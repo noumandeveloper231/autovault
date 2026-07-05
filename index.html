@@ -97,7 +97,7 @@
     font-family:var(--ff-body);font-weight:600;font-size:14.5px;cursor:pointer;
     border-radius:10px;padding:11px 20px;border:1px solid transparent;transition:transform .12s,box-shadow .2s,background .2s,border-color .2s;white-space:nowrap;
   }
-  .btn-primary{background:linear-gradient(150deg,var(--accent),var(--accent-2));color:#fff;box-shadow:0 8px 24px rgba(44,146,87,.24)}
+  .btn-primary{background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;font-weight:700;text-shadow:0 1px 1px rgba(0,0,0,.28);box-shadow:0 8px 24px rgba(44,146,87,.30)}
   .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(44,146,87,.34)}
   .btn-ghost{background:transparent;color:var(--text);border-color:var(--line)}
   .btn-ghost:hover{border-color:var(--accent-line);background:rgba(255,255,255,.02)}
@@ -319,6 +319,298 @@
   .statement .q .glow{color:var(--accent)}
   .statement .sig{position:relative;margin-top:22px;font-family:var(--ff-mono);font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
 
+  /* ============ VEHICLE BREAKDOWN ============ */
+  .veh-panel{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:20px;box-shadow:0 30px 60px -30px rgba(0,0,0,.7);margin-top:40px}
+  .veh-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .veh-head .vt{font-family:var(--ff-display);font-size:16px;font-weight:600}
+  .veh-head .vs{font-size:12px;color:var(--faint);margin-top:2px}
+  .veh-head .veh-pill{margin-left:auto;font-family:var(--ff-mono);font-size:12px;color:var(--up);background:var(--up-soft);padding:4px 12px;border-radius:20px;white-space:nowrap}
+  .vtable{min-width:660px}
+  .vtable th,.vtable td{padding:10px 10px}
+  .vtable tr.tot td{border-top:1px solid var(--line);border-bottom:0;font-weight:700;color:var(--text);padding-top:13px}
+  .vtable tr.tot .v{font-family:var(--ff-display)}
+
+  /* ============ FINANCE STAT BOXES ============ */
+  .statgrid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:26px}
+  .statbox{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:14px}
+  .statbox .sl{font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .statbox .sv{font-family:var(--ff-mono);font-weight:700;font-size:20px;margin-top:9px;letter-spacing:-.02em}
+  .statbox .sv.pos{color:var(--up)}
+  .statbox .sof{color:var(--faint);font-size:14px;font-weight:500}
+  .statbox .ssub{font-size:10.5px;color:var(--faint);margin-top:5px}
+  .statbox .track{height:5px;border-radius:4px;background:#0d1116;margin-top:9px;overflow:hidden}
+  .statbox .track i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:4px}
+
+  /* ============ STATE TAX CENTER ============ */
+  .tax-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:28px}
+  .tax-card{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:20px}
+  .tax-remind{display:flex;align-items:center;gap:13px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:11px;padding:12px 13px;margin-bottom:16px}
+  .tax-remind .tr-ic{width:34px;height:34px;border-radius:9px;background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+  .tax-remind .tr-ic svg{width:18px;height:18px}
+  .tax-remind .tr-t{font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+  .tax-remind .tr-d{font-family:var(--ff-display);font-weight:700;font-size:17px;margin-top:1px}
+  .tax-remind .tr-s{font-size:11px;color:var(--faint);margin-top:2px}
+  .tax-remind .tax-chip{margin-left:auto}
+  .tax-chip{font-family:var(--ff-mono);font-size:10px;padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .tax-chip.due{color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line)}
+  .tax-chip.filed{color:var(--up);background:var(--up-soft)}
+  .tax-chip.up{color:var(--faint);background:var(--panel-3)}
+  .tax-sub{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin:2px 0 10px}
+  .sched{display:flex;flex-direction:column}
+  .sched-row{display:flex;align-items:center;gap:10px;padding:11px 6px;border-bottom:1px solid var(--line-soft)}
+  .sched-row:last-child{border-bottom:0}
+  .sched-row.now{background:linear-gradient(90deg,var(--accent-soft),transparent);border-radius:8px}
+  .sched-q{display:flex;flex-direction:column;flex:1;min-width:0}
+  .sched-q .q{font-size:13px;font-weight:600}
+  .sched-q .p{font-family:var(--ff-mono);font-size:10px;color:var(--faint);margin-top:2px}
+  .sched-amt{font-family:var(--ff-mono);font-weight:700;font-size:13px;white-space:nowrap}
+  .tax-states{display:flex;flex-wrap:wrap;gap:8px;margin:2px 0 14px}
+  .state-chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:999px;padding:7px 12px;font-size:12px}
+  .state-chip .sabbr{font-family:var(--ff-mono);font-weight:700;color:var(--accent)}
+  .state-chip .samt{font-family:var(--ff-mono);color:var(--muted)}
+  .tvrow{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 6px;border-bottom:1px solid var(--line-soft)}
+  .tvrow:last-child{border-bottom:0}
+  .tvl{display:flex;flex-direction:column;min-width:0}
+  .tvn{font-size:12.5px;font-weight:600}
+  .tvst{font-family:var(--ff-mono);font-size:9.5px;color:var(--faint);margin-top:2px}
+  .tvamt{font-family:var(--ff-mono);font-weight:700;font-size:12.5px;white-space:nowrap}
+
+  /* ============ TEAM MESSAGING ============ */
+  .chat-panel{display:grid;grid-template-columns:158px 1fr;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,var(--panel),var(--ink-2));box-shadow:0 30px 60px -30px rgba(0,0,0,.7)}
+  .chat-side{border-right:1px solid var(--line-soft);padding:12px 9px;background:var(--ink-2);display:flex;flex-direction:column;gap:2px}
+  .cs-h{font-size:8.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin:11px 7px 5px}
+  .cs-h:first-child{margin-top:2px}
+  .chan{display:flex;align-items:center;gap:7px;padding:7px 8px;border-radius:8px;font-size:12.5px;color:var(--muted)}
+  .chan.on{background:var(--accent-soft);color:var(--accent)}
+  .chan .hash{font-family:var(--ff-mono);color:var(--faint)}
+  .chan.on .hash{color:var(--accent)}
+  .dm{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:8px;font-size:12.5px;color:var(--muted)}
+  .dm .av{width:22px;height:22px;border-radius:50%;background:linear-gradient(140deg,#333c49,#1a2129);border:1px solid var(--line);display:grid;place-items:center;font-size:8px;font-family:var(--ff-mono);color:var(--muted);flex:0 0 auto;position:relative}
+  .dm .st{width:8px;height:8px;border-radius:50%;background:var(--up);position:absolute;bottom:-1px;right:-1px;border:2px solid var(--ink-2)}
+  .chat-main{display:flex;flex-direction:column;min-height:376px}
+  .chat-head{display:flex;align-items:center;gap:9px;padding:12px 15px;border-bottom:1px solid var(--line-soft)}
+  .chat-head .ct{font-weight:600;font-size:13px}
+  .chat-head .ct .hash{font-family:var(--ff-mono);color:var(--faint)}
+  .chat-head .cmem{font-size:10.5px;color:var(--faint)}
+  .chat-head .meet{margin-left:auto;font-family:var(--ff-mono);font-size:10px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:20px;padding:4px 10px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+  .chat-head .meet svg{width:11px;height:11px}
+  .chat-msgs{flex:1;padding:15px;display:flex;flex-direction:column;gap:14px}
+  .msg{display:flex;gap:10px}
+  .msg .mav{width:28px;height:28px;border-radius:50%;flex:0 0 auto;background:linear-gradient(140deg,#2f6b48,#1a2129);border:1px solid var(--line);display:grid;place-items:center;font-size:9.5px;font-family:var(--ff-mono);color:var(--text)}
+  .msg .mbody{min-width:0}
+  .msg .mmeta{display:flex;align-items:baseline;gap:8px}
+  .msg .mname{font-size:12.5px;font-weight:600}
+  .msg .mtime{font-family:var(--ff-mono);font-size:9px;color:var(--faint)}
+  .msg .mtext{font-size:12.5px;color:var(--muted);margin-top:3px;line-height:1.5}
+  .msg .mtext b{color:var(--up);font-weight:600}
+  .doc-card{display:flex;align-items:center;gap:11px;border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin-top:8px;background:var(--panel-2);max-width:290px}
+  .doc-card .dic{width:32px;height:32px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:0 0 auto}
+  .doc-card .dic svg{width:16px;height:16px}
+  .doc-card .dname{font-size:12px;font-weight:600}
+  .doc-card .dsize{font-family:var(--ff-mono);font-size:9px;color:var(--faint);margin-top:2px}
+  .meet-card{display:flex;align-items:center;gap:11px;border:1px solid var(--accent-line);border-radius:10px;padding:10px 12px;margin-top:8px;background:var(--accent-soft);max-width:320px}
+  .meet-card .mic{width:32px;height:32px;border-radius:8px;background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+  .meet-card .mic svg{width:16px;height:16px}
+  .meet-card .mt{font-size:12px;font-weight:600}
+  .meet-card .ms{font-family:var(--ff-mono);font-size:9.5px;color:var(--muted);margin-top:2px}
+  .meet-card .mgo{margin-left:auto;font-family:var(--ff-mono);font-size:9.5px;color:var(--accent);white-space:nowrap}
+  .chat-input{margin:0 15px 15px;border:1px solid var(--line);border-radius:10px;padding:10px 13px;display:flex;align-items:center;gap:10px;color:var(--faint);font-size:12.5px}
+  .chat-input .send{margin-left:auto;width:28px;height:28px;border-radius:8px;background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+  .chat-input .send svg{width:14px;height:14px}
+
+  /* ============ WHOLESALERS ============ */
+  #wholesale{overflow-x:clip}
+  .ws-lead{color:var(--muted);font-size:17px;margin-top:16px;line-height:1.6}
+  .ws-kicker{font-family:var(--ff-mono);font-size:13px;letter-spacing:.02em;color:var(--accent);margin-top:22px;font-weight:500}
+  .ws-visual{position:relative;display:flex;justify-content:center;align-items:center;min-height:580px}
+  .ws-aura{position:absolute;left:50%;top:50%;width:360px;height:78%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(44,146,87,.30),transparent 62%);filter:blur(30px);pointer-events:none;z-index:0;animation:auraPulse 6s ease-in-out infinite}
+  .phone{position:relative;z-index:1;width:280px;border-radius:42px;border:1px solid var(--line);background:linear-gradient(160deg,#1b212a,#0b0e11);padding:11px;box-shadow:0 44px 80px -28px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.03) inset,0 0 60px -20px rgba(44,146,87,.42);animation:appBob 6s ease-in-out infinite;will-change:transform}
+  .phone .island{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:86px;height:24px;background:#000;border-radius:14px;z-index:3}
+  .pscreen{border-radius:32px;overflow:hidden;background:var(--ink-2);border:1px solid var(--line-soft);display:flex;flex-direction:column}
+  .pstatus{display:flex;justify-content:space-between;align-items:center;padding:14px 22px 8px;font-family:var(--ff-mono);font-size:10px;color:var(--muted)}
+  .pstatus svg{width:14px;height:11px;vertical-align:middle}
+  .phead{padding:6px 16px 12px}
+  .phead .pt{font-family:var(--ff-display);font-weight:700;font-size:16px}
+  .phead .ps{font-size:10.5px;color:var(--faint);margin-top:1px}
+  .pstat{display:flex;gap:9px;padding:4px 16px 12px}
+  .pbox{flex:1;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:12px;padding:11px 12px}
+  .pbox .pl{font-size:8px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint)}
+  .pbox .pv{font-family:var(--ff-mono);font-weight:700;font-size:18px;margin-top:5px}
+  .pbox .pv.pos{color:var(--up)}
+  .pdeals{padding:0 14px 12px;display:flex;flex-direction:column;gap:8px}
+  .pdeal{border:1px solid var(--line-soft);border-radius:12px;padding:11px 12px;background:var(--panel)}
+  .pdeal .pdtop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .pdeal .pdname{font-size:12px;font-weight:600}
+  .pdeal .pdp{font-family:var(--ff-mono);font-weight:700;font-size:12.5px;color:var(--up);white-space:nowrap}
+  .pdeal .pdsub{font-family:var(--ff-mono);font-size:9px;color:var(--faint);margin-top:4px}
+  .pdeal.open{border-color:var(--accent-line)}
+  .pdeal.open .pdp{color:var(--accent)}
+  .pcta{margin:2px 14px 16px;background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;text-align:center;padding:12px;border-radius:12px;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px}
+  .pcta svg{width:15px;height:15px}
+
+  /* ============ WHOLESALE AUCTION BOARD ============ */
+  .wb-panel{border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:20px;box-shadow:0 30px 60px -30px rgba(0,0,0,.7);margin-top:44px}
+  .wb-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .wb-head .wb-t{font-family:var(--ff-display);font-size:16px;font-weight:600}
+  .wb-head .wb-s{font-size:12px;color:var(--faint);margin-top:2px}
+  .wb-head .veh-pill{margin-left:auto}
+  .wb-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+  .wb-grid{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;min-width:0}
+  .wb-cal,.wb-loc{border:1px solid var(--line-soft);border-radius:12px;background:var(--panel-2);padding:15px;min-width:0;max-width:100%}
+  .wc-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+  .wc-title{font-family:var(--ff-display);font-weight:600;font-size:13px}
+  .wc-legend{display:flex;gap:12px;font-size:9.5px;color:var(--muted)}
+  .wc-legend span{display:inline-flex;align-items:center;gap:5px}
+  .wc-legend i{width:8px;height:8px;border-radius:2px;display:block}
+  .wc-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;min-width:588px}
+  .wc-day{background:var(--panel);border:1px solid var(--line-soft);border-radius:9px;padding:8px 6px;min-height:106px;display:flex;flex-direction:column;gap:6px}
+  .wc-day.dim{opacity:.45}
+  .wc-dow{font-family:var(--ff-mono);font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--faint)}
+  .wc-date{font-family:var(--ff-mono);font-weight:700;font-size:13px;margin-top:-2px}
+  .wc-ev{border-radius:7px;padding:5px 6px}
+  .wc-ev.auc{background:var(--accent-soft);border:1px solid var(--accent-line)}
+  .wc-ev.d2d{background:rgba(76,147,245,.12);border:1px solid rgba(76,147,245,.3)}
+  .wc-ev .n{font-family:var(--ff-mono);font-weight:700;font-size:11px;display:block}
+  .wc-ev.auc .n{color:var(--accent)}
+  .wc-ev.d2d .n{color:#7fb3ff}
+  .wc-ev .loc{color:var(--muted);font-size:8.5px;display:block;margin-top:2px;line-height:1.25}
+  .wbl-title{font-family:var(--ff-display);font-weight:600;font-size:13px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+  .wbl-title span{font-family:var(--ff-mono);font-size:10px;color:var(--faint)}
+  .loc-row{display:flex;align-items:flex-start;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line-soft)}
+  .loc-row:last-child{border-bottom:0}
+  .loc-row .lp{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:0 0 auto}
+  .loc-row .lp svg{width:16px;height:16px}
+  .loc-row .ln{flex:1;min-width:0}
+  .loc-row .lntop{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+  .loc-row .lnn{font-size:13px;font-weight:600}
+  .loc-row .lc{font-family:var(--ff-mono);font-weight:700;font-size:13px;color:var(--accent);white-space:nowrap}
+  .loc-row .lc small{color:var(--faint);font-weight:400;font-size:9px;margin-left:2px}
+  .loc-row .lns{font-family:var(--ff-mono);font-size:9.5px;color:var(--faint);margin-top:2px}
+  .loc-row .lbar{height:5px;border-radius:4px;background:#0d1116;margin-top:9px;overflow:hidden}
+  .loc-row .lbar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:4px}
+
+  /* ============ MINI FLOATING PHONES ============ */
+  .intro2{display:grid;grid-template-columns:1fr 220px;gap:48px;align-items:center}
+  .intro2 .sec-head{max-width:none}
+  .mini-phone{width:210px;justify-self:center;border-radius:30px;border:1px solid var(--line);background:linear-gradient(160deg,#1b212a,#0b0e11);padding:8px;box-shadow:0 30px 60px -24px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.03) inset,0 0 46px -18px rgba(44,146,87,.42);animation:appBob 6.5s ease-in-out infinite;will-change:transform;position:relative}
+  .mp-island{position:absolute;top:15px;left:50%;transform:translateX(-50%);width:58px;height:16px;background:#000;border-radius:10px;z-index:3}
+  .mp-screen{border-radius:23px;overflow:hidden;background:var(--ink-2);border:1px solid var(--line-soft);min-height:378px;display:flex;flex-direction:column}
+  .mp-status{display:flex;justify-content:space-between;padding:11px 16px 4px;font-family:var(--ff-mono);font-size:8px;color:var(--muted)}
+  .mp-top{padding:3px 14px 6px}
+  .mp-t{font-family:var(--ff-display);font-weight:700;font-size:13px}
+  .mp-s{font-size:8.5px;color:var(--faint);margin-top:1px}
+  .mp-biglbl{font-size:7.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);padding:4px 14px 0}
+  .mp-big{font-family:var(--ff-mono);font-weight:700;font-size:20px;padding:2px 14px 0}
+  .mp-big.pos{color:var(--up)}
+  .mp-list{padding:9px 11px 12px;display:flex;flex-direction:column;gap:6px;flex:1}
+  .mp-item{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--line-soft);border-radius:9px;padding:8px 9px}
+  .mp-item .mi-n{font-size:9.5px;font-weight:600}
+  .mp-item .mi-s{font-family:var(--ff-mono);font-size:7px;color:var(--faint);margin-top:1px}
+  .mp-item .mi-v{font-family:var(--ff-mono);font-weight:700;font-size:9.5px;white-space:nowrap}
+  .mp-item .mi-v.pos{color:var(--up)} .mp-item .mi-v.neg{color:var(--down)} .mp-item .mi-v.acc{color:var(--accent)}
+  .mp-msg{display:flex;gap:7px}
+  .mp-msg .mpav{width:20px;height:20px;border-radius:50%;background:linear-gradient(140deg,#2f6b48,#1a2129);border:1px solid var(--line);display:grid;place-items:center;font-size:7px;font-family:var(--ff-mono);color:var(--text);flex:0 0 auto}
+  .mp-msg .mpb{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:9px;padding:6px 8px;font-size:9px;color:var(--muted);line-height:1.4}
+  .mp-msg .mpn{font-size:8px;font-weight:600;color:var(--text);margin-bottom:2px}
+
+  .float-phone{position:absolute;z-index:4;pointer-events:none}
+  .float-phone .mini-phone{width:168px;animation-duration:7.2s}
+  .float-phone .mp-screen{min-height:322px}
+  .hero-phone{left:-54px;bottom:-4px}
+  .hero-phone .mini-phone{width:140px}
+  .hero-phone .mp-screen{min-height:302px}
+  .hero-phone .mp-t{font-size:11px}
+  .hero-phone .mp-s{font-size:7.5px}
+  .hero-phone .mp-biglbl{font-size:7px}
+  .hero-phone .mp-big{font-size:16px}
+  .hero-phone .mp-list{gap:5px;padding:8px 9px 6px}
+  .hero-phone .mp-item{padding:6px 7px}
+  .hero-phone .mp-item .mi-n{font-size:8.5px}
+  .hero-phone .mp-item .mi-v{font-size:8.5px}
+  .hero-phone .mp-item .mi-s{font-size:6.5px}
+  .chat-wrap{position:relative}
+  .team-phone{left:-26px;bottom:-22px}
+
+  .touch-tag{display:inline-flex;align-items:center;gap:9px;font-family:var(--ff-mono);font-size:12.5px;color:var(--accent);margin-top:24px;border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:999px;padding:9px 16px}
+  .touch-tag svg{width:15px;height:15px;flex:0 0 auto}
+
+  .mp-stage{position:relative;flex:1;min-height:0}
+  .mp-slide{position:absolute;inset:0;opacity:0;transition:opacity .45s ease;display:flex;flex-direction:column;pointer-events:none}
+  .mp-slide.on{opacity:1}
+  .mp-dots{display:flex;gap:5px;justify-content:center;padding:6px 0 11px}
+  .mp-dots i{width:5px;height:5px;border-radius:50%;background:var(--line);display:block;transition:.25s}
+  .mp-dots i.on{background:var(--accent);width:14px;border-radius:3px}
+
+  /* ============ JENNA (AI assistant) ============ */
+  #jenna{position:relative;overflow-x:clip}
+  .jenna-grid{display:grid;grid-template-columns:1.55fr 0.9fr;gap:40px;align-items:end;position:relative}
+  .jenna-main{position:relative;z-index:1;min-width:0}
+  .jenna-intro{margin-bottom:28px}
+  .jenna-hero-orb{position:relative;width:58px;height:58px;margin-bottom:26px}
+  .jenna-hero-orb .core{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#8FF3BC,#2C9257 55%,#124A2A);box-shadow:0 0 0 1px rgba(44,146,87,.5),0 0 36px -2px rgba(44,146,87,.95);display:grid;place-items:center;position:relative;z-index:2}
+  .jenna-hero-orb .core svg{width:28px;height:28px;color:#08190f}
+  .jenna-hero-orb .ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--accent-line);animation:orbring 3.2s ease-out infinite;z-index:1}
+  .jenna-hero-orb .ring:nth-child(2){animation-delay:1.06s}
+  .jenna-hero-orb .ring:nth-child(3){animation-delay:2.13s}
+  @keyframes orbring{0%{transform:scale(1);opacity:.6}100%{transform:scale(2.3);opacity:0}}
+  .jenna-badge{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:999px;padding:6px 15px;font-family:var(--ff-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .jenna-intro h2{font-size:clamp(34px,4.4vw,56px);letter-spacing:-.03em;font-weight:700;margin-top:20px;line-height:1.01}
+  .jenna-intro h2 .glow{color:var(--accent)}
+  .jenna-intro p{color:var(--muted);font-size:17.5px;margin-top:18px;line-height:1.62;max-width:52ch}
+  .jenna-tags{display:flex;gap:9px;justify-content:flex-start;flex-wrap:wrap;margin-top:26px}
+  .jenna-tags span{font-family:var(--ff-mono);font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 14px;display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.015)}
+  .jenna-tags span::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 7px var(--accent)}
+  .jenna-orb{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#7DF0AE,#2C9257 58%,#16532F);display:grid;place-items:center;box-shadow:0 0 0 1px rgba(44,146,87,.4),0 0 18px -2px rgba(44,146,87,.75);flex:0 0 auto}
+  .jenna-orb svg{width:16px;height:16px;color:#0a1f12}
+  .jenna-orb.sm{width:22px;height:22px}.jenna-orb.sm svg{width:12px;height:12px}
+  .jenna-orb.lg{width:42px;height:42px}.jenna-orb.lg svg{width:21px;height:21px}
+
+  .jenna-aura{position:absolute;left:50%;top:50%;width:760px;height:88%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(44,146,87,.24),transparent 64%);filter:blur(32px);z-index:0;animation:auraPulse 6s ease-in-out infinite;pointer-events:none}
+  .jenna-panel{position:relative;z-index:1;width:100%;margin-top:0;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:linear-gradient(180deg,var(--panel),var(--ink-2));box-shadow:0 44px 90px -34px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.03) inset,0 0 70px -22px rgba(44,146,87,.45)}
+  .jenna-top{display:flex;align-items:center;gap:11px;padding:13px 16px;border-bottom:1px solid var(--line-soft)}
+  .jenna-top .jt{font-family:var(--ff-display);font-weight:600;font-size:14px}
+  .jenna-top .js2{font-size:10.5px;color:var(--faint);margin-top:1px}
+  .jenna-top .jlive{margin-left:auto;font-family:var(--ff-mono);font-size:10px;color:var(--up);display:flex;align-items:center;gap:6px}
+  .jenna-top .jlive .beat{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 0 0 rgba(70,211,146,.6);animation:beat 2s infinite}
+  .jmsgs{height:308px;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:13px;scrollbar-width:none}
+  .jmsgs::-webkit-scrollbar{display:none}
+  .jrow{display:flex;gap:10px;max-width:84%;animation:msgIn .35s ease}
+  .jrow.user{align-self:flex-end;flex-direction:row-reverse}
+  .jrow.jenna{align-self:flex-start}
+  .jbub{border-radius:13px;padding:10px 13px;font-size:13.5px;line-height:1.5}
+  .jrow.jenna .jbub{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--text);border-top-left-radius:4px}
+  .jrow.user .jbub{background:var(--panel-3);border:1px solid var(--line);color:var(--text);border-top-right-radius:4px}
+  .jrow.user .uav{width:24px;height:24px;border-radius:50%;background:linear-gradient(140deg,#333c49,#1a2129);border:1px solid var(--line);display:grid;place-items:center;font-size:8.5px;font-family:var(--ff-mono);color:var(--muted);flex:0 0 auto}
+  @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .jtyping{display:inline-flex;gap:4px;padding:13px 14px!important}
+  .jtyping i{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:typing 1.2s infinite}
+  .jtyping i:nth-child(2){animation-delay:.2s}.jtyping i:nth-child(3){animation-delay:.4s}
+  @keyframes typing{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+  .jaction{align-self:flex-start;display:flex;align-items:center;gap:11px;background:var(--panel-2);border:1px solid var(--accent-line);border-radius:12px;padding:11px 13px;animation:msgIn .35s ease;max-width:84%}
+  .jaction .jac-ic{width:30px;height:30px;border-radius:8px;background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;display:grid;place-items:center;flex:0 0 auto}
+  .jaction .jac-ic svg{width:16px;height:16px}
+  .jaction .jac-t{font-size:12.5px;font-weight:600}
+  .jaction .jac-s{font-family:var(--ff-mono);font-size:9.5px;color:var(--up);margin-top:2px;display:flex;align-items:center;gap:5px}
+  .jenna-input{display:flex;align-items:center;gap:11px;margin:0 16px 16px;border:1px solid var(--line);border-radius:11px;padding:11px 14px;color:var(--faint);font-size:13px}
+  .jenna-input .jmic{margin-left:auto;width:30px;height:30px;border-radius:8px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;flex:0 0 auto}
+  .jenna-input .jmic svg{width:15px;height:15px}
+
+  .jenna-phone-side{position:relative;z-index:1;justify-self:center;align-self:end}
+  .jenna-phone-side .mini-phone{width:206px;animation:appBob 6.5s ease-in-out infinite}
+  .jenna-phone-side .mp-screen{min-height:424px}
+  .jp-top{display:flex;align-items:center;gap:8px;padding:8px 13px 10px;border-bottom:1px solid var(--line-soft)}
+  .jp-top .jp-t{font-family:var(--ff-display);font-weight:700;font-size:12px}
+  .jp-top .jp-s{font-size:8px;color:var(--up);display:flex;align-items:center;gap:4px}
+  .jp-top .jp-s::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--up)}
+  .jenna-phone-side .jmsgs{height:322px;padding:11px;gap:9px}
+  .jenna-phone-side .jbub{font-size:9px;padding:7px 9px;border-radius:10px}
+  .jenna-phone-side .jrow{gap:6px;max-width:88%}
+  .jenna-phone-side .jenna-orb.sm{width:17px;height:17px}.jenna-phone-side .jenna-orb.sm svg{width:9px;height:9px}
+  .jenna-phone-side .jrow.user .uav{width:17px;height:17px;font-size:6.5px}
+  .jenna-phone-side .jaction{padding:8px 9px;gap:8px}
+  .jenna-phone-side .jaction .jac-ic{width:22px;height:22px}.jenna-phone-side .jaction .jac-ic svg{width:12px;height:12px}
+  .jenna-phone-side .jaction .jac-t{font-size:9px}.jenna-phone-side .jaction .jac-s{font-size:7px}
+
   /* ============ WAITLIST ============ */
   .waitlist{padding:104px 0}
   .wl-card{
@@ -380,6 +672,12 @@
   /* ============ RESPONSIVE ============ */
   @media(max-width:1024px){
     .hero-grid{grid-template-columns:1fr;gap:44px}
+    .statgrid{grid-template-columns:repeat(3,1fr)}
+    .intro2{grid-template-columns:1fr}
+    .intro2 .mini-phone,.float-phone{display:none}
+    .jenna-grid{grid-template-columns:1fr;gap:0}
+    .jenna-panel{width:100%}
+    .jenna-phone-side{display:none}
     .app{transform:none}
     .app:hover{transform:none}
     .hero-sub{max-width:none}
@@ -402,6 +700,11 @@
     .hero-cta .btn{width:100%}
     .hero-trust{gap:12px;font-size:12px}
     .split{grid-template-columns:1fr}
+    .statgrid{grid-template-columns:repeat(2,1fr)}
+    .tax-grid{grid-template-columns:1fr}
+    .chat-panel{grid-template-columns:1fr}
+    .chat-side{display:none}
+    .wb-grid{grid-template-columns:1fr}
     .fgrid{grid-template-columns:1fr}
     .bgrid{grid-template-columns:1fr}
     .sec-head h2{font-size:clamp(24px,7vw,32px)}
@@ -456,9 +759,10 @@
       AutoVault
     </a>
     <nav class="nav-links" id="navlinks">
-      <a href="#tracking">How it works</a>
-      <a href="#modules">What's inside</a>
-      <a href="#finance">Finance &amp; payroll</a>
+      <a href="#jenna">Jenna</a>
+      <a href="#team">Team</a>
+      <a href="#wholesale">Wholesale</a>
+      <a href="#finance">Finance</a>
       <a href="#waitlist" class="btn btn-primary">Request Early Access</a>
     </nav>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">
@@ -487,10 +791,12 @@
         <span class="dot"></span>
         <span>Built by dealers</span>
       </div>
+      <div class="touch-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg>Run your entire dealership from the touch of your phone.</div>
     </div>
 
     <div class="app-stage">
       <div class="app-aura"></div>
+            <div class="float-phone hero-phone"><div class="mini-phone"><div class="mp-island"></div><div class="mp-screen" id="heroPhoneScreen"><div class="mp-status"><span>9:41</span><span>5G</span></div><div class="mp-stage"><div class="mp-slide on" data-i="0"><div class="mp-top"><div class="mp-t">Dashboard</div><div class="mp-s">This month</div></div><div class="mp-biglbl">Net profit</div><div class="mp-big pos">$187,452</div><div class="mp-list"><div class="mp-item"><div class="mi-n">Revenue</div><div class="mi-v">$1.24M</div></div><div class="mp-item"><div class="mi-n">Owed to reps</div><div class="mi-v acc">$9,280</div></div><div class="mp-item"><div><div class="mi-n">Inventory</div><div class="mi-s">128 vehicles</div></div><div class="mi-v">68 units</div></div></div></div><div class="mp-slide" data-i="1"><div class="mp-top"><div class="mp-t">Inventory</div><div class="mp-s">Profit per VIN</div></div><div class="mp-list"><div class="mp-item"><div><div class="mi-n">Jeep Grand Cherokee</div><div class="mi-s">Sold</div></div><div class="mi-v pos">+$4,755</div></div><div class="mp-item"><div><div class="mi-n">Ford F-150 XLT</div><div class="mi-s">In stock</div></div><div class="mi-v pos">+$3,690</div></div><div class="mp-item"><div><div class="mi-n">Chevy Silverado LT</div><div class="mi-s">Underwater</div></div><div class="mi-v neg">&minus;$800</div></div></div></div><div class="mp-slide" data-i="2"><div class="mp-top"><div class="mp-t">Sales Tax</div><div class="mp-s">Quarterly</div></div><div class="mp-biglbl">Next filing due</div><div class="mp-big">Jul 31</div><div class="mp-list"><div class="mp-item"><div class="mi-n">Collected</div><div class="mi-v acc">$18,240</div></div><div class="mp-item"><div><div class="mi-n">Ford F-150</div><div class="mi-s">On file</div></div><div class="mi-v">$1,470</div></div><div class="mp-item"><div><div class="mi-n">Silverado LT</div><div class="mi-s">On file</div></div><div class="mi-v">$1,272</div></div></div></div><div class="mp-slide" data-i="3"><div class="mp-top"><div class="mp-t">Payroll</div><div class="mp-s">Owed $9,280</div></div><div class="mp-list"><div class="mp-item"><div><div class="mi-n">D. Cole</div><div class="mi-s">Salary + comm</div></div><div class="mi-v">$3,120</div></div><div class="mp-item"><div><div class="mi-n">A. Patel</div><div class="mi-s">Salary + comm</div></div><div class="mi-v">$2,740</div></div><div class="mp-item"><div><div class="mi-n">C. Mendez</div><div class="mi-s">Hourly</div></div><div class="mi-v">$2,560</div></div></div></div><div class="mp-slide" data-i="4"><div class="mp-top"><div class="mp-t">Profit &amp; Loss</div><div class="mp-s">Net margin 15%</div></div><div class="mp-list"><div class="mp-item"><div class="mi-n">Revenue</div><div class="mi-v">$1.25M</div></div><div class="mp-item"><div class="mi-n">Cost of goods</div><div class="mi-v neg">$986K</div></div><div class="mp-item"><div class="mi-n">Commissions</div><div class="mi-v neg">$34K</div></div><div class="mp-item"><div class="mi-n">Net profit</div><div class="mi-v pos">$187K</div></div></div></div></div><div class="mp-dots"><i class="on"></i><i></i><i></i><i></i><i></i></div></div></div></div>
       <div class="app-float">
       <div class="app reveal" id="heroApp">
         <div class="app-bar">
@@ -620,6 +926,36 @@
 </section>
 
 
+<!-- ============ JENNA ============ -->
+<section class="sec" id="jenna">
+  <div class="wrap">
+    <div class="jenna-grid">
+      <div class="jenna-aura"></div>
+      <div class="jenna-main">
+        <div class="jenna-intro reveal">
+          <div class="jenna-hero-orb"><span class="ring"></span><span class="ring"></span><span class="ring"></span><span class="core"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.7 5.6L19.5 9l-5.8 1.4L12 16l-1.7-5.6L4.5 9l5.8-1.4z"/></svg></span></div>
+          <span class="jenna-badge">Introducing Jenna</span>
+          <h2>The AI assistant <span class="glow">built for dealerships.</span></h2>
+          <p>Jenna is modeled for dealerships and nothing else. Ask her about your lot, your profit, or your deals &mdash; she answers instantly, takes action, and keeps you profitable. The assistant every dealership needs, right in your pocket &mdash; one click away.</p>
+          <div class="jenna-tags"><span>Helps you stay profitable</span><span>Takes action for you</span><span>In your pocket, one click away</span></div>
+        </div>
+        <div class="jenna-panel reveal">
+          <div class="app-bar"><span class="tl"><i></i><i></i><i></i></span><span class="app-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>app.autovault360.com/jenna</span></div>
+          <div class="jenna-top"><span class="jenna-orb lg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.7 5.6L19.5 9l-5.8 1.4L12 16l-1.7-5.6L4.5 9l5.8-1.4z"/></svg></span><div><div class="jt">Jenna</div><div class="js2">AI Assistant for AutoVault</div></div><span class="jlive"><span class="beat"></span>Live</span></div>
+          <div class="jmsgs" id="jmsgsPanel"></div>
+          <div class="jenna-input">Ask Jenna anything&hellip;<span class="jmic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></span></div>
+        </div>
+      </div>
+      <div class="jenna-phone-side reveal">
+        <div class="mini-phone"><div class="mp-island"></div><div class="mp-screen"><div class="mp-status"><span>9:41</span><span>5G</span></div>
+          <div class="jp-top"><span class="jenna-orb sm"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.7 5.6L19.5 9l-5.8 1.4L12 16l-1.7-5.6L4.5 9l5.8-1.4z"/></svg></span><div><div class="jp-t">Jenna</div><div class="jp-s">Live</div></div></div>
+          <div class="jmsgs" id="jmsgsPhone"></div>
+        </div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ MARQUEE ============ -->
 <div class="marquee-band">
   <div class="marquee">
@@ -628,80 +964,10 @@
   </div>
 </div>
 
-<!-- ============ PROBLEM / SOLUTION ============ -->
-<section class="sec" id="platform">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">Why dealers switch</span>
-      <h2>The lot runs on gut feel and six open tabs.</h2>
-      <p>Deals live in a spreadsheet, commissions in a text thread, expenses on a shoebox of receipts. By the time the numbers add up, the month is over. AutoVault closes the gap.</p>
-    </div>
-    <div class="split">
-      <div class="col-card bad reveal">
-        <div class="tag">The spreadsheet stack</div>
-        <ul class="plist">
-          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>Numbers never match.</b> Inventory, sales, and payments live in separate files that drift out of sync.</span></li>
-          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>Commissions get argued.</b> No single source of truth for who sold what and what they're owed.</span></li>
-          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>Tax season is a scramble.</b> Weeks spent rebuilding records your CPA can't read.</span></li>
-          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>You find out too late.</b> A thin-margin deal only shows up after the money's gone.</span></li>
-        </ul>
-      </div>
-      <div class="col-card good reveal">
-        <div class="tag">With AutoVault</div>
-        <ul class="plist">
-          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>One connected ledger.</b> Every vehicle, sale, and payment updates the same live P&amp;L.</span></li>
-          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Commissions calculate themselves.</b> Reps and payroll see the same numbers, automatically.</span></li>
-          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Export-ready for your CPA.</b> Give your accountant secure access instead of a shoebox.</span></li>
-          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Margin in real time.</b> Know the profit on a deal before you shake on it.</span></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- ============ TRACKING ============ -->
-<section class="sec" id="tracking" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <span class="eyebrow">How it tracks every number</span>
-      <h2>Every dollar tied to a VIN, a rep, or a filing.</h2>
-      <p>Flip through the dashboard above and you'll see the same data broken down four ways. Here's what each screen is actually doing.</p>
-    </div>
-    <div class="fgrid">
-      <div class="fcard reveal">
-        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l2-5h14l2 5"/><path d="M5 17h14"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg></div>
-        <div>
-          <h3>Cost to the penny, per vehicle</h3>
-          <p>Purchase price, auction &amp; doc fees, repairs, add-ons, flooring, and days on the lot roll into one true net-profit and ROI number — so you know which cars made money and which went underwater.</p>
-        </div>
-      </div>
-      <div class="fcard reveal">
-        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h9l3 3v13H6z"/><path d="M9 12h6M9 16h6"/></svg></div>
-        <div>
-          <h3>Sales tax kept on file</h3>
-          <p>The tax you collect is captured on every sale and tied to the VIN, then organized by your filing frequency with the next due date front and center. No more rebuilding it at quarter-end.</p>
-        </div>
-      </div>
-      <div class="fcard reveal">
-        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-        <div>
-          <h3>Payroll &amp; commissions in one run</h3>
-          <p>Salespeople on base plus commission, mechanics and lot staff hourly, managers on salary — all calculated automatically, with every payout logged and proof kept on file.</p>
-        </div>
-      </div>
-      <div class="fcard reveal">
-        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6"/></svg></div>
-        <div>
-          <h3>A live profit &amp; loss statement</h3>
-          <p>Revenue minus cost of goods, commissions, and overhead — with gross and net margin — shows exactly where the money goes and where you're losing it, updated as deals close.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ============ BENEFITS ============ -->
-<section class="sec" style="padding-top:0">
+<section class="sec">
   <div class="wrap">
     <div class="sec-head reveal">
       <span class="eyebrow">One platform, whole operation</span>
@@ -760,40 +1026,325 @@
 <!-- ============ FINANCE / PAYROLL SHOWCASE ============ -->
 <section class="sec" id="finance" style="padding-top:0">
   <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Finance &amp; every deal</span>
+      <h2>Every vehicle, down to the dollar.</h2>
+      <p>Purchase, auction fees, flooring, and sales tax &mdash; captured per VIN &mdash; so you see true gross and net profit on every car, and catch the ones quietly losing money.</p>
+    </div>
+
+    <div class="statgrid reveal">
+      <div class="statbox">
+        <div class="sl">Titles in hand</div>
+        <div class="sv">13 <span class="sof">/ 18</span></div>
+        <div class="track"><i style="width:72%"></i></div>
+        <div class="ssub">5 titles pending</div>
+      </div>
+      <div class="statbox"><div class="sl">Total purchase cost</div><div class="sv">$115,900</div><div class="ssub">6 vehicles</div></div>
+      <div class="statbox"><div class="sl">Total gross profit</div><div class="sv pos">$23,500</div></div>
+      <div class="statbox"><div class="sl">Total net profit</div><div class="sv pos">$19,246</div><div class="ssub">after all costs</div></div>
+      <div class="statbox"><div class="sl">Avg ROI</div><div class="sv pos">17.0%</div><div class="ssub">per vehicle</div></div>
+      <div class="statbox"><div class="sl">Avg gross profit</div><div class="sv">$3,917</div><div class="ssub">per vehicle</div></div>
+    </div>
+
+    <div class="veh-panel reveal">
+      <div class="veh-head">
+        <div><div class="vt">Vehicle Profit Breakdown</div><div class="vs">This month · showing 6 of 128 vehicles</div></div>
+        <span class="veh-pill">+$19,246 net profit</span>
+      </div>
+      <div class="tscroll"><table class="dtable vtable">
+        <thead><tr>
+          <th>Vehicle</th>
+          <th class="r">Purchase</th>
+          <th class="r">Auction fees</th>
+          <th class="r">Flooring fees</th>
+          <th class="r">Sales tax</th>
+          <th class="r">Sale price</th>
+          <th class="r">Profit</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><div class="v">Jeep Grand Cherokee</div><div class="vin">1C4RJFAG3JC411882 · Sold</div></td><td class="num">$15,600</td><td class="num">$300</td><td class="num">$410</td><td class="num">$936</td><td class="num">$22,900</td><td class="num pos">+$6,590</td></tr>
+          <tr><td><div class="v">Ford F-150 XLT</div><div class="vin">1FTFW1E5XMFA12345 · In stock</div></td><td class="num">$24,500</td><td class="num">$380</td><td class="num">$248</td><td class="num">$1,470</td><td class="num">$29,900</td><td class="num pos">+$4,772</td></tr>
+          <tr><td><div class="v">Honda Accord Sport</div><div class="vin">1HGCV1F34LA098213 · In stock</div></td><td class="num">$17,800</td><td class="num">$300</td><td class="num">$190</td><td class="num">$1,068</td><td class="num">$21,900</td><td class="num pos">+$3,610</td></tr>
+          <tr><td><div class="v">Toyota Camry SE</div><div class="vin">4T1G11AK5NU552310 · In stock</div></td><td class="num">$19,900</td><td class="num">$190</td><td class="num">$175</td><td class="num">$1,194</td><td class="num">$23,400</td><td class="num pos">+$3,135</td></tr>
+          <tr><td><div class="v">Nissan Altima SR</div><div class="vin">1N4BL4CV5NN315502 · In stock</div></td><td class="num">$16,900</td><td class="num">$260</td><td class="num">$301</td><td class="num">$1,014</td><td class="num">$19,400</td><td class="num pos">+$1,939</td></tr>
+          <tr><td><div class="v">Chevrolet Silverado LT</div><div class="vin">3GCUYDED5KG215566 · Underwater</div></td><td class="num">$21,200</td><td class="num">$350</td><td class="num">$1,150</td><td class="num">$1,272</td><td class="num">$21,900</td><td class="num neg">−$800</td></tr>
+          <tr class="tot"><td><div class="v">All vehicles</div></td><td class="num">$115,900</td><td class="num">$1,780</td><td class="num">$2,474</td><td class="num">$6,954</td><td class="num">$139,400</td><td class="num pos">+$19,246</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Sales tax is collected on the buyer's behalf and remitted to the state — profit is your real margin after purchase, auction, and flooring costs.</div>
+    </div>
+
+    <div class="sec-head reveal" style="margin-top:60px">
+      <span class="eyebrow">State Tax Center</span>
+      <h2>Your sales tax, organized and never late.</h2>
+      <p>Set your filing frequency &mdash; monthly, quarterly, or annual &mdash; and AutoVault reminds you before every due date. Separate what you've collected by state, keep each vehicle's tax tied to its VIN, and export a filing-ready report in one click.</p>
+    </div>
+
+    <div class="tax-grid">
+      <div class="tax-card reveal">
+        <div class="tax-remind">
+          <span class="tr-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg></span>
+          <div>
+            <div class="tr-t">Next filing due</div>
+            <div class="tr-d">July 31, 2026</div>
+            <div class="tr-s">Quarterly filing · reminder set 7 days before</div>
+          </div>
+          <span class="tax-chip due">Due in 28 days</span>
+        </div>
+        <div class="tax-sub">Filing schedule · Quarterly</div>
+        <div class="sched">
+          <div class="sched-row"><div class="sched-q"><span class="q">Q1 2026</span><span class="p">Jan – Mar · filed Apr 30</span></div><span class="sched-amt">$17,940</span><span class="tax-chip filed">Filed</span></div>
+          <div class="sched-row now"><div class="sched-q"><span class="q">Q2 2026</span><span class="p">Apr – Jun · due Jul 31</span></div><span class="sched-amt">$18,240</span><span class="tax-chip due">Due soon</span></div>
+          <div class="sched-row"><div class="sched-q"><span class="q">Q3 2026</span><span class="p">Jul – Sep · due Oct 31</span></div><span class="sched-amt">—</span><span class="tax-chip up">Upcoming</span></div>
+          <div class="sched-row"><div class="sched-q"><span class="q">Q4 2026</span><span class="p">Oct – Dec · due Jan 31</span></div><span class="sched-amt">—</span><span class="tax-chip up">Upcoming</span></div>
+        </div>
+      </div>
+
+      <div class="tax-card reveal">
+        <div class="veh-head" style="margin-bottom:12px">
+          <div><div class="vt" style="font-size:14px">Collected this quarter</div><div class="vs">Organized by state · tied to each VIN</div></div>
+          <span class="veh-pill" style="color:var(--accent);background:var(--accent-soft)">$18,240</span>
+        </div>
+        <div class="tax-states">
+          <span class="state-chip"><span class="sabbr">CA</span><span class="samt">$12,180</span></span>
+          <span class="state-chip"><span class="sabbr">NV</span><span class="samt">$4,020</span></span>
+          <span class="state-chip"><span class="sabbr">AZ</span><span class="samt">$2,040</span></span>
+        </div>
+        <div class="tax-sub">By vehicle · recent</div>
+        <div class="tvrow"><div class="tvl"><div class="tvn">Ford F-150 XLT</div><div class="tvst">CA · On file</div></div><div class="tvamt">$1,470</div></div>
+        <div class="tvrow"><div class="tvl"><div class="tvn">Chevrolet Silverado LT</div><div class="tvst">CA · On file</div></div><div class="tvamt">$1,272</div></div>
+        <div class="tvrow"><div class="tvl"><div class="tvn">Toyota Camry SE</div><div class="tvst">NV · On file</div></div><div class="tvamt">$1,194</div></div>
+        <div class="tvrow"><div class="tvl"><div class="tvn">Honda Accord Sport</div><div class="tvst">CA · On file</div></div><div class="tvamt">$1,068</div></div>
+        <div class="tvrow"><div class="tvl"><div class="tvn">Jeep Grand Cherokee</div><div class="tvst">CA · Filed</div></div><div class="tvamt">$936</div></div>
+      </div>
+    </div>
+
+    <div class="note" style="margin-top:16px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 21a2 2 0 0 0 4 0"/></svg>Choose a filing frequency and set due-date reminders for each state you sell in — AutoVault keeps every dollar of collected tax organized, sorted by state, and export-ready, so you never miss a deadline or rebuild it from a spreadsheet.</div>
+  </div>
+</section>
+
+<!-- ============ TEAM MESSAGING ============ -->
+<section class="sec" id="team" style="padding-top:0">
+  <div class="wrap">
     <div class="show2">
       <div class="reveal">
-        <span class="eyebrow">Finance &amp; payroll</span>
-        <h2 style="font-size:clamp(28px,3.4vw,40px);margin-top:16px">Built for dealerships. Designed for your accountant.</h2>
+        <span class="eyebrow">Team communication</span>
+        <h2 style="font-size:clamp(28px,3.4vw,40px);margin-top:16px">Keep the whole floor connected — and closing.</h2>
         <ul class="check-list">
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Payroll &amp; commission tracking.</b> Pay every rep accurately and on time, straight from the deals they closed.</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>CPA &amp; accountant login.</b> Secure, role-based access for your trusted advisors — no exports emailed around.</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Tax filing made easy.</b> All your data organized and export-ready when the season hits.</span></li>
-          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Role-based access.</b> Give every person the exact view they need — nothing more.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Message rep-to-rep in real time.</b> Deals, buyers, and questions handled in the same platform you track them — not scattered across group texts.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Share documents instantly.</b> Bills of sale, titles, and paperwork sent between reps and tied to the deal — nothing lost.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Group channels &amp; huddles.</b> Run sales meetings and keep the whole team aligned on the week's numbers.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Every rep, their own login.</b> Each rep tracks their own commissions and the vehicles they sold — all under one roof, keeping the dealership together for profitability.</span></li>
         </ul>
       </div>
-      <div class="pay-panel reveal">
-        <div class="app-head" style="margin-bottom:8px">
-          <div><div class="h" style="font-family:var(--ff-display);font-size:14px;font-weight:600">Payments Overview</div><div class="sub" style="font-size:11px;color:var(--faint)">This month</div></div>
+
+      <div class="chat-wrap reveal">
+      <div class="chat-panel">
+        <div class="chat-side">
+          <div class="cs-h">Channels</div>
+          <div class="chan on"><span class="hash">#</span> Sales Floor</div>
+          <div class="chan"><span class="hash">#</span> Deals Desk</div>
+          <div class="chan"><span class="hash">#</span> Auctions</div>
+          <div class="chan"><span class="hash">#</span> Paperwork</div>
+          <div class="cs-h">Direct</div>
+          <div class="dm"><span class="av">DC<span class="st"></span></span> D. Cole</div>
+          <div class="dm"><span class="av">AP</span> A. Patel</div>
+          <div class="dm"><span class="av">MR<span class="st"></span></span> M. Reyes</div>
         </div>
-        <div class="pay-row">
-          <div class="pay-l"><span class="pt">Paid</span><span class="ps">20 transactions</span></div>
-          <div class="pay-r"><div class="pa">$326,359</div><span class="chip paid">Cleared</span></div>
+        <div class="chat-main">
+          <div class="chat-head">
+            <div><div class="ct"><span class="hash">#</span> Sales Floor</div><div class="cmem">6 members · 3 online</div></div>
+            <span class="meet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="7" width="12" height="10" rx="2"/></svg>Huddle</span>
+          </div>
+          <div class="chat-msgs">
+            <div class="msg">
+              <span class="mav">AP</span>
+              <div class="mbody">
+                <div class="mmeta"><span class="mname">A. Patel</span><span class="mtime">2:14 PM</span></div>
+                <div class="mtext">Just closed the Jeep Grand Cherokee — <b>+$4,755 net</b>. Buyer's picking up tomorrow.</div>
+              </div>
+            </div>
+            <div class="msg">
+              <span class="mav">DC</span>
+              <div class="mbody">
+                <div class="mmeta"><span class="mname">D. Cole</span><span class="mtime">2:16 PM</span></div>
+                <div class="mtext">Nice work. Send over the bill of sale before pickup?</div>
+                <div class="doc-card">
+                  <span class="dic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3h9l3 3v15H6z"/><path d="M9 12h6M9 16h6"/></svg></span>
+                  <div><div class="dname">Bill of Sale — Jeep Grand Cherokee.pdf</div><div class="dsize">240 KB · shared with #Sales Floor</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="msg">
+              <span class="mav">MR</span>
+              <div class="mbody">
+                <div class="mmeta"><span class="mname">M. Reyes</span><span class="mtime">2:22 PM</span></div>
+                <div class="mtext">Team huddle at 4 — let's review this week's numbers and the auction list.</div>
+                <div class="meet-card">
+                  <span class="mic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="7" width="12" height="10" rx="2"/></svg></span>
+                  <div><div class="mt">Weekly Sales Huddle</div><div class="ms">Today · 4:00 PM</div></div>
+                  <span class="mgo">6 going</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="chat-input">
+            Message #Sales Floor
+            <span class="send"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg></span>
+          </div>
         </div>
-        <div class="pay-row">
-          <div class="pay-l"><span class="pt">Pending</span><span class="ps">6 transactions</span></div>
-          <div class="pay-r"><div class="pa">$27,450</div><span class="chip pend">Awaiting</span></div>
+      </div>
+      <div class="float-phone team-phone"><div class="mini-phone"><div class="mp-island"></div><div class="mp-screen"><div class="mp-status"><span>9:41</span><span>5G</span></div><div class="mp-top"><div class="mp-t"># Sales Floor</div><div class="mp-s">6 members · 3 online</div></div><div class="mp-list" style="gap:9px;padding-top:8px"><div class="mp-msg"><span class="mpav">AP</span><div class="mpb"><div class="mpn">A. Patel</div>Closed the Jeep &mdash; +$4,755</div></div><div class="mp-msg"><span class="mpav">DC</span><div class="mpb"><div class="mpn">D. Cole</div>Sending the bill of sale</div></div><div class="mp-msg"><span class="mpav">MR</span><div class="mpb"><div class="mpn">M. Reyes</div>Huddle at 4</div></div></div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHOLESALERS ============ -->
+<section class="sec" id="wholesale" style="padding-top:0">
+  <div class="wrap">
+    <div class="show2">
+      <div class="ws-visual reveal">
+        <div class="ws-aura"></div>
+        <div class="phone">
+          <div class="island"></div>
+          <div class="pscreen">
+            <div class="pstatus"><span>9:41</span><span><svg viewBox="0 0 24 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a11 11 0 0 1 16 0M5 12a7 7 0 0 1 10 0"/><circle cx="10" cy="15" r="1" fill="currentColor" stroke="none"/></svg> <svg viewBox="0 0 26 14" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="1" y="2" width="20" height="10" rx="2.5"/><rect x="3" y="4" width="14" height="6" rx="1" fill="currentColor" stroke="none"/><path d="M23 5v4" stroke-linecap="round"/></svg></span></div>
+            <div class="phead"><div class="pt">Wholesale</div><div class="ps">This week · tap any deal</div></div>
+            <div class="pstat">
+              <div class="pbox"><div class="pl">Profit</div><div class="pv pos">$14,320</div></div>
+              <div class="pbox"><div class="pl">Deals</div><div class="pv">9</div></div>
+            </div>
+            <div class="pdeals">
+              <div class="pdeal"><div class="pdtop"><span class="pdname">2019 Chevy Silverado</span><span class="pdp">+$2,180</span></div><div class="pdsub">Bought $18,400 · Sold $21,900</div></div>
+              <div class="pdeal"><div class="pdtop"><span class="pdname">2020 Ford Explorer XLT</span><span class="pdp">+$1,940</span></div><div class="pdsub">Bought $16,900 · Sold $19,600</div></div>
+              <div class="pdeal"><div class="pdtop"><span class="pdname">2018 Ram 1500 Big Horn</span><span class="pdp">+$1,720</span></div><div class="pdsub">Bought $15,200 · Sold $18,100</div></div>
+              <div class="pdeal open"><div class="pdtop"><span class="pdname">2021 Nissan Rogue SV</span><span class="pdp">Flipping</span></div><div class="pdsub">Bought $14,300 · asking $17,500</div></div>
+            </div>
+            <div class="pcta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>Log a wholesale deal</div>
+          </div>
         </div>
-        <div class="pay-row">
-          <div class="pay-l"><span class="pt">Partial</span><span class="ps">7 transactions</span></div>
-          <div class="pay-r"><div class="pa">$13,671</div><span class="chip part">Partial</span></div>
+      </div>
+
+      <div class="reveal">
+        <span class="eyebrow">For wholesalers</span>
+        <h2 style="font-size:clamp(28px,3.6vw,44px);margin-top:16px">Your cars move fast. Your numbers should move faster.</h2>
+        <p class="ws-lead">The wholesale game doesn't wait — and neither should you. Stop scribbling deals in a notebook and guessing what you made. AutoVault puts every number, every vehicle, and every wholesale deal right in your pocket. Buy it, flip it, log it — and watch your real profit land the second the deal closes.</p>
+        <ul class="check-list">
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Every deal in your pocket.</b> All your numbers, vehicles, and wholesale deals — one tap away, wherever you are.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Profit the moment you flip.</b> Cost in, sale out, profit clear. No math, no notebook, no guessing.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Built for speed.</b> Log a buy at the auction and a sale on the lot without breaking stride.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Nothing slips through.</b> Track every unit from the second you buy it to the day it's gone.</span></li>
+        </ul>
+        <div class="ws-kicker">One tap. Every deal. Total control.</div>
+      </div>
+    </div>
+
+    <div class="wb-panel reveal">
+      <div class="wb-head">
+        <div><div class="wb-t">Wholesale Auction Board</div><div class="wb-s">This week · Jul 6 – 12, 2026</div></div>
+        <span class="veh-pill" style="color:var(--accent);background:var(--accent-soft)">18 cars in motion</span>
+      </div>
+      <div class="wb-stats">
+        <div class="statbox"><div class="sl">Sold at auction</div><div class="sv pos">10</div><div class="ssub">this week</div></div>
+        <div class="statbox"><div class="sl">Rerunning</div><div class="sv">5</div><div class="ssub">back on the block</div></div>
+        <div class="statbox"><div class="sl">Dealer-to-dealer</div><div class="sv">3</div><div class="ssub">direct sales</div></div>
+      </div>
+      <div class="wb-grid">
+        <div class="wb-cal">
+          <div class="wc-head">
+            <div class="wc-title">Where your cars are selling</div>
+            <div class="wc-legend"><span><i style="background:var(--accent)"></i>Auction</span><span><i style="background:#4C93F5"></i>Dealer-to-dealer</span></div>
+          </div>
+          <div class="tscroll"><div class="wc-grid">
+            <div class="wc-day dim"><span class="wc-dow">Mon</span><span class="wc-date">6</span></div>
+            <div class="wc-day"><span class="wc-dow">Tue</span><span class="wc-date">7</span><div class="wc-ev auc"><span class="n">3 cars</span><span class="loc">Manheim Fontana</span></div></div>
+            <div class="wc-day"><span class="wc-dow">Wed</span><span class="wc-date">8</span><div class="wc-ev d2d"><span class="n">3 cars</span><span class="loc">Dealer-to-dealer</span></div></div>
+            <div class="wc-day"><span class="wc-dow">Thu</span><span class="wc-date">9</span><div class="wc-ev auc"><span class="n">4 cars</span><span class="loc">Manheim Riverside</span></div></div>
+            <div class="wc-day"><span class="wc-dow">Fri</span><span class="wc-date">10</span><div class="wc-ev auc"><span class="n">3 cars</span><span class="loc">Manheim Las Vegas</span></div></div>
+            <div class="wc-day dim"><span class="wc-dow">Sat</span><span class="wc-date">11</span></div>
+            <div class="wc-day dim"><span class="wc-dow">Sun</span><span class="wc-date">12</span></div>
+          </div></div>
         </div>
-        <div class="pay-row">
-          <div class="pay-l"><span class="pt">2020 BMW 5 Series 530i</span><span class="ps">Dealer Sale · May 24</span></div>
-          <div class="pay-r"><div class="pa">$25,023</div><span class="chip paid">Paid</span></div>
+        <div class="wb-loc">
+          <div class="wbl-title">Where your cars are <span>8 at auction</span></div>
+          <div class="loc-row"><span class="lp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><div class="ln"><div class="lntop"><span class="lnn">Manheim Riverside</span><span class="lc">3<small>units</small></span></div><div class="lns">Riverside, CA · 38% of lot</div><div class="lbar"><i style="width:38%"></i></div></div></div>
+          <div class="loc-row"><span class="lp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><div class="ln"><div class="lntop"><span class="lnn">Manheim Las Vegas</span><span class="lc">2<small>units</small></span></div><div class="lns">Las Vegas, NV · 25% of lot</div><div class="lbar"><i style="width:25%"></i></div></div></div>
+          <div class="loc-row"><span class="lp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><div class="ln"><div class="lntop"><span class="lnn">Manheim Fontana</span><span class="lc">2<small>units</small></span></div><div class="lns">Fontana, CA · 25% of lot</div><div class="lbar"><i style="width:25%"></i></div></div></div>
+          <div class="loc-row"><span class="lp"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><div class="ln"><div class="lntop"><span class="lnn">ADESA Phoenix</span><span class="lc">1<small>unit</small></span></div><div class="lns">Phoenix, AZ · 12% of lot</div><div class="lbar"><i style="width:12%"></i></div></div></div>
         </div>
-        <div class="pay-row">
-          <div class="pay-l"><span class="pt">2021 Honda Accord Sport</span><span class="ps">Auction Sale · May 20</span></div>
-          <div class="pay-r"><div class="pa">$22,465</div><span class="chip part">Partial</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ PROBLEM / SOLUTION ============ -->
+<section class="sec" id="platform">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Why dealers switch</span>
+      <h2>The lot runs on gut feel and six open tabs.</h2>
+      <p>Deals live in a spreadsheet, commissions in a text thread, expenses on a shoebox of receipts. By the time the numbers add up, the month is over. AutoVault closes the gap.</p>
+    </div>
+    <div class="split">
+      <div class="col-card bad reveal">
+        <div class="tag">The spreadsheet stack</div>
+        <ul class="plist">
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>Numbers never match.</b> Inventory, sales, and payments live in separate files that drift out of sync.</span></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>Commissions get argued.</b> No single source of truth for who sold what and what they're owed.</span></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>Tax season is a scramble.</b> Weeks spent rebuilding records your CPA can't read.</span></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M6 6l12 12M18 6L6 18"/></svg></span><span><b>You find out too late.</b> A thin-margin deal only shows up after the money's gone.</span></li>
+        </ul>
+      </div>
+      <div class="col-card good reveal">
+        <div class="tag">With AutoVault</div>
+        <ul class="plist">
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>One connected ledger.</b> Every vehicle, sale, and payment updates the same live P&amp;L.</span></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Commissions calculate themselves.</b> Reps and payroll see the same numbers, automatically.</span></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Export-ready for your CPA.</b> Give your accountant secure access instead of a shoebox.</span></li>
+          <li><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Margin in real time.</b> Know the profit on a deal before you shake on it.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRACKING ============ -->
+<section class="sec" id="tracking" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">How it tracks every number</span>
+      <h2>Every dollar tied to a VIN, a rep, or a filing.</h2>
+      <p>Flip through the dashboard and you'll see the same data broken down four ways. Here's what each screen is actually doing.</p>
+    </div>
+    <div class="fgrid">
+      <div class="fcard reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l2-5h14l2 5"/><path d="M5 17h14"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg></div>
+        <div>
+          <h3>Cost to the penny, per vehicle</h3>
+          <p>Purchase price, auction &amp; doc fees, repairs, add-ons, flooring, and days on the lot roll into one true net-profit and ROI number — so you know which cars made money and which went underwater.</p>
+        </div>
+      </div>
+      <div class="fcard reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h9l3 3v13H6z"/><path d="M9 12h6M9 16h6"/></svg></div>
+        <div>
+          <h3>Sales tax kept on file</h3>
+          <p>The tax you collect is captured on every sale and tied to the VIN, then organized by your filing frequency with the next due date front and center. No more rebuilding it at quarter-end.</p>
+        </div>
+      </div>
+      <div class="fcard reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <div>
+          <h3>Payroll &amp; commissions in one run</h3>
+          <p>Salespeople on base plus commission, mechanics and lot staff hourly, managers on salary — all calculated automatically, with every payout logged and proof kept on file.</p>
+        </div>
+      </div>
+      <div class="fcard reveal">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19V5M4 19h16M8 16l4-5 3 3 4-6"/></svg></div>
+        <div>
+          <h3>A live profit &amp; loss statement</h3>
+          <p>Revenue minus cost of goods, commissions, and overhead — with gross and net margin — shows exactly where the money goes and where you're losing it, updated as deals close.</p>
         </div>
       </div>
     </div>
@@ -977,6 +1528,67 @@
       es.forEach(e=>{ if(e.isIntersecting){ show(0); start(); io.disconnect(); } });
     },{threshold:.3});
     io.observe(stage);
+  })();
+
+  /* hero phone: auto-scroll through screens */
+  (function(){
+    const scr=document.getElementById('heroPhoneScreen');
+    if(!scr)return;
+    const slides=[...scr.querySelectorAll('.mp-slide')];
+    const dots=[...scr.querySelectorAll('.mp-dots i')];
+    if(!slides.length)return;
+    const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    let i=0;
+    function show(n){i=(n+slides.length)%slides.length;slides.forEach((s,k)=>s.classList.toggle('on',k===i));dots.forEach((d,k)=>d.classList.toggle('on',k===i));}
+    show(0);
+    if(!reduce) setInterval(()=>show(i+1),2600);
+  })();
+
+  /* Jenna: live self-typing conversation (mirrored on panel + phone) */
+  (function(){
+    const panel=document.getElementById('jmsgsPanel');
+    const phone=document.getElementById('jmsgsPhone');
+    if(!panel)return;
+    const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+    const SPARK='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.7 5.6L19.5 9l-5.8 1.4L12 16l-1.7-5.6L4.5 9l5.8-1.4z"/></svg>';
+    const turns=[
+      {who:'user',text:'Hey Jenna \u2014 how many vehicles are on the lot?'},
+      {who:'jenna',text:"You've got 65 vehicles on the lot, totaling $482,000 in inventory."},
+      {who:'jenna',text:'Want me to run your profitability this week?'},
+      {who:'user',text:'Yes'},
+      {who:'jenna',text:'This week you sold 10 cars at auction, and your net profit is $18,000. Nice work \u2014 this is shaping up to be a profitable month. Want to see this month vs. last month?'},
+      {who:'user',text:'Add this deal to the vehicle inventory.'},
+      {who:'action',title:'2021 Nissan Rogue SV',sub:'Added to inventory'},
+      {who:'jenna',text:"Done \u2014 I've added the 2021 Nissan Rogue SV and logged the numbers."}
+    ];
+    const CK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l4 4 10-10"/></svg>';
+    function rowHTML(t){
+      if(t.who==='action') return '<div class="jaction"><span class="jac-ic">'+CK+'</span><div><div class="jac-t">'+t.title+'</div><div class="jac-s"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:9px;height:9px"><path d="M5 12l4 4 10-10"/></svg>'+t.sub+'</div></div></div>';
+      if(t.who==='user') return '<div class="jrow user"><span class="uav">JD</span><div class="jbub">'+t.text+'</div></div>';
+      return '<div class="jrow jenna"><span class="jenna-orb sm">'+SPARK+'</span><div class="jbub">'+t.text+'</div></div>';
+    }
+    const typing='<div class="jrow jenna jtwrap"><span class="jenna-orb sm">'+SPARK+'</span><div class="jbub jtyping"><i></i><i></i><i></i></div></div>';
+    const cs=[panel,phone];
+    const sc=el=>{el.scrollTop=el.scrollHeight;};
+    const append=html=>cs.forEach(c=>{c.insertAdjacentHTML('beforeend',html);sc(c);});
+    const clearTyping=()=>cs.forEach(c=>{const t=c.querySelector('.jtwrap');if(t)t.remove();});
+    const clearAll=()=>cs.forEach(c=>c.innerHTML='');
+    const wait=ms=>new Promise(r=>setTimeout(r,ms));
+    let running=false;
+    async function run(){
+      if(running)return; running=true;
+      while(true){
+        clearAll(); await wait(600);
+        for(const t of turns){
+          if(t.who!=='user'){ append(typing); await wait(reduce?350:1050); clearTyping(); }
+          append(rowHTML(t));
+          await wait(t.who==='user'?750:(reduce?500:1650));
+        }
+        await wait(3400);
+      }
+    }
+    const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){run();io.disconnect();}});},{threshold:.2});
+    io.observe(document.getElementById('jenna'));
   })();
 
   /* waitlist form — client-side confirmation.
