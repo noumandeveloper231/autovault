@@ -1169,6 +1169,342 @@
 .jg-text{ font-size:12.5px; color:var(--text); line-height:1.6; margin-bottom:12px; }
 .jg-open{ width:100%; background:linear-gradient(135deg,#7c5cff,#3aa0ff); border:none; color:#fff; font-weight:700; font-size:12px; padding:9px; border-radius:10px; cursor:pointer; transition:filter .15s; }
 .jg-open:hover{ filter:brightness(1.1); }
+
+.tour-start-btn{ display:inline-flex; align-items:center; gap:7px; background:rgba(58,160,255,.10); border:1px solid rgba(58,160,255,.42); color:var(--blue); font-size:12px; font-weight:700; padding:8px 14px; border-radius:9px; cursor:pointer; white-space:nowrap; transition:all .15s; }
+.tour-start-btn:hover{ background:rgba(58,160,255,.18); }
+.tour-overlay{ position:fixed; inset:0; z-index:5000; display:none; pointer-events:none; }
+.tour-overlay.show{ display:block; }
+.tour-spot{ position:fixed; border-radius:12px; box-shadow:0 0 0 9999px rgba(6,10,18,.80); border:2px solid var(--blue); transition:top .35s ease, left .35s ease, width .35s ease, height .35s ease; pointer-events:none; z-index:5000; }
+.tour-pop{ position:fixed; width:300px; max-width:calc(100vw - 32px); background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 18px 50px rgba(0,0,0,.6); pointer-events:auto; transition:top .35s ease, left .35s ease; z-index:5002; }
+.tour-pop-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.tour-badge{ font-size:11px; font-weight:800; color:var(--blue); background:rgba(58,160,255,.12); padding:3px 9px; border-radius:20px; }
+.tour-skip{ background:none; border:none; color:var(--muted); font-size:11.5px; cursor:pointer; }
+.tour-skip:hover{ color:var(--text); }
+.tour-title{ font-size:15px; font-weight:800; color:var(--text); margin-bottom:6px; }
+.tour-text{ font-size:12.5px; color:var(--muted); line-height:1.55; margin-bottom:14px; }
+.tour-nav{ display:flex; gap:8px; justify-content:flex-end; }
+.tour-back{ background:transparent; border:1px solid var(--border); color:var(--muted); font-size:12px; font-weight:700; padding:7px 14px; border-radius:9px; cursor:pointer; }
+.tour-back:hover{ color:var(--text); border-color:var(--blue); }
+.tour-next{ background:var(--blue); border:none; color:#fff; font-size:12px; font-weight:700; padding:7px 16px; border-radius:9px; cursor:pointer; }
+.tour-next:hover{ filter:brightness(1.1); }
+
+.imsg{ display:flex; height:calc(100vh - 200px); min-height:520px; background:var(--panel); border:1px solid var(--border); border-radius:16px; overflow:hidden; }
+.imsg-list{ width:320px; flex-shrink:0; border-right:1px solid var(--border); display:flex; flex-direction:column; background:var(--panel-2); }
+.imsg-list-head{ padding:16px 16px 12px; border-bottom:1px solid var(--border); }
+.imsg-list-title{ font-size:22px; font-weight:800; color:var(--text); margin-bottom:11px; }
+.imsg-search{ width:100%; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:8px 12px; color:var(--text); font-size:13px; outline:none; box-sizing:border-box; }
+.imsg-convos{ flex:1; overflow-y:auto; }
+.imsg-convo{ display:flex; gap:12px; padding:12px 16px; cursor:pointer; align-items:center; border-bottom:1px solid rgba(255,255,255,.03); }
+.imsg-convo:hover{ background:rgba(255,255,255,.03); }
+.imsg-convo.active{ background:rgba(58,160,255,.13); }
+.imsg-avatar{ width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:15px; flex-shrink:0; letter-spacing:.5px; }
+.imsg-convo-info{ flex:1; min-width:0; }
+.imsg-convo-top{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+.imsg-convo-name{ font-weight:700; font-size:14px; color:var(--text); }
+.imsg-convo-time{ font-size:11px; color:var(--muted); flex-shrink:0; }
+.imsg-convo-preview{ font-size:12.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
+.imsg-chat{ flex:1; display:flex; flex-direction:column; min-width:0; }
+.imsg-chat-head{ display:flex; align-items:center; gap:10px; padding:11px 18px; border-bottom:1px solid var(--border); flex-shrink:0; }
+.imsg-chat-head b{ font-size:14.5px; color:var(--text); }
+.imsg-chat-body{ flex:1; overflow-y:auto; padding:16px 18px; display:flex; flex-direction:column; }
+.imsg-bubble-row{ display:flex; flex-direction:column; margin-top:2px; max-width:100%; }
+.imsg-bubble-row.gap{ margin-top:10px; }
+.imsg-bubble-row.me{ align-items:flex-end; }
+.imsg-bubble-row.them{ align-items:flex-start; }
+.imsg-sender{ font-size:11px; color:var(--muted); margin:0 0 3px 12px; font-weight:600; }
+.imsg-bubble{ max-width:66%; padding:9px 14px; border-radius:18px; font-size:13.5px; line-height:1.38; word-wrap:break-word; }
+.imsg-bubble-row.them .imsg-bubble{ background:#3a3a3c; color:#fff; border-bottom-left-radius:5px; }
+.imsg-bubble-row.me .imsg-bubble{ background:#0a84ff; color:#fff; border-bottom-right-radius:5px; }
+.imsg-time-sep{ text-align:center; font-size:11px; color:var(--muted); margin:16px 0 8px; font-weight:600; }
+.imsg-compose{ display:flex; gap:9px; padding:12px 16px; border-top:1px solid var(--border); align-items:center; flex-shrink:0; }
+.imsg-input{ flex:1; background:var(--panel-2); border:1px solid var(--border); border-radius:20px; padding:9px 16px; color:var(--text); font-size:13.5px; outline:none; }
+.imsg-input:focus{ border-color:var(--blue); }
+.imsg-send{ width:34px; height:34px; border-radius:50%; background:#0a84ff; border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:filter .15s; }
+.imsg-send:hover{ filter:brightness(1.12); }
+.imsg-typing{ display:inline-flex; gap:3px; padding:11px 14px; background:#3a3a3c; border-radius:18px; border-bottom-left-radius:5px; }
+.imsg-typing span{ width:6px; height:6px; border-radius:50%; background:#8a8a8e; animation:imsgblink 1.2s infinite; }
+.imsg-typing span:nth-child(2){ animation-delay:.2s; } .imsg-typing span:nth-child(3){ animation-delay:.4s; }
+@keyframes imsgblink{ 0%,60%,100%{ opacity:.3; } 30%{ opacity:1; } }
+@media(max-width:760px){ .imsg-list{ width:130px; } .imsg-convo-preview,.imsg-convo-time{ display:none; } }
+
+.nav-badge{ display:inline-flex; align-items:center; justify-content:center; min-width:18px; height:18px; padding:0 5px; margin-left:auto; background:var(--red); color:#fff; font-size:10.5px; font-weight:800; border-radius:10px; }
+.sidebar.collapsed .nav-badge{ position:absolute; top:6px; right:10px; margin:0; min-width:15px; height:15px; font-size:9px; }
+.imsg-list-titlerow{ display:flex; align-items:center; justify-content:space-between; margin-bottom:11px; }
+.imsg-list-title{ margin-bottom:0 !important; }
+.imsg-compose-btn{ width:32px; height:32px; border-radius:9px; background:var(--panel); border:1px solid var(--border); color:var(--blue); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.imsg-compose-btn:hover{ border-color:var(--blue); background:rgba(58,160,255,.1); }
+.imsg-convo.unread .imsg-convo-name{ font-weight:800; }
+.imsg-convo.unread .imsg-convo-preview{ color:var(--text); }
+.imsg-unread-dot{ min-width:18px; height:18px; padding:0 5px; border-radius:9px; background:var(--blue); color:#fff; font-size:10.5px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.msg-new-list{ display:flex; flex-direction:column; gap:2px; max-height:340px; overflow-y:auto; }
+.msg-new-item{ display:flex; align-items:center; gap:11px; padding:9px 10px; border-radius:10px; cursor:pointer; }
+.msg-new-item:hover{ background:var(--panel-2); }
+
+.imsg-attach{ width:34px; height:34px; border-radius:50%; background:var(--panel-2); border:1px solid var(--border); color:var(--blue); cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.imsg-attach:hover{ border-color:var(--blue); background:rgba(58,160,255,.1); }
+.imsg-avatar{ position:relative; }
+.imsg-online-dot{ position:absolute; bottom:-1px; right:-1px; width:12px; height:12px; border-radius:50%; background:#23d18b; border:2.5px solid var(--panel-2); }
+.imsg-chat-head .imsg-online-dot{ border-color:var(--panel); }
+.imsg-status{ font-size:11px; color:var(--muted); margin-top:1px; }
+.imsg-status.online{ color:#23d18b; }
+.imsg-veh-card{ display:flex; align-items:center; gap:11px; max-width:74%; background:var(--panel-2); border:1px solid var(--border); border-radius:16px; padding:10px 12px; cursor:pointer; transition:border-color .15s; }
+.imsg-bubble-row.me .imsg-veh-card{ background:rgba(10,132,255,.14); border-color:rgba(10,132,255,.4); }
+.imsg-veh-card:hover{ border-color:var(--blue); }
+.ivc-icon{ width:40px; height:40px; border-radius:10px; background:var(--panel); display:flex; align-items:center; justify-content:center; color:var(--blue); flex-shrink:0; }
+.ivc-info{ min-width:0; }
+.ivc-title{ font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.ivc-sub{ font-size:11.5px; color:var(--muted); font-family:var(--mono); margin-top:2px; }
+.ivc-arrow{ margin-left:auto; color:var(--muted); font-size:20px; font-weight:700; padding-left:6px; }
+
+.cpa-only-group{ display:none; }
+body.cpa-mode .cpa-only-group{ display:block; }
+body.cpa-mode .cpa-x{ display:none !important; }
+body.cpa-mode .quick-actions, body.cpa-mode .topbar-settings,
+body.cpa-mode #openFlooringModal, body.cpa-mode .flooring-banner .btn-ghost,
+body.cpa-mode [onclick*="openMarkSold"], body.cpa-mode [onclick*="openEmployee"],
+body.cpa-mode [onclick*="openRepModal"], body.cpa-mode [onclick*="editRep"],
+body.cpa-mode [onclick*="deleteRep"], body.cpa-mode [onclick*="removeRep"],
+body.cpa-mode [onclick*="fileSalesTax"], body.cpa-mode [onclick*="promptFileBucket"],
+body.cpa-mode [onclick*="confirmFile"], body.cpa-mode [onclick*="saveEmployee"],
+body.cpa-mode [onclick*="saveSalesRep"], body.cpa-mode [onclick*="openDealJacket"],
+body.cpa-mode .jenna-fab, body.cpa-mode #jennaGreeting, body.cpa-mode #jennaPanel{ display:none !important; }
+body.cpa-mode #page-cpa-overview [onclick*="addCpaNote"], body.cpa-mode #page-cpa-notes [onclick*="addCpaNote"]{ display:inline-flex !important; }
+.cpa-banner{ display:none; align-items:center; justify-content:space-between; gap:12px; padding:9px 18px; background:linear-gradient(90deg, rgba(28,122,70,.18), rgba(28,122,70,.06)); border-bottom:1px solid rgba(28,122,70,.4); font-size:12.5px; color:var(--text); position:sticky; top:0; z-index:60; flex-wrap:wrap; }
+body.cpa-mode .cpa-banner{ display:flex; }
+.cpa-banner-badge{ background:#1c7a46; color:#fff; font-size:10px; font-weight:800; padding:3px 8px; border-radius:6px; letter-spacing:.5px; margin-right:8px; }
+.cpa-banner-exit{ background:transparent; border:1px solid rgba(28,122,70,.6); color:#2dd47f; font-size:12px; font-weight:700; padding:6px 14px; border-radius:8px; cursor:pointer; white-space:nowrap; }
+.cpa-banner-exit:hover{ background:rgba(28,122,70,.15); }
+.cpa-login{ position:fixed; inset:0; z-index:6000; display:none; align-items:center; justify-content:center; background:rgba(6,10,18,.82); backdrop-filter:blur(4px); }
+.cpa-login.show{ display:flex; }
+.cpa-login-card{ width:380px; max-width:calc(100vw - 32px); background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:30px 28px; box-shadow:0 24px 70px rgba(0,0,0,.6); text-align:center; }
+.cpa-login-mark{ margin-bottom:14px; }
+.cpa-login-title{ font-size:19px; font-weight:800; margin:0 0 6px; }
+.cpa-login-desc{ font-size:12.5px; color:var(--muted); margin:0 0 20px; }
+.cpa-login-label{ display:block; text-align:left; font-size:11px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.4px; margin:12px 0 5px; }
+.cpa-login-input{ width:100%; background:var(--panel-2); border:1px solid var(--border); color:var(--text); border-radius:10px; padding:10px 13px; font-size:13.5px; outline:none; box-sizing:border-box; }
+.cpa-login-input:focus{ border-color:#1c7a46; }
+.cpa-login-btn{ width:100%; margin-top:18px; background:#1c7a46; border:none; color:#fff; font-size:13.5px; font-weight:800; padding:11px; border-radius:10px; cursor:pointer; }
+.cpa-login-btn:hover{ filter:brightness(1.12); }
+.cpa-login-cancel{ width:100%; margin-top:9px; background:transparent; border:1px solid var(--border); color:var(--muted); font-size:12.5px; font-weight:700; padding:9px; border-radius:10px; cursor:pointer; }
+.cpa-login-note{ font-size:11px; color:var(--muted); margin-top:16px; line-height:1.5; }
+.cpa-note-input{ background:var(--panel); border:1px solid var(--border); color:var(--text); border-radius:9px; padding:9px 13px; font-size:13px; outline:none; }
+.cpa-note-input:focus{ border-color:var(--blue); }
+.cpa-note-card{ background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:14px 16px; margin-bottom:10px; }
+.cpa-note-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:7px; }
+.cpa-note-sec{ font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--blue); background:rgba(58,160,255,.12); padding:3px 9px; border-radius:20px; }
+.cpa-note-date{ font-size:11.5px; color:var(--muted); }
+.cpa-note-body{ font-size:13.5px; color:var(--text); line-height:1.5; }
+.cpa-note-author{ font-size:11px; color:var(--muted); margin-top:8px; font-style:italic; }
+.cpa-toast{ position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px); background:#1c7a46; color:#fff; font-size:13px; font-weight:600; padding:11px 20px; border-radius:12px; box-shadow:0 12px 34px rgba(0,0,0,.5); z-index:7000; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; }
+.cpa-toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+@media print{ .sidebar,.topbar,.cpa-banner,.jenna-fab{ display:none !important; } .main-content{ margin:0 !important; } }
+
+.sv-tabs{ display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap; }
+.sv-tab{ background:var(--panel); border:1px solid var(--border); color:var(--muted); font-size:13px; font-weight:700; padding:9px 18px; border-radius:10px; cursor:pointer; transition:.15s; }
+.sv-tab:hover{ color:var(--text); border-color:var(--blue); }
+.sv-tab.active{ background:var(--blue); color:#fff; border-color:var(--blue); }
+.sv-cal{ display:flex; align-items:center; gap:12px; background:var(--panel); border:1px solid var(--border); border-radius:12px; padding:8px 12px; margin-bottom:18px; flex-wrap:wrap; }
+.sv-months{ display:flex; gap:3px; flex-wrap:wrap; }
+.sv-year-lbl{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin-bottom:16px; }
+.sv-month-group{ margin-bottom:24px; }
+.sv-month-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; margin-bottom:11px; padding-bottom:8px; border-bottom:2px solid var(--border); }
+.sv-month-name{ font-size:17px; font-weight:800; color:var(--text); }
+.sv-month-meta{ font-size:12.5px; color:var(--muted); }
+
+.sv-month-row td{ background:var(--panel-2); padding:8px 16px !important; border-top:1px solid var(--border); border-bottom:1px solid var(--border); white-space:nowrap; }
+.sv-mr-name{ font-weight:800; font-size:12.5px; color:var(--text); text-transform:uppercase; letter-spacing:.4px; }
+.sv-mr-meta{ font-size:11.5px; color:var(--muted); margin-left:12px; }
+#svBody .dash-sold-table thead th{ position:sticky; top:0; background:var(--panel-2); z-index:2; }
+#svBody .table-scroll{ max-height:calc(100vh - 320px); overflow-y:auto; }
+
+#page-vehicles .table-scroll{ max-height:calc(100vh - 340px); overflow-y:auto; }
+#page-vehicles table thead th{ position:sticky; top:0; background:var(--panel); z-index:3; }
+
+.dash-cal-inner{ position:relative; }
+.dash-day-panel{ position:absolute; inset:0; background:var(--panel); border:1.5px solid var(--blue); border-radius:12px; padding:18px 20px; display:none; flex-direction:column; z-index:25; box-shadow:0 14px 44px rgba(0,0,0,.55); overflow-y:auto; }
+.dash-day-panel.show{ display:flex; animation:ddpIn .22s ease; }
+@keyframes ddpIn{ from{opacity:0; transform:scale(.96);} to{opacity:1; transform:scale(1);} }
+.ddp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.ddp-date{ font-size:18px; font-weight:800; color:var(--text); }
+.ddp-close{ background:none; border:none; color:var(--muted); font-size:26px; cursor:pointer; line-height:1; padding:0 4px; }
+.ddp-close:hover{ color:var(--text); }
+.ddp-body{ flex:1; }
+.ddp-section-label{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin:14px 0 8px; }
+.ddp-section-label:first-child{ margin-top:0; }
+.ddp-sold-item{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding:9px 13px; background:var(--panel-2); border:1px solid var(--border); border-radius:9px; margin-bottom:6px; }
+.ddp-reminder{ display:flex; align-items:center; gap:8px; font-size:12.5px; padding:9px 13px; border-radius:9px; margin-bottom:6px; }
+.ddp-note-area{ width:100%; min-height:110px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:11px 13px; color:var(--text); font-size:13.5px; resize:vertical; outline:none; font-family:inherit; box-sizing:border-box; line-height:1.5; }
+.ddp-note-area:focus{ border-color:var(--blue); }
+
+.cal-cell.expanded{ grid-column:span 3; grid-row:span 3; background:var(--panel); border:1.5px solid var(--blue) !important; z-index:6; cursor:default; overflow:hidden; padding:12px 14px; box-shadow:0 10px 34px rgba(0,0,0,.45); display:flex; flex-direction:column; }
+.cal-exp-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; flex-shrink:0; }
+.cal-exp-date{ font-size:15px; font-weight:800; color:var(--text); }
+.cal-exp-close{ background:none; border:none; color:var(--muted); font-size:22px; line-height:1; cursor:pointer; padding:0 2px; }
+.cal-exp-close:hover{ color:var(--text); }
+.cal-exp-lbl{ font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin:9px 0 5px; flex-shrink:0; }
+.cal-cell.expanded .ddp-sold-item{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 11px; background:var(--panel-2); border:1px solid var(--border); border-radius:8px; margin-bottom:5px; font-size:12.5px; }
+.cal-cell.expanded .ddp-reminder{ display:flex; align-items:center; gap:8px; font-size:12px; padding:7px 11px; border-radius:8px; margin-bottom:5px; flex-shrink:0; }
+.cal-exp-sold-list{ max-height:132px; overflow-y:auto; flex-shrink:0; }
+.cal-exp-note{ width:100%; flex:1 1 0; min-height:46px; overflow-y:auto; background:var(--panel-2); border:1px solid var(--border); border-radius:9px; padding:9px 11px; color:var(--text); font-size:13px; resize:none; outline:none; font-family:inherit; box-sizing:border-box; line-height:1.5; }
+.cal-exp-note:focus{ border-color:var(--blue); }
+
+.page-head{ position:relative; }
+#page-expense-detail{ position:relative; }
+.print-btn{ display:inline-flex; align-items:center; gap:7px; background:var(--panel); border:1px solid var(--border); color:var(--text); font-size:12px; font-weight:700; padding:8px 14px; border-radius:9px; cursor:pointer; white-space:nowrap; transition:all .15s; }
+.print-btn:hover{ border-color:var(--blue); color:var(--blue); }
+@media print{
+  :root{ --bg:#fff; --panel:#fff; --panel-2:#f4f5f7; --text:#111827; --muted:#4b5563; --border:#d0d5dd; }
+  html, body{ background:#fff !important; }
+  *{ -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; box-shadow:none !important; }
+  .sidebar, .topbar, .cpa-banner, .jenna-fab, #jennaGreeting, #jennaPanel, .tour-overlay, .dash-day-panel,
+  .fin-calendar, .filter-row, .sv-tabs, .sv-cal, .dash-period, .action-row, .menu-toggle,
+  button, select, .grid-toggle-btn{ display:none !important; }
+  .main-content{ margin:0 !important; padding:14px !important; }
+  .table-scroll{ max-height:none !important; overflow:visible !important; }
+  .page-section{ background:#fff; }
+  #dashCompareBars, .dash-notes{ display:none !important; }
+}
+
+.notif-wrap{ position:relative; }
+.notif-btn{ position:relative; padding:8px 11px !important; }
+.notif-badge{ position:absolute; top:-4px; right:-4px; min-width:17px; height:17px; padding:0 4px; background:var(--red); color:#fff; font-size:10px; font-weight:800; border-radius:9px; display:flex; align-items:center; justify-content:center; border:2px solid var(--panel); }
+.notif-panel{ position:absolute; top:calc(100% + 10px); right:0; width:330px; max-width:calc(100vw - 32px); background:var(--panel); border:1px solid var(--border); border-radius:14px; box-shadow:0 18px 50px rgba(0,0,0,.6); z-index:1500; display:none; overflow:hidden; }
+.notif-panel.open{ display:block; }
+.notif-head{ padding:13px 16px; border-bottom:1px solid var(--border); font-size:14px; font-weight:800; color:var(--text); }
+.notif-head span{ color:var(--muted); font-weight:600; font-size:12px; }
+.notif-list{ max-height:380px; overflow-y:auto; }
+.notif-item{ display:flex; gap:11px; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,.04); }
+.notif-item:last-child{ border-bottom:none; }
+.notif-dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.notif-title{ font-size:13px; font-weight:700; color:var(--text); }
+.notif-text{ font-size:12px; color:var(--muted); margin-top:2px; line-height:1.4; }
+.notif-empty{ padding:30px 16px; text-align:center; color:var(--muted); font-size:13px; }
+.cal-bday{ background:rgba(124,92,255,.16); color:#a78bfa; font-size:9.5px; font-weight:800; padding:1px 5px; border-radius:5px; margin-top:3px; display:inline-block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
+
+.notif-item{ cursor:pointer; align-items:center; transition:background .12s; }
+.notif-item:hover{ background:rgba(255,255,255,.04); }
+.notif-arrow{ color:var(--muted); font-size:20px; font-weight:700; flex-shrink:0; margin-left:4px; }
+
+.rep-only-group{ display:none; }
+body.rep-mode .sidebar .nav-group, body.rep-mode .sidebar > .nav-item{ display:none !important; }
+body.rep-mode .sidebar .rep-only-group{ display:block !important; }
+body.rep-mode .quick-actions, body.rep-mode .topbar-settings{ display:none !important; }
+body.rep-mode .jenna-fab, body.rep-mode #jennaGreeting, body.rep-mode #jennaPanel{ display:none !important; }
+.rep-banner{ display:none; background:linear-gradient(90deg, rgba(58,160,255,.16), rgba(58,160,255,.05)) !important; border-bottom:1px solid rgba(58,160,255,.4) !important; }
+body.rep-mode .rep-banner{ display:flex; }
+
+.rc-card{ padding:24px 26px; max-width:680px; }
+.rc-label, .rc-field label{ display:block; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); margin-bottom:6px; }
+.rc-grid{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.rc-field{ min-width:0; }
+.rc-input{ width:100%; background:var(--panel-2); border:1px solid var(--border); color:var(--text); border-radius:10px; padding:10px 13px; font-size:13.5px; outline:none; box-sizing:border-box; font-family:inherit; }
+.rc-input:focus{ border-color:var(--blue); }
+@media(max-width:640px){ .rc-grid{ grid-template-columns:1fr; } }
+.rc-ok{ padding:11px 14px; border-radius:10px; font-size:13px; font-weight:600; }
+.rc-ok.good{ background:rgba(35,209,139,.13); color:var(--green); border:1px solid rgba(35,209,139,.4); }
+.rc-ok.bad{ background:rgba(255,84,112,.13); color:var(--red); border:1px solid rgba(255,84,112,.4); }
+
+.rc-comm-box{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:rgba(35,209,139,.10); border:1px solid rgba(35,209,139,.4); border-radius:12px; padding:13px 16px; }
+.rc-comm-lbl{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--green); }
+.rc-comm-note{ font-size:11.5px; color:var(--muted); margin-top:2px; }
+.rc-comm-val{ font-size:22px; font-weight:800; color:var(--green); font-family:var(--mono); }
+.rc-frontnote{ font-size:11.5px; color:var(--muted); line-height:1.5; margin-top:12px; padding:10px 13px; background:var(--panel-2); border-radius:9px; border-left:3px solid var(--blue); }
+
+.rc-layout{ display:grid; grid-template-columns: 1fr 320px; gap:20px; align-items:start; }
+@media(max-width:900px){ .rc-layout{ grid-template-columns:1fr; } }
+.rc-calc{ padding:20px 22px; position:sticky; top:16px; }
+.rc-calc-head{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); margin-bottom:14px; }
+.rc-calc-empty{ font-size:13px; color:var(--muted); line-height:1.55; }
+.rc-calc-veh{ font-size:15px; font-weight:800; color:var(--text); margin-bottom:12px; }
+.rc-calc-row{ display:flex; justify-content:space-between; font-size:13px; color:var(--muted); padding:9px 0; border-bottom:1px solid var(--border); }
+.rc-calc-row b{ color:var(--text); font-weight:700; }
+.rc-calc-total{ display:flex; justify-content:space-between; align-items:center; margin-top:14px; padding-top:14px; }
+.rc-calc-total span{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--green); }
+.rc-calc-total b{ font-size:26px; font-weight:800; color:var(--green); font-family:var(--mono); }
+
+.rd-top{ display:grid; grid-template-columns: 1fr 300px; gap:16px; align-items:stretch; }
+@media(max-width:820px){ .rd-top{ grid-template-columns:1fr; } }
+.rd-vs{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px 20px; }
+.rd-vs-title{ font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin-bottom:14px; }
+.rd-vs-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.rd-vs-label{ font-size:12px; color:var(--muted); font-weight:700; }
+.rd-vs-big{ font-size:30px; font-weight:800; color:var(--text); font-family:var(--mono); margin:4px 0 3px; }
+.rd-vs-cmp{ font-size:12px; font-weight:700; }
+.rd-vs-cmp span{ color:var(--muted); font-weight:600; }
+.rd-vs-cmp.up{ color:var(--green); } .rd-vs-cmp.down{ color:var(--red); }
+.rd-toprep{ background:linear-gradient(135deg, rgba(255,159,67,.14), rgba(124,92,255,.10)); border:1px solid var(--border); border-radius:16px; padding:18px 20px; display:flex; align-items:center; gap:14px; }
+.rd-tr-crown{ font-size:34px; }
+.rd-tr-label{ font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.5px; color:var(--muted); }
+.rd-tr-name{ font-size:19px; font-weight:800; color:var(--text); margin:2px 0; }
+.rd-tr-you{ font-size:12px; color:var(--green); font-weight:700; }
+.rd-tr-sub{ font-size:12px; color:var(--muted); }
+.rd-cal-nav button{ background:var(--panel-2); border:1px solid var(--border); color:var(--text); width:28px; height:28px; border-radius:8px; cursor:pointer; font-size:15px; }
+.rd-cal-nav button:hover{ border-color:var(--blue); color:var(--blue); }
+
+.rd-toprep{ background:linear-gradient(135deg, rgba(255,159,67,.14), rgba(124,92,255,.10)); border:1px solid var(--border); border-radius:16px; padding:16px 20px; display:flex; align-items:center; gap:14px; }
+.rd-leads-card{ background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:18px 20px; margin-top:16px; }
+.rd-leads-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+.lead-card{ display:flex; align-items:center; gap:13px; padding:12px 14px; background:var(--panel-2); border:1px solid var(--border); border-radius:12px; margin-bottom:8px; cursor:pointer; transition:border-color .15s; }
+.lead-card:hover{ border-color:var(--blue); }
+.lead-avatar{ width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#3aa0ff,#7c5cff); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; flex-shrink:0; }
+.lead-info{ flex:1; min-width:0; }
+.lead-name{ font-size:14px; font-weight:700; color:var(--text); }
+.lead-contact{ font-size:12px; color:var(--muted); margin-top:2px; }
+.lead-notes{ font-size:12px; color:var(--muted); margin-top:4px; font-style:italic; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.lead-arrow{ color:var(--muted); font-size:20px; font-weight:700; }
+.lead-empty{ padding:30px; text-align:center; color:var(--muted); font-size:13px; }
+
+.lead-table tbody tr{ cursor:pointer; }
+.lead-table tbody tr:hover{ background:rgba(58,160,255,.07); }
+.lead-notes-cell{ color:var(--muted); max-width:280px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+#repLeadsList .table-scroll{ max-height:calc(100vh - 280px); overflow-y:auto; }
+#repLeadsList thead th{ position:sticky; top:0; background:var(--panel-2); z-index:2; }
+
+.veh-ticker{ overflow:hidden; background:linear-gradient(90deg, var(--panel-2), var(--panel)); border:1px solid var(--border); border-radius:12px; padding:11px 0; margin-bottom:16px; white-space:nowrap; position:relative; }
+.veh-ticker::before, .veh-ticker::after{ content:''; position:absolute; top:0; bottom:0; width:40px; z-index:2; pointer-events:none; }
+.veh-ticker::before{ left:0; background:linear-gradient(90deg, var(--panel-2), transparent); }
+.veh-ticker::after{ right:0; background:linear-gradient(270deg, var(--panel-2), transparent); }
+.veh-ticker-track{ display:inline-flex; animation:vtScroll 48s linear infinite; }
+.veh-ticker:hover .veh-ticker-track{ animation-play-state:paused; }
+.vt-group{ display:inline-flex; align-items:center; }
+@keyframes vtScroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+.vt-item{ display:inline-flex; align-items:center; gap:8px; padding:0 22px; }
+.vt-k{ font-size:9.5px; font-weight:800; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); }
+.vt-v{ font-size:14px; font-weight:700; color:var(--text); font-family:var(--mono); white-space:nowrap; }
+.vt-sep{ color:var(--blue); opacity:.5; font-size:12px; }
+
+.vdp-notes-area{ width:100%; min-height:90px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:11px 13px; color:var(--text); font-size:13px; line-height:1.6; resize:vertical; outline:none; font-family:inherit; box-sizing:border-box; }
+.vdp-notes-area:focus{ border-color:var(--blue); }
+
+#repSoldScroll{ max-height:340px; overflow-y:auto; }
+#repSoldScroll thead th{ position:sticky; top:0; background:var(--panel-2); z-index:2; }
+
+#repMyScroll{ max-height:calc(100vh - 380px); overflow-y:auto; }
+#repMyScroll thead th{ position:sticky; top:0; background:var(--panel-2); z-index:2; }
+
+.av-label{ display:block; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); margin:0 0 5px; }
+.av-vin-row{ display:flex; gap:8px; margin-bottom:6px; }
+.av-vin-input{ flex:1; background:var(--panel-2); border:1px solid var(--border); color:var(--text); border-radius:10px; padding:13px 15px; font-size:16px; font-family:var(--mono); letter-spacing:1.5px; outline:none; text-transform:uppercase; }
+.av-vin-input:focus{ border-color:var(--blue); }
+.av-scan-btn{ width:48px; border-radius:10px; background:var(--blue); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.av-scan-btn:hover{ filter:brightness(1.12); }
+.av-decoded{ min-height:18px; margin-bottom:12px; font-size:12px; }
+.av-dec-ok{ color:var(--green); font-weight:700; }
+.av-dec-warn{ color:var(--muted); }
+.av-grid3{ display:grid; grid-template-columns:84px 1fr 1fr; gap:10px; margin-bottom:12px; }
+.av-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.av-submit{ width:100%; padding:12px; font-size:14px; }
+
+.av-flooring{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; padding:11px 14px; margin-bottom:16px; }
+.av-fl-title{ font-size:13px; font-weight:700; color:var(--text); }
+.av-fl-sub{ font-size:11px; color:var(--muted); margin-top:2px; }
+.av-switch{ position:relative; display:inline-block; width:42px; height:24px; flex-shrink:0; }
+.av-switch input{ opacity:0; width:0; height:0; }
+.av-switch-slider{ position:absolute; inset:0; background:var(--border); border-radius:24px; cursor:pointer; transition:.2s; }
+.av-switch-slider::before{ content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.2s; }
+.av-switch input:checked + .av-switch-slider{ background:var(--green); }
+.av-switch input:checked + .av-switch-slider::before{ transform:translateX(18px); }
 </style>
 </head>
 <body>
@@ -1185,9 +1521,32 @@
     </div>
   </div>
 
-  <div class="nav-item active" data-page="dashboard" onclick="showPage('dashboard', this); renderDashboard()">
+  <div class="nav-item active cpa-x" data-page="dashboard" onclick="showPage('dashboard', this); renderDashboard()">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
     Dashboard
+  </div>
+
+  <div class="nav-item cpa-x" data-page="messages" onclick="showPage('messages', this); renderMessages();">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+    Messages<span class="nav-badge" id="msgNavBadge" style="display:none;">0</span>
+  </div>
+
+  <div class="nav-group rep-only-group">
+    <div class="nav-section-label" style="color:var(--blue);">Sales Rep Portal</div>
+    <div class="nav-item" data-page="rep-dashboard" onclick="showPage('rep-dashboard', this); renderRepDashboard();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg> Dashboard</div>
+    <div class="nav-item" data-page="messages" onclick="showPage('messages', this); renderMessages();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Messages</div>
+    <div class="nav-item" data-page="rep-my" onclick="showPage('rep-my', this); renderRepMy();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17v-6h18v6M5 17v3M19 17v3M3 11l2-5h14l2 5"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg> Vehicles Sold</div>
+    <div class="nav-item" data-page="rep-customers" onclick="showPage('rep-customers', this); renderRepCustomers();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> My Customers</div>
+    <div class="nav-item" data-page="rep-leads" onclick="showPage('rep-leads', this); renderRepLeads();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 11h-6"/></svg> My Leads</div>
+    <div class="nav-item" onclick="exitRepMode()" style="color:var(--red);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Log Out</div>
+  </div>
+
+  <div class="nav-group cpa-only-group">
+    <div class="nav-section-label" style="color:var(--green);">CPA Portal &middot; Read-only</div>
+    <div class="nav-item" data-page="cpa-overview" onclick="showPage('cpa-overview', this); renderCpaOverview();">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-6 6-3-3-3 3"/></svg>
+      Financial Overview
+    </div>
   </div>
 
   <div class="nav-group">
@@ -1196,15 +1555,11 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17v-6h18v6M5 17v3M19 17v3M3 11l2-5h14l2 5"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg>
       Vehicles
     </div>
-    <div class="nav-item sub" data-page="profit" onclick="showPage('profit', this)">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 3 3 5-6"/></svg>
-      Vehicles by Profit
+    <div class="nav-item sub" data-page="sold-vehicles" onclick="showPage('sold-vehicles', this); renderSoldVehicles();">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+      Sold Vehicles
     </div>
-    <div class="nav-item sub" data-page="loss" onclick="showPage('loss', this); renderLossPage();">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 18 7 11 11 14 16 7 21 11"/></svg>
-      Vehicles by Loss
-    </div>
-    <div class="nav-item sub" data-nav="deal-jackets" onclick="showPage('deal-jackets', this); renderDealJacketsList();">
+    <div class="nav-item sub cpa-x" data-nav="deal-jackets" onclick="showPage('deal-jackets', this); renderDealJacketsList();">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
       Deal Jackets
     </div>
@@ -1226,7 +1581,7 @@
     </div>
   </div>
 
-  <div class="nav-group">
+  <div class="nav-group cpa-x">
     <div class="nav-section-label">Documents</div>
     <div class="nav-item sub" data-page="customers" onclick="showPage('customers', this); renderCustomersPage();">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -1240,25 +1595,41 @@
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/></svg>
       Payroll &amp; Commissions
     </div>
-    <div class="nav-item sub" data-page="reps" onclick="showPage('reps', this); renderRepsPage();">
+    <div class="nav-item sub cpa-x" data-page="reps" onclick="showPage('reps', this); renderRepsPage();">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Sales Reps
     </div>
   </div>
 
-  <div class="nav-group">
+  <div class="nav-group cpa-only-group">
+    <div class="nav-section-label">CPA Tools</div>
+    <div class="nav-item" data-page="cpa-notes" onclick="showPage('cpa-notes', this); renderCpaNotes();">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h4"/></svg>
+      Review Notes
+    </div>
+    <div class="nav-item" onclick="cpaPrint()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
+      Print / Export
+    </div>
+    <div class="nav-item" onclick="exitCpaMode()" style="color:var(--red);">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Log Out
+    </div>
+  </div>
+
+  <div class="nav-group cpa-x">
     <div class="nav-section-label">Tools</div>
     <div class="nav-item sub" data-page="calendar" onclick="showPage('calendar', this); renderCalendarPage();">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
       Calendar
     </div>
-    <div class="nav-item sub" onclick="showPage('placeholder', this)">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6M9 9h1"/></svg>
-      Reports &amp; Reminders
-    </div>
-    <div class="nav-item sub" onclick="showPage('placeholder', this)">
+    <div class="nav-item sub" onclick="openCpaLogin()">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
       CPA Portal Login
+    </div>
+    <div class="nav-item sub" onclick="openRepLogin()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M20 8v6M23 11h-6"/></svg>
+      Sales Rep Login
     </div>
   </div>
 
@@ -1266,6 +1637,15 @@
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <div class="main-content">
+    <div class="cpa-banner rep-banner" id="repBanner">
+      <div class="cpa-banner-left"><span class="cpa-banner-badge" style="background:var(--blue);">REP</span>Signed in as <b id="repWhoami"></b> &mdash; Sales Rep Portal.</div>
+      <button class="cpa-banner-exit" style="border-color:rgba(58,160,255,.6);color:var(--blue);" onclick="exitRepMode()">Log out</button>
+    </div>
+    <div class="cpa-banner" id="cpaBanner">
+  <div class="cpa-banner-left"><span class="cpa-banner-badge">CPA</span><b>Read-only access</b> &mdash; viewing live financials as <span id="cpaWhoami">accountant@autovault.com</span>. You can leave review notes, but changes are disabled.</div>
+  <button class="cpa-banner-exit" onclick="exitCpaMode()">Exit portal</button>
+</div>
+
 <div class="wrap">
 
   <!-- TOPBAR -->
@@ -1278,12 +1658,21 @@
       <input type="text" placeholder="Search vehicles, VIN, customers...">
     </div>
     <div class="quick-actions">
-      <button class="qa-btn" onclick="sendPrompt && sendPrompt('Add Vehicle')">+ Add Vehicle</button>
+      <button class="qa-btn" onclick="openAddVeh()">+ Add Vehicle</button>
       <button class="qa-btn accent-orange">+ Add Expense</button>
       <button class="qa-btn accent-purple">Scan VIN</button>
       <button class="qa-btn accent-green" onclick="openMarkSold()">Mark Sold</button>
       <button class="qa-btn">+ Add Customer</button>
-      <button class="qa-btn">⋯ More</button>
+      <div class="notif-wrap" id="notifWrap">
+        <button class="qa-btn notif-btn" onclick="toggleNotif()" title="Notifications">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+        </button>
+        <div class="notif-panel" id="notifPanel">
+          <div class="notif-head">Notifications <span id="notifCount"></span></div>
+          <div class="notif-list" id="notifList"></div>
+        </div>
+      </div>
     </div>
     <div class="topbar-settings" id="settingsWrap">
       <button class="qa-btn" id="settingsBtn" onclick="toggleSettingsMenu()" title="Language / Idioma — switch to Español" style="padding:8px 11px;">
@@ -1546,6 +1935,7 @@
   <div id="page-tax" class="page-section" style="display:none">
 
     <div class="page-head">
+    <button class="print-btn" onclick="window.print()" style="position:absolute;top:2px;right:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg> Print / Export</button>
       <div class="page-title">FINANCIALS <b>SALES TAX</b></div>
       <div class="page-sub">Sales tax collected on every sale — filter by month or year, with filing reminders.</div>
     </div>
@@ -1588,7 +1978,7 @@
 
     <div class="section-heading" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
       <div><h2>Sales Tax by Vehicle</h2><div class="section-sub" id="taxRowCount">— sales</div></div>
-      <button class="btn-ghost" id="taxGroupToggle" onclick="toggleTaxGroup()" style="white-space:nowrap;">Show Quarterly Filings</button>
+      <button class="grid-toggle-btn" id="taxMonthBtn" onclick="toggleTaxMonth()" style="margin-right:8px;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Tax by Month</button><button class="btn-ghost" id="taxGroupToggle" onclick="toggleTaxGroup()" style="white-space:nowrap;">Show Quarterly Filings</button>
     </div>
     <div id="taxFlatWrap">
       <div class="table-card">
@@ -2030,6 +2420,8 @@
       Back to Inventory
     </div>
 
+    <div class="veh-ticker" id="vdpTicker"><div class="veh-ticker-track" id="vdpTickerTrack"></div></div>
+
     <!-- HERO -->
     <div class="vdp-hero">
       <div>
@@ -2133,6 +2525,10 @@
               <input type="number" id="vdpSoldPrice" placeholder="e.g. 28500" style="width:100%;background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:9px 12px;font-size:14px;font-family:var(--mono);font-weight:700;outline:none;" oninput="vdpRecalc()">
             </div>
             <div class="form-row" style="margin-bottom:6px;">
+              <div class="form-group"><label>Deal Number</label><input type="text" id="vdpDealNumber" placeholder="e.g. D-10482" style="width:100%;background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:9px 12px;font-size:13px;outline:none;"></div>
+              <div class="form-group"><label>Sales Rep</label><select id="vdpSaleRep" style="width:100%;background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:9px 12px;font-size:13px;outline:none;"></select></div>
+            </div>
+            <div class="form-row" style="margin-bottom:6px;">
               <div class="form-group">
                 <label>Sales Tax ($)</label>
                 <input type="number" id="vdpSalesTax" placeholder="0" style="width:100%;background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:9px 12px;font-size:13px;outline:none;" oninput="vdpRecalc()">
@@ -2174,7 +2570,7 @@
         <!-- Notes -->
         <div class="vdp-section">
           <div class="vdp-section-title">Notes</div>
-          <div id="vdpNotes" style="font-size:13px;color:var(--muted);line-height:1.6;">—</div>
+          <textarea id="vdpNotes" class="vdp-notes-area" placeholder="Type notes about this vehicle…" oninput="vdpSaveNotes(this.value)"></textarea>
         </div>
       </div>
     </div>
@@ -2191,10 +2587,145 @@
   </div>
 
   <!-- VEHICLES PAGE (Inventory > Vehicles) -->
-  <div id="page-vehicles" class="page-section">
+  <div id="page-messages" class="page-section">
+  <div class="page-head">
+    <div class="page-title">TEAM <b>MESSAGES</b></div>
+    <div class="page-sub">Stay connected with your sales team &mdash; message reps right on the platform.</div>
+  </div>
+  <div class="imsg">
+    <div class="imsg-list">
+      <div class="imsg-list-head">
+        <div class="imsg-list-titlerow"><div class="imsg-list-title">Messages</div><button class="imsg-compose-btn" onclick="openMsgNew()" title="New message"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></button></div>
+        <input class="imsg-search" id="imsgSearch" placeholder="Search" oninput="renderMsgConvos()">
+      </div>
+      <div class="imsg-convos" id="imsgConvos"></div>
+    </div>
+    <div class="imsg-chat">
+      <div class="imsg-chat-head" id="imsgChatHead"></div>
+      <div class="imsg-chat-body" id="imsgChatBody"></div>
+      <div class="imsg-compose">
+        <button class="imsg-attach" onclick="openMsgVehiclePicker()" title="Attach a vehicle"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17v-6h18v6M5 17v3M19 17v3M3 11l2-5h14l2 5"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg></button>
+        <input class="imsg-input" id="imsgInput" placeholder="Message" onkeydown="if(event.key==='Enter'){event.preventDefault();msgSend();}">
+        <button class="imsg-send" onclick="msgSend()" aria-label="Send"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="page-cpa-overview" class="page-section">
+  <div class="page-head">
+    <div class="page-title">CPA <b>FINANCIAL OVERVIEW</b></div>
+    <div class="page-sub" id="cpaOverviewSub">Live snapshot &mdash; read-only.</div>
+  </div>
+  <div class="fin-calendar" id="cpaCalWrap">
+    <div class="pnl-cal-year"><button onclick="cpaChangeYear(-1)">&lsaquo;</button><span id="cpaYearVal">2026</span><button onclick="cpaChangeYear(1)">&rsaquo;</button></div>
+    <div class="fin-months" id="cpaMonths"></div>
+    <div class="pnl-cal-modes"><button class="pnl-mode" data-mode="month" onclick="cpaSetMode('month')">Monthly</button><button class="pnl-mode" data-mode="year" onclick="cpaSetMode('year')">Yearly</button></div>
+  </div>
+  <div class="kpi-grid" id="cpaOverviewKpis"></div>
+  <div class="table-card" style="margin-top:6px;padding:18px 20px;">
+    <div class="section-heading" style="margin:0 0 14px;"><h2 style="font-size:16px;" id="cpaSummaryTitle">Year-to-date summary</h2></div>
+    <div id="cpaOverviewBody"></div>
+  </div>
+  <div class="table-card" style="margin-top:16px;padding:18px 20px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px;">
+      <h2 style="font-size:16px;font-weight:800;margin:0;">Quick review note</h2>
+      <span style="font-size:12px;color:var(--muted);">Flag anything you'd like the dealer to look at.</span>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <input class="cpa-note-input" id="cpaQuickNote" placeholder="e.g. Confirm the $500 Camry adjustment was approved" style="flex:1;min-width:240px;">
+      <button class="btn-primary" style="box-shadow:none;" onclick="addCpaNote('cpaQuickNote','Overview')">Add note</button>
+    </div>
+  </div>
+</div>
+
+<div id="page-cpa-notes" class="page-section">
+  <div class="page-head">
+    <div class="page-title">CPA <b>REVIEW NOTES</b></div>
+    <div class="page-sub">Leave notes for the dealer &mdash; nothing here changes any records.</div>
+  </div>
+  <div class="table-card" style="padding:18px 20px;margin-bottom:16px;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <select class="cpa-note-input" id="cpaNoteSection" style="max-width:180px;">
+        <option>General</option><option>Vehicles</option><option>Profit &amp; Loss</option><option>Expenses</option><option>Payroll</option><option>State Tax</option>
+      </select>
+      <input class="cpa-note-input" id="cpaNoteText" placeholder="Write a review note or question for the dealer..." style="flex:1;min-width:240px;">
+      <button class="btn-primary" style="box-shadow:none;" onclick="addCpaNote('cpaNoteText', document.getElementById('cpaNoteSection').value)">Post note</button>
+    </div>
+  </div>
+  <div id="cpaNotesList"></div>
+</div>
+
+<div id="page-sold-vehicles" class="page-section">
+  <div class="page-head">
+    <div style="position:absolute;top:2px;right:0;display:flex;gap:8px;"><button class="print-btn" onclick="exportSoldCsv()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export CSV</button><button class="print-btn" onclick="window.print()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg> Print</button></div>
+    <div class="page-title">INVENTORY <b>SOLD VEHICLES</b></div>
+    <div class="page-sub">Every car you've sold &mdash; broken down by profit, loss, and month.</div>
+  </div>
+  <div class="sv-tabs">
+    <button class="sv-tab active" data-tab="profit" onclick="svSetTab('profit')">Vehicles by Profit</button>
+    <button class="sv-tab" data-tab="loss" onclick="svSetTab('loss')">Vehicles by Loss</button>
+    <button class="sv-tab" data-tab="all" onclick="svSetTab('all')">All Vehicles</button>
+  </div>
+  <div class="sv-cal" id="svCalWrap">
+    <div class="dp-yearwrap"><button class="dp-nav" onclick="svChangeYear(-1)">&lsaquo;</button><span class="dp-year" id="svYearVal">2026</span><button class="dp-nav" onclick="svChangeYear(1)">&rsaquo;</button></div>
+    <div class="sv-months" id="svMonths"></div>
+  </div>
+  <div id="svBody"></div>
+</div>
+
+<div id="page-rep-my" class="page-section">
+  <div class="page-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <div><div class="page-title">MY <b>VEHICLES SOLD</b></div><div class="page-sub" id="repMySub">Your personal sold log.</div></div>
+    <button class="grid-toggle-btn" id="repMyMonthBtn" onclick="toggleRepMyMonth()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Sold Vehicles by Month</button>
+  </div>
+  <div class="kpi-grid" id="repMyKpis"></div>
+  <div id="repMyBody"></div>
+</div>
+
+<div id="page-rep-dashboard" class="page-section">
+  <div class="page-head"><div class="page-title">SALES REP <b>DASHBOARD</b></div><div class="page-sub" id="repDashSub">Your month at a glance.</div></div>
+  <div class="rd-toprep" id="repTopRep"></div>
+  <div class="dash-cal-card" style="margin-top:16px;">
+    <div class="dcs-topbar" style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px 4px;flex-wrap:wrap;gap:8px;">
+      <div class="dcs-title" style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);">This month vs last month &middot; <b id="repCmpLbl" style="color:var(--text);"></b></div>
+      <span class="dch-legend"><span class="dch-dot this"></span> This <span class="dch-dot last"></span> Last</span>
+    </div>
+    <div class="dash-compare-strip" id="repCompareBars" style="grid-template-columns:1fr 1fr;"></div>
+    <div class="dash-cal-toolbar" style="display:flex;align-items:center;justify-content:space-between;">
+      <div id="repCalTitle" style="font-weight:800;font-size:15px;color:var(--text);"></div>
+      <div class="rd-cal-nav"><button onclick="repCalMonth(-1)">&lsaquo;</button><button onclick="repCalMonth(1)">&rsaquo;</button></div>
+    </div>
+    <div class="cal-weekdays"><div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div></div>
+    <div class="cal-grid" id="repCalGrid"></div>
+  </div>
+  <div class="table-card dash-sold-card" style="margin-top:16px;">
+    <div class="dash-sold-head">
+      <div id="repPnlCircle"></div>
+      <div><h2 style="margin:0;">My Vehicles Sold</h2><div class="section-sub" id="repSoldCount"></div></div>
+    </div>
+    <div class="table-scroll" id="repSoldScroll"><table class="dash-sold-table"><thead><tr><th>Vehicle</th><th>VIN</th><th>Sold Date</th><th>My Commission</th></tr></thead><tbody id="repSoldBody"></tbody></table></div>
+  </div>
+</div>
+
+<div id="page-rep-leads" class="page-section">
+  <div class="page-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <div><div class="page-title">MY <b>LEADS</b></div><div class="page-sub">People interested or potential buyers.</div></div>
+    <button class="btn-primary" style="box-shadow:none;" onclick="openLeadModal()">+ Add Lead</button>
+  </div>
+  <div id="repLeadsList"></div>
+</div>
+
+<div id="page-rep-customers" class="page-section">
+  <div class="page-head"><div class="page-title">MY <b>CUSTOMERS</b></div><div class="page-sub" id="repCustSub">Customers you have created deal jackets for.</div></div>
+  <div id="repCustBody"></div>
+</div>
+
+<div id="page-vehicles" class="page-section">
 
   <!-- PAGE TITLE -->
   <div class="page-head">
+    <div style="position:absolute;top:2px;right:0;display:flex;gap:8px;"><button class="print-btn" onclick="exportVehiclesCsv()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg> Export CSV</button><button class="print-btn" onclick="window.print()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg> Print</button></div>
     <div class="page-title">INVENTORY <b>VEHICLES INVENTORY</b></div>
     <div class="page-sub" id="vehicleCountLabel">— vehicles in active inventory</div>
   </div>
@@ -2299,6 +2830,10 @@
       <span class="toggle-dot"></span>
       Add Grid Lines
     </button>
+    <button class="grid-toggle-btn" id="vehMonthBtn" onclick="toggleVehMonth()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      Vehicles by Month
+    </button>
     </div>
   </div>
 
@@ -2338,6 +2873,7 @@
 
 <!-- EXPENSE DETAIL PAGE -->
 <div id="page-expense-detail" class="page-section" style="display:none;">
+  <button class="print-btn" onclick="window.print()" style="position:absolute;top:16px;right:22px;z-index:8;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg> Print</button>
 
   <div class="vdp-back" onclick="showPage('expenses', document.querySelector('[data-page=expenses]'))">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -2444,6 +2980,7 @@
 
   <!-- PAGE TITLE -->
   <div class="page-head">
+    <button class="print-btn" onclick="window.print()" style="position:absolute;top:2px;right:0;"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg> Print / Export</button>
     <div class="page-title">FINANCIALS <b>EXPENSES</b></div>
     <div class="page-sub" id="expCountLabel">— dealership spending overview</div>
   </div>
@@ -2695,9 +3232,9 @@
 
 <!-- DEAL JACKETS LIST PAGE -->
 <div id="page-deal-jackets" class="page-section" style="display:none">
-  <div class="page-head">
-    <div class="page-title">DOCUMENTS <b>DEAL JACKETS</b></div>
-    <div class="page-sub" id="djlSub">— closed deals</div>
+  <div class="page-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <div><div class="page-title">DOCUMENTS <b>DEAL JACKETS</b></div><div class="page-sub" id="djlSub">— closed deals</div></div>
+    <button class="grid-toggle-btn" id="djMonthBtn" onclick="toggleDjMonth()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Deals by Month</button>
   </div>
   <div class="fin-calendar pnl-actions">
       <div class="pnl-cal-year">
@@ -3259,6 +3796,45 @@
 </div>
 
 
+<div class="tour-overlay" id="tourOverlay">
+  <div class="tour-spot" id="tourSpot"></div>
+  <div class="tour-pop" id="tourPop">
+    <div class="tour-pop-head"><span class="tour-badge" id="tourBadge">1 / 5</span><button class="tour-skip" onclick="endTour()">Skip tour</button></div>
+    <div class="tour-title" id="tourTitle"></div>
+    <div class="tour-text" id="tourText"></div>
+    <div class="tour-nav"><button class="tour-back" id="tourBack" onclick="tourPrev()">Back</button><button class="tour-next" id="tourNext" onclick="tourNext()">Next</button></div>
+  </div>
+</div>
+
+<div class="cpa-login" id="repLogin">
+  <div class="cpa-login-card">
+    <div class="cpa-login-mark"><svg viewBox="0 0 92 60" width="70" fill="none"><path d="M9 6 L33 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/><path d="M33 54 L57 6" stroke="#1c7a46" stroke-width="11" stroke-linecap="round"/><path d="M57 6 L83 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/></svg></div>
+    <h2 class="cpa-login-title">Sales Rep Portal</h2>
+    <p class="cpa-login-desc">Log in to manage your deals, inventory, and messages.</p>
+    <label class="cpa-login-label">Select your name</label>
+    <select class="cpa-login-input" id="repLoginSelect"></select>
+    <label class="cpa-login-label">Password</label>
+    <input class="cpa-login-input" type="password" id="repLoginPass" value="rep-demo-2026">
+    <button class="cpa-login-btn" style="background:var(--blue);" onclick="repDoLogin()">Log In</button>
+    <button class="cpa-login-cancel" onclick="closeRepLogin()">Cancel</button>
+  </div>
+</div>
+
+<div class="cpa-login" id="cpaLogin">
+  <div class="cpa-login-card">
+    <div class="cpa-login-mark"><svg viewBox="0 0 92 60" width="70" fill="none"><path d="M9 6 L33 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/><path d="M33 54 L57 6" stroke="#1c7a46" stroke-width="11" stroke-linecap="round"/><path d="M57 6 L83 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/></svg></div>
+    <h2 class="cpa-login-title">CPA / Accountant Portal</h2>
+    <p class="cpa-login-desc">Secure, read-only access to live dealership financials.</p>
+    <label class="cpa-login-label">Email</label>
+    <input class="cpa-login-input" id="cpaEmail" value="accountant@autovault.com">
+    <label class="cpa-login-label">Password</label>
+    <input class="cpa-login-input" type="password" id="cpaPass" value="cpa-demo-2026">
+    <button class="cpa-login-btn" onclick="cpaDoLogin()">Log In to Portal</button>
+    <button class="cpa-login-cancel" onclick="closeCpaLogin()">Cancel</button>
+    <div class="cpa-login-note"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> You can view all reports and leave notes, but cannot edit any records.</div>
+  </div>
+</div>
+
 <!-- ===================== JENNA AI ASSISTANT ===================== -->
 <div class="jenna-fab" id="jennaFab" title="Ask Jenna — drag to move">
   <span class="jenna-badge">Jenna</span>
@@ -3298,6 +3874,65 @@
   <div class="jg-head"><div class="jg-ava"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.9 4.3L18 9l-4.1 1.7L12 15l-1.9-4.3L6 9l4.1-1.7L12 3z"/></svg></div><b>Jenna</b><button class="jg-close" onclick="dismissJennaGreeting()">&times;</button></div>
   <div class="jg-text" id="jennaGreetingText"></div>
   <button class="jg-open" onclick="dismissJennaGreeting(); toggleJenna();">Chat with Jenna</button>
+</div>
+
+<div class="modal-overlay" id="msgVehModal" style="display:none;">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-head"><h3>Attach a Vehicle</h3><button class="modal-close" onclick="closeMsgVeh()">&times;</button></div>
+    <div class="modal-body"><div class="msg-new-list" id="msgVehList"></div></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="msgNewModal" style="display:none;">
+  <div class="modal" style="max-width:380px;">
+    <div class="modal-head"><h3>New Message</h3><button class="modal-close" onclick="closeMsgNew()">&times;</button></div>
+    <div class="modal-body"><div class="msg-new-list" id="msgNewList"></div></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="leadModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head"><h3 id="leadModalTitle">Add Lead</h3><button class="modal-close" onclick="closeLeadModal()">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Name</label><input id="leadName" class="rc-input" placeholder="Full name"></div>
+      <div class="form-group"><label>Phone</label><input id="leadPhone" class="rc-input" placeholder="(555) 000-0000"></div>
+      <div class="form-group"><label>Email</label><input id="leadEmail" class="rc-input" placeholder="name@email.com"></div>
+      <div class="form-group"><label>Notes</label><textarea id="leadNotes" class="rc-input" rows="3" placeholder="What are they interested in?" style="resize:vertical;"></textarea></div>
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <button class="btn-danger" id="leadDeleteBtn" style="display:none;" onclick="deleteLead()">Delete</button>
+        <button class="btn-primary" style="flex:1;box-shadow:none;" onclick="saveLead()">Save Lead</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addVehModal">
+  <div class="modal" style="max-width:470px;">
+    <div class="modal-head"><h3>Add Vehicle</h3><button class="modal-close" onclick="closeAddVeh()">&times;</button></div>
+    <div class="modal-body">
+      <label class="av-label">Scan or paste VIN</label>
+      <div class="av-vin-row">
+        <input id="avVin" class="av-vin-input" placeholder="17-digit VIN…" oninput="avVinInput()" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('avPrice').focus();}" autocomplete="off">
+        <button class="av-scan-btn" onclick="avScan()" title="Scan VIN"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8v8M10 8v8M13 8v8M16 8v8"/></svg></button>
+      </div>
+      <div id="avDecoded" class="av-decoded"></div>
+      <div class="av-grid3">
+        <div><label class="av-label">Year</label><input id="avYear" class="rc-input" type="number" placeholder="2024"></div>
+        <div><label class="av-label">Make</label><input id="avMake" class="rc-input" placeholder="Make"></div>
+        <div><label class="av-label">Model</label><input id="avModel" class="rc-input" placeholder="Model"></div>
+      </div>
+      <div class="av-grid2">
+        <div><label class="av-label">Purchase Price ($)</label><input id="avPrice" class="rc-input" type="number" placeholder="0"></div>
+        <div><label class="av-label">Auction Fees ($)</label><input id="avFees" class="rc-input" type="number" placeholder="0" onkeydown="if(event.key==='Enter'){event.preventDefault();addVehicleSave();}"></div>
+      </div>
+      <div class="av-flooring">
+        <div><div class="av-fl-title">Add Flooring Rate</div><div class="av-fl-sub" id="avFlSub">Applies your saved flooring rate automatically.</div></div>
+        <label class="av-switch"><input type="checkbox" id="avFlooring" checked><span class="av-switch-slider"></span></label>
+      </div>
+      <button class="btn-primary av-submit" onclick="addVehicleSave()">Add Vehicle to Inventory</button>
+      <div id="avMsg" style="margin-top:12px;"></div>
+    </div>
+  </div>
 </div>
 
 <!-- ===================== SCAN / DOCUMENT MODAL ===================== -->
@@ -3379,6 +4014,7 @@
     </div>
     <div class="modal-body">
       <div class="form-group"><label>Rep Name</label><input type="text" id="repModalName" placeholder="e.g. J. Rivera"></div>
+      <div class="form-group"><label>Birthday</label><input type="date" id="repModalBirthday"></div>
       <div class="form-group"><label>Commission Rate (% of gross)</label><input type="number" id="repModalPct" placeholder="e.g. 20" step="0.5" min="0" oninput="repCalcSummary()"></div>
       <div class="form-group"><label>Base Salary ($ / month)</label><input type="number" id="repModalBase" placeholder="e.g. 2500 (enter 0 if commission-only)" min="0" oninput="repCalcSummary()"></div>
       <div class="form-row">
@@ -3609,6 +4245,655 @@ function toggleSidebar(){
   const btn=document.getElementById('sidebarCollapse');
   if(btn){ btn.textContent = collapsed ? '›' : '‹'; btn.title = collapsed ? 'Expand menu' : 'Collapse menu'; }
 }
+const VEH_TOUR=[
+  { sel:'.kpi-grid', title:'Your lot at a glance', text:"These cards show your Total Inventory, Purchase Cost, Total Fees, Titles in-hand vs pending, and how many you've sold this month." },
+  { sel:'.flooring-banner', title:'Flooring cost', text:'The daily floor-plan interest on your inventory. Add a flooring rate to all vehicles, or view the full cost breakdown.' },
+  { sel:'#tableSearch', title:'Search your inventory', text:'Find any vehicle instantly by name, VIN, or the sales rep who handled it.' },
+  { sel:'.filter-controls', title:'Filter, sort & grid lines', text:'Filter by sales rep, sort by net profit, ROI, or days in inventory, and toggle grid lines for easier reading.' },
+  { sel:'.table-card', title:'Your vehicles', text:'Each row is a vehicle with its cost, fees, repairs, and profit. Click any vehicle to open its deal jacket and full cost breakdown.' }
+];
+let tourIdx=0;
+function startVehiclesTour(){
+  showPage('vehicles', document.querySelector('[data-page=vehicles]'));
+  tourIdx=0;
+  document.getElementById('tourOverlay').classList.add('show');
+  window.addEventListener('scroll', positionTour, true);
+  window.addEventListener('resize', positionTour);
+  setTimeout(renderTourStep, 180);
+}
+function renderTourStep(){
+  const step=VEH_TOUR[tourIdx]; if(!step) return;
+  document.getElementById('tourBadge').textContent=`${tourIdx+1} / ${VEH_TOUR.length}`;
+  document.getElementById('tourTitle').textContent=step.title;
+  document.getElementById('tourText').textContent=step.text;
+  document.getElementById('tourBack').style.visibility = tourIdx===0 ? 'hidden' : 'visible';
+  document.getElementById('tourNext').textContent = tourIdx===VEH_TOUR.length-1 ? 'Finish' : 'Next';
+  const el=document.querySelector(step.sel);
+  if(el) el.scrollIntoView({block:'center', behavior:'smooth'});
+  setTimeout(positionTour, 320);
+}
+function positionTour(){
+  const step=VEH_TOUR[tourIdx]; if(!step) return;
+  const el=document.querySelector(step.sel); if(!el) return;
+  const r=el.getBoundingClientRect(); const pad=8;
+  const spot=document.getElementById('tourSpot');
+  spot.style.top=(r.top-pad)+'px'; spot.style.left=(r.left-pad)+'px';
+  spot.style.width=(r.width+pad*2)+'px'; spot.style.height=(r.height+pad*2)+'px';
+  const pop=document.getElementById('tourPop');
+  const pw=pop.offsetWidth||300, ph=pop.offsetHeight||170;
+  let top=r.bottom+14, left=r.left;
+  if(top+ph>window.innerHeight-10) top=Math.max(10, r.top-ph-14);
+  if(left+pw>window.innerWidth-10) left=window.innerWidth-pw-16;
+  if(left<10) left=10;
+  pop.style.top=top+'px'; pop.style.left=left+'px';
+}
+function tourNext(){ if(tourIdx<VEH_TOUR.length-1){ tourIdx++; renderTourStep(); } else endTour(); }
+function tourPrev(){ if(tourIdx>0){ tourIdx--; renderTourStep(); } }
+function endTour(){ document.getElementById('tourOverlay').classList.remove('show'); window.removeEventListener('scroll', positionTour, true); window.removeEventListener('resize', positionTour); }
+let msgConvos=[
+  {id:'dc', name:'D. Cole', initials:'DC', color:'#3aa0ff', online:true, messages:[
+    {from:'them', text:'Morning! Did the title for the Jeep Grand Cherokee come in yet?', time:'8:42 AM'},
+    {from:'me', text:'Not yet \u2014 DMV said it should land Friday.', time:'8:45 AM'},
+    {from:'them', text:'Perfect. My buyer is ready to pick up the second it arrives.', time:'8:46 AM'},
+    {from:'me', text:'Great work closing that one, Devon.', time:'8:47 AM'}
+  ]},
+  {id:'mr', name:'M. Reyes', initials:'MR', color:'#23d18b', online:true, unread:2, messages:[
+    {from:'them', text:'Can you approve a $500 adjustment on the Camry? Customer is on the fence.', time:'Yesterday'},
+    {from:'me', text:'Approved. Go ahead and write it up.', time:'Yesterday'},
+    {from:'them', text:'Thank you! They are signing now.', time:'Yesterday'}
+  ]},
+  {id:'ap', name:'A. Patel', initials:'AP', color:'#ff9f43', online:false, unread:1, messages:[
+    {from:'me', text:'Hey Aarav, how did the Silverado test drive go?', time:'Mon'},
+    {from:'them', text:'Really well \u2014 he loved it. Coming back tomorrow with his wife to finalize.', time:'Mon'}
+  ]},
+  {id:'team', name:'Sales Team', initials:'ST', color:'#7c5cff', group:true, messages:[
+    {from:'them', sender:'Devon', text:'Great month everyone \u2014 we hit 10 units!', time:'Tue'},
+    {from:'them', sender:'Maria', text:'Let us push for 12 next month.', time:'Tue'},
+    {from:'me', text:'Proud of this team. Lunch is on me Friday.', time:'Tue'}
+  ]}
+];
+let msgActive=null;
+function msgEsc(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function updateMsgBadge(){
+  const total=msgConvos.reduce((s,c)=>s+(c.unread||0),0);
+  const b=document.getElementById('msgNavBadge');
+  if(b){ b.textContent=total; b.style.display=total>0?'':'none'; }
+}
+function renderMessages(){
+  if(!msgActive && msgConvos.length) msgActive=msgConvos[0].id;
+  const a=msgConvos.find(x=>x.id===msgActive); if(a) a.unread=0;
+  updateMsgBadge(); renderMsgConvos(); renderMsgThread();
+}
+function renderMsgConvos(){
+  const host=document.getElementById('imsgConvos'); if(!host) return;
+  const q=(document.getElementById('imsgSearch')?.value||'').toLowerCase();
+  const list=msgConvos.filter(c=>!q || c.name.toLowerCase().includes(q));
+  host.innerHTML=list.map(c=>{
+    const last=c.messages[c.messages.length-1];
+    const preview=last?((last.from==='me'?'You: ':(c.group&&last.sender?last.sender+': ':''))+(last.type==='vehicle'?'\ud83d\ude97 Shared a vehicle':last.text)):'No messages yet';
+    const un=c.unread||0;
+    return `<div class="imsg-convo ${c.id===msgActive?'active':''} ${un?'unread':''}" onclick="openMsgConvo('${c.id}')">
+      <div class="imsg-avatar" style="background:${c.color}">${c.initials}${(c.online&&!c.group)?'<span class="imsg-online-dot"></span>':''}</div>
+      <div class="imsg-convo-info">
+        <div class="imsg-convo-top"><span class="imsg-convo-name">${c.name}</span><span class="imsg-convo-time">${last?last.time:''}</span></div>
+        <div class="imsg-convo-preview">${msgEsc(preview)}</div>
+      </div>
+      ${un?`<span class="imsg-unread-dot">${un}</span>`:''}
+    </div>`;
+  }).join('');
+}
+function openMsgConvo(id){ msgActive=id; const c=msgConvos.find(x=>x.id===id); if(c) c.unread=0; updateMsgBadge(); renderMsgConvos(); renderMsgThread(); }
+function msgInitials(name){ return name.replace(/[^A-Za-z. ]/g,'').split(/[ .]+/).filter(Boolean).slice(0,2).map(w=>w[0].toUpperCase()).join(''); }
+const MSG_PALETTE=['#3aa0ff','#23d18b','#ff9f43','#7c5cff','#ff5470','#2dd4bf','#f472b6','#a78bfa'];
+function msgColor(name){ let h=0; for(const ch of name) h=(h*31+ch.charCodeAt(0))>>>0; return MSG_PALETTE[h%MSG_PALETTE.length]; }
+function msgContacts(){
+  const list=[];
+  (typeof salesReps!=='undefined'?salesReps:[]).forEach(r=>list.push({name:r.name, role:'Sales Rep'}));
+  (typeof staff!=='undefined'?staff:[]).forEach(s=>list.push({name:s.name, role:s.role||'Staff'}));
+  return list;
+}
+function openMsgNew(){
+  const host=document.getElementById('msgNewList'); if(!host) return;
+  host.innerHTML=msgContacts().map(c=>`<div class="msg-new-item" onclick="msgStartWith('${c.name.replace(/'/g,"\\'")}')">
+    <div class="imsg-avatar" style="background:${msgColor(c.name)};width:38px;height:38px;font-size:13px;">${msgInitials(c.name)}</div>
+    <div><div style="font-weight:700;font-size:13.5px;color:var(--text);">${msgEsc(c.name)}</div><div style="font-size:11.5px;color:var(--muted);">${msgEsc(c.role)}</div></div>
+  </div>`).join('') || '<div style="color:var(--muted);font-size:13px;padding:10px;">No contacts found.</div>';
+  document.getElementById('msgNewModal').style.display='flex';
+}
+function closeMsgNew(){ const m=document.getElementById('msgNewModal'); if(m) m.style.display='none'; }
+function msgStartWith(name){
+  closeMsgNew();
+  let c=msgConvos.find(x=>x.name===name);
+  if(!c){ c={id:'c'+Date.now(), name, initials:msgInitials(name), color:msgColor(name), messages:[]}; msgConvos.unshift(c); }
+  openMsgConvo(c.id);
+  setTimeout(()=>{ const i=document.getElementById('imsgInput'); if(i) i.focus(); }, 60);
+}
+function renderMsgThread(){
+  const c=msgConvos.find(x=>x.id===msgActive); if(!c) return;
+  const head=document.getElementById('imsgChatHead');
+  if(head){
+    const status = c.group ? '<div class="imsg-status">Group chat</div>' : (c.online ? '<div class="imsg-status online">Active now</div>' : '<div class="imsg-status">Offline</div>');
+    head.innerHTML=`<div class="imsg-avatar" style="background:${c.color};width:34px;height:34px;font-size:12px;">${c.initials}${(c.online&&!c.group)?'<span class="imsg-online-dot"></span>':''}</div><div><b>${c.name}</b>${status}</div>`;
+  }
+  const body=document.getElementById('imsgChatBody'); if(!body) return;
+  body.innerHTML=c.messages.map((m,i)=>{
+    const prev=c.messages[i-1];
+    const gap = prev && prev.from!==m.from ? ' gap' : (i===0?'':'');
+    const sender = (c.group && m.from==='them' && m.sender && (!prev||prev.sender!==m.sender||prev.from!=='them')) ? `<div class="imsg-sender">${msgEsc(m.sender)}</div>` : '';
+    if(m.type==='vehicle'){
+      const v=(vehicles||[]).find(x=>x.vin===m.vin);
+      if(v){ const r=computeRow(v); return `<div class="imsg-bubble-row ${m.from}${gap}">${sender}<div class="imsg-veh-card" onclick="openDealJacket('${v.vin}','messages')">
+        <div class="ivc-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17v-6h18v6M5 17v3M19 17v3M3 11l2-5h14l2 5"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg></div>
+        <div class="ivc-info"><div class="ivc-title">${v.year} ${v.make} ${v.model}</div><div class="ivc-sub">${(v.vin||'').slice(-8)} \u00b7 ${fmt(r.price)}</div></div>
+        <div class="ivc-arrow">\u203a</div></div></div>`; }
+    }
+    return `<div class="imsg-bubble-row ${m.from}${gap}">${sender}<div class="imsg-bubble">${msgEsc(m.text)}</div></div>`;
+  }).join('');
+  body.scrollTop=body.scrollHeight;
+}
+function openMsgVehiclePicker(){
+  const host=document.getElementById('msgVehList'); if(!host) return;
+  host.innerHTML=(vehicles||[]).map(v=>{ const r=computeRow(v); return `<div class="msg-new-item" onclick="msgAttachVehicle('${v.vin}')">
+    <div class="ivc-icon" style="width:38px;height:38px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17v-6h18v6M5 17v3M19 17v3M3 11l2-5h14l2 5"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg></div>
+    <div><div style="font-weight:700;font-size:13px;color:var(--text);">${v.year} ${v.make} ${v.model}</div><div style="font-size:11px;color:var(--muted);font-family:var(--mono);">${(v.vin||'').slice(-8)} \u00b7 ${fmt(r.price)}</div></div>
+  </div>`; }).join('') || '<div style="color:var(--muted);font-size:13px;padding:10px;">No vehicles.</div>';
+  document.getElementById('msgVehModal').style.display='flex';
+}
+function closeMsgVeh(){ const m=document.getElementById('msgVehModal'); if(m) m.style.display='none'; }
+function msgAttachVehicle(vin){
+  closeMsgVeh();
+  const c=msgConvos.find(x=>x.id===msgActive); if(!c) return;
+  const time=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  c.messages.push({from:'me', type:'vehicle', vin, time});
+  renderMsgConvos(); renderMsgThread();
+  const body=document.getElementById('imsgChatBody');
+  setTimeout(()=>{ if(msgActive===c.id && body){ const t=document.createElement('div'); t.className='imsg-bubble-row them gap'; t.id='imsgTyping'; t.innerHTML='<div class="imsg-typing"><span></span><span></span><span></span></div>'; body.appendChild(t); body.scrollTop=body.scrollHeight; } }, 500);
+  setTimeout(()=>{ const cc=msgConvos.find(x=>x.id===c.id); cc.messages.push({from:'them', sender:(cc.group?cc.name.split(' ')[0]:undefined), text:'Got it, taking a look now.', time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}); const typ=document.getElementById('imsgTyping'); if(typ) typ.remove(); if(msgActive===c.id){ renderMsgConvos(); renderMsgThread(); } }, 1700);
+}
+function msgSend(){
+  const inp=document.getElementById('imsgInput'); if(!inp) return;
+  const t=inp.value.trim(); if(!t) return;
+  const c=msgConvos.find(x=>x.id===msgActive); if(!c) return;
+  const time=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  c.messages.push({from:'me', text:t, time}); inp.value='';
+  renderMsgConvos(); renderMsgThread();
+  const replies=['Got it.','Sounds good.','On it.','Thanks for the update!','Will do.','Copy that.'];
+  const body=document.getElementById('imsgChatBody');
+  setTimeout(()=>{
+    if(msgActive===c.id && body){ const t=document.createElement('div'); t.className='imsg-bubble-row them gap'; t.id='imsgTyping'; t.innerHTML='<div class="imsg-typing"><span></span><span></span><span></span></div>'; body.appendChild(t); body.scrollTop=body.scrollHeight; }
+  }, 500);
+  setTimeout(()=>{
+    const cc=msgConvos.find(x=>x.id===c.id);
+    cc.messages.push({from:'them', sender:(cc.group?cc.name.split(' ')[0]:undefined), text:replies[Math.floor(Math.random()*replies.length)], time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})});
+    const typ=document.getElementById('imsgTyping'); if(typ) typ.remove();
+    if(msgActive===c.id){ renderMsgConvos(); renderMsgThread(); }
+  }, 1700);
+}
+let cpaNotes=[];
+function openCpaLogin(){ const l=document.getElementById('cpaLogin'); if(l) l.classList.add('show'); }
+function closeCpaLogin(){ const l=document.getElementById('cpaLogin'); if(l) l.classList.remove('show'); }
+function cpaDoLogin(){ closeCpaLogin(); enterCpaMode(); }
+function cpaPrint(){ window.print(); }
+function enterCpaMode(){
+  document.body.classList.add('cpa-mode');
+  const who=document.getElementById('cpaWhoami'), email=document.getElementById('cpaEmail');
+  if(who&&email&&email.value) who.textContent=email.value;
+  const nav=document.querySelector('[data-page="cpa-overview"]');
+  showPage('cpa-overview', nav); renderCpaOverview();
+  window.scrollTo(0,0);
+}
+function exitCpaMode(){
+  document.body.classList.remove('cpa-mode');
+  const nav=document.querySelector('[data-page="dashboard"]');
+  showPage('dashboard', nav); renderDashboard();
+}
+function cpaToast(msg){
+  let t=document.getElementById('cpaToast');
+  if(!t){ t=document.createElement('div'); t.id='cpaToast'; t.className='cpa-toast'; document.body.appendChild(t); }
+  t.textContent=msg; t.classList.add('show');
+  clearTimeout(window.__cpaToast); window.__cpaToast=setTimeout(()=>t.classList.remove('show'), 2200);
+}
+let cpaPeriod={mode:'year', year:2026, month:5};
+function cpaSetMode(m){ cpaPeriod.mode=m; renderCpaOverview(); }
+function cpaChangeYear(d){ cpaPeriod.year+=d; renderCpaOverview(); }
+function cpaPickMonth(i){ cpaPeriod.month=i; cpaPeriod.mode='month'; renderCpaOverview(); }
+function renderCpaCal(){
+  const yv=document.getElementById('cpaYearVal'); if(yv) yv.textContent=cpaPeriod.year;
+  const mh=document.getElementById('cpaMonths');
+  if(mh) mh.innerHTML=SV_MONTHS.map((mm,i)=>`<button class="pnl-month ${(cpaPeriod.mode==='month'&&i===cpaPeriod.month)?'active':''}" onclick="cpaPickMonth(${i})">${mm}</button>`).join('');
+  document.querySelectorAll('#cpaCalWrap .pnl-mode').forEach(b=>b.classList.toggle('active', b.dataset.mode===cpaPeriod.mode));
+}
+function renderCpaOverview(){
+  renderCpaCal();
+  const mode=cpaPeriod.mode, yr=cpaPeriod.year, mo=cpaPeriod.month;
+  const m=periodStats(mode, yr, mo);
+  const prefix = mode==='year' ? String(yr) : `${yr}-${String(mo+1).padStart(2,'0')}`;
+  const periodLbl = mode==='year' ? `${yr}` : `${SV_MFULL[mo]} ${yr}`;
+  let exp=0; try{ exp=(expenses||[]).filter(e=>String(e.date||'').startsWith(prefix)).reduce((s,e)=>s+(+e.amount||0),0); }catch(_){}
+  let tax=0; try{ tax=(vehicles||[]).filter(v=>v.sold&&String(v.soldDate||'').startsWith(prefix)).reduce((s,v)=>s+(typeof saleTaxOf==='function'?saleTaxOf(v):0),0); }catch(_){}
+  const cogs=m.revenue-m.gross;
+  const sub=document.getElementById('cpaOverviewSub'); if(sub) sub.textContent=`Live ${mode==='year'?'year-to-date':'monthly'} snapshot for ${periodLbl} \u2014 read-only.`;
+  const st=document.getElementById('cpaSummaryTitle'); if(st) st.textContent=`${periodLbl} summary`;
+  const kpis=[
+    {l:'Revenue', v:fmt(m.revenue), c:'var(--blue)'},
+    {l:'Gross Profit', v:dashMoney(m.gross), c:'var(--green)'},
+    {l:'Net Profit', v:dashMoney(m.net), c:m.net>=0?'var(--green)':'var(--red)'},
+    {l:'Operating Expenses', v:fmt(exp), c:'var(--orange)'},
+    {l:'Commissions Paid', v:fmt(m.commission), c:'var(--purple)'},
+    {l:'Sales Tax Collected', v:fmt(tax), c:'var(--blue)'},
+    {l:'Vehicles Sold', v:m.carsSold, c:'var(--text)'}
+  ];
+  const kh=document.getElementById('cpaOverviewKpis');
+  if(kh) kh.innerHTML=kpis.map(k=>`<div class="kpi"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div><div class="kpi-foot">${periodLbl}</div></div>`).join('');
+  const margin=m.revenue>0?Math.round(m.net/m.revenue*100):0;
+  const rows=[
+    ['Total Revenue', fmt(m.revenue), 'var(--text)', false],
+    ['Vehicle Cost (COGS)', '-'+fmt(cogs), 'var(--muted)', false],
+    ['Gross Profit', dashMoney(m.gross), 'var(--green)', true],
+    ['Operating Expenses', '-'+fmt(exp), 'var(--muted)', false],
+    ['Commissions', '-'+fmt(m.commission), 'var(--muted)', false],
+    ['Net Profit', dashMoney(m.net), m.net>=0?'var(--green)':'var(--red)', true],
+    ['Net Margin', margin+'%', 'var(--muted)', false]
+  ];
+  const bh=document.getElementById('cpaOverviewBody');
+  if(bh) bh.innerHTML=rows.map(r=>`<div class="vdp-row"${r[3]?' style="border-top:1px solid var(--border);padding-top:11px;margin-top:3px;"':''}><span class="vdp-row-label"${r[3]?' style="font-weight:800;color:var(--text);"':''}>${r[0]}</span><span class="vdp-row-value" style="color:${r[2]};${r[3]?'font-weight:800;':''}">${r[1]}</span></div>`).join('');
+}
+function renderCpaNotes(){
+  const host=document.getElementById('cpaNotesList'); if(!host) return;
+  if(!cpaNotes.length){ host.innerHTML='<div style="padding:34px;text-align:center;color:var(--muted);font-size:13px;">No notes yet. Post a note above to flag something for the dealer to review.</div>'; return; }
+  host.innerHTML=cpaNotes.slice().reverse().map(n=>`<div class="cpa-note-card">
+    <div class="cpa-note-head"><span class="cpa-note-sec">${msgEsc(n.section)}</span><span class="cpa-note-date">${n.date}</span></div>
+    <div class="cpa-note-body">${msgEsc(n.text)}</div>
+    <div class="cpa-note-author">\u2014 CPA / Accountant</div>
+  </div>`).join('');
+}
+function addCpaNote(inputId, section){
+  const inp=document.getElementById(inputId); if(!inp) return;
+  const t=(inp.value||'').trim(); if(!t) return;
+  cpaNotes.push({text:t, section, date:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})});
+  inp.value=''; renderCpaNotes(); cpaToast('Note saved for the dealer to review.');
+}
+let svTab='profit', svMonth=5, svYear=2026, svSynced=false;
+const SV_MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const SV_MFULL=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const SV_THEAD='<thead><tr><th>Vehicle</th><th>VIN</th><th>Sold Date</th><th>Purchase Price</th><th>Sold Price</th><th>Gross Profit</th><th>Net Profit</th></tr></thead>';
+function svSetTab(t){ svTab=t; renderSoldVehicles(); }
+function svChangeYear(d){ svYear+=d; renderSoldVehicles(); }
+function svPickMonth(i){ svMonth=i; renderSoldVehicles(); }
+function svRows(year, month){ const pfx=`${year}-${String(month+1).padStart(2,'0')}`; return (vehicles||[]).filter(v=>v.sold && (v.soldDate||'').startsWith(pfx)).map(computeRow); }
+function svRowHtml(r){ return `<tr>
+  <td class="veh-cell dash-veh-link" onclick="openDealJacket('${r.vin}','sold')"><div class="veh-name">${r.year} ${r.make} ${r.model}</div></td>
+  <td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${r.vin||''}</td>
+  <td>${r.soldDate?fmtDate(r.soldDate):'\u2014'}</td>
+  <td>${fmt(r.price)}</td>
+  <td>${fmt(r.soldPrice||r.estimatedSale||0)}</td>
+  <td style="font-weight:700;">${dashMoney(r.grossProfit)}</td>
+  <td style="font-weight:800;color:${r.netProfit>=0?'var(--green)':'var(--red)'};">${dashMoney(r.netProfit)}</td>
+</tr>`; }
+function renderSvCal(){
+  const yv=document.getElementById('svYearVal'); if(yv) yv.textContent=svYear;
+  const mh=document.getElementById('svMonths');
+  if(mh) mh.innerHTML=SV_MONTHS.map((m,i)=>`<button class="pnl-month ${i===svMonth?'active':''}" onclick="svPickMonth(${i})">${m}</button>`).join('');
+}
+function renderSoldVehicles(){
+  if(!svSynced){ svSynced=true; try{ svMonth=today.getMonth(); svYear=today.getFullYear(); }catch(e){} }
+  document.querySelectorAll('.sv-tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===svTab));
+  const calWrap=document.getElementById('svCalWrap'); const body=document.getElementById('svBody'); if(!body) return;
+  if(svTab==='all'){
+    if(calWrap) calWrap.style.display='none';
+    let rh='', totNet=0, totCars=0;
+    for(let mo=11;mo>=0;mo--){
+      const rows=svRows(svYear, mo).sort((a,b)=>(a.soldDate||'').localeCompare(b.soldDate||''));
+      if(!rows.length) continue;
+      const net=rows.reduce((s,r)=>s+r.netProfit,0); totNet+=net; totCars+=rows.length;
+      rh+=`<tr class="sv-month-row"><td colspan="7"><span class="sv-mr-name">${SV_MFULL[mo]} ${svYear}</span><span class="sv-mr-meta">${rows.length} car${rows.length===1?'':'s'} \u00b7 <b style="color:${net>=0?'var(--green)':'var(--red)'}">${dashMoney(net)}</b> net</span></td></tr>`;
+      rh+=rows.map(svRowHtml).join('');
+    }
+    body.innerHTML = rh ? `<div class="sv-year-lbl">All sold vehicles \u00b7 ${svYear} \u00b7 <span style="color:var(--text);">${totCars} sold</span> \u00b7 <b style="color:${totNet>=0?'var(--green)':'var(--red)'};">${dashMoney(totNet)}</b> net</div><div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${SV_THEAD}<tbody>${rh}</tbody></table></div></div>` : `<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No sold vehicles in ${svYear}.</div>`;
+  } else {
+    if(calWrap) calWrap.style.display='';
+    renderSvCal();
+    const rows=svRows(svYear, svMonth).filter(r=> svTab==='profit' ? r.netProfit>=0 : r.netProfit<0).sort((a,b)=>(b.soldDate||'').localeCompare(a.soldDate||''));
+    const net=rows.reduce((s,r)=>s+r.netProfit,0), gross=rows.reduce((s,r)=>s+r.grossProfit,0);
+    const kpis=`<div class="kpi-grid" style="margin-bottom:16px;">
+      <div class="kpi"><div class="kpi-label">${svTab==='profit'?'Profitable Sales':'Loss Sales'}</div><div class="kpi-value">${rows.length}</div><div class="kpi-foot">${SV_MFULL[svMonth]} ${svYear}</div></div>
+      <div class="kpi"><div class="kpi-label">Total Gross</div><div class="kpi-value" style="color:var(--green)">${dashMoney(gross)}</div></div>
+      <div class="kpi"><div class="kpi-label">Total Net</div><div class="kpi-value" style="color:${net>=0?'var(--green)':'var(--red)'}">${dashMoney(net)}</div></div>
+    </div>`;
+    const table = rows.length ? `<div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${SV_THEAD}<tbody>${rows.map(svRowHtml).join('')}</tbody></table></div></div>` : `<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No ${svTab==='profit'?'profitable':'loss'} sales in ${SV_MFULL[svMonth]} ${svYear}.</div>`;
+    body.innerHTML=kpis+table;
+  }
+}
+let vehByMonth=false;
+function toggleVehMonth(){ vehByMonth=!vehByMonth; const b=document.getElementById('vehMonthBtn'); if(b) b.classList.toggle('active', vehByMonth); if(typeof render==='function') render(); }
+function vehRender(filtered, rowFn){
+  if(!vehByMonth) return filtered.map(rowFn).join('');
+  const byMonth={};
+  filtered.forEach(r=>{ const key=(r.date||'').slice(0,7)||'0000-00'; (byMonth[key]=byMonth[key]||[]).push(r); });
+  const keys=Object.keys(byMonth).sort().reverse();
+  return keys.map(k=>{
+    const grp=byMonth[k];
+    let label='No date';
+    if(k!=='0000-00'){ const p=k.split('-'); label=`${SV_MFULL[(+p[1])-1]} ${p[0]}`; }
+    return `<tr class="sv-month-row"><td colspan="20"><span class="sv-mr-name">${label}</span><span class="sv-mr-meta">${grp.length} vehicle${grp.length===1?'':'s'}</span></td></tr>`+grp.map(rowFn).join('');
+  }).join('');
+}
+function downloadCsv(filename, headers, rows){
+  const esc=v=>{ v=(v==null?'':String(v)); return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; };
+  const csv=[headers.map(esc).join(','), ...rows.map(r=>r.map(esc).join(','))].join('\n');
+  const blob=new Blob([csv], {type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); setTimeout(()=>URL.revokeObjectURL(url), 500);
+}
+function exportVehiclesCsv(){
+  const rows=(window.lastVehRows&&window.lastVehRows.length)?window.lastVehRows:vehicles.map(computeRow);
+  const headers=['Purchase Date','Year','Make','Model','VIN','Sales Rep','Status','Purchase Price','Fees','Repairs','Add-ons','Flooring Cost','Total Investment','Sold Price','Gross Profit','Commission','Net Profit','ROI %','Days on Lot'];
+  const data=rows.map(r=>[r.date||'', r.year||'', r.make||'', r.model||'', r.vin||'', r.rep||'', (r.status||(r.sold?'Sold':'Active')), r.price??'', r.fees??'', r.repairs??'', r.addOns??'', r.flooringCost??'', r.totalInvestment??'', (r.soldPrice??''), r.grossProfit??'', r.commission??'', r.netProfit??'', (r.roi!=null?Math.round(r.roi*10)/10:''), (r.daysOnLot??'')]);
+  downloadCsv('autovault-inventory.csv', headers, data);
+}
+function exportSoldCsv(){
+  let rows=[], name;
+  if(svTab==='all'){ for(let mo=0;mo<12;mo++){ rows=rows.concat(svRows(svYear,mo)); } name='sold-vehicles-'+svYear+'.csv'; }
+  else { rows=svRows(svYear,svMonth).filter(r=> svTab==='profit'? r.netProfit>=0 : r.netProfit<0); name='sold-'+svTab+'-'+SV_MONTHS[svMonth]+'-'+svYear+'.csv'; }
+  const headers=['Sold Date','Year','Make','Model','VIN','Purchase Price','Sold Price','Gross Profit','Net Profit'];
+  const data=rows.map(r=>[r.soldDate||'', r.year||'', r.make||'', r.model||'', r.vin||'', r.price??'', (r.soldPrice??r.estimatedSale??''), r.grossProfit??'', r.netProfit??'']);
+  downloadCsv(name, headers, data);
+}
+function closeNotif(){ const p=document.getElementById('notifPanel'); if(p) p.classList.remove('open'); }
+function goPage(pg, fn){ closeNotif(); const el=document.querySelector('[data-page="'+pg+'"]'); showPage(pg, el); if(fn && typeof window[fn]==='function') window[fn](); }
+function getNotifications(){
+  const items=[]; const todayStr=today.toISOString().slice(0,10);
+  try{ if(typeof taxConfig!=='undefined' && taxConfig.nextDue){ const days=Math.round((new Date(taxConfig.nextDue+'T00:00:00')-new Date(todayStr+'T00:00:00'))/86400000); const filed=(taxFilings||[]).some(f=>f.dueDate===taxConfig.nextDue); if(days>=0 && days<=45 && !filed) items.push({color:'var(--orange)', title:'Sales tax filing due', text:`${taxConfig.frequency} filing due ${fmtDate(taxConfig.nextDue)} \u2014 ${days} day${days===1?'':'s'} left`, act:()=>goPage('tax','renderTaxPage')}); } }catch(e){}
+  try{ const fl=vehicles.filter(v=>!v.sold && vehicleFloored(v) && !v.flooringPaidOff).map(computeRow).filter(r=>r.daysOnLot>30); if(fl.length) items.push({color:'var(--red)', title:'Flooring payoff needed', text:`${fl.length} vehicle${fl.length===1?'':'s'} over 30 days on the floor plan \u2014 pay off to stop interest`, act:()=>{ closeNotif(); if(typeof openFlooringPage==='function') openFlooringPage(); else goPage('vehicles'); }}); }catch(e){}
+  try{ if(typeof calPayables==='function'){ const d=calPayables().filter(w=>isPayday(w,todayStr)); if(d.length) items.push({color:'#a78bfa', title:'Payroll due today', text:`${d.length} team member${d.length===1?'':'s'} to pay`, act:()=>goPage('payroll','renderPayrollPage')}); } }catch(e){}
+  try{ peopleBirthdaysOn(todayStr).forEach(nm=>items.push({color:'var(--purple)', title:'\ud83c\udf82 Birthday today', text:`It's ${nm}'s birthday \u2014 don't forget to celebrate!`, act:()=>goPage('dashboard','renderDashboard')})); }catch(e){}
+  return items;
+}
+function updateNotifBadge(){ const n=getNotifications().length; const b=document.getElementById('notifBadge'); if(b){ b.textContent=n; b.style.display=n>0?'':'none'; } }
+function toggleNotif(){ const p=document.getElementById('notifPanel'); if(!p) return; const open=p.classList.toggle('open'); if(open) renderNotifList(); }
+function renderNotifList(){
+  const items=getNotifications(); window.__notifs=items;
+  const cnt=document.getElementById('notifCount'); if(cnt) cnt.textContent=items.length?`(${items.length})`:'';
+  const list=document.getElementById('notifList'); if(!list) return;
+  list.innerHTML = items.length ? items.map((it,i)=>`<div class="notif-item" onclick="notifClick(${i})"><div class="notif-dot" style="background:${it.color}"></div><div style="flex:1;"><div class="notif-title">${it.title}</div><div class="notif-text">${it.text}</div></div><div class="notif-arrow">\u203a</div></div>`).join('') : '<div class="notif-empty">All caught up. No reminders right now.</div>';
+}
+function notifClick(i){ const it=(window.__notifs||[])[i]; if(it && it.act) it.act(); }
+document.addEventListener('click', function(e){ const w=document.getElementById('notifWrap'); const p=document.getElementById('notifPanel'); if(p && p.classList.contains('open') && w && !w.contains(e.target)) p.classList.remove('open'); });
+let repUser=null;
+function openRepLogin(){ const sel=document.getElementById('repLoginSelect'); if(sel) sel.innerHTML=(salesReps||[]).map(r=>`<option>${r.name}</option>`).join(''); const l=document.getElementById('repLogin'); if(l) l.classList.add('show'); }
+function closeRepLogin(){ const l=document.getElementById('repLogin'); if(l) l.classList.remove('show'); }
+function repDoLogin(){ repUser=(document.getElementById('repLoginSelect')||{}).value || (salesReps[0]&&salesReps[0].name); closeRepLogin(); enterRepMode(); }
+function enterRepMode(){
+  document.body.classList.add('rep-mode');
+  const who=document.getElementById('repWhoami'); if(who) who.textContent=repUser;
+  showPage('rep-dashboard', document.querySelector('[data-page="rep-dashboard"]')); renderRepDashboard();
+  window.scrollTo(0,0);
+}
+function exitRepMode(){ document.body.classList.remove('rep-mode'); repUser=null; showPage('dashboard', document.querySelector('[data-page="dashboard"]')); if(typeof renderDashboard==='function') renderDashboard(); }
+function renderRepMy(){
+  const sub=document.getElementById('repMySub'); if(sub) sub.textContent=`${repUser||'Your'}'s personal sold log.`;
+  const rows=vehicles.filter(v=>v.sold && v.rep===repUser).map(computeRow).sort((a,b)=>(b.soldDate||'').localeCompare(a.soldDate||''));
+  const totalComm=rows.reduce((s,r)=>s+(r.commission||0),0);
+  const thisMo=rows.filter(r=>(r.soldDate||'').startsWith(today.toISOString().slice(0,7))).length;
+  const moComm=rows.filter(r=>(r.soldDate||'').startsWith(today.toISOString().slice(0,7))).reduce((s,r)=>s+(r.commission||0),0);
+  const kh=document.getElementById('repMyKpis');
+  if(kh) kh.innerHTML=[{l:'Vehicles Sold',v:rows.length,c:'var(--blue)'},{l:'Total Commission',v:fmt(totalComm),c:'var(--green)'},{l:'Sold This Month',v:thisMo,c:'var(--text)'},{l:'Commission This Month',v:fmt(moComm),c:'var(--green)'}].map(k=>`<div class="kpi"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div></div>`).join('');
+  const thead='<thead><tr><th>Vehicle</th><th>VIN</th><th>Sold Date</th><th>Customer</th><th>Sale Price</th><th>My Commission</th></tr></thead>';
+  const rowFn = r => `<tr><td class="veh-cell"><div class="veh-name">${r.year} ${r.make} ${r.model}</div></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${r.vin||''}</td><td>${r.soldDate?fmtDate(r.soldDate):'\u2014'}</td><td>${r.customer||r.customerName||'\u2014'}</td><td>${fmt(r.soldPrice||0)}</td><td style="font-weight:800;color:var(--green);">${fmt(r.commission||0)}</td></tr>`;
+  let bodyHtml;
+  if(repMyByMonth){
+    const byMonth={};
+    rows.forEach(r=>{ const k=(r.soldDate||'').slice(0,7)||'0000-00'; (byMonth[k]=byMonth[k]||[]).push(r); });
+    const keys=Object.keys(byMonth).sort().reverse();
+    bodyHtml = keys.map(k=>{
+      const grp=byMonth[k].slice().sort((a,b)=>(a.soldDate||'').localeCompare(b.soldDate||''));
+      const comm=grp.reduce((s,r)=>s+(r.commission||0),0);
+      let label='No date'; if(k!=='0000-00'){ const p=k.split('-'); label=`${SV_MFULL[(+p[1])-1]} ${p[0]}`; }
+      return `<tr class="sv-month-row"><td colspan="6"><span class="sv-mr-name">${label}</span><span class="sv-mr-meta">${grp.length} car${grp.length===1?'':'s'} \u00b7 <b style="color:var(--green)">${fmt(comm)}</b> commission</span></td></tr>`+grp.map(rowFn).join('');
+    }).join('');
+  } else {
+    bodyHtml = rows.map(rowFn).join('');
+  }
+  const body=document.getElementById('repMyBody');
+  if(body) body.innerHTML = rows.length ? `<div class="table-card"><div class="table-scroll" id="repMyScroll"><table class="dash-sold-table">${thead}<tbody>${bodyHtml}</tbody></table></div></div>` : `<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No sales logged yet. Sales appear here once the finance desk assigns you a deal.</div>`;
+}
+
+function renderRepAvailable(){
+  const q=((document.getElementById('repAvailSearch')||{}).value||'').toLowerCase();
+  const rows=vehicles.filter(v=>!v.sold).map(computeRow).filter(r=>!q || `${r.year} ${r.make} ${r.model} ${r.vin}`.toLowerCase().includes(q)).sort((a,b)=>a.daysOnLot-b.daysOnLot);
+  const sub=document.getElementById('repAvailSub'); if(sub) sub.textContent=`${rows.length} vehicle${rows.length===1?'':'s'} available \u2014 asking prices shown, dealer cost hidden.`;
+  const thead='<thead><tr><th>Vehicle</th><th>VIN</th><th>Asking Price</th><th>Days on Lot</th><th>Status</th><th></th></tr></thead>';
+  const body=document.getElementById('repAvailBody');
+  if(body) body.innerHTML = rows.length ? `<div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${thead}<tbody>`+rows.map(r=>{const ask=r.estimatedSale||r.baseSale||Math.round((r.price||0)*1.27); return `<tr><td class="veh-cell"><div class="veh-name">${r.year} ${r.make} ${r.model}</div></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${r.vin||''}</td><td style="font-weight:700;">${fmt(ask)}</td><td>${r.daysOnLot} days</td><td><span style="color:${(r.status&&r.status!=='Active')?'var(--orange)':'var(--green)'};font-weight:700;">${(r.status&&r.status!=='Active')?r.status:'Available'}</span></td><td style="text-align:right;"><button class="print-btn" style="padding:5px 12px;font-size:11.5px;" onclick="repStartDeal('${r.vin}')">Start Deal</button></td></tr>`;}).join('')+`</tbody></table></div></div>` : `<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No available vehicles right now.</div>`;
+}
+function repRateFor(name){ const r=(salesReps||[]).find(x=>x.name===name); return r? (Number(r.commissionPct)||20)/100 : 0.20; }
+function repCommEst(){
+  const box=document.getElementById('rcCalc'); if(!box) return;
+  const vin=(document.getElementById('rcVehicle')||{}).value;
+  const price=parseFloat((document.getElementById('rcPrice')||{}).value)||0;
+  const v=(vehicles||[]).find(x=>x && x.vin===vin);
+  const rate=repRateFor(repUser);
+  if(!v){ box.innerHTML='<div class="rc-calc-head">Your Commission</div><div class="rc-calc-empty">Choose a vehicle and enter the sale price to see your commission for this deal.</div>'; return; }
+  const frontEndGross=Math.max(0, price-(v.price||0));
+  const comm=Math.round(frontEndGross*rate);
+  box.innerHTML=`<div class="rc-calc-head">Your Commission</div>
+    <div class="rc-calc-veh">${v.year} ${v.make} ${v.model}</div>
+    <div class="rc-calc-row"><span>Sale price</span><b>${price?fmt(price):'\u2014'}</b></div>
+    <div class="rc-calc-row"><span>Commission rate</span><b>${Math.round(rate*100)}%</b></div>
+    <div class="rc-calc-total"><span>Your commission</span><b>${fmt(comm)}</b></div>`;
+}
+function renderRepCustomers(){
+  const list=vehicles.filter(v=>v.sold && v.rep===repUser && (v.customerName||v.customer)).sort((a,b)=>(b.soldDate||'').localeCompare(a.soldDate||''));
+  const sub=document.getElementById('repCustSub'); if(sub) sub.textContent=`${list.length} customer${list.length===1?'':'s'} on your book.`;
+  const thead='<thead><tr><th>Customer</th><th>Phone</th><th>Email</th><th>Vehicle</th><th>Sale Date</th><th>My Commission</th></tr></thead>';
+  const body=document.getElementById('repCustBody');
+  if(body) body.innerHTML = list.length ? `<div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${thead}<tbody>`+list.map(v=>{const r=computeRow(v); return `<tr><td style="font-weight:700;color:var(--text);">${v.customerName||v.customer||'\u2014'}</td><td>${v.customerPhone||'\u2014'}</td><td>${v.customerEmail||'\u2014'}</td><td>${v.year} ${v.make} ${v.model}</td><td>${v.soldDate?fmtDate(v.soldDate):'\u2014'}</td><td style="font-weight:800;color:var(--green);">${fmt(r.commission||0)}</td></tr>`;}).join('')+`</tbody></table></div></div>` : `<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No customers yet. Create a deal jacket to add your first customer.</div>`;
+}
+function repStartDeal(vin){ showPage('rep-create', document.querySelector('[data-page="rep-create"]')); renderRepCreate(); const sel=document.getElementById('rcVehicle'); if(sel) sel.value=vin; }
+function renderRepCreate(){
+  const sel=document.getElementById('rcVehicle'); if(!sel) return;
+  const avail=vehicles.filter(v=>!v.sold);
+  sel.innerHTML='<option value="">Select a vehicle\u2026</option>'+avail.map(v=>`<option value="${v.vin}">${v.year} ${v.make} ${v.model} \u2014 ${v.vin}</option>`).join('');
+  const dt=document.getElementById('rcDate'); if(dt && !dt.value) dt.value=today.toISOString().slice(0,10);
+  repCommEst();
+}
+function rcMsgShow(msg, good){ const el=document.getElementById('rcMsg'); if(el) el.innerHTML=`<div class="rc-ok ${good?'good':'bad'}">${msg}</div>`; }
+function repCreateDeal(){
+  const vin=(document.getElementById('rcVehicle')||{}).value;
+  const v=vehicles.find(x=>x.vin===vin);
+  if(!v){ rcMsgShow('Please choose a vehicle first.', false); return; }
+  const name=(document.getElementById('rcName')||{}).value.trim();
+  if(!name){ rcMsgShow('Please enter the customer name.', false); return; }
+  const price=parseFloat((document.getElementById('rcPrice')||{}).value)||0;
+  const date=(document.getElementById('rcDate')||{}).value || today.toISOString().slice(0,10);
+  v.sold=true; v.status='Sold'; v.soldDate=date; v.soldPrice=price||Math.round(v.price*1.27); v.rep=repUser;
+  v.customer=name; v.customerName=name; v.customerPhone=(document.getElementById('rcPhone')||{}).value; v.customerEmail=(document.getElementById('rcEmail')||{}).value;
+  v.dealSaved=true; v.dealDate=date; const nt=(document.getElementById('rcNotes')||{}).value; if(nt) v.notes=nt;
+  const docsEl=document.getElementById('rcDocs'); if(docsEl && docsEl.files && docsEl.files.length) v.customerDocs=[...docsEl.files].map(f=>f.name);
+  try{ if(typeof recalcRepCommissions==='function') recalcRepCommissions([repUser]); }catch(e){}
+  try{ if(typeof render==='function') render(); }catch(e){}
+  rcMsgShow(`Deal jacket created for the ${v.year} ${v.make} ${v.model} and marked sold. Great work, ${repUser}!`, true);
+  ['rcName','rcPhone','rcEmail','rcPrice','rcNotes'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  if(docsEl) docsEl.value='';
+  renderRepCreate(); renderRepMy(); renderRepAvailable(); renderRepCustomers(); if(typeof updateNotifBadge==='function') updateNotifBadge();
+  setTimeout(()=>{ showPage('rep-customers', document.querySelector('[data-page="rep-customers"]')); renderRepCustomers(); }, 1100);
+}
+let repDashMonth=5, repDashYear=2026, repDaySynced=false, repExpandedDay=null, repDayNotes={}, repMyByMonth=false;
+function toggleRepMyMonth(){ repMyByMonth=!repMyByMonth; const b=document.getElementById('repMyMonthBtn'); if(b) b.classList.toggle('active', repMyByMonth); renderRepMy(); }
+function repCalMonth(d){ repDashMonth+=d; if(repDashMonth<0){repDashMonth=11;repDashYear--;} if(repDashMonth>11){repDashMonth=0;repDashYear++;} repExpandedDay=null; renderRepCal(); renderRepSold(); }
+function repDayOpen(ds){ repExpandedDay=(repExpandedDay===ds)?null:ds; renderRepCal(); }
+function repSaveDayNote(ds,val){ repDayNotes[ds]=val; }
+function repMySoldIn(mo,yr){ const pfx=`${yr}-${String(mo+1).padStart(2,'0')}`; return vehicles.filter(v=>v.sold && v.rep===repUser && (v.soldDate||'').startsWith(pfx)).map(computeRow); }
+function renderRepDashboard(){
+  if(!repDaySynced){ repDaySynced=true; try{ repDashMonth=today.getMonth(); repDashYear=today.getFullYear(); }catch(e){} }
+  const sub=document.getElementById('repDashSub'); if(sub) sub.textContent=`Welcome back, ${repUser||''}. Here is your month at a glance.`;
+  const cm=today.getMonth(), cy=today.getFullYear(); let pm=cm-1, py=cy; if(pm<0){pm=11;py--;}
+  renderRepCompare();
+  // top rep this month
+  const pfx=`${cy}-${String(cm+1).padStart(2,'0')}`;
+  const counts={}; (salesReps||[]).forEach(r=>counts[r.name]=0);
+  vehicles.filter(v=>v.sold && (v.soldDate||'').startsWith(pfx)).forEach(v=>{ if(v.rep) counts[v.rep]=(counts[v.rep]||0)+1; });
+  let top=null, topN=-1; Object.keys(counts).forEach(n=>{ if(counts[n]>topN){topN=counts[n];top=n;} });
+  const tr=document.getElementById('repTopRep');
+  if(tr){ const isYou=top===repUser; tr.innerHTML = `<div class="rd-tr-crown">\ud83c\udfc6</div><div><div class="rd-tr-label">Top Sales Rep \u2014 ${PNL_MFULL[cm]}</div><div class="rd-tr-name">${top||'\u2014'}${isYou?' <span class="rd-tr-you">that is you!</span>':''}</div><div class="rd-tr-sub">${topN>0?topN+' car'+(topN===1?'':'s')+' sold this month':'No sales logged yet'}</div></div>`; }
+  renderRepCal();
+  renderRepSold();
+}
+function renderRepSold(){
+  const rows=repMySoldIn(repDashMonth, repDashYear).sort((a,b)=>(b.soldDate||'').localeCompare(a.soldDate||''));
+  const cnt=document.getElementById('repSoldCount'); if(cnt) cnt.textContent=`${rows.length} sold \u00b7 ${PNL_MFULL[repDashMonth]} ${repDashYear}`;
+  const body=document.getElementById('repSoldBody');
+  if(body) body.innerHTML = rows.length ? rows.map(r=>`<tr><td class="veh-cell"><div class="veh-name">${r.year} ${r.make} ${r.model}</div></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${r.vin||''}</td><td>${r.soldDate?fmtDate(r.soldDate):'\u2014'}</td><td style="font-weight:800;color:var(--green);">${fmt(r.commission||0)}</td></tr>`).join('') : `<tr><td colspan="4"><div style="padding:26px;text-align:center;color:var(--muted);">No vehicles sold in ${PNL_MFULL[repDashMonth]} ${repDashYear}.</div></td></tr>`;
+  const totalComm=rows.reduce((s,r)=>s+(r.commission||0),0);
+  const totalRev=rows.reduce((s,r)=>s+(r.soldPrice||0),0);
+  const rate=totalRev>0?totalComm/totalRev:0;
+  const circ=2*Math.PI*26; const dash=Math.max(0,Math.min(1,rate))*circ; const col='var(--green)';
+  const cmp = totalComm>=1000 ? '$'+(Math.round(totalComm/100)/10)+'k' : fmt(totalComm);
+  const dc=document.getElementById('repPnlCircle');
+  if(dc) dc.innerHTML=`<svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="26" fill="none" stroke="var(--border)" stroke-width="7"/><circle cx="37" cy="37" r="26" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${dash} ${circ}" transform="rotate(-90 37 37)"/><text x="37" y="33" text-anchor="middle" font-size="7" fill="var(--muted)">Commission</text><text x="37" y="46" text-anchor="middle" font-size="11" font-weight="800" fill="${col}">${cmp}</text></svg>`;
+}
+function renderRepCompare(){
+  const host=document.getElementById('repCompareBars'); if(!host) return;
+  const cm=today.getMonth(), cy=today.getFullYear(); let pm=cm-1, py=cy; if(pm<0){pm=11;py--;}
+  const tArr=repMySoldIn(cm,cy), lArr=repMySoldIn(pm,py);
+  const lbl=document.getElementById('repCmpLbl'); if(lbl) lbl.textContent=`${PNL_MFULL[cm]} vs ${PNL_MFULL[pm]}`;
+  const metrics=[{label:'Cars Sold', t:tArr.length, l:lArr.length, money:false},{label:'Commission', t:tArr.reduce((s,r)=>s+(r.commission||0),0), l:lArr.reduce((s,r)=>s+(r.commission||0),0), money:true}];
+  host.innerHTML=metrics.map(mt=>{
+    const mx=Math.max(Math.abs(mt.t),Math.abs(mt.l),1);
+    const tw=Math.round(Math.abs(mt.t)/mx*100), lw=Math.round(Math.abs(mt.l)/mx*100);
+    const fmtv=v=>mt.money?fmt(v):v; const tCol='var(--blue)';
+    let chg='';
+    if(mt.l!==0){ const pct=Math.round((mt.t-mt.l)/Math.abs(mt.l)*100); const up=pct>=0; chg=`<span class="cmp-chg ${up?'up':'down'}">${up?'\u25b2':'\u25bc'} ${Math.abs(pct)}%</span>`; }
+    else if(mt.t>0){ chg='<span class="cmp-chg flat">NEW</span>'; }
+    return `<div class="dcs-metric"><div class="dcs-head"><span class="dcs-label">${mt.label}</span>${chg}</div><div class="dcs-row"><div class="dcs-track"><div class="dcs-fill" style="width:${tw}%;background:${tCol};"></div></div><span class="dcs-val" style="color:${tCol};">${fmtv(mt.t)}</span></div><div class="dcs-row"><div class="dcs-track"><div class="dcs-fill last" style="width:${lw}%"></div></div><span class="dcs-val">${fmtv(mt.l)}</span></div></div>`;
+  }).join('');
+}
+let repLeads=[], editingLead=null;
+function openLeadModal(id){
+  editingLead=id||null;
+  const t=document.getElementById('leadModalTitle'); if(t) t.textContent=id?'Lead Details':'Add Lead';
+  const L=id?repLeads.find(x=>x.id===id):{};
+  document.getElementById('leadName').value=L.name||'';
+  document.getElementById('leadPhone').value=L.phone||'';
+  document.getElementById('leadEmail').value=L.email||'';
+  document.getElementById('leadNotes').value=L.notes||'';
+  document.getElementById('leadDeleteBtn').style.display=id?'inline-flex':'none';
+  document.getElementById('leadModal').classList.add('open');
+}
+function closeLeadModal(){ const m=document.getElementById('leadModal'); if(m) m.classList.remove('open'); }
+function saveLead(){
+  const name=document.getElementById('leadName').value.trim();
+  if(!name){ document.getElementById('leadName').focus(); return; }
+  const data={name, phone:document.getElementById('leadPhone').value, email:document.getElementById('leadEmail').value, notes:document.getElementById('leadNotes').value};
+  if(editingLead){ const L=repLeads.find(x=>x.id===editingLead); if(L) Object.assign(L,data); }
+  else { repLeads.push({id:'L'+Date.now(), rep:repUser, date:today.toISOString().slice(0,10), ...data}); }
+  closeLeadModal(); renderRepLeads();
+}
+function deleteLead(){ if(editingLead) repLeads=repLeads.filter(x=>x.id!==editingLead); closeLeadModal(); renderRepLeads(); }
+function renderRepLeads(){
+  const host=document.getElementById('repLeadsList'); if(!host) return;
+  const mine=repLeads.filter(l=>l.rep===repUser);
+  if(!mine.length){ host.innerHTML='<div class="lead-empty">No leads yet. Add a lead to start tracking potential buyers.</div>'; return; }
+  const thead='<thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Notes</th><th>Added</th></tr></thead>';
+  host.innerHTML=`<div class="table-card" style="margin:0;"><div class="table-scroll"><table class="dash-sold-table lead-table">${thead}<tbody>`+mine.map(l=>`<tr onclick="openLeadModal('${l.id}')"><td style="font-weight:700;color:var(--text);">${msgEsc(l.name)}</td><td>${msgEsc(l.phone||'\u2014')}</td><td>${msgEsc(l.email||'\u2014')}</td><td class="lead-notes-cell">${msgEsc(l.notes||'\u2014')}</td><td style="color:var(--muted);white-space:nowrap;">${l.date?fmtDate(l.date):'\u2014'}</td></tr>`).join('')+`</tbody></table></div></div>`;
+}
+function renderRepCal(){
+  const grid=document.getElementById('repCalGrid'); if(!grid) return;
+  const title=document.getElementById('repCalTitle'); if(title) title.textContent=`${PNL_MFULL[repDashMonth]} ${repDashYear}`;
+  const startDow=new Date(repDashYear,repDashMonth,1).getDay();
+  const daysInMonth=new Date(repDashYear,repDashMonth+1,0).getDate();
+  const todayStr=today.toISOString().slice(0,10);
+  const prefix=`${repDashYear}-${String(repDashMonth+1).padStart(2,'0')}`;
+  let cells='';
+  for(let i=0;i<startDow;i++) cells+='<div class="cal-cell empty"></div>';
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=`${prefix}-${String(d).padStart(2,'0')}`;
+    const soldList=vehicles.filter(v=>v.sold && v.rep===repUser && v.soldDate===ds).map(computeRow);
+    const sold=soldList.length;
+    const bdays=peopleBirthdaysOn(ds);
+    const note=(repDayNotes[ds]||'').trim();
+    const cls=['cal-cell']; if(ds===todayStr) cls.push('today');
+    if(ds===repExpandedDay){
+      cls.push('expanded');
+      const dObj=new Date(ds+'T00:00:00');
+      const totalComm=soldList.reduce((s,r)=>s+(r.commission||0),0);
+      const rem=[];
+      if(bdays.length) rem.push('<div class="ddp-reminder" style="background:rgba(124,92,255,.16);color:#a78bfa;">\ud83c\udf82 <b>'+bdays.join(', ')+'</b> \u2014 birthday today</div>');
+      const soldHtml = sold ? '<div class="cal-exp-lbl">You sold ('+sold+') \u00b7 '+fmt(totalComm)+' commission</div><div class="cal-exp-sold-list">'+soldList.map(r=>`<div class="ddp-sold-item"><span>${r.year} ${r.make} ${r.model}</span><span style="font-weight:800;color:var(--green);">${fmt(r.commission||0)}</span></div>`).join('')+'</div>' : '';
+      cells+=`<div class="${cls.join(' ')}">
+        <div class="cal-exp-head"><span class="cal-exp-date">${dObj.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</span><button class="cal-exp-close" onclick="event.stopPropagation(); repDayOpen('${ds}');">&times;</button></div>
+        ${rem.length?'<div class="cal-exp-lbl">Reminders</div>'+rem.join(''):''}
+        ${soldHtml}
+        <div class="cal-exp-lbl">Notes</div>
+        <textarea class="cal-exp-note" placeholder="Type notes for this day\u2026" onclick="event.stopPropagation();" oninput="repSaveDayNote('${ds}', this.value)">${(repDayNotes[ds]||'').replace(/&/g,'&amp;').replace(/</g,'&lt;')}</textarea>
+      </div>`;
+    } else {
+      cells+=`<div class="${cls.join(' ')}" onclick="repDayOpen('${ds}')">
+        <div class="cal-daynum">${d}</div>
+        ${sold?`<div class="cal-sold">${sold} sold</div>`:''}
+        ${bdays.length?`<div class="cal-bday">\ud83c\udf82 ${bdays[0]}${bdays.length>1?' +'+(bdays.length-1):''}</div>`:''}
+        ${note?`<div class="cal-note-bar" style="background:rgba(58,160,255,.16);color:var(--blue);">Note</div>`:''}
+      </div>`;
+    }
+  }
+  grid.innerHTML=cells;
+}
+function openAddVeh(){ const m=document.getElementById('addVehModal'); if(m){ m.classList.add('open'); try{ const s=document.getElementById('avFlSub'); if(s && typeof flooringConfig!=='undefined'){ s.textContent='Uses your saved rate: $'+(flooringConfig.buyFee||0)+' buy fee, from $'+((flooringConfig.tiers&&flooringConfig.tiers[0]&&flooringConfig.tiers[0].rate)||0)+'/day.'; } }catch(e){} setTimeout(()=>{ const v=document.getElementById('avVin'); if(v) v.focus(); }, 60); } }
+function closeAddVeh(){ const m=document.getElementById('addVehModal'); if(m) m.classList.remove('open'); }
+function decodeVin(vin){
+  vin=(vin||'').toUpperCase().replace(/\s/g,''); let year='', make='';
+  if(vin.length>=10){ const yc=vin[9]; const ym={A:2010,B:2011,C:2012,D:2013,E:2014,F:2015,G:2016,H:2017,J:2018,K:2019,L:2020,M:2021,N:2022,P:2023,R:2024,S:2025,T:2026,V:2027,W:2028,X:2029,Y:2030,'1':2001,'2':2002,'3':2003,'4':2004,'5':2005,'6':2006,'7':2007,'8':2008,'9':2009}; if(ym[yc]) year=ym[yc]; }
+  const w3=vin.slice(0,3), w2=vin.slice(0,2);
+  const M={'1FA':'Ford','1FT':'Ford','1FD':'Ford','1FB':'Ford','1FC':'Ford','1FM':'Ford','2FA':'Ford','3FA':'Ford','1G1':'Chevrolet','1GC':'Chevrolet','3GC':'Chevrolet','1GK':'GMC','1GT':'GMC','3GT':'GMC','1HG':'Honda','2HG':'Honda','JHM':'Honda','5FN':'Honda','4T1':'Toyota','5TD':'Toyota','JTD':'Toyota','2T1':'Toyota','JTE':'Toyota','5TF':'Toyota','5YJ':'Tesla','7SA':'Tesla','1N4':'Nissan','JN1':'Nissan','JN8':'Nissan','3N1':'Nissan','5N1':'Nissan','WBA':'BMW','WBS':'BMW','5UX':'BMW','WDD':'Mercedes-Benz','WDB':'Mercedes-Benz','4JG':'Mercedes-Benz','W1K':'Mercedes-Benz','1C4':'Jeep','1C6':'Ram','2C3':'Chrysler','3C4':'Jeep','5NP':'Hyundai','KMH':'Hyundai','5NM':'Hyundai','KNA':'Kia','KND':'Kia','5XY':'Kia','JF1':'Subaru','4S3':'Subaru','4S4':'Subaru','WVW':'Volkswagen','3VW':'Volkswagen','JM1':'Mazda','JM3':'Mazda','WAU':'Audi','WA1':'Audi'};
+  make = M[w3] || M[w2] || '';
+  return {year, make};
+}
+function avVinInput(){
+  const vin=(document.getElementById('avVin')||{}).value||''; const d=decodeVin(vin);
+  const dec=document.getElementById('avDecoded'); if(!dec) return;
+  if(vin.replace(/\s/g,'').length>=11){
+    if(d.year && !document.getElementById('avYear').value) document.getElementById('avYear').value=d.year;
+    if(d.make && !document.getElementById('avMake').value) document.getElementById('avMake').value=d.make;
+    dec.innerHTML = (d.year||d.make) ? `<span class="av-dec-ok">\u2713 Decoded: ${[d.year,d.make].filter(Boolean).join(' ')} \u2014 add the model &amp; price</span>` : `<span class="av-dec-warn">VIN captured \u2014 add the details below</span>`;
+  } else { dec.innerHTML=''; }
+}
+function avScan(){ const s=['1FTFW1E58NKE45012','5YJYGDEE9PF221100','1HGCV1F30PA045678','3GCUYDED0NG556677','5NPE34AF4NH210987','1C4RJFBG7NC998877']; const pick=s[Math.floor(Math.random()*s.length)]; const el=document.getElementById('avVin'); if(el){ el.value=pick; avVinInput(); } }
+function avMsg(msg, good){ const el=document.getElementById('avMsg'); if(el) el.innerHTML=`<div class="rc-ok ${good?'good':'bad'}">${msg}</div>`; }
+function addVehicleSave(){
+  const vin=(document.getElementById('avVin').value||'').trim().toUpperCase();
+  if(!vin){ avMsg('Scan or paste a VIN first.', false); document.getElementById('avVin').focus(); return; }
+  if(vehicles.some(v=>(v.vin||'').toUpperCase()===vin)){ avMsg('That VIN is already in inventory.', false); return; }
+  const year=parseInt(document.getElementById('avYear').value)||'';
+  const make=document.getElementById('avMake').value.trim();
+  const model=document.getElementById('avModel').value.trim();
+  const price=parseFloat(document.getElementById('avPrice').value)||0;
+  const fees=parseFloat(document.getElementById('avFees').value)||0;
+  const floored=!!(document.getElementById('avFlooring')||{}).checked;
+  vehicles.unshift({ date: today.toISOString().slice(0,10), year:year||'\u2014', make:make||'Vehicle', model:model||'', vin, category:'', price, fees, repairs:0, salesTax:0, regFees:0, addOns:0, extraRepPay:0, rep:'', sold:false, soldDate:null, soldPrice:null, customer:null, notes:'', floored:floored });
+  try{ if(typeof render==='function') render(); }catch(e){}
+  try{ if(typeof populateRepFilter==='function') populateRepFilter(vehicles.map(computeRow), true); }catch(e){}
+  try{ if(typeof updateNotifBadge==='function') updateNotifBadge(); }catch(e){}
+  avMsg(`Added ${[year,make,model].filter(Boolean).join(' ')||'vehicle'} to inventory \u2014 add another or close.`, true);
+  ['avVin','avYear','avMake','avModel','avPrice','avFees'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('avDecoded').innerHTML='';
+  try{ const sb=document.getElementById('sortBy'); if(sb){ sb.value='default'; } const se=document.getElementById('tableSearch'); if(se){ se.value=''; } if(typeof render==='function') render(); }catch(e){}
+  document.getElementById('avVin').focus();
+}
+let djByMonth=false, taxByMonth=false;
+function monthGroupRows(rows, dateKey, rowFn, colspan, metaFn){
+  const byMonth={};
+  rows.forEach(r=>{ const k=((r[dateKey]||'')+'').slice(0,7)||'0000-00'; (byMonth[k]=byMonth[k]||[]).push(r); });
+  const keys=Object.keys(byMonth).sort().reverse();
+  return keys.map(k=>{
+    const grp=byMonth[k];
+    let label='No date'; if(k!=='0000-00'){ const p=k.split('-'); label=`${PNL_MFULL[(+p[1])-1]} ${p[0]}`; }
+    const meta = metaFn ? metaFn(grp) : `${grp.length} item${grp.length===1?'':'s'}`;
+    return `<tr class="sv-month-row"><td colspan="${colspan}"><span class="sv-mr-name">${label}</span><span class="sv-mr-meta">${meta}</span></td></tr>`+grp.map(rowFn).join('');
+  }).join('');
+}
+function toggleDjMonth(){ djByMonth=!djByMonth; const b=document.getElementById('djMonthBtn'); if(b) b.classList.toggle('active',djByMonth); if(typeof renderDealJacketsList==='function') renderDealJacketsList(); }
+function toggleTaxMonth(){ taxByMonth=!taxByMonth; if(taxByMonth && typeof taxGroupView!=='undefined') taxGroupView=false; const b=document.getElementById('taxMonthBtn'); if(b) b.classList.toggle('active',taxByMonth); if(typeof renderTaxPage==='function') renderTaxPage(); }
 function showPage(pageId, el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(el) el.classList.add('active');
@@ -3746,10 +5031,13 @@ const fmtSigned = n => (n<0?'-':'') + '$' + Math.abs(Math.round(n)).toLocaleStri
 const fmtDate = d => new Date(d).toLocaleDateString('en-US',{month:'short',day:'2-digit',year:'numeric'});
 
 let salesReps = [
-  {name:'D. Cole', commissionPct:20, base:2500, payFreq:'biweekly', payDay:5, payAnchor:'2026-06-05'},
-  {name:'M. Reyes', commissionPct:20, base:2000, payFreq:'weekly', payDay:5},
-  {name:'A. Patel', commissionPct:20, base:2200, payFreq:'biweekly', payDay:5, payAnchor:'2026-06-12'}
+  {name:'D. Cole', commissionPct:20, base:2500, payFreq:'biweekly', payDay:5, payAnchor:'2026-06-05', birthday:'1988-06-29'},
+  {name:'M. Reyes', commissionPct:20, base:2000, payFreq:'weekly', payDay:5, birthday:'1992-03-14'},
+  {name:'A. Patel', commissionPct:20, base:2200, payFreq:'biweekly', payDay:5, payAnchor:'2026-06-12', birthday:'1985-11-02'}
 ];
+let crmOwner = {name:'Jordan Marsh', role:'Dealer Admin', birthday:'1979-09-20'};
+function allPeople(){ const arr=(salesReps||[]).map(r=>({name:r.name, birthday:r.birthday})); arr.push({name:crmOwner.name, birthday:crmOwner.birthday}); return arr.filter(p=>p.birthday); }
+function peopleBirthdaysOn(ds){ const md=(ds||'').slice(5,10); return allPeople().filter(p=>(p.birthday||'').slice(5,10)===md).map(p=>p.name); }
 let REP_LIST = salesReps.map(r=>r.name);
 function syncRepList(){ REP_LIST = salesReps.map(r=>r.name); }
 function repRate(name){ const r=salesReps.find(x=>x.name===name); return r?Number(r.commissionPct):null; }
@@ -3778,7 +5066,8 @@ function render(){
 
   (document.getElementById('filterTag')||{}).textContent = `Showing ${filtered.length} of ${vehicles.length} vehicles`;
 
-  document.getElementById('tableBody').innerHTML = filtered.map(r=>`
+  window.lastVehRows = filtered;
+  document.getElementById('tableBody').innerHTML = vehRender(filtered, (r)=>`
     <tr>
       <td>${fmtDate(r.date)}</td>
       <td class="veh-cell" style="cursor:pointer;" onclick="showVehicleDetail('${r.vin}')">
@@ -3843,7 +5132,7 @@ function render(){
         <div class="icon-btn" title="Mark Sold">✓</div>
       </td>
     </tr>
-  `).join('');
+  `);
 
   renderKPIs(rows);
   populateRepFilter(rows);
@@ -3988,10 +5277,10 @@ function openRepModal(name){
   const nameEl=document.getElementById('repModalName'); const pctEl=document.getElementById('repModalPct');
   if(name){
     const r=salesReps.find(x=>x.name===name);
-    nameEl.value=r.name; nameEl.disabled=true; pctEl.value=r.commissionPct;
+    nameEl.value=r.name; nameEl.disabled=true; pctEl.value=r.commissionPct; { const bd=document.getElementById('repModalBirthday'); if(bd) bd.value=r.birthday||''; }
     document.getElementById('repDeleteBtn').style.display='inline-flex';
   } else {
-    nameEl.value=''; nameEl.disabled=false; pctEl.value='';
+    nameEl.value=''; nameEl.disabled=false; pctEl.value=''; { const bd=document.getElementById('repModalBirthday'); if(bd) bd.value=''; }
     document.getElementById('repDeleteBtn').style.display='none';
   }
   document.getElementById('repModalBase').value = name ? (salesReps.find(x=>x.name===name).base||'') : '';
@@ -4036,7 +5325,8 @@ function saveSalesRep(){
   const anchor=freq==='biweekly'?nextWeekdayOnOrAfter(today, payDay):null;
   if(name){
     let rep=salesReps.find(r=>r.name===name);
-    if(rep){ rep.commissionPct=pct; rep.base=base; rep.payFreq=freq; rep.payDay=payDay; rep.payAnchor=anchor; } else { salesReps.push({name, commissionPct:pct, base, payFreq:freq, payDay, payAnchor:anchor}); }
+    const bday=(document.getElementById('repModalBirthday')||{}).value||'';
+  if(rep){ rep.commissionPct=pct; rep.base=base; rep.payFreq=freq; rep.payDay=payDay; rep.payAnchor=anchor; rep.birthday=bday; } else { salesReps.push({name, commissionPct:pct, base, payFreq:freq, payDay, payAnchor:anchor, birthday:bday}); }
   }
   if(repApplyAll){ salesReps.forEach(r=>r.commissionPct=pct); }
   syncRepList();
@@ -4602,10 +5892,36 @@ function showVehicleDetail(vin){
   if(typeof renderVehicleDocs==='function') renderVehicleDocs(vin);
 }
 
+function buildVdpTicker(v){
+  const r=computeRow(v);
+  const roi=Math.round((r.roi||0)*10)/10;
+  const items=[
+    ['Vehicle', `${r.year} ${r.make} ${r.model}`],
+    ['VIN', r.vin||'\u2014'],
+    ['Purchase Price', fmt(r.price||0)],
+    ['Fees', fmt(r.fees!=null?r.fees:(v.fees||0))],
+    ['Repairs', fmt(r.repairs!=null?r.repairs:(v.repairs||0))],
+    ['Flooring Cost', fmt(r.flooringCost||0)],
+    ['Flooring Age', (r.daysOnLot||0)+' days'],
+    ['Date In', r.date?fmtDate(r.date):'\u2014'],
+    ['Sales Tax', fmt(v.customerSalesTax!=null?v.customerSalesTax:(v.salesTax||0))],
+    ['Reg. Fee', fmt(v.customerRegFees!=null?v.customerRegFees:(v.regFees||0))],
+    ['Total Investment', fmt(r.totalInvestment||0)],
+    ['Total Vehicle Cost', fmt(r.totalVehicleCost||0)],
+    ['Commission', fmt(r.commission||0)],
+    ['Net Profit', dashMoney(r.netProfit||0)],
+    ['ROI', roi+'%'],
+    ['Sales Rep', r.rep||v.rep||'\u2014'],
+    ['Sold Date', r.soldDate?fmtDate(r.soldDate):'\u2014'],
+    ['Inventory', r.status||(r.sold?'Sold':'Active')]
+  ];
+  return items.map(([k,val])=>`<span class="vt-item"><span class="vt-k">${k}</span><span class="vt-v">${val}</span></span>`).join('<span class="vt-sep">\u2022</span>');
+}
 function renderVehicleDetailPage(vin){
   const v = vehicles.find(x=>x.vin===vin);
   if(!v) return;
   const r = computeRow(v);
+  { const tt=document.getElementById('vdpTickerTrack'); if(tt){ const pills=buildVdpTicker(v); tt.innerHTML=`<div class="vt-group">${pills}</div><div class="vt-group">${pills}</div>`; } }
 
   // Hero
   document.getElementById('vdpTitle').textContent = `${r.year} ${r.make} ${r.model}`;
@@ -4682,7 +5998,7 @@ function renderVehicleDetailPage(vin){
   }
 
   // Notes
-  document.getElementById('vdpNotes').textContent = v.notes || 'No notes on file.';
+  document.getElementById('vdpNotes').value = v.notes || '';
 
   // Status dropdown
   const sel = document.getElementById('vdpStatusSelect');
@@ -4702,6 +6018,8 @@ function renderVehicleDetailPage(vin){
   } else {
     soldForm.classList.remove('open');
   }
+  { const rs=document.getElementById('vdpSaleRep'); if(rs) rs.innerHTML='<option value="">Select rep\u2026</option>'+(salesReps||[]).map(rp=>`<option${v.rep===rp.name?' selected':''}>${rp.name}</option>`).join(''); }
+  { const dn=document.getElementById('vdpDealNumber'); if(dn) dn.value=v.dealNumber||''; }
 
   // Quick list
   renderVdpQuickList(vin);
@@ -4724,6 +6042,7 @@ function vdpRecalc(){
   // live profit preview while filling sold form — future enhancement
 }
 
+function vdpSaveNotes(val){ const v=vehicles.find(x=>x.vin===currentVdpVin); if(v) v.notes=val; }
 function vdpSaveSale(){
   const v = vehicles.find(x=>x.vin===currentVdpVin);
   if(!v) return;
@@ -4734,6 +6053,8 @@ function vdpSaveSale(){
   const phone = document.getElementById('vdpCustomerPhone').value;
   const email = document.getElementById('vdpCustomerEmail').value;
   const notes = document.getElementById('vdpSaleNotes').value;
+  const saleRep = (document.getElementById('vdpSaleRep')||{}).value;
+  const dealNumber = (document.getElementById('vdpDealNumber')||{}).value;
 
   if(soldPrice > 0) v.soldPrice = soldPrice;
   // Customer sales tax & reg fees are collected from the customer and passed to the state.
@@ -4741,6 +6062,8 @@ function vdpSaveSale(){
   v.customerSalesTax = customerSalesTax;
   v.customerRegFees  = customerRegFees;
   if(customerName) v.customer = customerName;
+  if(saleRep) v.rep = saleRep;
+  if(dealNumber) v.dealNumber = dealNumber;
   v.customerPhone = phone;
   v.customerEmail = email;
   if(notes) v.notes = notes;
@@ -4749,6 +6072,7 @@ function vdpSaveSale(){
   v.statusDate = today.toISOString().split('T')[0];
   if(!v.soldDate) v.soldDate = today.toISOString().split('T')[0];
 
+  try{ if(typeof recalcRepCommissions==='function' && v.rep) recalcRepCommissions([v.rep]); }catch(e){}
   render();
   renderProfitPage();
   renderVehicleDetailPage(currentVdpVin);
@@ -6277,12 +7601,14 @@ let djContext='inventory';
 function djBack(){
   if(djContext==='customers'){ showPage('customers', document.querySelector('[data-page="customers"]')); renderCustomersPage(); }
   else if(djContext==='dashboard'){ showPage('dashboard', document.querySelector('[data-page="dashboard"]')); renderDashboard(); }
+  else if(djContext==='messages'){ showPage('messages', document.querySelector('[data-page="messages"]')); renderMessages(); }
+  else if(djContext==='sold'){ showPage('sold-vehicles', document.querySelector('[data-page="sold-vehicles"]')); renderSoldVehicles(); }
   else { openMarkSold(); }
 }
 function openDealJacket(vin, context){
   currentDealVin=vin;
-  djContext = (context==='customers') ? 'customers' : (context==='dashboard' ? 'dashboard' : 'inventory');
-  { const bt=document.getElementById('djBackText'); if(bt) bt.textContent = djContext==='customers' ? 'Back to Paid Customers' : (djContext==='dashboard' ? 'Back to Dashboard' : 'Choose another vehicle'); }
+  djContext = (context==='customers') ? 'customers' : (context==='dashboard' ? 'dashboard' : (context==='messages' ? 'messages' : (context==='sold' ? 'sold' : 'inventory')));
+  { const bt=document.getElementById('djBackText'); if(bt) bt.textContent = djContext==='customers' ? 'Back to Paid Customers' : (djContext==='dashboard' ? 'Back to Dashboard' : (djContext==='messages' ? 'Back to Messages' : (djContext==='sold' ? 'Back to Sold Vehicles' : 'Choose another vehicle'))); }
   closeMarkSold();
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   const navSel = djContext==='customers' ? '[data-page="customers"]' : '[data-nav="deal-jackets"]';
@@ -6497,6 +7823,18 @@ function renderDealBottomList(){
     if(sub) sub.textContent='Click a customer to open their deal jacket';
     if(headLabel) headLabel.textContent='Paid customers';
     renderDealCustomerList();
+  } else if(djContext==='sold'){
+    if(back) back.textContent='Back to Sold Vehicles';
+    if(heading) heading.textContent='Rest of Inventory';
+    if(sub) sub.textContent='Click any vehicle to open its deal jacket';
+    if(headLabel) headLabel.textContent='Active vehicles';
+    renderDealRestList();
+  } else if(djContext==='messages'){
+    if(back) back.textContent='Back to Messages';
+    if(heading) heading.textContent='Rest of Inventory';
+    if(sub) sub.textContent='Click any vehicle to open its deal jacket';
+    if(headLabel) headLabel.textContent='Active vehicles';
+    renderDealRestList();
   } else if(djContext==='dashboard'){
     if(back) back.textContent='Back to Dashboard';
     if(heading) heading.textContent='Rest of Inventory';
@@ -6581,7 +7919,8 @@ function renderDealJacketsList(){
   document.getElementById('djlSoldValue').textContent=fmt(soldValue);
   document.getElementById('djlNet').textContent=fmtSigned(net);
   document.getElementById('djlRoi').textContent=Math.round(avgRoi)+'%';
-  document.getElementById('djlBody').innerHTML=rows.length?[...rows].sort((a,b)=>new Date(b.soldDate||0)-new Date(a.soldDate||0)).map(r=>{
+  const _djS=[...rows].sort((a,b)=>new Date(b.soldDate||0)-new Date(a.soldDate||0));
+  const _djRf=(r)=>{
     const docs=(vehicles.find(v=>v.vin===r.vin).documents||[]).length;
     return `<tr style="cursor:pointer;" onclick="openDealJacket('${r.vin}')">
       <td><div class="exp-name">${r.year} ${r.make} ${r.model}</div><div class="exp-sub" style="opacity:.6;">${r.vin}</div></td>
@@ -6594,7 +7933,8 @@ function renderDealJacketsList(){
       <td>${r.soldDate?fmtDate(r.soldDate):'\u2014'}</td>
       <td>${docs?docs+' \uD83D\uDCCE':'\u2014'}</td>
     </tr>`;
-  }).join(''):`<tr><td colspan="9"><div class="doc-empty">No deals closed yet. Click "New Deal / Mark Sold" to create one.</div></td></tr>`;
+  };
+  document.getElementById('djlBody').innerHTML=rows.length?(djByMonth?monthGroupRows(_djS,'soldDate',_djRf,9,g=>g.length+' deal'+(g.length===1?'':'s')+' · '+fmtSigned(g.reduce((s,r)=>s+r.netProfit,0))):_djS.map(_djRf).join('')):`<tr><td colspan="9"><div class="doc-empty">No deals closed yet. Click "New Deal / Mark Sold" to create one.</div></td></tr>`;
 }
 
 
@@ -7550,7 +8890,7 @@ function renderTaxPage(){
   const _flat=document.getElementById('taxFlatWrap'), _grp=document.getElementById('taxGrouped');
   if(_flat&&_grp){ _flat.style.display=taxGroupView?'none':''; _grp.style.display=taxGroupView?'':'none'; if(taxGroupView) renderTaxGrouped(); }
   const body=document.getElementById('taxBody');
-  body.innerHTML = rows.length ? rows.map(r=>`
+  const _txRf = r => `
     <tr>
       <td>${r.date?fmtDate(r.date):'\u2014'}</td>
       <td class="veh-cell"><div class="veh-name">${r.label}</div></td>
@@ -7558,7 +8898,8 @@ function renderTaxPage(){
       <td style="font-weight:700;">${fmt(r.sold)}</td>
       <td style="font-weight:800;color:var(--green);">${fmt(r.tax)}</td>
       <td style="color:var(--muted);font-family:var(--mono);font-size:12px;">${r.sold>0?(r.tax/r.sold*100).toFixed(2)+'%':'\u2014'}</td>
-    </tr>`).join('') : `<tr><td colspan="6"><div class="doc-empty" style="padding:30px;text-align:center;">No sales in this period.</div></td></tr>`;
+    </tr>`;
+  body.innerHTML = rows.length ? (taxByMonth ? monthGroupRows(rows,'date',_txRf,6,g=>g.length+' sale'+(g.length===1?'':'s')+' · '+fmt(g.reduce((s,r)=>s+r.tax,0))+' tax') : rows.map(_txRf).join('')) : `<tr><td colspan="6"><div class="doc-empty" style="padding:30px;text-align:center;">No sales in this period.</div></td></tr>`;
 }
 function openTaxConfig(){
   document.getElementById('taxCfgFreq').value=taxConfig.frequency;
@@ -7945,6 +9286,7 @@ function jennaGreet(){
   const last=periodStats('month', py, pm);
   const pct = last.net!==0 ? Math.round((m.net-last.net)/Math.abs(last.net)*100) : null;
   const parts=['Welcome back, Mr. Jordan.'];
+  try{ const _bd=peopleBirthdaysOn(today.toISOString().slice(0,10)); if(_bd.includes(crmOwner.name)) parts.push('And happy birthday to you! \ud83c\udf89'); const _oth=_bd.filter(n=>n!==crmOwner.name); if(_oth.length) parts.push(`Also, it's ${_oth.join(' and ')}'s birthday today \u2014 be sure to wish them well!`); }catch(e){}
   if(m.net>=0 && (pct===null||pct>=0)) parts.push("You're doing well this month.");
   if(pct!==null) parts.push(pct>=0 ? `You're up ${pct}% from last month.` : `You're down ${Math.abs(pct)}% from last month.`);
   parts.push(m.net>=0 ? "Looks like this'll be a profitable month." : "Let's keep an eye on the margins this month.");
@@ -8042,16 +9384,39 @@ function renderDashCalendar(){
   for(let i=0;i<startDow;i++) cells+=`<div class="cal-cell empty"></div>`;
   for(let d=1;d<=daysInMonth;d++){
     const ds=`${prefix}-${String(d).padStart(2,'0')}`;
-    const sold=vehicles.filter(v=>v.sold && v.soldDate===ds).length;
+    const soldList=vehicles.filter(v=>v.sold && v.soldDate===ds).map(computeRow);
+    const sold=soldList.length;
     const note=((notes[ds]||'')+'').trim();
     const cls=['cal-cell']; if(ds===todayStr) cls.push('today');
-    const filingChip = _filedSet.has(ds) ? `<div class="cal-filing filed">Filed \u2713</div>` : (_filingSet.has(ds) ? `<div class="cal-filing">Tax due</div>` : '');
-    cells+=`<div class="${cls.join(' ')}" onclick="dashOpenDay('${ds}')">
-      <div class="cal-daynum">${d}</div>
-      ${sold?`<div class="cal-sold">${sold} sold</div>`:''}
-      ${filingChip}
-      ${note?`<div class="cal-note-bar">${note.split('\n')[0].slice(0,18)}</div>`:''}
-    </div>`;
+    const bdays=peopleBirthdaysOn(ds);
+    const filingChip = _filedSet.has(ds) ? `<div class="cal-filing filed">Filed ✓</div>` : (_filingSet.has(ds) ? `<div class="cal-filing">Tax due</div>` : '');
+    if(ds===dashExpandedDay){
+      cls.push('expanded');
+      const dObj=new Date(ds+'T00:00:00');
+      const rem=[];
+      try{ if(typeof taxConfig!=='undefined' && taxConfig.nextDue===ds) rem.push('<div class="ddp-reminder" style="background:rgba(255,159,67,.12);color:var(--orange);"><b>Sales tax filing due</b></div>'); }catch(e){}
+      try{ if((taxFilings||[]).some(f=>f.dueDate===ds)) rem.push('<div class="ddp-reminder" style="background:rgba(35,209,139,.12);color:var(--green);">Sales tax filed ✓</div>'); }catch(e){}
+      try{ if(typeof calPayables==='function'){ const due=calPayables().filter(w=>isPayday(w,ds)); if(due.length) rem.push('<div class="ddp-reminder" style="background:rgba(124,92,255,.14);color:#a78bfa;"><b>Payroll due</b> ('+due.length+')</div>'); } }catch(e){}
+      if(bdays.length) rem.push('<div class="ddp-reminder" style="background:rgba(124,92,255,.16);color:#a78bfa;">\ud83c\udf82 <b>'+bdays.join(', ')+'</b> \u2014 birthday today</div>');
+      const soldHtml = sold ? '<div class="cal-exp-lbl">Vehicles sold ('+sold+')</div><div class="cal-exp-sold-list">'+soldList.map(r=>`<div class="ddp-sold-item"><span class="dash-veh-link" style="color:var(--blue);font-weight:600;cursor:pointer;" onclick="event.stopPropagation(); dashExpandedDay=null; openDealJacket('${r.vin}','dashboard');">${r.year} ${r.make} ${r.model}</span><span style="font-weight:800;color:${r.netProfit>=0?'var(--green)':'var(--red)'};">${dashMoney(r.netProfit)}</span></div>`).join('')+'</div>' : '';
+      const noteVal=(dashDayNotes[ds]||'').replace(/&/g,'&amp;').replace(/</g,'&lt;');
+      cells+=`<div class="${cls.join(' ')}">
+        <div class="cal-exp-head"><span class="cal-exp-date">${dObj.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</span><button class="cal-exp-close" onclick="event.stopPropagation(); dashOpenDay('${ds}');">&times;</button></div>
+        ${rem.length?'<div class="cal-exp-lbl">Reminders</div>'+rem.join(''):''}
+        ${soldHtml}
+        <div class="cal-exp-lbl">Notes</div>
+        <textarea class="cal-exp-note" placeholder="Type notes for this day…" onclick="event.stopPropagation();" oninput="dashSaveDayNote('${ds}', this.value)">${noteVal}</textarea>
+      </div>`;
+    } else {
+      cells+=`<div class="${cls.join(' ')}" onclick="dashOpenDay('${ds}')">
+        <div class="cal-daynum">${d}</div>
+        ${sold?`<div class="cal-sold">${sold} sold</div>`:''}
+        ${filingChip}
+        ${bdays.length?`<div class="cal-bday">\ud83c\udf82 ${bdays[0]}${bdays.length>1?' +'+(bdays.length-1):''}</div>`:''}
+        ${(dashDayNotes[ds]&&dashDayNotes[ds].trim())?`<div class="cal-note-bar" style="background:rgba(58,160,255,.16);color:var(--blue);">Note</div>`:''}
+        ${note?`<div class="cal-note-bar">${note.split('\n')[0].slice(0,18)}</div>`:''}
+      </div>`;
+    }
   }
   grid.innerHTML=cells;
   dashTaxReminder();
@@ -8070,12 +9435,9 @@ function dashTaxReminder(){
   el.style.display='';
   el.innerHTML=`<span class="dtr-label">Sales Tax</span><span class="dtr-sep">\u00b7</span>${taxConfig.frequency} filing<span class="dtr-sep">\u00b7</span>next due <b>${dueLbl}</b> (${days} day${days===1?'':'s'})<span class="dtr-sep">\u00b7</span>collected <b style="color:var(--green);">${fmt(collected)}</b><span class="dtr-sep">\u00b7</span>${filedTxt}`;
 }
-function dashOpenDay(ds){
-  const parts=ds.split('-'); calYear=+parts[0]; calMonth=+parts[1]-1; if(typeof calMode!=='undefined') calMode='sales';
-  showPage('calendar', document.querySelector('[data-page="calendar"]'));
-  if(typeof renderCalendarPage==='function') renderCalendarPage();
-  if(typeof calSelectDay==='function') calSelectDay(ds);
-}
+let dashDayNotes={}, dashExpandedDay=null;
+function dashOpenDay(ds){ dashExpandedDay = (dashExpandedDay===ds) ? null : ds; if(typeof renderDashCalendar==='function') renderDashCalendar(); }
+function dashSaveDayNote(ds, val){ dashDayNotes[ds]=val; }
 
 function renderLossPage(){
   if(typeof renderFinCalendars==='function') renderFinCalendars();
@@ -8373,6 +9735,8 @@ loadKpiColors();
   setTimeout(decorateScrollers, 400);
 })();
 
+updateMsgBadge();
+updateNotifBadge();
 renderDashboard();
 showPage('dashboard', document.querySelector('[data-page=\"dashboard\"]'));
 </script>
