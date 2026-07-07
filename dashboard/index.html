@@ -1505,6 +1505,22 @@ body.rep-mode .rep-banner{ display:flex; }
 .av-switch-slider::before{ content:''; position:absolute; height:18px; width:18px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.2s; }
 .av-switch input:checked + .av-switch-slider{ background:var(--green); }
 .av-switch input:checked + .av-switch-slider::before{ transform:translateX(18px); }
+
+.sidebar{ scrollbar-width:none; -ms-overflow-style:none; }
+.sidebar::-webkit-scrollbar{ display:none; width:0; height:0; }
+
+.rep-login-section{ margin-top:18px; padding-top:16px; border-top:1px solid var(--border); }
+.rep-login-title{ font-size:13px; font-weight:800; color:var(--text); }
+.rep-login-sub{ font-size:11.5px; color:var(--muted); margin:3px 0 12px; line-height:1.5; }
+.rep-invite-btns{ display:flex; gap:10px; margin-top:4px; flex-wrap:wrap; }
+.rep-invite-btns .btn-ghost{ flex:1; min-width:150px; display:inline-flex; align-items:center; justify-content:center; gap:7px; font-size:12.5px; }
+
+.rep-modal-grid{ display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start; }
+@media(max-width:680px){ .rep-modal-grid{ grid-template-columns:1fr; } }
+.rep-modal-col .rep-login-section{ margin-top:0; padding-top:0; border-top:none; }
+.rep-modal-col{ min-width:0; }
+.rep-modal-col .rep-invite-btns{ flex-direction:column; }
+.rep-modal-col .rep-invite-btns .btn-ghost{ min-width:0; width:100%; }
 </style>
 </head>
 <body>
@@ -1535,9 +1551,23 @@ body.rep-mode .rep-banner{ display:flex; }
     <div class="nav-section-label" style="color:var(--blue);">Sales Rep Portal</div>
     <div class="nav-item" data-page="rep-dashboard" onclick="showPage('rep-dashboard', this); renderRepDashboard();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg> Dashboard</div>
     <div class="nav-item" data-page="messages" onclick="showPage('messages', this); renderMessages();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg> Messages</div>
-    <div class="nav-item" data-page="rep-my" onclick="showPage('rep-my', this); renderRepMy();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17v-6h18v6M5 17v3M19 17v3M3 11l2-5h14l2 5"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg> Vehicles Sold</div>
+  </div>
+
+  <div class="nav-group rep-only-group">
+    <div class="nav-section-label">Financials</div>
+    <div class="nav-item" data-page="rep-finance" onclick="showPage('rep-finance', this); renderRepFinance();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-6 6-3-3-3 3"/></svg> Financial Overview</div>
+    <div class="nav-item" data-page="rep-my" onclick="showPage('rep-my', this); renderRepMy();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17v-6h18v6M5 17v3M19 17v3M3 11l2-5h14l2 5"/><circle cx="7.5" cy="17" r="1.5"/><circle cx="16.5" cy="17" r="1.5"/></svg> My Vehicles Sold</div>
+    <div class="nav-item" data-page="rep-ytd" onclick="showPage('rep-ytd', this); renderRepYtd();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 15l2 2 4-4"/></svg> Year to Date</div>
+  </div>
+
+  <div class="nav-group rep-only-group">
+    <div class="nav-section-label">Customers</div>
     <div class="nav-item" data-page="rep-customers" onclick="showPage('rep-customers', this); renderRepCustomers();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg> My Customers</div>
     <div class="nav-item" data-page="rep-leads" onclick="showPage('rep-leads', this); renderRepLeads();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 11h-6"/></svg> My Leads</div>
+  </div>
+
+  <div class="nav-group rep-only-group">
+    <div class="nav-section-label">Account</div>
     <div class="nav-item" onclick="exitRepMode()" style="color:var(--red);"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg> Log Out</div>
   </div>
 
@@ -2714,6 +2744,19 @@ body.rep-mode .rep-banner{ display:flex; }
     <button class="btn-primary" style="box-shadow:none;" onclick="openLeadModal()">+ Add Lead</button>
   </div>
   <div id="repLeadsList"></div>
+</div>
+
+<div id="page-rep-finance" class="page-section">
+  <div class="page-head"><div class="page-title">MY <b>FINANCIAL OVERVIEW</b></div><div class="page-sub">Your earnings at a glance.</div></div>
+  <div class="kpi-grid" id="repFinKpis"></div>
+</div>
+
+<div id="page-rep-ytd" class="page-section">
+  <div class="page-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <div><div class="page-title">MY <b>YEAR TO DATE</b></div><div class="page-sub" id="repYtdSub">Your commissions this year.</div></div>
+    <div class="dp-yearwrap"><button class="dp-nav" onclick="repYtdChangeYear(-1)">&lsaquo;</button><span class="dp-year" id="repYtdYear">2026</span><button class="dp-nav" onclick="repYtdChangeYear(1)">&rsaquo;</button></div>
+  </div>
+  <div id="repYtdBody"></div>
 </div>
 
 <div id="page-rep-customers" class="page-section">
@@ -4007,12 +4050,14 @@ body.rep-mode .rep-banner{ display:flex; }
 
 
 <div class="modal-overlay" id="repModal" style="display:none;">
-  <div class="modal" style="max-width:440px;">
+  <div class="modal rep-modal-wide" style="max-width:760px;">
     <div class="modal-head">
       <h3 id="repModalTitle">Add Sales Rep</h3>
       <button class="modal-close" onclick="closeRepModal()">&times;</button>
     </div>
     <div class="modal-body">
+      <div class="rep-modal-grid">
+      <div class="rep-modal-col">
       <div class="form-group"><label>Rep Name</label><input type="text" id="repModalName" placeholder="e.g. J. Rivera"></div>
       <div class="form-group"><label>Birthday</label><input type="date" id="repModalBirthday"></div>
       <div class="form-group"><label>Commission Rate (% of gross)</label><input type="number" id="repModalPct" placeholder="e.g. 20" step="0.5" min="0" oninput="repCalcSummary()"></div>
@@ -4033,6 +4078,22 @@ body.rep-mode .rep-banner{ display:flex; }
         <div class="txt">Apply this rate to <b>all sales reps</b>
           <small>Sets every rep to the same commission rate and recalculates commissions on cars they've already sold.</small>
         </div>
+      </div>
+      </div>
+      <div class="rep-modal-col">
+      <div class="rep-login-section">
+        <div class="rep-login-title">Add Sales Rep Login</div>
+        <div class="rep-login-sub">Send this rep a secure link to set up their account and log in — by email or text.</div>
+        <div class="form-group"><label>Username</label><input type="text" id="repInviteUser" placeholder="e.g. jrivera"></div>
+        <div class="form-group"><label>Email</label><input type="email" id="repInviteEmail" placeholder="rep@email.com"></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" id="repInvitePhone" placeholder="(555) 000-0000"></div>
+        <div class="rep-invite-btns">
+          <button class="btn-ghost" onclick="sendRepInvite('email')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-10 6L2 7"/></svg> Send Link via Email</button>
+          <button class="btn-ghost" onclick="sendRepInvite('text')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg> Send Link via Text</button>
+        </div>
+        <div id="repInviteMsg"></div>
+      </div>
+      </div>
       </div>
     </div>
     <div class="modal-foot" style="justify-content:space-between;">
@@ -4894,6 +4955,41 @@ function monthGroupRows(rows, dateKey, rowFn, colspan, metaFn){
 }
 function toggleDjMonth(){ djByMonth=!djByMonth; const b=document.getElementById('djMonthBtn'); if(b) b.classList.toggle('active',djByMonth); if(typeof renderDealJacketsList==='function') renderDealJacketsList(); }
 function toggleTaxMonth(){ taxByMonth=!taxByMonth; if(taxByMonth && typeof taxGroupView!=='undefined') taxGroupView=false; const b=document.getElementById('taxMonthBtn'); if(b) b.classList.toggle('active',taxByMonth); if(typeof renderTaxPage==='function') renderTaxPage(); }
+let repYtdYear=2026, repYtdSynced=false;
+function repYtdChangeYear(d){ repYtdYear+=d; renderRepYtd(); }
+function renderRepFinance(){
+  const sold=vehicles.filter(v=>v.sold && v.rep===repUser).map(computeRow);
+  const total=sold.reduce((s,r)=>s+(r.commission||0),0);
+  const cm=today.getMonth(), cy=today.getFullYear();
+  const moComm=sold.filter(r=>(r.soldDate||'').startsWith(`${cy}-${String(cm+1).padStart(2,'0')}`)).reduce((s,r)=>s+(r.commission||0),0);
+  const yrComm=sold.filter(r=>(r.soldDate||'').startsWith(String(cy))).reduce((s,r)=>s+(r.commission||0),0);
+  const avg=sold.length?Math.round(total/sold.length):0;
+  const kh=document.getElementById('repFinKpis');
+  if(kh) kh.innerHTML=[
+    {l:'Total Commission',v:fmt(total),c:'var(--green)'},
+    {l:'This Month',v:fmt(moComm),c:'var(--green)'},
+    {l:'This Year',v:fmt(yrComm),c:'var(--green)'},
+    {l:'Vehicles Sold',v:sold.length,c:'var(--blue)'},
+    {l:'Avg per Sale',v:fmt(avg),c:'var(--text)'}
+  ].map(k=>`<div class="kpi"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div></div>`).join('');
+}
+function renderRepYtd(){
+  if(!repYtdSynced){ repYtdSynced=true; try{ repYtdYear=today.getFullYear(); }catch(e){} }
+  const yv=document.getElementById('repYtdYear'); if(yv) yv.textContent=repYtdYear;
+  const sold=vehicles.filter(v=>v.sold && v.rep===repUser).map(computeRow);
+  const maxMo = (repYtdYear===today.getFullYear()) ? today.getMonth() : 11;
+  let totalComm=0, totalCars=0, rows='';
+  for(let mo=maxMo; mo>=0; mo--){
+    const pfx=`${repYtdYear}-${String(mo+1).padStart(2,'0')}`;
+    const m=sold.filter(r=>(r.soldDate||'').startsWith(pfx));
+    const comm=m.reduce((s,r)=>s+(r.commission||0),0);
+    totalComm+=comm; totalCars+=m.length;
+    rows+=`<tr><td style="font-weight:600;">${PNL_MFULL[mo]} ${repYtdYear}</td><td>${m.length}</td><td style="font-weight:700;color:${comm>0?'var(--green)':'var(--muted)'};">${fmt(comm)}</td></tr>`;
+  }
+  const body=document.getElementById('repYtdBody');
+  if(body) body.innerHTML=`<div class="table-card"><div class="table-scroll"><table class="dash-sold-table"><thead><tr><th>Month</th><th>Cars Sold</th><th>Commission</th></tr></thead><tbody>${rows}<tr class="sv-month-row"><td colspan="1"><span class="sv-mr-name">${repYtdYear} Total</span></td><td style="font-weight:800;color:var(--text);">${totalCars}</td><td style="font-weight:800;color:var(--green);">${fmt(totalComm)}</td></tr></tbody></table></div></div>`;
+  const sub=document.getElementById('repYtdSub'); if(sub) sub.textContent=`${fmt(totalComm)} earned across ${totalCars} sale${totalCars===1?'':'s'} in ${repYtdYear}.`;
+}
 function showPage(pageId, el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   if(el) el.classList.add('active');
@@ -5277,10 +5373,10 @@ function openRepModal(name){
   const nameEl=document.getElementById('repModalName'); const pctEl=document.getElementById('repModalPct');
   if(name){
     const r=salesReps.find(x=>x.name===name);
-    nameEl.value=r.name; nameEl.disabled=true; pctEl.value=r.commissionPct; { const bd=document.getElementById('repModalBirthday'); if(bd) bd.value=r.birthday||''; }
+    nameEl.value=r.name; nameEl.disabled=true; pctEl.value=r.commissionPct; { const bd=document.getElementById('repModalBirthday'); if(bd) bd.value=r.birthday||''; } { const u=document.getElementById('repInviteUser'); if(u) u.value=r.username||''; const e=document.getElementById('repInviteEmail'); if(e) e.value=r.email||''; const ph=document.getElementById('repInvitePhone'); if(ph) ph.value=r.phone||''; } { const im=document.getElementById('repInviteMsg'); if(im) im.innerHTML=''; }
     document.getElementById('repDeleteBtn').style.display='inline-flex';
   } else {
-    nameEl.value=''; nameEl.disabled=false; pctEl.value=''; { const bd=document.getElementById('repModalBirthday'); if(bd) bd.value=''; }
+    nameEl.value=''; nameEl.disabled=false; pctEl.value=''; { const bd=document.getElementById('repModalBirthday'); if(bd) bd.value=''; } ['repInviteUser','repInviteEmail','repInvitePhone'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; }); { const im=document.getElementById('repInviteMsg'); if(im) im.innerHTML=''; }
     document.getElementById('repDeleteBtn').style.display='none';
   }
   document.getElementById('repModalBase').value = name ? (salesReps.find(x=>x.name===name).base||'') : '';
@@ -5315,6 +5411,21 @@ function repCalcSummary(){
   const payLbl=EMP_DAYS_FULL[+document.getElementById('repModalPayDay').value];
   el.innerHTML = `<div class="epc-line">Paid <b>${freq==='biweekly'?'every other':'every'} ${payLbl}</b> \u00b7 <b>${pct}%</b> commission \u00b7 base <b>${fmt(base)}/mo</b></div><div class="epc-pay">Each pay period they receive the <b>greater</b> of their base salary or the commission they earned \u2014 auto-calculated from their sales.</div>`;
 }
+function repInviteMsg(msg, good){ const el=document.getElementById('repInviteMsg'); if(el) el.innerHTML=`<div class="rc-ok ${good?'good':'bad'}" style="margin-top:8px;">${msg}</div>`; }
+function sendRepInvite(method){
+  const user=(document.getElementById('repInviteUser').value||'').trim();
+  const email=(document.getElementById('repInviteEmail').value||'').trim();
+  const phone=(document.getElementById('repInvitePhone').value||'').trim();
+  const name=(document.getElementById('repModalName').value||'').trim() || user || 'The rep';
+  if(!user){ repInviteMsg('Enter a username for their login first.', false); return; }
+  if(method==='email' && !email){ repInviteMsg('Enter an email address to send the link.', false); return; }
+  if(method==='text' && !phone){ repInviteMsg('Enter a phone number to text the link.', false); return; }
+  const token=Math.random().toString(36).slice(2,10);
+  const link=`autovault.app/join?u=${encodeURIComponent(user)}&t=${token}`;
+  const dest = method==='email' ? email : phone;
+  const via = method==='email' ? 'by email' : 'by text';
+  repInviteMsg(`Login link sent to <b>${dest}</b> ${via}. ${name} can tap it to set up their account and sign in.<br><span style="opacity:.7;font-size:11px;">Invite link: ${link}</span>`, true);
+}
 function saveSalesRep(){
   const name=document.getElementById('repModalName').value.trim();
   const pct=Math.max(0, parseFloat(document.getElementById('repModalPct').value)||0);
@@ -5326,7 +5437,8 @@ function saveSalesRep(){
   if(name){
     let rep=salesReps.find(r=>r.name===name);
     const bday=(document.getElementById('repModalBirthday')||{}).value||'';
-  if(rep){ rep.commissionPct=pct; rep.base=base; rep.payFreq=freq; rep.payDay=payDay; rep.payAnchor=anchor; rep.birthday=bday; } else { salesReps.push({name, commissionPct:pct, base, payFreq:freq, payDay, payAnchor:anchor, birthday:bday}); }
+  const uname=(document.getElementById('repInviteUser')||{}).value||''; const uemail=(document.getElementById('repInviteEmail')||{}).value||''; const uphone=(document.getElementById('repInvitePhone')||{}).value||'';
+  if(rep){ rep.commissionPct=pct; rep.base=base; rep.payFreq=freq; rep.payDay=payDay; rep.payAnchor=anchor; rep.birthday=bday; rep.username=uname; rep.email=uemail; rep.phone=uphone; } else { salesReps.push({name, commissionPct:pct, base, payFreq:freq, payDay, payAnchor:anchor, birthday:bday, username:uname, email:uemail, phone:uphone}); }
   }
   if(repApplyAll){ salesReps.forEach(r=>r.commissionPct=pct); }
   syncRepList();
