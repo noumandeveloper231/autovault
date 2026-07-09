@@ -6320,7 +6320,11 @@ function renderOwnerLive(){
     <div class="table-card" style="margin-top:16px;"><div class="table-scroll"><table class="dash-sold-table"><thead><tr><th>User</th><th>Dealership</th><th>Location</th><th>Time on CRM</th><th>Activity</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
 }
 const avConfig = {
-  apiUrl: window.AUTOVAULT_API_URL || 'http://localhost:3000',
+  apiUrl: window.AUTOVAULT_API_URL || (
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : 'https://autovault-backend-cbdp.onrender.com'
+  ),
   ownerApiKey: window.AUTOVAULT_OWNER_API_KEY || ''
 };
 let ownerRegistrations = [];

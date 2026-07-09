@@ -1710,7 +1710,11 @@
     io.observe(document.getElementById('jenna'));
   })();
 
-  const API_URL = window.AUTOVAULT_API_URL || 'http://localhost:3000';
+  const API_URL = window.AUTOVAULT_API_URL || (
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : 'https://autovault-backend-cbdp.onrender.com'
+  );
   const PLAN_MAP = {
     'Wholesaler': 'wholesaler',
     'Independent Dealer': 'independent_dealer',

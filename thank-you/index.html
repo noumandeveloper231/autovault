@@ -28,7 +28,11 @@
 
   <script>
     (async function(){
-      const API_URL = window.AUTOVAULT_API_URL || 'http://localhost:3000';
+      const API_URL = window.AUTOVAULT_API_URL || (
+        (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+          ? 'http://localhost:3000'
+          : 'https://autovault-backend-cbdp.onrender.com'
+      );
       const title = document.getElementById('title');
       const desc = document.getElementById('desc');
       const token = new URLSearchParams(window.location.search).get('token');
