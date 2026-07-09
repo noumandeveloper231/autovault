@@ -69,10 +69,41 @@
   .qa-btn.accent-green:hover{border-color:var(--green);color:var(--green);}
   .qa-btn.accent-orange:hover{border-color:var(--orange);color:var(--orange);}
   .qa-btn.accent-purple:hover{border-color:var(--purple);color:var(--purple);}
-  .profile{display:flex;align-items:center;gap:10px;padding-left:14px;border-left:1px solid var(--border);}
-  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#03121c;}
+  .profile-wrap{ position:relative; }
+  .profile{display:flex;align-items:center;gap:10px;padding:6px 10px 6px 14px;border-left:1px solid var(--border);background:none;cursor:pointer;border-radius:0 9px 9px 0;font-family:inherit;color:inherit;}
+  .profile:hover{ background:var(--panel-2); }
+  .profile-meta{ text-align:left; }
+  .profile-caret{ width:15px;height:15px;color:var(--muted);flex-shrink:0;transition:transform .18s; }
+  .profile-wrap.open .profile-caret{ transform:rotate(180deg); }
+  .avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--green),var(--blue));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#03121c;flex-shrink:0;}
   .profile-name{font-size:13px;font-weight:600;line-height:1.1;}
   .profile-role{font-size:11px;color:var(--muted);}
+  .admin-menu{ position:absolute; top:calc(100% + 8px); right:0; width:308px; background:var(--panel); border:1px solid var(--border); border-radius:14px; box-shadow:0 18px 46px rgba(0,0,0,.5); padding:10px; display:none; z-index:130; }
+  .profile-wrap.open .admin-menu{ display:block; }
+  .admin-menu-head{ font-size:10.5px; font-weight:800; letter-spacing:.6px; text-transform:uppercase; color:var(--muted); padding:6px 8px 10px; }
+  .admin-menu-list{ display:flex; flex-direction:column; gap:3px; max-height:330px; overflow-y:auto; }
+  .am-row{ display:flex; align-items:center; gap:10px; padding:8px; border-radius:10px; }
+  .am-row:hover{ background:var(--panel-2); }
+  .am-av{ width:33px; height:33px; border-radius:50%; background:var(--blue); color:#fff; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; flex-shrink:0; }
+  .am-av.owner{ background:linear-gradient(135deg,var(--green),var(--blue)); color:#03121c; }
+  .am-av.editor{ background:var(--purple); }
+  .am-info{ flex:1; min-width:0; }
+  .am-name{ font-size:13px; font-weight:700; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .am-role{ font-size:11px; color:var(--muted); }
+  .am-role.editor{ color:var(--purple); font-weight:700; }
+  .am-role.owner{ color:var(--green); font-weight:700; }
+  .am-act{ font-size:11px; font-weight:700; padding:5px 10px; border-radius:8px; border:1px solid var(--border); background:var(--panel-2); color:var(--text); cursor:pointer; white-space:nowrap; flex-shrink:0; }
+  .am-act:hover{ border-color:var(--purple); color:var(--purple); }
+  .am-act.revoke:hover{ border-color:var(--red); color:var(--red); }
+  .am-tag-owner{ font-size:10px; font-weight:700; color:var(--muted); flex-shrink:0; padding:3px 8px; border:1px solid var(--border); border-radius:20px; }
+  .admin-add-btn{ width:100%; display:flex; align-items:center; justify-content:center; gap:7px; margin-top:10px; padding:10px; border-radius:10px; border:1px dashed var(--border); background:none; color:var(--text); font-size:13px; font-weight:700; cursor:pointer; }
+  .admin-add-btn:hover{ border-color:var(--green); color:var(--green); }
+  .admin-add-btn svg{ width:15px; height:15px; }
+  .am-role-note{ font-size:11.5px; color:var(--muted); line-height:1.5; margin-top:4px; }
+  #editorConfirmModal, #addAdminModal{ z-index:210; }
+  .ec-msg{ font-size:15px; color:var(--text); line-height:1.5; }
+  .ec-msg b{ color:var(--text); }
+  .ec-sub{ font-size:12.5px; color:var(--muted); line-height:1.55; margin-top:10px; }
 
   /* PAGE TITLE */
   .page-head{display:flex;justify-content:space-between;align-items:flex-end;margin:22px 0 18px;flex-wrap:wrap;gap:14px;}
@@ -1495,6 +1526,8 @@ body.rep-mode .rep-banner{ display:flex; }
 
 #repLeadsList .table-scroll{ max-height:calc(100vh - 280px); overflow-y:auto; }
 #repLeadsList thead th{ position:sticky; top:0; background:var(--panel-2); z-index:2; }
+#custLeadBody .table-scroll{ max-height:calc(100vh - 300px); overflow-y:auto; }
+#custLeadBody thead th{ position:sticky; top:0; background:var(--panel-2); z-index:2; }
 
 .veh-ticker{ overflow:hidden; background:linear-gradient(90deg, var(--panel-2), var(--panel)); border:1px solid var(--border); border-radius:12px; padding:11px 0; margin-bottom:16px; white-space:nowrap; position:relative; }
 .veh-ticker::before, .veh-ticker::after{ content:''; position:absolute; top:0; bottom:0; width:40px; z-index:2; pointer-events:none; }
@@ -1515,7 +1548,7 @@ body.rep-mode .rep-banner{ display:flex; }
 #repSoldScroll{ max-height:340px; overflow-y:auto; }
 #repSoldScroll thead th{ position:sticky; top:0; background:var(--panel-2); z-index:2; }
 
-#repMyScroll{ max-height:calc(100vh - 380px); overflow-y:auto; }
+#repMyScroll{ max-height:380px; overflow-y:auto; }
 #repMyScroll thead th{ position:sticky; top:0; background:var(--panel-2); z-index:2; }
 
 .av-label{ display:block; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:var(--muted); margin:0 0 5px; }
@@ -1524,9 +1557,24 @@ body.rep-mode .rep-banner{ display:flex; }
 .av-vin-input:focus{ border-color:var(--blue); }
 .av-scan-btn{ width:48px; border-radius:10px; background:var(--blue); border:none; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
 .av-scan-btn:hover{ filter:brightness(1.12); }
+.av-scan-cta{ width:100%; display:flex; align-items:center; justify-content:center; gap:9px; padding:13px; margin-bottom:14px; border:1px solid var(--border); border-radius:11px; background:var(--panel-2); color:var(--text); font-size:14px; font-weight:800; cursor:pointer; transition:border-color .15s, color .15s; }
+.av-scan-cta:hover{ border-color:var(--purple); color:var(--purple); }
+.av-scan-cta svg{ width:19px; height:19px; }
+#vinScanModal{ z-index:200; }
+.vinscan-stage{ position:relative; width:100%; aspect-ratio:4/3; background:#000; border-radius:12px; overflow:hidden; }
+#vinScanVideo{ width:100%; height:100%; object-fit:cover; display:block; }
+.vinscan-frame{ position:absolute; inset:30% 8%; border:2px solid var(--green); border-radius:8px; box-shadow:0 0 0 100vmax rgba(0,0,0,.38); pointer-events:none; }
+.vinscan-status{ margin-top:13px; font-size:13.5px; color:var(--text); text-align:center; min-height:18px; font-weight:600; }
+.vinscan-status.ok{ color:var(--green); font-weight:800; }
+.vinscan-status.err{ color:var(--red); font-weight:600; }
+.vinscan-hint{ margin-top:5px; font-size:11.5px; color:var(--muted); text-align:center; line-height:1.4; }
 .av-decoded{ min-height:18px; margin-bottom:12px; font-size:12px; }
 .av-dec-ok{ color:var(--green); font-weight:700; }
 .av-dec-warn{ color:var(--muted); }
+.av-dec-load{ color:var(--blue); font-weight:700; display:inline-flex; align-items:center; gap:7px; }
+.av-dec-load::before{ content:""; width:11px; height:11px; border-radius:50%; border:2px solid var(--blue); border-top-color:transparent; display:inline-block; animation:avSpin .7s linear infinite; }
+@keyframes avSpin{ to{ transform:rotate(360deg); } }
+.av-dec-extra{ color:var(--muted); font-weight:600; }
 .av-grid3{ display:grid; grid-template-columns:84px 1fr 1fr; gap:10px; margin-bottom:12px; }
 .av-grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
 .av-submit{ width:100%; padding:12px; font-size:14px; }
@@ -1650,7 +1698,6 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
         <path d="M33 54 L57 6" stroke="#1c7a46" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M57 6 L83 54" stroke="#ffffff" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
-      <div class="logo-va-underline"></div>
     </div>
   </div>
 
@@ -1731,6 +1778,10 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
     <div class="nav-item sub" data-page="customers" onclick="showPage('customers', this); renderCustomersPage();">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
       Paid Customers
+    </div>
+    <div class="nav-item sub" data-page="customer-leads" onclick="showPage('customer-leads', this); renderCustomerLeads();">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 11h-6"/></svg>
+      Customer Leads
     </div>
   </div>
 
@@ -1845,10 +1896,9 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
     </div>
     <div class="quick-actions">
       <button class="qa-btn" onclick="openAddVeh()">+ Add Vehicle</button>
-      <button class="qa-btn accent-orange">+ Add Expense</button>
-      <button class="qa-btn accent-purple">Scan VIN</button>
+      <button class="qa-btn accent-orange" onclick="openExpenseModal()">+ Add Expense</button>
       <button class="qa-btn accent-green" onclick="openMarkSold()">Mark Sold</button>
-      <button class="qa-btn qa-add-customer">+ Add Customer</button>
+      <button class="qa-btn qa-add-customer" onclick="openCustLeadModal()">+ Add Lead</button>
       <div class="notif-wrap" id="notifWrap">
         <button class="qa-btn notif-btn" onclick="toggleNotif()" title="Notifications">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
@@ -1872,11 +1922,19 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
         <div class="sm-hint">Numbers stay the same; only wording changes.</div>
       </div>
     </div>
-    <div class="profile">
-      <div class="avatar">JM</div>
-      <div>
-        <div class="profile-name">Jordan Marsh</div>
-        <div class="profile-role">Dealer Admin</div>
+    <div class="profile-wrap" id="profileWrap">
+      <button class="profile" id="profileChip" onclick="toggleAdminMenu()" title="Users & access">
+        <div class="avatar">JM</div>
+        <div class="profile-meta">
+          <div class="profile-name">Jordan Marsh</div>
+          <div class="profile-role">Dealer Admin</div>
+        </div>
+        <svg class="profile-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="admin-menu" id="adminMenu">
+        <div class="admin-menu-head">Users &amp; Access</div>
+        <div class="admin-menu-list" id="adminMenuList"></div>
+        <button class="admin-add-btn" onclick="openAddAdmin()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> Add admin user</button>
       </div>
     </div>
   </div>
@@ -2277,6 +2335,24 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
         </table>
       </div>
     </div>
+
+  </div>
+
+  <div id="page-customer-leads" class="page-section" style="display:none">
+
+    <div class="page-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <div>
+        <div class="page-title">SALES <b>CUSTOMER LEADS</b></div>
+        <div class="page-sub" id="custLeadSub">&mdash; potential customers to follow up with</div>
+      </div>
+      <button class="btn-primary" style="box-shadow:none;" onclick="openCustLeadModal()">+ Add Lead</button>
+    </div>
+
+    <div class="section-heading">
+      <h2>Leads</h2>
+      <div class="section-sub" id="custLeadCount">&mdash; leads</div>
+    </div>
+    <div id="custLeadBody"></div>
 
   </div>
 
@@ -4310,11 +4386,72 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
   </div>
 </div>
 
+<div class="modal-overlay" id="custLeadModal" onclick="if(event.target===this)closeCustLeadModal()">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head"><h3 id="custLeadModalTitle">Add Lead</h3><button class="modal-close" onclick="closeCustLeadModal()">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Name</label><input id="custLeadName" class="rc-input" placeholder="Full name" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('custLeadPhone').focus();}"></div>
+      <div class="form-group"><label>Phone</label><input id="custLeadPhone" class="rc-input" placeholder="(555) 000-0000"></div>
+      <div class="form-group"><label>Email</label><input id="custLeadEmail" class="rc-input" placeholder="name@email.com"></div>
+      <div class="form-group"><label>Notes <span style="color:var(--muted);font-weight:400;">(optional)</span></label><textarea id="custLeadNotes" class="rc-input" rows="3" placeholder="What are they interested in?" style="resize:vertical;"></textarea></div>
+      <div style="display:flex;gap:10px;margin-top:10px;">
+        <button class="btn-danger" id="custLeadDeleteBtn" style="display:none;" onclick="deleteCustLead()">Delete</button>
+        <button class="btn-primary" style="flex:1;box-shadow:none;" onclick="saveCustLead()">Save Lead</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="editorConfirmModal" onclick="if(event.target===this)closeEditorConfirm()">
+  <div class="modal" style="max-width:410px;">
+    <div class="modal-head"><h3>Make Editor?</h3><button class="modal-close" onclick="closeEditorConfirm()">&times;</button></div>
+    <div class="modal-body">
+      <div class="ec-msg">Are you sure you want to make <b id="ecName">this user</b> an editor?</div>
+      <div class="ec-sub">This will allow the user to see all of the numbers in the dashboard and give them editing access to the dashboard.</div>
+      <div style="display:flex;gap:10px;margin-top:18px;">
+        <button class="btn-ghost" style="flex:1;" onclick="closeEditorConfirm()">Cancel</button>
+        <button class="btn-primary" style="flex:1;box-shadow:none;" onclick="confirmMakeEditor()">Yes, make editor</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addAdminModal" onclick="if(event.target===this)closeAddAdmin()">
+  <div class="modal" style="max-width:400px;">
+    <div class="modal-head"><h3>Add Admin User</h3><button class="modal-close" onclick="closeAddAdmin()">&times;</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label>Name</label><input id="adminName" class="rc-input" placeholder="Full name" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('adminEmail').focus();}"></div>
+      <div class="form-group"><label>Email</label><input id="adminEmail" class="rc-input" placeholder="name@email.com" onkeydown="if(event.key==='Enter'){event.preventDefault();saveAdminUser();}"></div>
+      <div class="am-role-note">New admins are added as <b style="color:var(--purple)">Editors</b> &mdash; they can view and edit records, while the owner stays in control of managing users.</div>
+      <button class="btn-primary" style="width:100%;box-shadow:none;margin-top:14px;" onclick="saveAdminUser()">Add as Editor</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="vinScanModal" onclick="if(event.target===this)closeVinScan()">
+  <div class="modal" style="max-width:460px;">
+    <div class="modal-head"><h3>Scan VIN Number</h3><button class="modal-close" onclick="closeVinScan()">&times;</button></div>
+    <div class="modal-body">
+      <div class="vinscan-stage">
+        <video id="vinScanVideo" playsinline muted autoplay></video>
+        <div class="vinscan-frame"></div>
+      </div>
+      <div id="vinScanStatus" class="vinscan-status">Point your camera at the VIN barcode&hellip;</div>
+      <div class="vinscan-hint">The VIN barcode is usually on the driver&rsquo;s door jamb or the lower windshield.</div>
+      <button class="btn-ghost" style="width:100%;margin-top:12px;" onclick="closeVinScan()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay" id="addVehModal">
   <div class="modal" style="max-width:470px;">
     <div class="modal-head"><h3>Add Vehicle</h3><button class="modal-close" onclick="closeAddVeh()">&times;</button></div>
     <div class="modal-body">
-      <label class="av-label">Scan or paste VIN</label>
+      <button type="button" class="av-scan-cta" onclick="avScan()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Scan VIN number
+      </button>
+      <label class="av-label">Or paste / type the VIN</label>
       <div class="av-vin-row">
         <input id="avVin" class="av-vin-input" placeholder="17-digit VIN…" oninput="avVinInput()" onkeydown="if(event.key==='Enter'){event.preventDefault();document.getElementById('avPrice').focus();}" autocomplete="off">
         <button class="av-scan-btn" onclick="avScan()" title="Scan VIN"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><path d="M7 8v8M10 8v8M13 8v8M16 8v8"/></svg></button>
@@ -5235,6 +5372,42 @@ function renderRepLeads(){
   const thead='<thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Notes</th><th>Added</th></tr></thead>';
   host.innerHTML=`<div class="table-card" style="margin:0;"><div class="table-scroll"><table class="dash-sold-table lead-table">${thead}<tbody>`+mine.map(l=>`<tr onclick="openLeadModal('${l.id}')"><td style="font-weight:700;color:var(--text);">${msgEsc(l.name)}</td><td>${msgEsc(l.phone||'\u2014')}</td><td>${msgEsc(l.email||'\u2014')}</td><td class="lead-notes-cell">${msgEsc(l.notes||'\u2014')}</td><td style="color:var(--muted);white-space:nowrap;">${l.date?fmtDate(l.date):'\u2014'}</td></tr>`).join('')+`</tbody></table></div></div>`;
 }
+let customerLeads=[
+  {id:'CL1', name:'Marcus Bell', phone:'(951) 555-0148', email:'marcus.bell@gmail.com', notes:'Wants a 3-row SUV under $30k, plans to finance.', date:'2026-06-24'},
+  {id:'CL2', name:'Priya Nair', phone:'(760) 555-0192', email:'priya.n@outlook.com', notes:'Trade-in 2019 Civic, cash buyer.', date:'2026-06-27'},
+  {id:'CL3', name:'Dontae Willis', phone:'(909) 555-0175', email:'', notes:'Called about the F-150 \u2014 callback Friday afternoon.', date:'2026-06-28'}
+], editingCustLead=null;
+function openCustLeadModal(id){
+  editingCustLead=id||null;
+  const t=document.getElementById('custLeadModalTitle'); if(t) t.textContent=id?'Lead Details':'Add Lead';
+  const L=id?customerLeads.find(x=>x.id===id):{};
+  document.getElementById('custLeadName').value=(L&&L.name)||'';
+  document.getElementById('custLeadPhone').value=(L&&L.phone)||'';
+  document.getElementById('custLeadEmail').value=(L&&L.email)||'';
+  document.getElementById('custLeadNotes').value=(L&&L.notes)||'';
+  document.getElementById('custLeadDeleteBtn').style.display=id?'inline-flex':'none';
+  document.getElementById('custLeadModal').classList.add('open');
+  setTimeout(()=>{ const nm=document.getElementById('custLeadName'); if(nm && !id) nm.focus(); }, 60);
+}
+function closeCustLeadModal(){ const m=document.getElementById('custLeadModal'); if(m) m.classList.remove('open'); }
+function saveCustLead(){
+  const name=document.getElementById('custLeadName').value.trim();
+  if(!name){ document.getElementById('custLeadName').focus(); return; }
+  const data={ name, phone:document.getElementById('custLeadPhone').value.trim(), email:document.getElementById('custLeadEmail').value.trim(), notes:document.getElementById('custLeadNotes').value.trim() };
+  if(editingCustLead){ const L=customerLeads.find(x=>x.id===editingCustLead); if(L) Object.assign(L,data); }
+  else { customerLeads.unshift({ id:'CL'+Date.now(), date:today.toISOString().slice(0,10), ...data }); }
+  closeCustLeadModal(); renderCustomerLeads();
+}
+function deleteCustLead(){ if(editingCustLead) customerLeads=customerLeads.filter(x=>x.id!==editingCustLead); closeCustLeadModal(); renderCustomerLeads(); }
+function renderCustomerLeads(){
+  const host=document.getElementById('custLeadBody'); if(!host) return;
+  const n=customerLeads.length;
+  const sub=document.getElementById('custLeadSub'); if(sub) sub.textContent=`\u2014 ${n} potential customer${n===1?'':'s'} to follow up with`;
+  const cnt=document.getElementById('custLeadCount'); if(cnt) cnt.textContent=`${n} lead${n===1?'':'s'}`;
+  if(!n){ host.innerHTML='<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No leads yet. Click <b>+ Add Lead</b> to log a potential customer\u2019s name, phone, and email.</div>'; return; }
+  const thead='<thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Notes</th><th>Added</th></tr></thead>';
+  host.innerHTML=`<div class="table-card"><div class="table-scroll"><table class="dash-sold-table lead-table">${thead}<tbody>`+customerLeads.map(l=>`<tr style="cursor:pointer;" onclick="openCustLeadModal('${l.id}')"><td style="font-weight:700;color:var(--text);">${msgEsc(l.name)}</td><td>${msgEsc(l.phone||'\u2014')}</td><td>${msgEsc(l.email||'\u2014')}</td><td class="lead-notes-cell">${msgEsc(l.notes||'\u2014')}</td><td style="color:var(--muted);white-space:nowrap;">${l.date?fmtDate(l.date):'\u2014'}</td></tr>`).join('')+`</tbody></table></div></div>`;
+}
 function renderRepCal(){
   const grid=document.getElementById('repCalGrid'); if(!grid) return;
   const title=document.getElementById('repCalTitle'); if(title) title.textContent=`${PNL_MFULL[repDashMonth]} ${repDashYear}`;
@@ -5286,16 +5459,133 @@ function decodeVin(vin){
   make = M[w3] || M[w2] || '';
   return {year, make};
 }
+const AV_BRAND_CASE={'BMW':'BMW','GMC':'GMC','RAM':'Ram','MINI':'MINI','FIAT':'FIAT','KIA':'Kia','MG':'MG','MERCEDES-BENZ':'Mercedes-Benz','LAND ROVER':'Land Rover','ROLLS-ROYCE':'Rolls-Royce','BMW ALPINA':'BMW Alpina'};
+function avTitleCase(s){ s=(s||'').trim(); if(!s) return ''; const up=s.toUpperCase(); if(AV_BRAND_CASE[up]) return AV_BRAND_CASE[up]; return s.toLowerCase().replace(/\b([a-z])/g, m=>m.toUpperCase()); }
+let _avVinLast='', _avVinReq=0;
 function avVinInput(){
-  const vin=(document.getElementById('avVin')||{}).value||''; const d=decodeVin(vin);
+  const raw=(document.getElementById('avVin')||{}).value||'';
+  const vin=raw.toUpperCase().replace(/\s/g,'');
   const dec=document.getElementById('avDecoded'); if(!dec) return;
-  if(vin.replace(/\s/g,'').length>=11){
+  if(vin.length===17){
+    if(vin!==_avVinLast){ _avVinLast=vin; avDecodeVinApi(vin); }
+  } else if(vin.length>=11){
+    // instant partial hint while the full VIN is still being typed
+    const d=decodeVin(vin);
     if(d.year && !document.getElementById('avYear').value) document.getElementById('avYear').value=d.year;
     if(d.make && !document.getElementById('avMake').value) document.getElementById('avMake').value=d.make;
-    dec.innerHTML = (d.year||d.make) ? `<span class="av-dec-ok">\u2713 Decoded: ${[d.year,d.make].filter(Boolean).join(' ')} \u2014 add the model &amp; price</span>` : `<span class="av-dec-warn">VIN captured \u2014 add the details below</span>`;
-  } else { dec.innerHTML=''; }
+    dec.innerHTML = (d.year||d.make)
+      ? `<span class="av-dec-ok">\u2713 ${[d.year,d.make].filter(Boolean).join(' ')}</span> <span class="av-dec-extra">\u2014 finish the 17-digit VIN to auto-fill the model</span>`
+      : `<span class="av-dec-warn">Keep typing the full 17-digit VIN\u2026</span>`;
+  } else { dec.innerHTML=''; _avVinLast=''; }
 }
-function avScan(){ const s=['1FTFW1E58NKE45012','5YJYGDEE9PF221100','1HGCV1F30PA045678','3GCUYDED0NG556677','5NPE34AF4NH210987','1C4RJFBG7NC998877']; const pick=s[Math.floor(Math.random()*s.length)]; const el=document.getElementById('avVin'); if(el){ el.value=pick; avVinInput(); } }
+function avDecodeVinApi(vin){
+  const dec=document.getElementById('avDecoded'); if(!dec) return;
+  const reqId=++_avVinReq;
+  dec.innerHTML=`<span class="av-dec-load">Decoding VIN\u2026</span>`;
+  const ctrl=new AbortController();
+  const to=setTimeout(()=>ctrl.abort(), 8000);
+  const stale=()=>{ if(reqId!==_avVinReq) return true; const cur=((document.getElementById('avVin')||{}).value||'').toUpperCase().replace(/\s/g,''); return cur!==vin; };
+  fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${encodeURIComponent(vin)}?format=json`, {signal:ctrl.signal})
+    .then(r=> r.ok ? r.json() : Promise.reject(new Error('HTTP '+r.status)))
+    .then(data=>{
+      clearTimeout(to); if(stale()) return;
+      const r=(data && data.Results && data.Results[0]) || {};
+      const year=(r.ModelYear||'').trim();
+      const make=avTitleCase(r.Make||'');
+      const model=(r.Model||'').trim();
+      const trim=(r.Trim||'').trim();
+      const body=(r.BodyClass||'').trim();
+      let filled=false;
+      if(year){ document.getElementById('avYear').value=year; filled=true; }
+      if(make){ document.getElementById('avMake').value=make; filled=true; }
+      if(model){ document.getElementById('avModel').value=model; filled=true; }
+      if(filled){
+        const label=[year,make,model].filter(Boolean).join(' ');
+        const extra=[trim,body].filter(Boolean).join(' \u00b7 ');
+        dec.innerHTML=`<span class="av-dec-ok">\u2713 Decoded: ${label}</span>${extra?` <span class="av-dec-extra">(${extra})</span>`:''} <span class="av-dec-extra">\u2014 add price to finish</span>`;
+      } else {
+        avDecodeLocalFallback(vin, dec);
+      }
+    })
+    .catch(()=>{ clearTimeout(to); if(stale()) return; avDecodeLocalFallback(vin, dec); });
+}
+function avDecodeLocalFallback(vin, dec){
+  const d=decodeVin(vin);
+  if(d.year && !document.getElementById('avYear').value) document.getElementById('avYear').value=d.year;
+  if(d.make && !document.getElementById('avMake').value) document.getElementById('avMake').value=d.make;
+  const got=[d.year,d.make].filter(Boolean).join(' ');
+  dec.innerHTML = got
+    ? `<span class="av-dec-ok">\u2713 ${got}</span> <span class="av-dec-warn">\u2014 couldn't reach the VIN service; add the model below</span>`
+    : `<span class="av-dec-warn">VIN captured \u2014 add the details below</span>`;
+}
+let vinScanStream=null, vinScanRAF=null, vinScanDetector=null, vinScanActive=false;
+function vinClean(s){ return (s||'').toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g,''); }
+function isLikelyVin(s){ const c=vinClean(s); return c.length===17 ? c : ''; }
+async function avScan(){
+  const modal=document.getElementById('vinScanModal'); if(!modal) return;
+  const status=document.getElementById('vinScanStatus');
+  const setStatus=(t,cls)=>{ if(status){ status.textContent=t; status.className='vinscan-status'+(cls?' '+cls:''); } };
+  modal.classList.add('open');
+  vinScanActive=true;
+  setStatus('Starting camera\u2026');
+  if(!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)){
+    setStatus('Camera isn\u2019t available on this device or browser. Type the VIN below instead.', 'err'); return;
+  }
+  try{
+    vinScanStream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:{ ideal:'environment' } }, audio:false });
+  }catch(err){
+    setStatus('Couldn\u2019t access the camera \u2014 allow camera permission, or type the VIN below.', 'err'); return;
+  }
+  if(!vinScanActive){ // user closed while awaiting permission
+    vinScanStream.getTracks().forEach(t=>t.stop()); vinScanStream=null; return;
+  }
+  const video=document.getElementById('vinScanVideo');
+  if(video){ video.srcObject=vinScanStream; try{ await video.play(); }catch(e){} }
+  if('BarcodeDetector' in window){
+    try{
+      let want;
+      try{ const fmts=await window.BarcodeDetector.getSupportedFormats(); want=['code_39','code_128','data_matrix','pdf417','qr_code'].filter(f=>fmts.includes(f)); }catch(e){ want=null; }
+      vinScanDetector = new window.BarcodeDetector(want && want.length ? { formats: want } : undefined);
+      setStatus('Point your camera at the VIN barcode\u2026');
+      vinScanLoop();
+    }catch(e){
+      setStatus('This browser can\u2019t auto-read barcodes. You\u2019ll see the camera \u2014 type the VIN below.', 'err');
+    }
+  } else {
+    setStatus('This browser can\u2019t auto-read barcodes (Chrome or an Android phone works best). Type the VIN below.', 'err');
+  }
+}
+function vinScanLoop(){
+  if(!vinScanActive || !vinScanDetector) return;
+  const video=document.getElementById('vinScanVideo');
+  if(video && video.readyState>=2){
+    vinScanDetector.detect(video).then(codes=>{
+      if(!vinScanActive) return;
+      for(const c of (codes||[])){ const vin=isLikelyVin(c.rawValue); if(vin){ vinScanFound(vin); return; } }
+    }).catch(()=>{});
+  }
+  vinScanRAF = requestAnimationFrame(vinScanLoop);
+}
+function vinScanFound(vin){
+  const status=document.getElementById('vinScanStatus');
+  if(status){ status.textContent='\u2713 VIN captured: '+vin; status.className='vinscan-status ok'; }
+  vinScanActive=false;
+  if(vinScanRAF){ cancelAnimationFrame(vinScanRAF); vinScanRAF=null; }
+  const el=document.getElementById('avVin'); if(el){ el.value=vin; }
+  setTimeout(()=>{
+    closeVinScan();
+    if(typeof avVinInput==='function') avVinInput();
+    const p=document.getElementById('avPrice'); if(p) p.focus();
+  }, 750);
+}
+function closeVinScan(){
+  vinScanActive=false;
+  if(vinScanRAF){ cancelAnimationFrame(vinScanRAF); vinScanRAF=null; }
+  if(vinScanStream){ vinScanStream.getTracks().forEach(t=>t.stop()); vinScanStream=null; }
+  const video=document.getElementById('vinScanVideo'); if(video){ try{ video.pause(); }catch(e){} video.srcObject=null; }
+  vinScanDetector=null;
+  const modal=document.getElementById('vinScanModal'); if(modal) modal.classList.remove('open');
+}
 function avMsg(msg, good){ const el=document.getElementById('avMsg'); if(el) el.innerHTML=`<div class="rc-ok ${good?'good':'bad'}">${msg}</div>`; }
 function addVehicleSave(){
   const vin=(document.getElementById('avVin').value||'').trim().toUpperCase();
@@ -6164,6 +6454,61 @@ let salesReps = [
 let crmOwner = {name:'Jordan Marsh', role:'Dealer Admin', birthday:'1979-09-20'};
 function allPeople(){ const arr=(salesReps||[]).map(r=>({name:r.name, birthday:r.birthday})); arr.push({name:crmOwner.name, birthday:crmOwner.birthday}); return arr.filter(p=>p.birthday); }
 function peopleBirthdaysOn(ds){ const md=(ds||'').slice(5,10); return allPeople().filter(p=>(p.birthday||'').slice(5,10)===md).map(p=>p.name); }
+
+// ---------- USERS & ACCESS (admin dropdown) ----------
+let adminEditors = [];   // sales-rep names appointed as editor-admins
+let extraAdmins = [];    // [{name,email}] newly added admin users (always editors)
+function amInitials(name){ const p=(name||'').trim().split(/[\s.]+/).filter(Boolean); const s=((p[0]||'')[0]||'')+((p[1]||'')[0]||''); return (s||(name||'?').slice(0,2)).toUpperCase(); }
+function toggleAdminMenu(){ const w=document.getElementById('profileWrap'); if(!w) return; const open=w.classList.toggle('open'); if(open) renderAdminMenu(); }
+function closeAdminMenu(){ const w=document.getElementById('profileWrap'); if(w) w.classList.remove('open'); }
+function renderAdminMenu(){
+  const list=document.getElementById('adminMenuList'); if(!list) return;
+  let html='';
+  html += `<div class="am-row"><div class="am-av owner">${amInitials(crmOwner.name)}</div><div class="am-info"><div class="am-name">${msgEsc(crmOwner.name)}</div><div class="am-role owner">Owner \u00b7 ${msgEsc(crmOwner.role||'Dealer Admin')}</div></div><span class="am-tag-owner">You</span></div>`;
+  extraAdmins.forEach((u,i)=>{
+    html += `<div class="am-row"><div class="am-av editor">${amInitials(u.name)}</div><div class="am-info"><div class="am-name">${msgEsc(u.name)}</div><div class="am-role editor">Admin \u00b7 Editor</div></div><button class="am-act revoke" onclick="removeExtraAdmin(${i})">Remove</button></div>`;
+  });
+  (salesReps||[]).forEach((r,idx)=>{
+    const isEd=adminEditors.indexOf(r.name)>=0;
+    html += `<div class="am-row"><div class="am-av ${isEd?'editor':''}">${amInitials(r.name)}</div><div class="am-info"><div class="am-name">${msgEsc(r.name)}</div><div class="am-role ${isEd?'editor':''}">${isEd?'Admin \u00b7 Editor':'Sales Rep'}</div></div><button class="am-act ${isEd?'revoke':''}" onclick="toggleRepEditor(${idx})">${isEd?'Remove editor':'Make editor'}</button></div>`;
+  });
+  list.innerHTML=html;
+}
+let pendingEditorIdx = null;
+function reopenAdminMenuDeferred(){ setTimeout(()=>{ const w=document.getElementById('profileWrap'); if(w) w.classList.add('open'); renderAdminMenu(); }, 0); }
+function toggleRepEditor(idx){
+  const r=(salesReps||[])[idx]; if(!r) return;
+  const i=adminEditors.indexOf(r.name);
+  if(i>=0){ adminEditors.splice(i,1); renderAdminMenu(); return; }   // removing is immediate
+  pendingEditorIdx=idx;                                              // appointing needs confirmation
+  const nm=document.getElementById('ecName'); if(nm) nm.textContent=r.name;
+  closeAdminMenu();
+  const m=document.getElementById('editorConfirmModal'); if(m) m.classList.add('open');
+}
+function confirmMakeEditor(){
+  const r=(salesReps||[])[pendingEditorIdx];
+  if(r && adminEditors.indexOf(r.name)<0) adminEditors.push(r.name);
+  pendingEditorIdx=null;
+  const m=document.getElementById('editorConfirmModal'); if(m) m.classList.remove('open');
+  reopenAdminMenuDeferred();
+}
+function closeEditorConfirm(){ pendingEditorIdx=null; const m=document.getElementById('editorConfirmModal'); if(m) m.classList.remove('open'); }
+function removeExtraAdmin(i){ extraAdmins.splice(i,1); renderAdminMenu(); }
+function openAddAdmin(){ closeAdminMenu(); const m=document.getElementById('addAdminModal'); if(m) m.classList.add('open'); setTimeout(()=>{ const n=document.getElementById('adminName'); if(n) n.focus(); }, 60); }
+function closeAddAdmin(){ const m=document.getElementById('addAdminModal'); if(m) m.classList.remove('open'); }
+function saveAdminUser(){
+  const name=(document.getElementById('adminName').value||'').trim();
+  const email=(document.getElementById('adminEmail').value||'').trim();
+  if(!name){ document.getElementById('adminName').focus(); return; }
+  extraAdmins.push({ name, email });
+  closeAddAdmin();
+  document.getElementById('adminName').value=''; document.getElementById('adminEmail').value='';
+  reopenAdminMenuDeferred();
+}
+document.addEventListener('click', function(e){
+  const w=document.getElementById('profileWrap');
+  if(w && w.classList.contains('open') && !w.contains(e.target)) w.classList.remove('open');
+});
 let REP_LIST = salesReps.map(r=>r.name);
 function syncRepList(){ REP_LIST = salesReps.map(r=>r.name); }
 function repRate(name){ const r=salesReps.find(x=>x.name===name); return r?Number(r.commissionPct):null; }
@@ -10671,6 +11016,7 @@ renderTaxPage();
 renderCalendarPage();
 renderPayrollPage();
 renderCustomersPage();
+renderCustomerLeads();
 renderPnlPage();
 renderRepsPage();
 
