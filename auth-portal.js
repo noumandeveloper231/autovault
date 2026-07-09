@@ -8,13 +8,20 @@
   const DASHBOARD_BY_PORTAL = {
     wholesale: "/wholesale/dashboard",
     sales_rep: "/sales-rep/dashbaord",
+    owner: "/owner/dashboard",
     admin: "/dashboard",
   };
 
   const LOGIN_BY_PORTAL = {
     wholesale: "/wholesale/login",
     sales_rep: "/sales-rep/login",
+    owner: "/owner/login",
     admin: "/login",
+  };
+
+  const TOKEN_BY_PORTAL = {
+    owner: "avOwnerToken",
+    default: "avAuthToken",
   };
 
   function normalizePortal(value) {
@@ -22,6 +29,7 @@
     if (portal === "sales-rep") return "sales_rep";
     if (portal === "wholesale") return "wholesale";
     if (portal === "sales_rep") return "sales_rep";
+    if (portal === "owner") return "owner";
     return "admin";
   }
 
@@ -30,17 +38,25 @@
     const queryPortal = normalizePortal(params.get("portal"));
     if (params.has("portal")) return queryPortal;
     const path = location.pathname.toLowerCase();
+    if (path.startsWith("/owner/")) return "owner";
     if (path.startsWith("/wholesale/")) return "wholesale";
     if (path.startsWith("/sales-rep/")) return "sales_rep";
     return "admin";
   }
 
-  function getToken() {
-    return localStorage.getItem("avAuthToken") || "";
+  function tokenStorageKey(portal) {
+    return normalizePortal(portal) === "owner" ? TOKEN_BY_PORTAL.owner : TOKEN_BY_PORTAL.default;
   }
 
-  function clearSession() {
+  function getToken(portal) {
+    return localStorage.getItem(tokenStorageKey(portal)) || "";
+  }
+
+  function clearSession(portal) {
+    const key = tokenStorageKey(portal);
+    localStorage.removeItem(key);
     localStorage.removeItem("avAuthToken");
+    localStorage.removeItem("avOwnerToken");
     localStorage.removeItem("avAuthPortal");
   }
 
@@ -55,19 +71,20 @@
     }
   }
 
-  function readSession() {
-    const token = getToken();
+  function readSession(portal) {
+    const normalizedPortal = normalizePortal(portal || getRoutePortal());
+    const token = getToken(normalizedPortal);
     if (!token) return null;
     const claims = parseJwt(token);
     if (!claims || !claims.exp || claims.exp * 1000 <= Date.now()) {
-      clearSession();
+      clearSession(normalizedPortal);
       return null;
     }
-    const portal = normalizePortal(claims.portal || localStorage.getItem("avAuthPortal"));
-    localStorage.setItem("avAuthPortal", portal);
+    const claimedPortal = normalizePortal(claims.portal || localStorage.getItem("avAuthPortal"));
+    localStorage.setItem("avAuthPortal", claimedPortal);
     return {
       token,
-      portal,
+      portal: claimedPortal,
       name: claims.name || "",
       sub: claims.sub || "",
     };
@@ -82,7 +99,7 @@
   function guardDashboard() {
     document.documentElement.classList.add("av-auth-pending");
     const routePortal = getRoutePortal();
-    const session = readSession();
+    const session = readSession(routePortal);
     if (!session) {
       redirect(LOGIN_BY_PORTAL[routePortal]);
       return;
@@ -96,7 +113,7 @@
 
   function guardLogin() {
     const routePortal = getRoutePortal();
-    const session = readSession();
+    const session = readSession(routePortal);
     if (!session) return;
     if (session.portal === routePortal) {
       redirect(DASHBOARD_BY_PORTAL[session.portal]);
@@ -104,9 +121,11 @@
   }
 
   function verifySessionInBackground(onInvalid) {
-    const token = getToken();
+    const routePortal = getRoutePortal();
+    const token = getToken(routePortal);
     if (!token) return;
-    fetch(`${API_URL}/api/auth/me`, {
+    const meUrl = routePortal === "owner" ? `${API_URL}/api/owner/auth/me` : `${API_URL}/api/auth/me`;
+    fetch(meUrl, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((resp) => resp.json().then((data) => ({ resp, data })))
@@ -120,10 +139,9 @@
         }
       })
       .catch(() => {
-        clearSession();
+        clearSession(routePortal);
         if (typeof onInvalid === "function") onInvalid();
         else {
-          const routePortal = getRoutePortal();
           redirect(LOGIN_BY_PORTAL[routePortal]);
         }
       });

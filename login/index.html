@@ -1832,6 +1832,13 @@
             sub: 'Sign in to your full dealership command center.',
             btn: 'Sign in to admin dashboard'
           });
+    if(inferredPortal === 'owner'){
+      portalConfig.bodyClass = 'portal-admin';
+      portalConfig.label = 'Super Owner Login';
+      portalConfig.title = 'Welcome to Owner Overview';
+      portalConfig.sub = 'Sign in as super owner to access the owner overview dashboard.';
+      portalConfig.btn = 'Sign in to owner dashboard';
+    }
     document.body.classList.add(portalConfig.bodyClass);
     if(portalLabel) portalLabel.textContent = portalConfig.label;
     if(welcomeTitle) welcomeTitle.textContent = portalConfig.title;
@@ -1856,7 +1863,10 @@
       btn.classList.add('loading');
       btn.disabled=true;
       try{
-        const resp = await fetch(`${API_URL}/api/auth/login`, {
+        const loginUrl = inferredPortal === 'owner'
+          ? `${API_URL}/api/owner/auth/login`
+          : `${API_URL}/api/auth/login`;
+        const resp = await fetch(loginUrl, {
           method:'POST',
           headers:{'Content-Type':'application/json'},
           body: JSON.stringify({
@@ -1867,7 +1877,8 @@
         });
         const data = await resp.json();
         if(!resp.ok) throw new Error(data.message || 'Login failed.');
-        localStorage.setItem('avAuthToken', data.token);
+        if(inferredPortal === 'owner') localStorage.setItem('avOwnerToken', data.token);
+        else localStorage.setItem('avAuthToken', data.token);
         localStorage.setItem('avAuthPortal', data.user?.portal || inferredPortal);
         window.location.href = data.redirectDashboardPath || '/dashboard';
       }catch(loginError){

@@ -13,7 +13,11 @@
     { "source": "/sales-rep/dashbaord", "destination": "/dashboard/index.html" },
     { "source": "/sales-rep/dashbaord/:path*", "destination": "/dashboard/index.html" },
     { "source": "/sales-rep/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/sales-rep/dashboard/:path*", "destination": "/dashboard/index.html" }
+    { "source": "/sales-rep/dashboard/:path*", "destination": "/dashboard/index.html" },
+    { "source": "/owner/login", "destination": "/login/index.html" },
+    { "source": "/owner/login/:path*", "destination": "/login/index.html" },
+    { "source": "/owner/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/owner/dashboard/:path*", "destination": "/dashboard/index.html" }
   ],
   "cleanUrls": true
 }

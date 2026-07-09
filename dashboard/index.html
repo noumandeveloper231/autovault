@@ -6218,7 +6218,10 @@ async function loadOwnerUsersFromApi(force){
   ownerUsersLoading=true;
   try{
     const headers={};
-    if(avConfig.ownerApiKey) headers['x-owner-key']=avConfig.ownerApiKey;
+    const routePortal = (typeof AVPortal!=='undefined' && AVPortal.getRoutePortal) ? AVPortal.getRoutePortal() : 'admin';
+    const ownerToken = (typeof AVPortal!=='undefined' && AVPortal.getToken) ? AVPortal.getToken('owner') : '';
+    if(routePortal==='owner' && ownerToken) headers.Authorization=`Bearer ${ownerToken}`;
+    else if(avConfig.ownerApiKey) headers['x-owner-key']=avConfig.ownerApiKey;
     const resp=await fetch(`${avConfig.apiUrl}/api/owner/registrations`,{headers});
     const data=await resp.json();
     if(!resp.ok) throw new Error(data.message||'Unable to load owner users');
@@ -6246,7 +6249,21 @@ function enterOwner(){
   });
   window.scrollTo(0,0);
 }
-function exitOwner(){ document.body.classList.remove('owner-mode'); showPage('dashboard', document.querySelector('[data-nav=dashboard]')); if(typeof renderDashboard==='function') renderDashboard(); }
+function exitOwner(){
+  if(typeof AVPortal!=='undefined' && AVPortal.clearSession){
+    AVPortal.clearSession('owner');
+  } else {
+    localStorage.removeItem('avOwnerToken');
+    localStorage.removeItem('avAuthPortal');
+  }
+  document.body.classList.remove('owner-mode');
+  if(location.pathname.toLowerCase().startsWith('/owner/')){
+    location.href='/owner/login';
+    return;
+  }
+  showPage('dashboard', document.querySelector('[data-nav=dashboard]'));
+  if(typeof renderDashboard==='function') renderDashboard();
+}
 function ownerFmtLogin(dt){ if(!dt) return '—'; const d=new Date(dt); return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+', '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
 function ownerPeriodStats(mode, mo, yr){
   const pfx = mode==='year' ? `${yr}` : `${yr}-${String(mo+1).padStart(2,'0')}`;
@@ -11304,7 +11321,7 @@ loadKpiColors();
 
 function bootstrapPortalAccess(){
   const routePortal = AVPortal.getRoutePortal();
-  const session = AVPortal.readSession();
+  const session = AVPortal.readSession(routePortal);
   if(!session || session.portal !== routePortal) return;
 
   updateMsgBadge();
@@ -11314,6 +11331,8 @@ function bootstrapPortalAccess(){
   } else if(routePortal === 'sales_rep'){
     repUser = session.name || repUser;
     enterRepMode();
+  } else if(routePortal === 'owner'){
+    enterOwner();
   } else {
     renderDashboard();
     showPage('dashboard', document.querySelector('[data-page=\"dashboard\"]'));
