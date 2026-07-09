@@ -1710,29 +1710,64 @@
     io.observe(document.getElementById('jenna'));
   })();
 
-  /* waitlist form — client-side confirmation.
-     Wire the fetch below to your real endpoint to capture leads. */
+  const API_URL = window.AUTOVAULT_API_URL || 'http://localhost:3000';
+  const PLAN_MAP = {
+    'Wholesaler': 'wholesaler',
+    'Independent Dealer': 'independent_dealer',
+    'Growing Dealership': 'growing_dealership'
+  };
+  let activeRegistrationId = null;
+
   const form=document.getElementById('waitForm'), gsStep1=document.getElementById('gsStep1'), gsStep2=document.getElementById('gsStep2');
-  form.addEventListener('submit',(e)=>{
+  form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const name=form.name.value.trim(), email=form.email.value.trim(), dealer=form.dealership.value.trim();
     if(!name||!email||!dealer||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
       form.querySelectorAll('input[required]').forEach(i=>{ i.style.borderColor=(i.value.trim()==='')?'var(--down)':'var(--line)'; });
       return;
     }
-    console.log('Signup:',{name,email,phone:form.phone.value.trim(),dealership:dealer});
-    gsStep1.style.display='none';
-    gsStep2.hidden=false;
-    gsStep2.scrollIntoView({behavior:'smooth',block:'start'});
+    try{
+      const submitBtn=form.querySelector('button[type="submit"]');
+      if(submitBtn){ submitBtn.disabled=true; submitBtn.textContent='Saving...'; }
+      const resp=await fetch(`${API_URL}/api/registrations`,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({name,email,phone:form.phone.value.trim(),dealership:dealer})
+      });
+      const data=await resp.json();
+      if(!resp.ok) throw new Error(data.message||'Unable to save registration.');
+      activeRegistrationId=data.registrationId;
+      gsStep1.style.display='none';
+      gsStep2.hidden=false;
+      gsStep2.scrollIntoView({behavior:'smooth',block:'start'});
+    }catch(err){
+      alert(err.message||'Failed to start registration. Please try again.');
+    }finally{
+      const submitBtn=form.querySelector('button[type="submit"]');
+      if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='Get Started'; }
+    }
   });
   document.querySelectorAll('#gsStep2 .tier-btn').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const tier=btn.getAttribute('data-tier')||'dealership';
-      const grid=document.querySelector('#gsStep2 .tiers-grid'), head=document.querySelector('#gsStep2 .tiers-head'), conf=document.getElementById('gsConfirm');
-      if(grid) grid.style.display='none';
-      if(head) head.style.display='none';
-      document.getElementById('gsConfirmText').textContent='Check your email to finish setting up your '+tier+' dashboard \u2014 starting today at $39.99/month.';
-      conf.hidden=false; conf.scrollIntoView({behavior:'smooth',block:'center'});
+    btn.addEventListener('click', async ()=>{
+      if(!activeRegistrationId){ alert('Please submit your details first.'); return; }
+      const plan=PLAN_MAP[btn.getAttribute('data-tier')]||null;
+      if(!plan){ alert('Invalid plan selected.'); return; }
+      const originalText=btn.textContent;
+      try{
+        btn.disabled=true; btn.textContent='Redirecting...';
+        const resp=await fetch(`${API_URL}/api/checkout`,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({registrationId:activeRegistrationId,plan})
+        });
+        const data=await resp.json();
+        if(!resp.ok||!data.url) throw new Error(data.message||'Unable to create checkout session.');
+        window.location.href=data.url;
+      }catch(err){
+        alert(err.message||'Checkout failed. Please try again.');
+        btn.disabled=false;
+        btn.textContent=originalText;
+      }
     });
   });
 </script>

@@ -1859,6 +1859,7 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
   <div class="nav-group owner-only-group">
     <div class="nav-section-label" style="color:#a78bfa;">Owner Portal</div>
     <div class="nav-item" data-page="owner-dashboard" onclick="showPage('owner-dashboard', this); renderOwnerDashboard();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg> Users Dashboard</div>
+    <div class="nav-item" data-page="owner-registrations" onclick="showPage('owner-registrations', this); renderOwnerRegistrations();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h8M8 11h8M8 15h5"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg> Registrations</div>
   </div>
   <div class="nav-group owner-only-group">
     <div class="nav-section-label">Insights</div>
@@ -3207,6 +3208,14 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
 <div id="page-owner-live" class="page-section">
   <div class="page-head"><div class="page-title">LIVE <b>DATA</b></div><div class="page-sub" id="ownerLiveSub">Who is on the platform right now.</div></div>
   <div id="ownerLiveBody"></div>
+</div>
+
+<div id="page-owner-registrations" class="page-section">
+  <div class="page-head"><div class="page-title">OWNER <b>REGISTRATIONS</b></div><div class="page-sub">New registrations captured from landing page checkout flow.</div></div>
+  <div class="filter-row" style="margin-top:16px;margin-bottom:14px;">
+    <input type="text" id="ownerRegSearch" placeholder="Search name, dealership, or email..." oninput="renderOwnerRegistrations()" style="flex:1;min-width:220px;">
+  </div>
+  <div id="ownerRegistrationsBody"></div>
 </div>
 
 <div id="page-vehicles" class="page-section">
@@ -6309,6 +6318,57 @@ function renderOwnerLive(){
   const rows=onlineU.map(u=>`<tr onclick="showOwnerUser('${u.id}')" style="cursor:pointer;"><td><span class="live-pulse" style="margin-right:9px;"></span>${u.name}</td><td>${u.dealership}</td><td>${u.city}, ${u.state}</td><td style="font-weight:800;color:var(--green);">${u.session} min</td><td style="font-size:12px;color:var(--muted);">On CRM now</td></tr>`).join('');
   document.getElementById('ownerLiveBody').innerHTML=`<div class="kpi-grid">${kpis.map(k=>`<div class="kpi"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div></div>`).join('')}</div>
     <div class="table-card" style="margin-top:16px;"><div class="table-scroll"><table class="dash-sold-table"><thead><tr><th>User</th><th>Dealership</th><th>Location</th><th>Time on CRM</th><th>Activity</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+}
+const avConfig = {
+  apiUrl: window.AUTOVAULT_API_URL || 'http://localhost:3000',
+  ownerApiKey: window.AUTOVAULT_OWNER_API_KEY || ''
+};
+let ownerRegistrations = [];
+let ownerRegistrationsLoaded = false;
+function ownerPlanLabel(plan){
+  if(plan==='wholesaler') return 'Wholesaler';
+  if(plan==='independent_dealer') return 'Independent Dealer';
+  if(plan==='growing_dealership') return 'Growing Dealership';
+  return plan || '—';
+}
+function ownerStatusClass(status){
+  if(status==='active') return 'active';
+  if(status==='payment_failed') return 'delinquent';
+  if(status==='canceled') return 'inactive';
+  return 'inactive';
+}
+function ownerStatusLabel(status){
+  if(!status) return 'Pending';
+  return status.replace(/_/g,' ').replace(/\b\w/g,m=>m.toUpperCase());
+}
+async function loadOwnerRegistrations(){
+  const headers = {};
+  if(avConfig.ownerApiKey) headers['x-owner-key'] = avConfig.ownerApiKey;
+  const resp = await fetch(`${avConfig.apiUrl}/api/owner/registrations`, { headers });
+  const data = await resp.json();
+  if(!resp.ok) throw new Error(data.message || 'Unable to load registrations');
+  ownerRegistrations = Array.isArray(data.registrations) ? data.registrations : [];
+  ownerRegistrationsLoaded = true;
+}
+async function renderOwnerRegistrations(){
+  const host=document.getElementById('ownerRegistrationsBody');
+  if(!host) return;
+  if(!ownerRegistrationsLoaded){
+    host.innerHTML='<div class="table-card">Loading registrations...</div>';
+    try{
+      await loadOwnerRegistrations();
+    }catch(err){
+      host.innerHTML=`<div class="table-card" style="color:var(--red);">Failed to load registrations: ${err.message || 'Unknown error'}</div>`;
+      return;
+    }
+  }
+  const q=((document.getElementById('ownerRegSearch')||{}).value||'').toLowerCase();
+  const rows=ownerRegistrations
+    .filter(r=>!q || `${r.name||''} ${r.dealership||''} ${r.email||''}`.toLowerCase().includes(q))
+    .sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
+  const thead='<thead><tr><th>Name</th><th>Dealership</th><th>Email</th><th>Plan</th><th>Signed Up</th><th>Status</th><th>Payment</th></tr></thead>';
+  const bodyHtml = rows.map(r=>`<tr><td class="veh-cell"><div class="veh-name">${r.name||'—'}</div><div style="font-size:11px;color:var(--muted);">${(r.phone||'—')}</div></td><td>${r.dealership||'—'}</td><td>${r.email||'—'}</td><td>${ownerPlanLabel(r.plan)}</td><td>${fmtDate((r.createdAt||'').slice(0,10))}</td><td><span class="usr-badge ${ownerStatusClass(r.status)}">${ownerStatusLabel(r.status)}</span></td><td><span class="pay-badge ${r.paymentStatus==='on-time'?'ontime':'behind'}">${r.paymentStatus==='on-time'?'On time':'Behind'}</span></td></tr>`).join('');
+  host.innerHTML=`<div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${thead}<tbody>${bodyHtml || '<tr><td colspan="7" style="color:var(--muted);padding:14px;">No registrations found.</td></tr>'}</tbody></table></div></div>`;
 }
 function showPage(pageId, el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));

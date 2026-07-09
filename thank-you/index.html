@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AutoVault - Thank You</title>
+<style>
+  :root{
+    --bg:#0A0D10; --panel:#12161B; --line:#232A32; --text:#EAECEF; --muted:#8B95A1; --accent:#2C9257;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,sans-serif;min-height:100vh;display:grid;place-items:center;padding:24px}
+  .card{width:min(680px,100%);background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:30px}
+  .badge{display:inline-block;background:rgba(44,146,87,.15);border:1px solid rgba(44,146,87,.4);color:#69d390;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
+  h1{margin:16px 0 10px;font-size:32px;line-height:1.15}
+  p{color:var(--muted);margin:0 0 12px}
+  .error{color:#f87171}
+  .btn{display:inline-block;margin-top:14px;background:var(--accent);color:#fff;text-decoration:none;padding:11px 16px;border-radius:10px;font-weight:700}
+</style>
+</head>
+<body>
+  <div class="card">
+    <span class="badge">Payment Confirmation</span>
+    <h1 id="title">Confirming your purchase...</h1>
+    <p id="desc">Please wait while we finish activating your AutoVault plan.</p>
+    <a class="btn" href="/login">Go to Login</a>
+  </div>
+
+  <script>
+    (async function(){
+      const API_URL = window.AUTOVAULT_API_URL || 'http://localhost:3000';
+      const title = document.getElementById('title');
+      const desc = document.getElementById('desc');
+      const token = new URLSearchParams(window.location.search).get('token');
+      if(!token){
+        title.textContent='Invalid confirmation link';
+        desc.textContent='Token is missing. Please return to the landing page and try again.';
+        desc.classList.add('error');
+        return;
+      }
+      try{
+        const resp = await fetch(`${API_URL}/api/registrations/complete?token=${encodeURIComponent(token)}`);
+        const data = await resp.json();
+        if(!resp.ok) throw new Error(data.message || 'Unable to verify purchase.');
+        const reg = data.registration || {};
+        title.textContent = `Welcome, ${reg.name || 'Dealer'}!`;
+        desc.textContent = `Your ${reg.planLabel || 'AutoVault'} plan is active for ${reg.dealership || 'your dealership'}. A confirmation email has been sent to ${reg.email || 'your email'}.`;
+      }catch(err){
+        title.textContent='Could not verify purchase';
+        desc.textContent=err.message || 'Your token is invalid or expired. Please contact support.';
+        desc.classList.add('error');
+      }
+    })();
+  </script>
+</body>
+</html>
