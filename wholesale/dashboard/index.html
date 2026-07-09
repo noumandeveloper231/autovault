@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoVault Wholesale Dashboard</title>
+</head>
+<body>
+  <script>
+    (async function () {
+      try {
+        const resp = await fetch("/dashboard/index.html", { cache: "no-store" });
+        if (!resp.ok) throw new Error("Unable to load dashboard page");
+        const html = await resp.text();
+        document.open();
+        document.write(html);
+        document.close();
+      } catch (error) {
+        document.body.innerHTML =
+          '<p style="font-family:Arial,sans-serif;padding:24px;">Unable to load dashboard page. <a href="/dashboard">Open default dashboard</a>.</p>';
+      }
+    })();
+  </script>
+</body>
+</html>
