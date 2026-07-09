@@ -3,7 +3,12 @@
     { "source": "/", "destination": "/index.html" },
     { "source": "/thank-you", "destination": "/thank-you/index.html" },
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/login", "destination": "/login/index.html" }
+    { "source": "/login", "destination": "/login/index.html" },
+    { "source": "/wholesale/login", "destination": "/login/index.html" },
+    { "source": "/sales-rep/login", "destination": "/login/index.html" },
+    { "source": "/wholesale/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashbaord", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashboard", "destination": "/dashboard/index.html" }
   ],
   "cleanUrls": true
 }

@@ -23,7 +23,7 @@
     <span class="badge">Payment Confirmation</span>
     <h1 id="title">Confirming your purchase...</h1>
     <p id="desc">Please wait while we finish activating your AutoVault plan.</p>
-    <a class="btn" href="/login">Go to Login</a>
+    <a class="btn" id="nextLoginBtn" href="/login">Go to Login</a>
   </div>
 
   <script src="/toast.js"></script>
@@ -36,6 +36,7 @@
       );
       const title = document.getElementById('title');
       const desc = document.getElementById('desc');
+      const nextLoginBtn = document.getElementById('nextLoginBtn');
       const token = new URLSearchParams(window.location.search).get('token');
       if(!token){
         title.textContent='Invalid confirmation link';
@@ -50,6 +51,10 @@
         const reg = data.registration || {};
         title.textContent = `Welcome, ${reg.name || 'Dealer'}!`;
         desc.textContent = `Your ${reg.planLabel || 'AutoVault'} plan is active for ${reg.dealership || 'your dealership'}. A confirmation email has been sent to ${reg.email || 'your email'}.`;
+        if(reg.loginPath){
+          nextLoginBtn.href = reg.loginPath;
+          setTimeout(()=>{ window.location.href = reg.loginPath; }, 1400);
+        }
       }catch(err){
         title.textContent='Could not verify purchase';
         desc.textContent=err.message || 'Your token is invalid or expired. Please contact support.';
