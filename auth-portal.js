@@ -26,6 +26,9 @@
   }
 
   function getRoutePortal() {
+    const params = new URLSearchParams(location.search);
+    const queryPortal = normalizePortal(params.get("portal"));
+    if (params.has("portal")) return queryPortal;
     const path = location.pathname.toLowerCase();
     if (path.startsWith("/wholesale/")) return "wholesale";
     if (path.startsWith("/sales-rep/")) return "sales_rep";
