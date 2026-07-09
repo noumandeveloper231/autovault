@@ -1575,6 +1575,7 @@
   </div>
 </footer>
 
+<script src="/toast.js"></script>
 <script>
   /* nav scroll state + mobile toggle */
   const header=document.getElementById('top');
@@ -1745,7 +1746,7 @@
       gsStep2.hidden=false;
       gsStep2.scrollIntoView({behavior:'smooth',block:'start'});
     }catch(err){
-      alert(err.message||'Failed to start registration. Please try again.');
+      AVToast.error(err.message||'Failed to start registration. Please try again.');
     }finally{
       const submitBtn=form.querySelector('button[type="submit"]');
       if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='Get Started'; }
@@ -1753,9 +1754,9 @@
   });
   document.querySelectorAll('#gsStep2 .tier-btn').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
-      if(!activeRegistrationId){ alert('Please submit your details first.'); return; }
+      if(!activeRegistrationId){ AVToast.warning('Please submit your details first.'); return; }
       const plan=PLAN_MAP[btn.getAttribute('data-tier')]||null;
-      if(!plan){ alert('Invalid plan selected.'); return; }
+      if(!plan){ AVToast.error('Invalid plan selected.'); return; }
       const originalText=btn.textContent;
       try{
         btn.disabled=true; btn.textContent='Redirecting...';
@@ -1768,7 +1769,7 @@
         if(!resp.ok||!data.url) throw new Error(data.message||'Unable to create checkout session.');
         window.location.href=data.url;
       }catch(err){
-        alert(err.message||'Checkout failed. Please try again.');
+        AVToast.error(err.message||'Checkout failed. Please try again.');
         btn.disabled=false;
         btn.textContent=originalText;
       }

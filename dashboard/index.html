@@ -4806,6 +4806,7 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
 </div>
 
 
+<script src="/toast.js"></script>
 <script>
 // ---------- GRID LINES TOGGLE ----------
 let gridLinesOn = false;
@@ -6898,7 +6899,7 @@ function saveSalesRep(){
 }
 function deleteSalesRep(){
   if(!repModalEditing) return;
-  if(vehicles.some(v=>v.rep===repModalEditing)){ alert('This rep has vehicles assigned. Reassign them before deleting.'); return; }
+  if(vehicles.some(v=>v.rep===repModalEditing)){ AVToast.warning('This rep has vehicles assigned. Reassign them before deleting.'); return; }
   salesReps = salesReps.filter(r=>r.name!==repModalEditing);
   syncRepList(); populateRepFilter(vehicles.map(computeRow), true); renderRepsPage(); closeRepModal();
 }
@@ -10033,7 +10034,7 @@ function deleteEmployee(){
   if(!empEditing) return;
   const name=document.getElementById('empName').value.trim();
   if(empEditing.kind==='rep'){
-    if(vehicles.some(v=>v.rep===name)){ alert('This rep has vehicles assigned. Reassign them before removing.'); return; }
+    if(vehicles.some(v=>v.rep===name)){ AVToast.warning('This rep has vehicles assigned. Reassign them before removing.'); return; }
     salesReps = salesReps.filter(r=>r.name!==name); syncRepList();
   } else {
     staff.splice(empEditing.key,1);
@@ -10492,7 +10493,7 @@ function currentFilingPreview(){
   return { covered, start, totalTax: covered.reduce((s,v)=>s+saleTaxOf(v),0) };
 }
 function fileSalesTax(){
-  const due=taxConfig.nextDue; if(!due){ alert('Set a filing due date first.'); return; }
+  const due=taxConfig.nextDue; if(!due){ AVToast.warning('Set a filing due date first.'); return; }
   const pv=currentFilingPreview();
   const dueLabel=new Date(due+'T00:00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'});
   document.getElementById('fileConfirmMsg').innerHTML = `Mark your <b>${taxConfig.frequency.toLowerCase()}</b> filing due <b>${dueLabel}</b> as filed?<br><br>This saves <b>${pv.covered.length} vehicle${pv.covered.length===1?'':'s'}</b> and <b style="color:var(--green);">${fmt(pv.totalTax)}</b> in sales tax to your filing history, then advances your next filing date.`;
