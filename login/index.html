@@ -795,6 +795,16 @@
   .lg-btn{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;font-weight:700;font-size:15px;text-shadow:0 1px 1px rgba(0,0,0,.28);border:0;border-radius:11px;padding:14px;cursor:pointer;box-shadow:0 8px 24px rgba(44,146,87,.3);transition:transform .12s,box-shadow .2s}
   .lg-btn:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(44,146,87,.4)}
   .lg-btn:disabled{opacity:.75;cursor:default;transform:none}.lg-btn svg{width:16px;height:16px}
+  .lg-eyebrow{display:inline-flex;align-items:center;gap:8px}
+  .lg-eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent)}
+  body.portal-wholesale .lg-eyebrow{color:#6cc8ff}
+  body.portal-wholesale .lg-eyebrow::before{background:#6cc8ff}
+  body.portal-wholesale .lg-btn{background:linear-gradient(150deg,#2368ad,#2f81d1);box-shadow:0 8px 24px rgba(47,129,209,.35)}
+  body.portal-wholesale .lg-btn:hover{box-shadow:0 12px 32px rgba(47,129,209,.45)}
+  body.portal-sales-rep .lg-eyebrow{color:#c794ff}
+  body.portal-sales-rep .lg-eyebrow::before{background:#c794ff}
+  body.portal-sales-rep .lg-btn{background:linear-gradient(150deg,#6f48c8,#8a5cf6);box-shadow:0 8px 24px rgba(138,92,246,.35)}
+  body.portal-sales-rep .lg-btn:hover{box-shadow:0 12px 32px rgba(138,92,246,.45)}
   .lg-spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:lgspin .7s linear infinite;display:none}
   @keyframes lgspin{to{transform:rotate(360deg)}}
   .lg-btn.loading .lg-spin{display:block}.lg-btn.loading .lg-label,.lg-btn.loading .lg-arrow{display:none}
@@ -857,15 +867,15 @@
       <div class="lg-form-inner">
         <a href="#" class="lg-brand"><span class="lg-mark"></span><span class="lg-name">AutoVault</span></a>
         <div class="lg-mobile-logo"><span class="lg-mark"></span><span class="lg-name">AutoVault</span></div>
-        <span class="lg-eyebrow">Dealership Login</span>
-        <h1 class="lg-welcome">Welcome back</h1>
-        <p class="lg-sub">Sign in to your dealership dashboard.</p>
+        <span class="lg-eyebrow" id="lgPortalLabel">Dealership Login</span>
+        <h1 class="lg-welcome" id="lgWelcomeTitle">Welcome back</h1>
+        <p class="lg-sub" id="lgWelcomeSub">Sign in to your dealership dashboard.</p>
         <form id="lgForm" novalidate>
           <div class="lg-field"><label for="lgUser">Username or email</label><div class="lg-iw"><span class="lg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span><input id="lgUser" type="text" placeholder="you@yourdealership.com" autocomplete="username" /></div></div>
           <div class="lg-field"><label for="lgPass">Password</label><div class="lg-iw"><span class="lg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><input id="lgPass" type="password" placeholder="••••••••••" autocomplete="current-password" /><button type="button" class="lg-eye" id="lgEye" aria-label="Show password"><svg id="lgEyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
           <div class="lg-err" id="lgErr">Please enter your username and password.</div>
           <div class="lg-row"><label class="lg-remember"><input type="checkbox" id="lgRemember" /><span class="lg-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span>Remember me</label><a href="#" class="lg-forgot">Forgot password?</a></div>
-          <button type="submit" class="lg-btn" id="lgBtn"><span class="lg-label">Sign in to dashboard</span><svg class="lg-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="lg-spin"></span></button>
+          <button type="submit" class="lg-btn" id="lgBtn"><span class="lg-label" id="lgBtnLabel">Sign in to dashboard</span><svg class="lg-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="lg-spin"></span></button>
         </form>
         <p class="lg-signup">New dealership? <a href="#waitlist">Sign up here</a></p>
         <div class="lg-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Secured with 256-bit encryption</div>
@@ -1800,12 +1810,38 @@
     const inferredPortal = path.startsWith('/wholesale/')
       ? 'wholesale'
       : (path.startsWith('/sales-rep/') ? 'sales_rep' : 'admin');
-    const loginHeading = document.querySelector('.lg-title');
-    if(loginHeading){
-      if(inferredPortal === 'wholesale') loginHeading.textContent = 'Wholesale Portal Login';
-      else if(inferredPortal === 'sales_rep') loginHeading.textContent = 'Sales Rep Portal Login';
-      else loginHeading.textContent = 'Dealer Admin Login';
-    }
+    const portalLabel = document.getElementById('lgPortalLabel');
+    const welcomeTitle = document.getElementById('lgWelcomeTitle');
+    const welcomeSub = document.getElementById('lgWelcomeSub');
+    const loginBtnLabel = document.getElementById('lgBtnLabel');
+    const portalConfig = inferredPortal === 'wholesale'
+      ? {
+          bodyClass: 'portal-wholesale',
+          label: 'Wholesale Plan Login',
+          title: 'Welcome to Wholesale Portal',
+          sub: 'Sign in to manage wholesale deals, auctions, and fast flips.',
+          btn: 'Sign in to wholesale dashboard'
+        }
+      : (inferredPortal === 'sales_rep'
+        ? {
+            bodyClass: 'portal-sales-rep',
+            label: 'Independent Dealer Login',
+            title: 'Welcome to Sales Rep Portal',
+            sub: 'Sign in to track your deals, commissions, and rep activity.',
+            btn: 'Sign in to sales-rep dashboard'
+          }
+        : {
+            bodyClass: 'portal-admin',
+            label: 'Growing Dealership Admin',
+            title: 'Welcome to Admin Dashboard',
+            sub: 'Sign in to your full dealership command center.',
+            btn: 'Sign in to admin dashboard'
+          });
+    document.body.classList.add(portalConfig.bodyClass);
+    if(portalLabel) portalLabel.textContent = portalConfig.label;
+    if(welcomeTitle) welcomeTitle.textContent = portalConfig.title;
+    if(welcomeSub) welcomeSub.textContent = portalConfig.sub;
+    if(loginBtnLabel) loginBtnLabel.textContent = portalConfig.btn;
 
     const pw=document.getElementById('lgPass'), eye=document.getElementById('lgEye'), icon=document.getElementById('lgEyeIcon');
     if(!pw)return;
