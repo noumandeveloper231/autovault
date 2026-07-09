@@ -5,10 +5,15 @@
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/login", "destination": "/login/index.html" },
     { "source": "/wholesale/login", "destination": "/login/index.html" },
+    { "source": "/wholesale/login/:path*", "destination": "/login/index.html" },
     { "source": "/sales-rep/login", "destination": "/login/index.html" },
+    { "source": "/sales-rep/login/:path*", "destination": "/login/index.html" },
     { "source": "/wholesale/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/wholesale/dashboard/:path*", "destination": "/dashboard/index.html" },
     { "source": "/sales-rep/dashbaord", "destination": "/dashboard/index.html" },
-    { "source": "/sales-rep/dashboard", "destination": "/dashboard/index.html" }
+    { "source": "/sales-rep/dashbaord/:path*", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashboard/:path*", "destination": "/dashboard/index.html" }
   ],
   "cleanUrls": true
 }
