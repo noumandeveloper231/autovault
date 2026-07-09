@@ -1686,7 +1686,10 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
 .owner-user-grid .vdp-row-value{ font-family:'Inter',sans-serif; font-weight:700; }
 .owner-user-grid .table-card{ padding:20px 22px; overflow:visible; }
 .owner-user-grid .vdp-row{ padding:9px 0; }
+  html.av-auth-pending body{visibility:hidden}
 </style>
+<script src="/auth-portal.js"></script>
+<script>AVPortal.guardDashboard();</script>
 </head>
 <body>
 <nav class="sidebar">
@@ -11299,55 +11302,26 @@ loadKpiColors();
   setTimeout(decorateScrollers, 400);
 })();
 
-async function bootstrapPortalAccess(){
-  const path = location.pathname.toLowerCase();
-  const routePortal = path.startsWith('/wholesale/')
-    ? 'wholesale'
-    : (path.startsWith('/sales-rep/') ? 'sales_rep' : 'admin');
-  const token = localStorage.getItem('avAuthToken') || '';
-  if(!token){
-    if(routePortal === 'wholesale') location.href='/wholesale/login';
-    else if(routePortal === 'sales_rep') location.href='/sales-rep/login';
-    else location.href='/login';
-    return;
-  }
-  const API_URL = window.AUTOVAULT_API_URL || (
-    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-      ? 'http://localhost:3000'
-      : 'https://autovault-backend-cbdp.onrender.com'
-  );
-  try{
-    const resp = await fetch(`${API_URL}/api/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
-    const data = await resp.json();
-    if(!resp.ok) throw new Error(data.message || 'Session expired');
-    const userPortal = data.user?.portal || 'admin';
-    localStorage.setItem('avAuthPortal', userPortal);
-    if(routePortal !== userPortal){
-      location.href = data.redirectDashboardPath || '/dashboard';
-      return;
-    }
-    updateMsgBadge();
-    updateNotifBadge();
-    if(routePortal === 'wholesale'){
-      enterWholesale();
-      return;
-    }
-    if(routePortal === 'sales_rep'){
-      repUser = data.user?.name || repUser;
-      enterRepMode();
-      return;
-    }
+function bootstrapPortalAccess(){
+  const routePortal = AVPortal.getRoutePortal();
+  const session = AVPortal.readSession();
+  if(!session || session.portal !== routePortal) return;
+
+  updateMsgBadge();
+  updateNotifBadge();
+  if(routePortal === 'wholesale'){
+    enterWholesale();
+  } else if(routePortal === 'sales_rep'){
+    repUser = session.name || repUser;
+    enterRepMode();
+  } else {
     renderDashboard();
     showPage('dashboard', document.querySelector('[data-page=\"dashboard\"]'));
-  }catch{
-    localStorage.removeItem('avAuthToken');
-    localStorage.removeItem('avAuthPortal');
-    if(routePortal === 'wholesale') location.href='/wholesale/login';
-    else if(routePortal === 'sales_rep') location.href='/sales-rep/login';
-    else location.href='/login';
   }
+
+  AVPortal.verifySessionInBackground(()=>{
+    AVPortal.redirect(AVPortal.loginPath(routePortal));
+  });
 }
 
 bootstrapPortalAccess();

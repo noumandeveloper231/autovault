@@ -4,16 +4,16 @@
     { "source": "/thank-you", "destination": "/thank-you/index.html" },
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/login", "destination": "/login/index.html" },
-    { "source": "/wholesale/login", "destination": "/wholesale/login/index.html" },
-    { "source": "/wholesale/login/:path*", "destination": "/wholesale/login/index.html" },
-    { "source": "/sales-rep/login", "destination": "/sales-rep/login/index.html" },
-    { "source": "/sales-rep/login/:path*", "destination": "/sales-rep/login/index.html" },
-    { "source": "/wholesale/dashboard", "destination": "/wholesale/dashboard/index.html" },
-    { "source": "/wholesale/dashboard/:path*", "destination": "/wholesale/dashboard/index.html" },
-    { "source": "/sales-rep/dashbaord", "destination": "/sales-rep/dashbaord/index.html" },
-    { "source": "/sales-rep/dashbaord/:path*", "destination": "/sales-rep/dashbaord/index.html" },
-    { "source": "/sales-rep/dashboard", "destination": "/sales-rep/dashboard/index.html" },
-    { "source": "/sales-rep/dashboard/:path*", "destination": "/sales-rep/dashboard/index.html" }
+    { "source": "/wholesale/login", "destination": "/login/index.html" },
+    { "source": "/wholesale/login/:path*", "destination": "/login/index.html" },
+    { "source": "/sales-rep/login", "destination": "/login/index.html" },
+    { "source": "/sales-rep/login/:path*", "destination": "/login/index.html" },
+    { "source": "/wholesale/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/wholesale/dashboard/:path*", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashbaord", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashbaord/:path*", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashboard/:path*", "destination": "/dashboard/index.html" }
   ],
   "cleanUrls": true
 }

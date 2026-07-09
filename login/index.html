@@ -854,6 +854,8 @@
   }
 
 </style>
+<script src="/auth-portal.js"></script>
+<script>AVPortal.guardLogin();</script>
 </head>
 <body>
 <div class="backdrop"><div class="grid-lines"></div></div>
@@ -1801,15 +1803,8 @@
 
   /* ===== login (top) interactions ===== */
   (function(){
-    const API_URL = window.AUTOVAULT_API_URL || (
-      (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-        ? 'http://localhost:3000'
-        : 'https://autovault-backend-cbdp.onrender.com'
-    );
-    const path = location.pathname.toLowerCase();
-    const inferredPortal = path.startsWith('/wholesale/')
-      ? 'wholesale'
-      : (path.startsWith('/sales-rep/') ? 'sales_rep' : 'admin');
+    const API_URL = AVPortal.API_URL;
+    const inferredPortal = AVPortal.getRoutePortal();
     const portalLabel = document.getElementById('lgPortalLabel');
     const welcomeTitle = document.getElementById('lgWelcomeTitle');
     const welcomeSub = document.getElementById('lgWelcomeSub');
