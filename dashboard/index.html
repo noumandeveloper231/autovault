@@ -1858,8 +1858,7 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
 
   <div class="nav-group owner-only-group">
     <div class="nav-section-label" style="color:#a78bfa;">Owner Portal</div>
-    <div class="nav-item" data-page="owner-dashboard" onclick="showPage('owner-dashboard', this); renderOwnerDashboard();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg> Users Dashboard</div>
-    <div class="nav-item" data-page="owner-registrations" onclick="showPage('owner-registrations', this); renderOwnerRegistrations();"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 7h8M8 11h8M8 15h5"/><rect x="4" y="3" width="16" height="18" rx="2"/></svg> Registrations</div>
+    <div class="nav-item" data-page="owner-dashboard" onclick="enterOwner()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg> Users Dashboard</div>
   </div>
   <div class="nav-group owner-only-group">
     <div class="nav-section-label">Insights</div>
@@ -3208,14 +3207,6 @@ body.owner-mode .qa-add-customer, body.owner-mode .qa-btn{ display:none !importa
 <div id="page-owner-live" class="page-section">
   <div class="page-head"><div class="page-title">LIVE <b>DATA</b></div><div class="page-sub" id="ownerLiveSub">Who is on the platform right now.</div></div>
   <div id="ownerLiveBody"></div>
-</div>
-
-<div id="page-owner-registrations" class="page-section">
-  <div class="page-head"><div class="page-title">OWNER <b>REGISTRATIONS</b></div><div class="page-sub">New registrations captured from landing page checkout flow.</div></div>
-  <div class="filter-row" style="margin-top:16px;margin-bottom:14px;">
-    <input type="text" id="ownerRegSearch" placeholder="Search name, dealership, or email..." oninput="renderOwnerRegistrations()" style="flex:1;min-width:220px;">
-  </div>
-  <div id="ownerRegistrationsBody"></div>
 </div>
 
 <div id="page-vehicles" class="page-section">
@@ -6154,49 +6145,83 @@ function openReceipt(id){
 }
 function closeReceipt(){ const m=document.getElementById('receiptModal'); if(m) m.classList.remove('open'); }
 function printReceipt(){ window.print(); }
+const avConfig = {
+  apiUrl: window.AUTOVAULT_API_URL || (
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : 'https://autovault-backend-cbdp.onrender.com'
+  ),
+  ownerApiKey: window.AUTOVAULT_OWNER_API_KEY || 'oLYIh09DuZVXCc3DjMqNuGv63kpOKWR7'
+};
 const OWNER_STATES={CA:{name:'California',x:70,y:300},TX:{name:'Texas',x:405,y:430},NY:{name:'New York',x:745,y:165},FL:{name:'Florida',x:705,y:485},IL:{name:'Illinois',x:565,y:250},GA:{name:'Georgia',x:665,y:400},AZ:{name:'Arizona',x:195,y:370},WA:{name:'Washington',x:120,y:70},NC:{name:'North Carolina',x:705,y:330},OH:{name:'Ohio',x:625,y:240},CO:{name:'Colorado',x:295,y:290},PA:{name:'Pennsylvania',x:695,y:215}};
-let ownerUsers=[
-  {id:'u1',name:'Marcus Bell',dealership:'Bell Auto Group',state:'CA',city:'Los Angeles',signup:'2026-06-26',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-29T08:12',online:true,session:47,email:'marcus@bellauto.com',phone:'(310) 555-0142'},
-  {id:'u2',name:'Priya Nair',dealership:'Sunset Motors',state:'CA',city:'San Diego',signup:'2026-06-21',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-29T09:41',online:true,session:23,email:'priya@sunsetmotors.com',phone:'(619) 555-0198'},
-  {id:'u3',name:'Derek Cole',dealership:'Coastline Auto',state:'CA',city:'Sacramento',signup:'2026-05-14',status:'active',payment:'on-time',plan:'Starter',fee:149,lastLogin:'2026-06-28T16:03',online:false,session:0,email:'derek@coastlineauto.com',phone:'(916) 555-0110'},
-  {id:'u4',name:'Nina Alvarez',dealership:'Golden State Autos',state:'CA',city:'Fresno',signup:'2026-04-09',status:'delinquent',payment:'behind',plan:'Pro',fee:299,lastLogin:'2026-06-12T11:20',online:false,session:0,email:'nina@gsautos.com',phone:'(559) 555-0177'},
-  {id:'u5',name:'Sam Whitfield',dealership:'Bayview Cars',state:'CA',city:'Oakland',signup:'2026-06-18',status:'active',payment:'on-time',plan:'Enterprise',fee:599,lastLogin:'2026-06-29T07:55',online:true,session:88,email:'sam@bayviewcars.com',phone:'(510) 555-0123'},
-  {id:'u6',name:' Raymond Ortiz',dealership:'Valley Auto Mart',state:'CA',city:'Bakersfield',signup:'2026-03-22',status:'inactive',payment:'on-time',plan:'Starter',fee:149,lastLogin:'2026-05-30T14:12',online:false,session:0,email:'ray@valleyautomart.com',phone:'(661) 555-0166'},
-  {id:'u7',name:'Jared Kim',dealership:'Lone Star Motors',state:'TX',city:'Dallas',signup:'2026-06-24',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-29T10:02',online:true,session:15,email:'jared@lonestarmotors.com',phone:'(214) 555-0144'},
-  {id:'u8',name:'Ashley Boone',dealership:'Hill Country Auto',state:'TX',city:'Austin',signup:'2026-05-27',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-27T13:40',online:false,session:0,email:'ashley@hillcountryauto.com',phone:'(512) 555-0155'},
-  {id:'u9',name:'Miguel Santos',dealership:'Gulf Coast Cars',state:'TX',city:'Houston',signup:'2026-06-11',status:'active',payment:'on-time',plan:'Enterprise',fee:599,lastLogin:'2026-06-29T08:47',online:true,session:62,email:'miguel@gulfcoastcars.com',phone:'(713) 555-0188'},
-  {id:'u10',name:'Tara Nguyen',dealership:'Alamo Auto',state:'TX',city:'San Antonio',signup:'2026-02-15',status:'delinquent',payment:'behind',plan:'Starter',fee:149,lastLogin:'2026-06-05T09:10',online:false,session:0,email:'tara@alamoauto.com',phone:'(210) 555-0133'},
-  {id:'u11',name:'Anthony Russo',dealership:'Empire Motors',state:'NY',city:'New York',signup:'2026-06-20',status:'active',payment:'on-time',plan:'Enterprise',fee:599,lastLogin:'2026-06-29T11:15',online:true,session:34,email:'anthony@empiremotors.com',phone:'(212) 555-0101'},
-  {id:'u12',name:'Grace Liu',dealership:'Hudson Auto',state:'NY',city:'Buffalo',signup:'2026-05-08',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-28T10:22',online:false,session:0,email:'grace@hudsonauto.com',phone:'(716) 555-0112'},
-  {id:'u13',name:'Victor Reyes',dealership:'Metro Cars NY',state:'NY',city:'Rochester',signup:'2026-06-15',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-29T09:05',online:true,session:19,email:'victor@metrocarsny.com',phone:'(585) 555-0129'},
-  {id:'u14',name:'Dana Fischer',dealership:'Liberty Auto',state:'NY',city:'Albany',signup:'2026-01-28',status:'inactive',payment:'on-time',plan:'Starter',fee:149,lastLogin:'2026-04-18T15:33',online:false,session:0,email:'dana@libertyauto.com',phone:'(518) 555-0147'},
-  {id:'u15',name:'Carlos Mendez',dealership:'Sunshine Motors',state:'FL',city:'Miami',signup:'2026-06-23',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-29T12:01',online:true,session:41,email:'carlos@sunshinemotors.com',phone:'(305) 555-0175'},
-  {id:'u16',name:'Bethany Cross',dealership:'Gator Auto',state:'FL',city:'Orlando',signup:'2026-05-19',status:'active',payment:'on-time',plan:'Starter',fee:149,lastLogin:'2026-06-26T14:50',online:false,session:0,email:'beth@gatorauto.com',phone:'(407) 555-0163'},
-  {id:'u17',name:'Owen Price',dealership:'Bay Auto Sales',state:'FL',city:'Tampa',signup:'2026-03-11',status:'delinquent',payment:'behind',plan:'Pro',fee:299,lastLogin:'2026-06-01T08:40',online:false,session:0,email:'owen@bayautosales.com',phone:'(813) 555-0154'},
-  {id:'u18',name:'Rachel Stern',dealership:'Windy City Motors',state:'IL',city:'Chicago',signup:'2026-06-19',status:'active',payment:'on-time',plan:'Enterprise',fee:599,lastLogin:'2026-06-29T10:38',online:true,session:56,email:'rachel@windycitymotors.com',phone:'(312) 555-0182'},
-  {id:'u19',name:'Kevin Barnes',dealership:'Prairie Auto',state:'IL',city:'Springfield',signup:'2026-04-25',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-27T09:14',online:false,session:0,email:'kevin@prairieauto.com',phone:'(217) 555-0121'},
-  {id:'u20',name:'Lauren Hayes',dealership:'Lakeside Cars',state:'IL',city:'Naperville',signup:'2026-02-06',status:'inactive',payment:'on-time',plan:'Starter',fee:149,lastLogin:'2026-05-02T11:47',online:false,session:0,email:'lauren@lakesidecars.com',phone:'(630) 555-0139'},
-  {id:'u21',name:'Terrence Ford',dealership:'Peach State Auto',state:'GA',city:'Atlanta',signup:'2026-06-22',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-29T08:29',online:true,session:27,email:'terrence@peachstateauto.com',phone:'(404) 555-0190'},
-  {id:'u22',name:'Monica Reed',dealership:'Savannah Motors',state:'GA',city:'Savannah',signup:'2026-05-03',status:'active',payment:'on-time',plan:'Starter',fee:149,lastLogin:'2026-06-25T13:22',online:false,session:0,email:'monica@savannahmotors.com',phone:'(912) 555-0108'},
-  {id:'u23',name:'Brian Cole',dealership:'Desert Auto',state:'AZ',city:'Phoenix',signup:'2026-06-16',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-28T17:11',online:false,session:0,email:'brian@desertauto.com',phone:'(602) 555-0116'},
-  {id:'u24',name:'Sofia Marin',dealership:'Cactus Cars',state:'AZ',city:'Tucson',signup:'2026-03-30',status:'delinquent',payment:'behind',plan:'Starter',fee:149,lastLogin:'2026-05-28T10:03',online:false,session:0,email:'sofia@cactuscars.com',phone:'(520) 555-0127'},
-  {id:'u25',name:'Ethan Wells',dealership:'Emerald Auto',state:'WA',city:'Seattle',signup:'2026-06-25',status:'active',payment:'on-time',plan:'Enterprise',fee:599,lastLogin:'2026-06-29T11:52',online:true,session:73,email:'ethan@emeraldauto.com',phone:'(206) 555-0169'},
-  {id:'u26',name:'Chloe Park',dealership:'Rainier Motors',state:'WA',city:'Spokane',signup:'2026-04-14',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-24T15:19',online:false,session:0,email:'chloe@rainiermotors.com',phone:'(509) 555-0141'},
-  {id:'u27',name:'Jordan Blake',dealership:'Tar Heel Auto',state:'NC',city:'Charlotte',signup:'2026-06-13',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-28T09:33',online:false,session:0,email:'jordan@tarheelauto.com',phone:'(704) 555-0158'},
-  {id:'u28',name:'Hailey Scott',dealership:'Piedmont Cars',state:'NC',city:'Raleigh',signup:'2026-01-19',status:'inactive',payment:'on-time',plan:'Starter',fee:149,lastLogin:'2026-03-27T14:08',online:false,session:0,email:'hailey@piedmontcars.com',phone:'(919) 555-0135'},
-  {id:'u29',name:'Nathan Price',dealership:'Buckeye Auto',state:'OH',city:'Columbus',signup:'2026-06-17',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-29T07:44',online:true,session:12,email:'nathan@buckeyeauto.com',phone:'(614) 555-0113'},
-  {id:'u30',name:'Olivia Grant',dealership:'Lake Erie Motors',state:'OH',city:'Cleveland',signup:'2026-05-21',status:'active',payment:'on-time',plan:'Starter',fee:149,lastLogin:'2026-06-26T10:57',online:false,session:0,email:'olivia@lakeeriemotors.com',phone:'(216) 555-0124'},
-  {id:'u31',name:'Diego Herrera',dealership:'Mile High Auto',state:'CO',city:'Denver',signup:'2026-06-27',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-29T12:22',online:true,session:8,email:'diego@milehighauto.com',phone:'(303) 555-0171'},
-  {id:'u32',name:'Whitney Cole',dealership:'Rockies Motors',state:'CO',city:'Colorado Springs',signup:'2026-04-02',status:'active',payment:'on-time',plan:'Pro',fee:299,lastLogin:'2026-06-23T09:48',online:false,session:0,email:'whitney@rockiesmotors.com',phone:'(719) 555-0150'},
-  {id:'u33',name:'Frank DeLuca',dealership:'Keystone Auto',state:'PA',city:'Philadelphia',signup:'2026-06-14',status:'active',payment:'on-time',plan:'Enterprise',fee:599,lastLogin:'2026-06-28T16:30',online:false,session:0,email:'frank@keystoneauto.com',phone:'(215) 555-0179'},
-  {id:'u34',name:'Isabel Rossi',dealership:'Steel City Cars',state:'PA',city:'Pittsburgh',signup:'2026-02-24',status:'delinquent',payment:'behind',plan:'Starter',fee:149,lastLogin:'2026-05-20T11:05',online:false,session:0,email:'isabel@steelcitycars.com',phone:'(412) 555-0162'}
-];
+let ownerUsers=[];
+let ownerUsersLoaded=false;
+let ownerUsersLoading=false;
+function ownerPlanLabel(plan){
+  if(plan==='wholesaler') return 'Wholesaler';
+  if(plan==='independent_dealer') return 'Independent Dealer';
+  if(plan==='growing_dealership') return 'Growing Dealership';
+  return plan || '—';
+}
+function mapRegistrationToOwnerUser(reg){
+  const signup=reg.createdAt?new Date(reg.createdAt).toISOString().slice(0,10):'';
+  let status='inactive';
+  if(reg.status==='active') status='active';
+  else if(reg.status==='payment_failed') status='delinquent';
+  let payment='on-time';
+  if(reg.paymentStatus==='behind'||reg.paymentStatus==='pending') payment='behind';
+  return {
+    id:String(reg.id),
+    name:reg.name||'—',
+    dealership:reg.dealership||'—',
+    state:reg.state||'',
+    city:reg.city||'',
+    signup,
+    status,
+    payment,
+    plan:ownerPlanLabel(reg.plan),
+    fee:Number(reg.monthlyFee)||39.99,
+    lastLogin:reg.updatedAt||null,
+    online:false,
+    session:0,
+    email:reg.email||'—',
+    phone:reg.phone||'—'
+  };
+}
+async function loadOwnerUsersFromApi(force){
+  if(ownerUsersLoaded && !force) return;
+  if(ownerUsersLoading) return;
+  ownerUsersLoading=true;
+  try{
+    const headers={};
+    if(avConfig.ownerApiKey) headers['x-owner-key']=avConfig.ownerApiKey;
+    const resp=await fetch(`${avConfig.apiUrl}/api/owner/registrations`,{headers});
+    const data=await resp.json();
+    if(!resp.ok) throw new Error(data.message||'Unable to load owner users');
+    ownerUsers=(data.registrations||[]).map(mapRegistrationToOwnerUser);
+    ownerUsersLoaded=true;
+  }finally{
+    ownerUsersLoading=false;
+  }
+}
 let ownerMonth=5, ownerYear=2026, ownerSynced=false, ownerByMonth=false, ownerMode='month';
 function ownerYearChange(d){ ownerYear+=d; renderOwnerDashboard(); }
 function ownerPickMonth(i){ ownerMode='month'; ownerMonth=i; renderOwnerDashboard(); }
 function ownerPickYear(){ ownerMode='year'; renderOwnerDashboard(); }
 function toggleOwnerByMonth(){ ownerByMonth=!ownerByMonth; const b=document.getElementById('ownerMonthBtn'); if(b) b.classList.toggle('active',ownerByMonth); renderOwnerUsers(); }
-function enterOwner(){ document.body.classList.add('owner-mode'); showPage('owner-dashboard', document.querySelector('[data-page="owner-dashboard"]')); renderOwnerDashboard(); window.scrollTo(0,0); }
+function enterOwner(){
+  document.body.classList.add('owner-mode');
+  showPage('owner-dashboard', document.querySelector('[data-page="owner-dashboard"]'));
+  const body=document.getElementById('ownerUsersBody');
+  if(body) body.innerHTML='<div class="table-card">Loading registrations...</div>';
+  loadOwnerUsersFromApi(true).then(()=>{
+    renderOwnerDashboard();
+  }).catch(err=>{
+    if(body) body.innerHTML=`<div class="table-card" style="color:var(--red);">Failed to load users: ${err.message||'Unknown error'}</div>`;
+    if(typeof AVToast!=='undefined') AVToast.error(err.message||'Failed to load owner users');
+  });
+  window.scrollTo(0,0);
+}
 function exitOwner(){ document.body.classList.remove('owner-mode'); showPage('dashboard', document.querySelector('[data-nav=dashboard]')); if(typeof renderDashboard==='function') renderDashboard(); }
 function ownerFmtLogin(dt){ if(!dt) return '—'; const d=new Date(dt); return d.toLocaleDateString('en-US',{month:'short',day:'numeric'})+', '+d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); }
 function ownerPeriodStats(mode, mo, yr){
@@ -6253,10 +6278,10 @@ function renderOwnerCompare(){
 }
 function renderOwnerUsers(){
   const q=((document.getElementById('ownerSearch')||{}).value||'').toLowerCase();
-  const rows=ownerUsers.filter(u=>!q || `${u.name} ${u.dealership} ${u.state} ${u.city}`.toLowerCase().includes(q)).sort((a,b)=>(b.signup||'').localeCompare(a.signup||''));
+  const rows=ownerUsers.filter(u=>!q || `${u.name} ${u.dealership} ${u.state} ${u.city} ${u.email}`.toLowerCase().includes(q)).sort((a,b)=>(b.signup||'').localeCompare(a.signup||''));
   const thead='<thead><tr><th>User</th><th>Dealership</th><th>State</th><th>Signed Up</th><th>Status</th><th>Payment</th><th>Last Login</th></tr></thead>';
   const rowFn = u => `<tr onclick="showOwnerUser('${u.id}')" style="cursor:pointer;"><td class="veh-cell"><div class="veh-name">${u.name}</div><div style="font-size:11px;color:var(--muted);">${u.plan} · ${fmt(u.fee)}/mo</div></td><td>${u.dealership}</td><td>${u.city}, ${u.state}</td><td>${fmtDate(u.signup)}</td><td><span class="usr-badge ${u.status}">${u.status.charAt(0).toUpperCase()+u.status.slice(1)}</span></td><td><span class="pay-badge ${u.payment==='on-time'?'ontime':'behind'}">${u.payment==='on-time'?'On time':'Behind'}</span></td><td style="font-size:12px;color:var(--muted);">${ownerFmtLogin(u.lastLogin)}</td></tr>`;
-  const bodyHtml = ownerByMonth ? monthGroupRows(rows,'signup',rowFn,7,g=>g.length+' new user'+(g.length===1?'':'s')+' · '+fmt(g.reduce((s,u)=>s+u.fee,0))+'/mo') : rows.map(rowFn).join('');
+  const bodyHtml = ownerByMonth ? monthGroupRows(rows,'signup',rowFn,7,g=>g.length+' new user'+(g.length===1?'':'s')+' · '+fmt(g.reduce((s,u)=>s+u.fee,0))+'/mo') : (rows.length?rows.map(rowFn).join(''):'<tr><td colspan="7" style="color:var(--muted);padding:14px;">No registrations yet.</td></tr>');
   const body=document.getElementById('ownerUsersBody');
   if(body) body.innerHTML=`<div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${thead}<tbody>${bodyHtml}</tbody></table></div></div>`;
 }
@@ -6278,8 +6303,9 @@ function renderOwnerUserDetail(u){
   const nextDue = nd.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
   const lp = behind ? new Date(today.getFullYear(), today.getMonth()-2, 1) : new Date(today.getFullYear(), today.getMonth(), 1);
   const lastPay = lp.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  const brands=['Visa','Mastercard','Amex']; const brand=brands[(parseInt(u.id.replace('u',''))||0)%3];
-  const last4=String((parseInt(u.id.replace('u',''))*137+4021)%9000+1000);
+  const brands=['Visa','Mastercard','Amex']; const idSeed=[...String(u.id)].reduce((s,c)=>s+c.charCodeAt(0),0);
+  const brand=brands[idSeed%3];
+  const last4=String((idSeed*137+4021)%9000+1000);
   const pay=[
     ['Plan',u.plan,'var(--text)'],
     ['Monthly Fee',fmt(u.fee)+'/mo','var(--text)'],
@@ -6299,7 +6325,8 @@ function renderOwnerUserDetail(u){
 }
 const US_OUTLINE='<path d="M108,96 L150,74 L215,86 L360,94 L520,116 L640,118 L700,130 L760,148 L812,150 L834,184 L818,222 L798,238 L806,272 L778,300 L762,300 L750,342 L726,362 L718,424 L700,472 L690,500 L666,498 L652,470 L638,440 L590,452 L520,452 L470,456 L440,468 L400,452 L360,440 L300,430 L250,410 L200,400 L150,372 L110,352 L74,300 L84,220 L96,150 Z" fill="rgba(167,139,250,.05)" stroke="rgba(167,139,250,.22)" stroke-width="1.5"/>';
 function renderOwnerMap(){
-  const byState={}; ownerUsers.forEach(u=>{ byState[u.state]=(byState[u.state]||0)+1; });
+  if(!ownerUsersLoaded){ loadOwnerUsersFromApi().then(()=>renderOwnerMap()); return; }
+  const byState={}; ownerUsers.forEach(u=>{ if(!u.state) return; byState[u.state]=(byState[u.state]||0)+1; });
   const maxC=Math.max(...Object.values(byState),1);
   const bubbles=Object.entries(byState).map(([st,c])=>{ const pos=OWNER_STATES[st]||{x:450,y:280}; const r=15+(c/maxC)*24; return `<g class="map-dot" onclick="ownerMapClick('${st}')"><circle cx="${pos.x}" cy="${pos.y}" r="${r}" fill="rgba(167,139,250,.3)" stroke="#a78bfa" stroke-width="2"/><text x="${pos.x}" y="${pos.y-1}" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">${c}</text><text x="${pos.x}" y="${pos.y+13}" text-anchor="middle" font-size="9" font-weight="700" fill="rgba(255,255,255,.75)">${st}</text></g>`; }).join('');
   const list=Object.entries(byState).sort((a,b)=>b[1]-a[1]).map(([st,c])=>`<div class="own-map-row" onclick="ownerMapClick('${st}')"><span style="width:9px;height:9px;border-radius:50%;background:#a78bfa;display:inline-block;margin-right:10px;flex-shrink:0;"></span><span style="flex:1;color:var(--text);">${(OWNER_STATES[st]||{name:st}).name}</span><b style="color:#a78bfa;">${c} user${c===1?'':'s'}</b></div>`).join('');
@@ -6311,6 +6338,7 @@ function renderOwnerMap(){
 }
 function ownerMapClick(st){ showPage('owner-dashboard', document.querySelector('[data-page=owner-dashboard]')); renderOwnerDashboard(); const s=document.getElementById('ownerSearch'); if(s){ s.value=st; renderOwnerUsers(); } }
 function renderOwnerLive(){
+  if(!ownerUsersLoaded){ loadOwnerUsersFromApi().then(()=>renderOwnerLive()); return; }
   const onlineU=ownerUsers.filter(u=>u.online).sort((a,b)=>b.session-a.session);
   const avgSession=onlineU.length?Math.round(onlineU.reduce((s,u)=>s+u.session,0)/onlineU.length):0;
   const totalTime=onlineU.reduce((s,u)=>s+u.session,0);
@@ -6319,61 +6347,6 @@ function renderOwnerLive(){
   const rows=onlineU.map(u=>`<tr onclick="showOwnerUser('${u.id}')" style="cursor:pointer;"><td><span class="live-pulse" style="margin-right:9px;"></span>${u.name}</td><td>${u.dealership}</td><td>${u.city}, ${u.state}</td><td style="font-weight:800;color:var(--green);">${u.session} min</td><td style="font-size:12px;color:var(--muted);">On CRM now</td></tr>`).join('');
   document.getElementById('ownerLiveBody').innerHTML=`<div class="kpi-grid">${kpis.map(k=>`<div class="kpi"><div class="kpi-label">${k.l}</div><div class="kpi-value" style="color:${k.c}">${k.v}</div></div>`).join('')}</div>
     <div class="table-card" style="margin-top:16px;"><div class="table-scroll"><table class="dash-sold-table"><thead><tr><th>User</th><th>Dealership</th><th>Location</th><th>Time on CRM</th><th>Activity</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
-}
-const avConfig = {
-  apiUrl: window.AUTOVAULT_API_URL || (
-    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-      ? 'http://localhost:3000'
-      : 'https://autovault-backend-cbdp.onrender.com'
-  ),
-  ownerApiKey: window.AUTOVAULT_OWNER_API_KEY || 'oLYIh09DuZVXCc3DjMqNuGv63kpOKWR7'
-};
-let ownerRegistrations = [];
-let ownerRegistrationsLoaded = false;
-function ownerPlanLabel(plan){
-  if(plan==='wholesaler') return 'Wholesaler';
-  if(plan==='independent_dealer') return 'Independent Dealer';
-  if(plan==='growing_dealership') return 'Growing Dealership';
-  return plan || '—';
-}
-function ownerStatusClass(status){
-  if(status==='active') return 'active';
-  if(status==='payment_failed') return 'delinquent';
-  if(status==='canceled') return 'inactive';
-  return 'inactive';
-}
-function ownerStatusLabel(status){
-  if(!status) return 'Pending';
-  return status.replace(/_/g,' ').replace(/\b\w/g,m=>m.toUpperCase());
-}
-async function loadOwnerRegistrations(){
-  const headers = {};
-  if(avConfig.ownerApiKey) headers['x-owner-key'] = avConfig.ownerApiKey;
-  const resp = await fetch(`${avConfig.apiUrl}/api/owner/registrations`, { headers });
-  const data = await resp.json();
-  if(!resp.ok) throw new Error(data.message || 'Unable to load registrations');
-  ownerRegistrations = Array.isArray(data.registrations) ? data.registrations : [];
-  ownerRegistrationsLoaded = true;
-}
-async function renderOwnerRegistrations(){
-  const host=document.getElementById('ownerRegistrationsBody');
-  if(!host) return;
-  if(!ownerRegistrationsLoaded){
-    host.innerHTML='<div class="table-card">Loading registrations...</div>';
-    try{
-      await loadOwnerRegistrations();
-    }catch(err){
-      host.innerHTML=`<div class="table-card" style="color:var(--red);">Failed to load registrations: ${err.message || 'Unknown error'}</div>`;
-      return;
-    }
-  }
-  const q=((document.getElementById('ownerRegSearch')||{}).value||'').toLowerCase();
-  const rows=ownerRegistrations
-    .filter(r=>!q || `${r.name||''} ${r.dealership||''} ${r.email||''}`.toLowerCase().includes(q))
-    .sort((a,b)=>new Date(b.createdAt||0)-new Date(a.createdAt||0));
-  const thead='<thead><tr><th>Name</th><th>Dealership</th><th>Email</th><th>Plan</th><th>Signed Up</th><th>Status</th><th>Payment</th></tr></thead>';
-  const bodyHtml = rows.map(r=>`<tr><td class="veh-cell"><div class="veh-name">${r.name||'—'}</div><div style="font-size:11px;color:var(--muted);">${(r.phone||'—')}</div></td><td>${r.dealership||'—'}</td><td>${r.email||'—'}</td><td>${ownerPlanLabel(r.plan)}</td><td>${fmtDate((r.createdAt||'').slice(0,10))}</td><td><span class="usr-badge ${ownerStatusClass(r.status)}">${ownerStatusLabel(r.status)}</span></td><td><span class="pay-badge ${r.paymentStatus==='on-time'?'ontime':'behind'}">${r.paymentStatus==='on-time'?'On time':'Behind'}</span></td></tr>`).join('');
-  host.innerHTML=`<div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${thead}<tbody>${bodyHtml || '<tr><td colspan="7" style="color:var(--muted);padding:14px;">No registrations found.</td></tr>'}</tbody></table></div></div>`;
 }
 function showPage(pageId, el){
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
