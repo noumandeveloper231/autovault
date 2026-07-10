@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>AutoVault — Page Not Found</title>
+<meta name="robots" content="noindex" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#0A0D10;
+    --ink-2:#0C1013;
+    --panel:#12161B;
+    --line:#232A32;
+    --line-soft:#1B2128;
+    --text:#EAECEF;
+    --muted:#8B95A1;
+    --faint:#5A636D;
+    --accent:#2C9257;
+    --accent-2:#46B074;
+    --accent-soft:rgba(44,146,87,.13);
+    --accent-line:rgba(44,146,87,.34);
+    --ff-display:"Space Grotesk",system-ui,sans-serif;
+    --ff-body:"Inter",system-ui,sans-serif;
+    --ff-mono:"JetBrains Mono",ui-monospace,monospace;
+  }
+
+  *{box-sizing:border-box}
+  html{overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%;scrollbar-width:thin;scrollbar-color:#2b333d transparent}
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--text);
+    font-family:var(--ff-body);
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none}
+  h1{font-family:var(--ff-display);font-weight:700;letter-spacing:-.02em;line-height:1.05;margin:0}
+  p{margin:0}
+
+  .backdrop{position:fixed;inset:0;z-index:-1;pointer-events:none}
+  .backdrop::before{
+    content:"";position:absolute;top:-20%;left:50%;transform:translateX(-50%);
+    width:1100px;height:700px;
+    background:radial-gradient(ellipse at center,rgba(44,146,87,.10),transparent 62%);
+    filter:blur(20px);
+  }
+  .grid-lines{
+    position:absolute;inset:0;
+    background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);
+    background-size:64px 64px;
+    -webkit-mask-image:radial-gradient(ellipse 80% 55% at 50% 0%,#000 0%,transparent 75%);
+            mask-image:radial-gradient(ellipse 80% 55% at 50% 0%,#000 0%,transparent 75%);
+    opacity:.5;
+  }
+
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    font-family:var(--ff-body);font-weight:600;font-size:14.5px;cursor:pointer;
+    border-radius:10px;padding:11px 20px;border:1px solid transparent;transition:transform .12s,box-shadow .2s,background .2s,border-color .2s;white-space:nowrap;
+  }
+  .btn-primary{background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;font-weight:700;text-shadow:0 1px 1px rgba(0,0,0,.28);box-shadow:0 8px 24px rgba(44,146,87,.30)}
+  .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(44,146,87,.34)}
+  .btn-ghost{background:transparent;color:var(--text);border-color:var(--line)}
+  .btn-ghost:hover{border-color:var(--accent-line);background:rgba(255,255,255,.02)}
+  .btn-login{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent);font-weight:600}
+  .btn-login:hover{background:rgba(44,146,87,.20);color:var(--accent-2)}
+
+  .login-close{position:fixed;top:18px;right:20px;z-index:320;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:10px;background:rgba(18,22,27,.82);border:1px solid var(--line);color:var(--muted);cursor:pointer;font-family:var(--ff-body);font-size:13px;font-weight:600;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:.18s}
+  .login-close:hover{color:var(--text);border-color:var(--accent-line)}
+  .login-close svg{width:15px;height:15px}
+
+  .nf-view{position:relative;min-height:100vh;display:flex;flex-direction:column;overflow:hidden}
+  .nf-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .nf-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 45%,#000,transparent 76%);mask-image:radial-gradient(ellipse 70% 60% at 50% 45%,#000,transparent 76%);opacity:.5}
+  .nf-aura{position:absolute;left:50%;top:48%;width:760px;height:680px;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(44,146,87,.20),transparent 62%);filter:blur(24px);animation:nfaura 6.5s ease-in-out infinite}
+  @keyframes nfaura{0%,100%{opacity:.55;transform:translate(-50%,-50%) scale(.96)}50%{opacity:.95;transform:translate(-50%,-50%) scale(1.05)}}
+
+  .nf-marquee{position:relative;z-index:3;border-bottom:1px solid var(--line-soft);background:rgba(12,16,19,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow:hidden;padding:13px 0;flex:0 0 auto}
+  .nf-track{display:flex;white-space:nowrap;width:max-content;animation:nftm 32s linear infinite}
+  .nf-track span{font-family:var(--ff-mono);font-size:13px;letter-spacing:.05em;display:inline-flex;align-items:center}
+  .nf-track b{color:var(--muted);font-weight:500;padding:0 22px}
+  .nf-track .sep{color:var(--accent-line)}
+  @keyframes nftm{to{transform:translateX(-50%)}}
+
+  .nf-shell{position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;padding:48px 24px}
+  .nf-card{
+    width:100%;max-width:440px;
+    background:linear-gradient(180deg,var(--panel),var(--ink-2));
+    border:1px solid var(--line);border-radius:18px;padding:40px 32px;
+    box-shadow:0 40px 80px -34px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.02) inset;
+    text-align:center;
+  }
+  .nf-brand{display:inline-flex;align-items:center;gap:11px;margin-bottom:28px}
+  .nf-brand .name{font-family:var(--ff-display);font-weight:700;font-size:19px}
+  .nf-brand .mark{
+    width:28px;height:28px;border-radius:8px;
+    background:linear-gradient(150deg,#1B7A46,#218A4E);
+    box-shadow:0 6px 16px rgba(44,146,87,.35);
+    display:grid;place-items:center;flex:0 0 auto;
+  }
+  .nf-brand .mark svg{width:14px;height:14px;color:#fff}
+
+  .nf-code{
+    font-family:var(--ff-mono);font-weight:700;font-size:64px;letter-spacing:-.04em;
+    color:var(--accent);line-height:1;margin:0 0 8px;
+    text-shadow:0 0 40px rgba(44,146,87,.25);
+  }
+  .nf-eyebrow{
+    font-family:var(--ff-mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--accent);display:inline-flex;align-items:center;gap:9px;justify-content:center;
+  }
+  .nf-eyebrow::before,.nf-eyebrow::after{content:"";width:20px;height:1px;background:var(--accent-line)}
+  .nf-title{font-size:32px;margin:16px 0 0}
+  .nf-sub{color:var(--muted);font-size:15px;margin-top:12px;max-width:32ch;margin-left:auto;margin-right:auto}
+  .nf-actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:28px}
+  .nf-actions .btn{padding:13px 22px;font-size:15px}
+  .nf-secure{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--faint);font-size:11.5px;margin-top:28px}
+  .nf-secure svg{width:13px;height:13px;color:var(--accent-2)}
+
+  @media(max-width:520px){
+    .nf-card{padding:34px 22px}
+    .nf-code{font-size:52px}
+    .nf-title{font-size:26px}
+    .nf-actions{flex-direction:column}
+    .nf-actions .btn{width:100%}
+  }
+</style>
+</head>
+<body>
+<div class="backdrop"><div class="grid-lines"></div></div>
+
+<a href="/" class="login-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back to Home</a>
+
+<section class="nf-view">
+  <div class="nf-bg"><div class="nf-grid"></div><div class="nf-aura"></div></div>
+  <div class="nf-marquee"><div class="nf-track"><span><b>Inventory</b><i class="sep">◆</i><b>Payroll</b><i class="sep">◆</i><b>Sales Tax</b><i class="sep">◆</i><b>Commissions</b><i class="sep">◆</i><b>Profit &amp; Loss</b><i class="sep">◆</i><b>Flooring</b><i class="sep">◆</i><b>Auctions</b><i class="sep">◆</i><b>Reports</b><i class="sep">◆</i><b>Customers</b><i class="sep">◆</i><b>Expenses</b><i class="sep">◆</i></span><span><b>Inventory</b><i class="sep">◆</i><b>Payroll</b><i class="sep">◆</i><b>Sales Tax</b><i class="sep">◆</i><b>Commissions</b><i class="sep">◆</i><b>Profit &amp; Loss</b><i class="sep">◆</i><b>Flooring</b><i class="sep">◆</i><b>Auctions</b><i class="sep">◆</i><b>Reports</b><i class="sep">◆</i><b>Customers</b><i class="sep">◆</i><b>Expenses</b><i class="sep">◆</i></span></div></div>
+
+  <div class="nf-shell">
+    <div class="nf-card">
+      <a href="/" class="nf-brand">
+        <span class="mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg></span>
+        <span class="name">AutoVault</span>
+      </a>
+      <div class="nf-code">404</div>
+      <span class="nf-eyebrow">Page not found</span>
+      <h1 class="nf-title">This route doesn't exist</h1>
+      <p class="nf-sub">The page you're looking for may have moved, or the link is incorrect. Head back home or sign in to your dashboard.</p>
+      <div class="nf-actions">
+        <a href="/" class="btn btn-primary">Back to Home
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="/login" class="btn btn-login">Log In</a>
+      </div>
+      <div class="nf-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>AutoVault · The Dealership Operating System</div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
