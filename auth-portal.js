@@ -7,8 +7,9 @@
 
   const DASHBOARD_BY_PORTAL = {
     wholesale: "/wholesale/dashboard",
-    sales_rep: "/sales-rep/dashbaord",
+    sales_rep: "/sales-rep/dashboard",
     owner: "/owner/dashboard",
+    cpa: "/cpa/dashboard",
     admin: "/dashboard",
   };
 
@@ -16,6 +17,7 @@
     wholesale: "/wholesale/login",
     sales_rep: "/sales-rep/login",
     owner: "/owner/login",
+    cpa: "/cpa/login",
     admin: "/login",
   };
 
@@ -30,17 +32,18 @@
     if (portal === "wholesale") return "wholesale";
     if (portal === "sales_rep") return "sales_rep";
     if (portal === "owner") return "owner";
+    if (portal === "cpa") return "cpa";
     return "admin";
   }
 
   function getRoutePortal() {
     const params = new URLSearchParams(location.search);
-    const queryPortal = normalizePortal(params.get("portal"));
-    if (params.has("portal")) return queryPortal;
+    if (params.has("portal")) return normalizePortal(params.get("portal"));
     const path = location.pathname.toLowerCase();
     if (path.startsWith("/owner/")) return "owner";
     if (path.startsWith("/wholesale/")) return "wholesale";
     if (path.startsWith("/sales-rep/")) return "sales_rep";
+    if (path.startsWith("/cpa/")) return "cpa";
     return "admin";
   }
 
@@ -49,15 +52,34 @@
   }
 
   function getToken(portal) {
+    try {
+      if (sessionStorage.getItem("avImpersonation") && sessionStorage.getItem("avImpAccessToken")) {
+        return sessionStorage.getItem("avImpAccessToken") || "";
+      }
+    } catch (_) {}
     return localStorage.getItem(tokenStorageKey(portal)) || "";
   }
 
   function clearSession(portal) {
+    try {
+      if (sessionStorage.getItem("avImpersonation")) {
+        sessionStorage.removeItem("avImpAccessToken");
+        sessionStorage.removeItem("avImpersonation");
+        sessionStorage.removeItem("avAdminSessionBackup");
+        if (global.AVApi && typeof global.AVApi.clearImpersonationSession === "function") {
+          global.AVApi.clearImpersonationSession();
+        }
+        return;
+      }
+    } catch (_) {}
     const key = tokenStorageKey(portal);
     localStorage.removeItem(key);
     localStorage.removeItem("avAuthToken");
     localStorage.removeItem("avOwnerToken");
+    localStorage.removeItem("avRefreshToken");
+    localStorage.removeItem("avOwnerRefreshToken");
     localStorage.removeItem("avAuthPortal");
+    if (global.AVApi) global.AVApi.clearSession(portal);
   }
 
   function parseJwt(token) {
@@ -73,20 +95,40 @@
 
   function readSession(portal) {
     const normalizedPortal = normalizePortal(portal || getRoutePortal());
+    const impersonating = (function () {
+      try {
+        return !!(sessionStorage.getItem("avImpersonation") && sessionStorage.getItem("avImpAccessToken"));
+      } catch (_) {
+        return false;
+      }
+    })();
     const token = getToken(normalizedPortal);
     if (!token) return null;
     const claims = parseJwt(token);
     if (!claims || !claims.exp || claims.exp * 1000 <= Date.now()) {
+      if (impersonating) {
+        try {
+          sessionStorage.removeItem("avImpAccessToken");
+          sessionStorage.removeItem("avImpersonation");
+        } catch (_) {}
+        return null;
+      }
       clearSession(normalizedPortal);
       return null;
     }
-    const claimedPortal = normalizePortal(claims.portal || localStorage.getItem("avAuthPortal"));
-    localStorage.setItem("avAuthPortal", claimedPortal);
+    const claimedPortal = impersonating
+      ? "sales_rep"
+      : normalizePortal(claims.portal || localStorage.getItem("avAuthPortal"));
+    // Never overwrite the admin portal cookie/key while a support tab is open
+    if (!impersonating) {
+      localStorage.setItem("avAuthPortal", claimedPortal);
+    }
     return {
       token,
       portal: claimedPortal,
       name: claims.name || "",
       sub: claims.sub || "",
+      impersonation: !!claims.impersonation,
     };
   }
 
@@ -97,6 +139,12 @@
   }
 
   function guardDashboard() {
+    // Pick up one-time support-login handoff before session checks (new tab)
+    try {
+      if (global.AVApi && typeof global.AVApi.consumeImpersonationHandoff === "function") {
+        global.AVApi.consumeImpersonationHandoff();
+      }
+    } catch (_) {}
     document.documentElement.classList.add("av-auth-pending");
     const routePortal = getRoutePortal();
     const session = readSession(routePortal);

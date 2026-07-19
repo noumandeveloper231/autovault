@@ -1786,7 +1786,7 @@
         body:JSON.stringify({name,email,phone:form.phone.value.trim(),dealership:dealer,city,state})
       });
       const data=await resp.json();
-      if(!resp.ok) throw new Error(data.message||'Unable to save registration.');
+      if(!resp.ok) throw new Error(data.error?.message||data.message||'Unable to save registration.');
       activeRegistrationId=data.registrationId;
       gsStep1.style.display='none';
       gsStep2.hidden=false;
@@ -1812,7 +1812,7 @@
           body:JSON.stringify({registrationId:activeRegistrationId,plan})
         });
         const data=await resp.json();
-        if(!resp.ok||!data.url) throw new Error(data.message||'Unable to create checkout session.');
+        if(!resp.ok||!data.url) throw new Error(data.error?.message||data.message||'Unable to create checkout session.');
         window.location.href=data.url;
       }catch(err){
         AVToast.error(err.message||'Checkout failed. Please try again.');

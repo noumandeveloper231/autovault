@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CPA Portal | AutoVault360</title>
+  <meta name="description" content="AutoVault360 CPA portal — read-only financial overview and review notes for your dealership." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="/cpa/dashboard" />
+  <meta property="og:title" content="CPA Portal | AutoVault360" />
+  <meta property="og:description" content="Secure CPA portal for dealership financial review." />
+  <meta property="og:type" content="website" />
+  <script>
+    // Keep /cpa/ path so portal detection works without relying on query params.
+    // On Vercel this file is usually rewritten to /dashboard/index.html.
+    if (!location.pathname.toLowerCase().startsWith("/cpa/")) {
+      window.location.replace("/cpa/dashboard");
+    } else {
+      window.location.replace("/dashboard?portal=cpa" + (location.hash || "#cpa-overview"));
+    }
+  </script>
+</head>
+<body>
+  <p>Redirecting to CPA dashboard… <a href="/cpa/dashboard">Continue</a></p>
+</body>
+</html>

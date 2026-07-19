@@ -3,10 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoVault Wholesale Dashboard</title>
+  <title>Wholesale CRM | AutoVault360</title>
+  <meta name="description" content="AutoVault360 Wholesale CRM — auction inventory, flooring, expenses, and tax-ready P&amp;L for wholesalers." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="/wholesale/dashboard" />
+  <meta property="og:title" content="Wholesale CRM | AutoVault360" />
+  <meta property="og:description" content="Standalone wholesale dashboard for auction flips, flooring, and P&amp;L." />
+  <meta property="og:type" content="website" />
   <script>
-    window.location.replace("/dashboard?portal=wholesale");
+    // Vercel rewrites /wholesale/dashboard → /dashboard/index.html (URL stays /wholesale/*).
+    // Live Server / static hosts serve this stub — send them to the dashboard SPA.
+    var hash = location.hash || "#ws-dashboard";
+    window.location.replace("/dashboard/?portal=wholesale" + hash);
   </script>
 </head>
-<body></body>
+<body>
+  <p>Redirecting to Wholesale CRM… <a href="/dashboard/?portal=wholesale#ws-dashboard">Continue</a></p>
+</body>
 </html>

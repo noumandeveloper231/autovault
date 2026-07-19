@@ -3,10 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoVault Sales Rep Dashboard</title>
+  <title>Sales Rep Portal | AutoVault360</title>
+  <meta name="description" content="AutoVault360 sales-rep portal — track deals, commissions, customers, and leads." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="/sales-rep/dashboard" />
   <script>
-    window.location.replace("/dashboard?portal=sales_rep");
+    if (!location.pathname.toLowerCase().startsWith("/sales-rep/")) {
+      window.location.replace("/sales-rep/dashboard");
+    } else {
+      window.location.replace("/dashboard?portal=sales_rep" + (location.hash || "#rep-dashboard"));
+    }
   </script>
 </head>
-<body></body>
+<body>
+  <p>Redirecting to sales-rep dashboard… <a href="/sales-rep/dashboard">Continue</a></p>
+</body>
 </html>

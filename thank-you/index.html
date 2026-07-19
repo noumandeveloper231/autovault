@@ -50,7 +50,11 @@
         if(!resp.ok) throw new Error(data.message || 'Unable to verify purchase.');
         const reg = data.registration || {};
         title.textContent = `Welcome, ${reg.name || 'Dealer'}!`;
-        desc.textContent = `Your ${reg.planLabel || 'AutoVault'} plan is active for ${reg.dealership || 'your dealership'}. A confirmation email has been sent to ${reg.email || 'your email'}.`;
+        if (reg.temporaryPassword) {
+          desc.innerHTML = `Your ${reg.planLabel || 'AutoVault'} plan is active for ${reg.dealership || 'your dealership'}.<br><br>Login: <strong>${reg.loginEmail || reg.email}</strong><br>Password: <strong>${reg.temporaryPassword}</strong><br><br><span style="color:var(--muted);font-size:13px">A confirmation email has also been sent to ${reg.email || 'your email'}.</span>`;
+        } else {
+          desc.textContent = `Your ${reg.planLabel || 'AutoVault'} plan is active for ${reg.dealership || 'your dealership'}. A confirmation email has been sent to ${reg.email || 'your email'}.`;
+        }
         if(reg.loginPath){
           nextLoginBtn.href = reg.loginPath;
           setTimeout(()=>{ window.location.href = reg.loginPath; }, 1400);

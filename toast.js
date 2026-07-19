@@ -14,6 +14,9 @@
     ".av-toast.av-warning .av-toast-icon{background:#F59E0B;box-shadow:0 0 0 3px rgba(245,158,11,.18)}",
     ".av-toast.av-error .av-toast-icon{background:#F87171;box-shadow:0 0 0 3px rgba(248,113,113,.18)}",
     ".av-toast.av-success .av-toast-icon{background:#46D392;box-shadow:0 0 0 3px rgba(70,211,146,.18)}",
+    ".av-toast.av-info .av-toast-icon{background:#3AA0FF;box-shadow:0 0 0 3px rgba(58,160,255,.18)}",
+    ".av-toast.av-loading .av-toast-icon{width:14px;height:14px;margin-top:5px;border-radius:50%;background:transparent;border:2px solid rgba(58,160,255,.28);border-top-color:#3AA0FF;box-shadow:none;animation:avToastSpin .65s linear infinite}",
+    "@keyframes avToastSpin{to{transform:rotate(360deg)}}",
     "@media(max-width:640px){.av-toast-wrap{left:12px;right:12px;top:12px;max-width:none}}",
   ].join("");
   document.head.appendChild(style);
@@ -69,6 +72,50 @@
     },
     error: function (message, title) {
       notify({ type: "error", title: title || "Something went wrong", message: message });
+    },
+    info: function (message, title) {
+      notify({ type: "info", title: title || "Working", message: message });
+    },
+    promise: function (promise, opts) {
+      var o = opts || {};
+      var node = document.createElement("div");
+      node.className = "av-toast av-loading";
+      node.innerHTML =
+        '<span class="av-toast-icon" aria-hidden="true"></span>' +
+        '<div><div class="av-toast-title"></div><div class="av-toast-msg"></div></div>';
+      node.querySelector(".av-toast-title").textContent = o.loading || "Saving\u2026";
+      node.querySelector(".av-toast-msg").textContent = o.loadingMsg || "Please wait";
+      getWrap().appendChild(node);
+      requestAnimationFrame(function () {
+        node.classList.add("show");
+      });
+
+      function removeLoading() {
+        node.classList.remove("show");
+        setTimeout(function () {
+          if (node.parentNode) node.parentNode.removeChild(node);
+        }, 360);
+      }
+
+      return Promise.resolve(promise)
+        .then(function (val) {
+          removeLoading();
+          notify({
+            type: "success",
+            title: o.successTitle || "Success",
+            message: o.success || "Saved",
+          });
+          return val;
+        })
+        .catch(function (err) {
+          removeLoading();
+          notify({
+            type: "error",
+            title: o.errorTitle || "Something went wrong",
+            message: (err && err.message) || o.error || "Something went wrong",
+          });
+          throw err;
+        });
     },
   };
 })();

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reset Password — AutoVault</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg:#0b0e14; --card:#12161b; --border:#232a32; --text:#eaecef; --muted:#8b95a1; --green:#2c9257; }
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; background:var(--bg); color:var(--text); font-family:Inter,system-ui,sans-serif; }
+    .card { width:min(420px,92vw); background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px; }
+    h1 { font-family:"Space Grotesk",sans-serif; font-size:26px; margin:0 0 8px; }
+    p { color:var(--muted); font-size:14px; margin:0 0 18px; }
+    label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
+    input { width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border); background:#0f1419; color:var(--text); margin-bottom:14px; }
+    button { width:100%; border:0; border-radius:10px; padding:12px; background:var(--green); color:#fff; font-weight:700; cursor:pointer; }
+    .msg { margin-top:12px; font-size:13px; display:none; }
+    .err { color:#ff7b7b; }
+    .ok { color:#46d392; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Choose a new password</h1>
+    <p>Use at least 8 characters.</p>
+    <form id="form">
+      <label for="password">New password</label>
+      <input id="password" type="password" minlength="8" required />
+      <label for="confirm">Confirm password</label>
+      <input id="confirm" type="password" minlength="8" required />
+      <button type="submit">Update password</button>
+    </form>
+    <p class="msg" id="msg"></p>
+  </div>
+  <script src="/api.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    const token = params.get("token") || "";
+    document.getElementById("form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const msg = document.getElementById("msg");
+      const password = document.getElementById("password").value;
+      const confirm = document.getElementById("confirm").value;
+      msg.style.display = "block";
+      if (password !== confirm) {
+        msg.className = "msg err";
+        msg.textContent = "Passwords do not match.";
+        return;
+      }
+      try {
+        await AVApi.resetPassword({ token, password });
+        msg.className = "msg ok";
+        msg.textContent = "Password updated. Redirecting to login…";
+        setTimeout(() => location.replace("/login"), 1200);
+      } catch (err) {
+        msg.className = "msg err";
+        msg.textContent = err.message || "Reset failed.";
+      }
+    });
+  </script>
+</body>
+</html>

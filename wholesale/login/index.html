@@ -3,10 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AutoVault Wholesale Login</title>
+  <title>Wholesale Login | AutoVault360</title>
+  <meta name="description" content="Sign in to AutoVault360 Wholesale CRM — Plan 1 wholesaler portal." />
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="canonical" href="/wholesale/login" />
+  <meta property="og:title" content="Wholesale Login | AutoVault360" />
+  <meta property="og:description" content="Secure wholesale dealer login for AutoVault360 Plan 1." />
+  <meta property="og:type" content="website" />
   <script>
-    window.location.replace("/login?portal=wholesale");
+    // Vercel rewrites /wholesale/login → /login/index.html (URL stays /wholesale/*).
+    // Live Server / static hosts serve this stub — send them to the real login SPA.
+    window.location.replace("/login/?portal=wholesale" + (location.hash || ""));
   </script>
 </head>
-<body></body>
+<body>
+  <p>Redirecting to wholesale login… <a href="/login/?portal=wholesale">Continue</a></p>
+</body>
 </html>
