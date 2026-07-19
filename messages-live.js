@@ -105,6 +105,9 @@
   }
 
   function getConvName(conv) {
+    if (conv.isSystem || (conv.type === 'GROUP' && conv.name === 'Group Chat')) {
+      return 'Group Chat';
+    }
     if (conv.type === 'GROUP') return conv.name || 'Unnamed Group';
     var me = currentUserId();
     var other = (conv.participants || []).filter(function (p) { return p.id !== me; });
@@ -113,15 +116,35 @@
     return 'Unknown';
   }
 
+  function groupChatIconSvg() {
+    return '<svg class="imsg-group-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>' +
+      '<circle cx="9" cy="7" r="4"/>' +
+      '<path d="M23 21v-2a4 4 0 0 0-3-3.87"/>' +
+      '<path d="M16 3.13a4 4 0 0 1 0 7.75"/>' +
+      '</svg>';
+  }
+
   function getConvAvatar(conv) {
+    if (conv.isSystem || (conv.type === 'GROUP' && conv.name === 'Group Chat')) {
+      return { kind: 'group', color: '#2f7fd6', initials: '' };
+    }
     if (conv.type === 'GROUP') {
-      return { initials: (conv.name || 'UG').slice(0, 2).toUpperCase(), color: '#7c5cff' };
+      return { kind: 'initials', initials: (conv.name || 'UG').slice(0, 2).toUpperCase(), color: '#3a8fd4' };
     }
     var me = currentUserId();
     var other = (conv.participants || []).filter(function (p) { return p.id !== me; });
     if (other.length === 0 && conv.participants) other = [conv.participants[0]];
     var name = other.length > 0 ? other[0].fullName : '?';
-    return { initials: msgInitials(name), color: msgColor(name) };
+    return { kind: 'initials', initials: msgInitials(name), color: msgColor(name) };
+  }
+
+  function renderAvatarHtml(avatar, sizeClass) {
+    var isGroup = avatar && avatar.kind === 'group';
+    var cls = 'imsg-avatar' + (isGroup ? ' imsg-avatar-group' : '');
+    var style = 'background:' + ((avatar && avatar.color) || '#2f7fd6') + ';' + (sizeClass || '');
+    var inner = isGroup ? groupChatIconSvg() : msgEsc((avatar && avatar.initials) || '?');
+    return '<div class="' + cls + '" style="' + style + '">' + inner + '</div>';
   }
 
   function getConvPreview(conv) {
@@ -433,8 +456,12 @@
       }
       var onlineDot = online ? '<span class="imsg-online-dot"></span>' : '';
       var un = c._unread || 0;
-      return '<div class="imsg-convo ' + (isActive ? 'active' : '') + ' ' + (un > 0 ? 'unread' : '') + '" onclick="openMsgConvo(\'' + c.id + '\')">' +
-        '<div class="imsg-avatar" style="background:' + avatar.color + '">' + msgEsc(avatar.initials) + onlineDot + '</div>' +
+      var avatarHtml = renderAvatarHtml(avatar);
+      if (onlineDot) {
+        avatarHtml = avatarHtml.replace('</div>', onlineDot + '</div>');
+      }
+      return '<div class="imsg-convo ' + (isActive ? 'active' : '') + ' ' + (un > 0 ? 'unread' : '') + (c.isSystem ? ' imsg-convo-system' : '') + '" onclick="openMsgConvo(\'' + c.id + '\')">' +
+        avatarHtml +
         '<div class="imsg-convo-info">' +
         '<div class="imsg-convo-top"><span class="imsg-convo-name">' + msgEsc(c._name) + '</span><span class="imsg-convo-time">' + timeAgo(c.lastMessageAt) + '</span></div>' +
         '<div class="imsg-convo-preview">' + msgEsc(c._preview) + '</div>' +
@@ -518,8 +545,15 @@
       }
     }
     var onlineDot = online ? '<span class="imsg-online-dot"></span>' : '';
-    el.innerHTML = '<div class="imsg-avatar" style="background:' + avatar.color + ';width:34px;height:34px;font-size:12px;">' + msgEsc(avatar.initials) + onlineDot + '</div>' +
-      '<div style="flex:1;min-width:0;"><b>' + msgEsc(conv._name) + '</b><div class="imsg-status' + (online ? ' online' : '') + '">' + msgEsc(statusText) + '</div></div>';
+    var avatarHtml = renderAvatarHtml(avatar, 'width:34px;height:34px;font-size:12px;');
+    if (onlineDot) {
+      avatarHtml = avatarHtml.replace('</div>', onlineDot + '</div>');
+    }
+    var subLabel = conv.isSystem
+      ? 'Sales team group \u00b7 ' + statusText
+      : statusText;
+    el.innerHTML = avatarHtml +
+      '<div style="flex:1;min-width:0;"><b>' + msgEsc(conv._name) + '</b><div class="imsg-status' + (online ? ' online' : '') + '">' + msgEsc(subLabel) + '</div></div>';
   }
 
   // ── Message Thread Render ──────────────────────────────────────────

@@ -162,7 +162,11 @@
       if (typeof msgState !== 'undefined' && msgState) {
         msgState.conversations = convList.map(function(c) {
           var name = '';
-          if (c.type === 'GROUP') {
+          var isSystem = !!c.isSystem;
+          if (isSystem || (c.type === 'GROUP' && c.name === 'Group Chat')) {
+            name = 'Group Chat';
+            isSystem = true;
+          } else if (c.type === 'GROUP') {
             name = c.name || 'Unnamed Group';
           } else {
             var others = (c.participants || []).filter(function(p) { return p.id !== (meResp && meResp.user && meResp.user.id); });
@@ -172,6 +176,7 @@
             id: c.id,
             type: c.type || 'DIRECT',
             name: c.name,
+            isSystem: isSystem,
             _name: name,
             participants: c.participants || [],
             lastMessageAt: c.lastMessageAt,
@@ -179,7 +184,9 @@
             isArchived: c.isArchived || false,
             createdAt: c.createdAt,
             updatedAt: c.updatedAt,
-            _avatar: { initials: (name || '?').slice(0,2).toUpperCase(), color: '#3aa0ff' },
+            _avatar: isSystem
+              ? { kind: 'group', color: '#2f7fd6', initials: '' }
+              : { kind: 'initials', initials: (name || '?').slice(0, 2).toUpperCase(), color: '#3aa0ff' },
             _preview: c.lastMessageText || 'No messages yet',
             _unread: c.unreadCount || 0,
           };
