@@ -39171,7 +39171,7 @@
         ${rem.length ? '<div class="cal-exp-lbl">Reminders</div>' + rem.join("") : ""}
         ${soldHtml}
         <div class="cal-exp-lbl">Notes</div>
-        <textarea id="dashDayNotePad" class="cal-exp-note" placeholder="Type notes for this day…" onclick="event.stopPropagation();" oninput="dashNoteDraft('${ds}', this.value)">${noteVal}</textarea>
+        <textarea id="dashDayNotePad" class="desk-pad" style="min-height:180px;margin-top:0;" placeholder="Write notes for this day..." onclick="event.stopPropagation();" oninput="dashNoteDraft('${ds}', this.value)">${noteVal}</textarea>
         <div class="cal-desk-foot" style="margin-top:8px;" onclick="event.stopPropagation();">
           <span id="dashDayNoteMsg" class="cal-saved-msg"></span>
           <button type="button" class="btn-primary" style="box-shadow:none;white-space:nowrap;padding:8px 14px;font-size:12.5px;" onclick="event.stopPropagation(); dashCommitDayNote('${ds}')">
