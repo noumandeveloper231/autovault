@@ -205,13 +205,37 @@
 
     const url = path.startsWith("http") ? path : `${API_URL}${path}`;
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), options.timeout || 90000);
+    const timeoutId = setTimeout(
+      () => controller.abort("timeout"),
+      options.timeout || 90000,
+    );
+    if (options.signal) {
+      if (options.signal.aborted) controller.abort(options.signal.reason || "abort");
+      else {
+        options.signal.addEventListener(
+          "abort",
+          () => controller.abort(options.signal.reason || "abort"),
+          { once: true },
+        );
+      }
+    }
     let resp;
     try {
-      resp = await fetch(url, { ...options, headers, signal: controller.signal });
+      const { signal: _ignore, ...fetchOpts } = options;
+      resp = await fetch(url, {
+        ...fetchOpts,
+        headers,
+        signal: controller.signal,
+      });
     } catch (err) {
       clearTimeout(timeoutId);
       if (err.name === "AbortError") {
+        if (options.signal && options.signal.aborted) {
+          const e = new Error("Request cancelled");
+          e.name = "AbortError";
+          e.code = "ABORTED";
+          throw e;
+        }
         throw new Error(`Request timed out: ${path}`);
       }
       throw err;
@@ -577,6 +601,15 @@
         publicUrl: signed.publicUrl,
       };
     },
+
+    jennaStatus: () => request("/api/v1/jenna/status"),
+    jennaChat: (body, opts = {}) =>
+      request("/api/v1/jenna/chat", {
+        method: "POST",
+        body: JSON.stringify(body),
+        signal: opts.signal,
+        timeout: opts.timeout,
+      }),
   };
 
   global.AVApi = api;

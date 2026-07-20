@@ -3013,9 +3013,43 @@
         border-bottom-right-radius: 5px;
       }
 
-      .jenna-msg b {
+      .jenna-msg b,
+      .jenna-msg strong {
         color: inherit;
         font-weight: 800;
+      }
+
+      .jenna-msg.bot p {
+        margin: 0 0 8px;
+      }
+
+      .jenna-msg.bot p:last-child {
+        margin-bottom: 0;
+      }
+
+      .jenna-msg.bot h3,
+      .jenna-msg.bot h4 {
+        margin: 0 0 8px;
+        font-size: 13.5px;
+        font-weight: 800;
+        line-height: 1.3;
+      }
+
+      .jenna-msg.bot ul,
+      .jenna-msg.bot ol {
+        margin: 4px 0 8px;
+        padding-left: 1.15em;
+      }
+
+      .jenna-msg.bot li {
+        margin: 3px 0;
+      }
+
+      .jenna-msg.bot code {
+        font-size: 12px;
+        padding: 1px 5px;
+        border-radius: 4px;
+        background: rgba(0, 0, 0, 0.08);
       }
 
       .jenna-typing {
@@ -3115,6 +3149,35 @@
       .jenna-send {
         background: linear-gradient(140deg, #7b61ff, #5b8bff);
         color: #fff;
+      }
+
+      .jenna-send:disabled,
+      .jenna-input-row input:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+      }
+
+      .jenna-stop {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        border: none;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        background: var(--red, #e5484d);
+        color: #fff;
+      }
+
+      .jenna-stop:hover {
+        filter: brightness(1.08);
+      }
+
+      .jenna-chips.is-busy .jenna-chip {
+        pointer-events: none;
+        opacity: 0.45;
       }
 
       .jenna-send svg,
@@ -20772,7 +20835,13 @@
           placeholder="Ask Jenna anything..."
           onkeydown="if (event.key === 'Enter') jennaSend();"
         />
-        <button class="jenna-send" onclick="jennaSend()">
+        <button
+          type="button"
+          class="jenna-send"
+          id="jennaSendBtn"
+          title="Send"
+          onclick="jennaSend()"
+        >
           <svg
             viewBox="0 0 24 24"
             fill="none"
@@ -20780,6 +20849,23 @@
             stroke-width="2"
           >
             <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+          </svg>
+        </button>
+        <button
+          type="button"
+          class="jenna-stop"
+          id="jennaStopBtn"
+          title="Stop"
+          style="display:none;"
+          onclick="jennaAbort()"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            width="14"
+            height="14"
+          >
+            <rect x="6" y="6" width="12" height="12" rx="2" />
           </svg>
         </button>
       </div>
@@ -33113,6 +33199,91 @@
         const b = document.getElementById("jennaBody");
         b.scrollTop = b.scrollHeight;
       }
+
+      /** Lightweight Markdown → HTML for Jenna AI answers (safe, no raw scripts). */
+      function jennaEscapeHtml(s) {
+        return String(s || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function jennaInlineMd(s) {
+        var t = jennaEscapeHtml(s);
+        t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
+        t = t.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+        t = t.replace(/(^|[^*\w])\*([^*\n]+)\*(?!\*)/g, "$1<em>$2</em>");
+        return t;
+      }
+
+      function jennaMdToHtml(md) {
+        if (!md) return "";
+        // Offline engine already returns HTML snippets — pass through
+        if (/<(?:b|br|span|div|strong)\b/i.test(md)) return md;
+
+        var lines = String(md).replace(/\r\n/g, "\n").split("\n");
+        var html = [];
+        var inUl = false;
+        var inOl = false;
+
+        function closeLists() {
+          if (inUl) {
+            html.push("</ul>");
+            inUl = false;
+          }
+          if (inOl) {
+            html.push("</ol>");
+            inOl = false;
+          }
+        }
+
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          var heading = line.match(/^#{1,3}\s+(.+)$/);
+          var ul = line.match(/^\s*[-*]\s+(.+)$/);
+          var ol = line.match(/^\s*\d+\.\s+(.+)$/);
+
+          if (heading) {
+            closeLists();
+            html.push("<h4>" + jennaInlineMd(heading[1]) + "</h4>");
+            continue;
+          }
+          if (ul) {
+            if (inOl) {
+              html.push("</ol>");
+              inOl = false;
+            }
+            if (!inUl) {
+              html.push("<ul>");
+              inUl = true;
+            }
+            html.push("<li>" + jennaInlineMd(ul[1]) + "</li>");
+            continue;
+          }
+          if (ol) {
+            if (inUl) {
+              html.push("</ul>");
+              inUl = false;
+            }
+            if (!inOl) {
+              html.push("<ol>");
+              inOl = true;
+            }
+            html.push("<li>" + jennaInlineMd(ol[1]) + "</li>");
+            continue;
+          }
+          closeLists();
+          if (!line.trim()) {
+            html.push("");
+            continue;
+          }
+          html.push("<p>" + jennaInlineMd(line) + "</p>");
+        }
+        closeLists();
+        return html.filter(Boolean).join("") || jennaInlineMd(md);
+      }
+
       function jennaBot(html) {
         const b = document.getElementById("jennaBody");
         const d = document.createElement("div");
@@ -33143,6 +33314,7 @@
         if (t) t.remove();
       }
       function jennaSend() {
+        if (jennaBusy) return;
         const inp = document.getElementById("jennaInput");
         const q = inp.value.trim();
         if (!q) return;
@@ -33150,82 +33322,59 @@
         jennaAsk(q);
       }
       // ============================================================
-      //  JENNA — REAL AI CONNECTION POINT
-      //  ----------------------------------------------------------
-      //  Jenna works fully offline using the on-device engine below.
-      //  To connect a real AI model (Claude, GPT, etc.) once deployed:
-      //    1. Stand up a small server proxy that holds your provider API
-      //       key SERVER-SIDE (never put the key in this file / browser).
-      //    2. Point jennaConfig.endpoint at that proxy and set enabled:true.
-      //
-      //  Your proxy receives POST JSON:  { system, messages, model, max_tokens, temperature }
-      //  and should return JSON in any of these shapes (all supported):
-      //    { "text": "...", "action": {...}|null }        <-- recommended
-      //    { "content": [{ "type":"text", "text":"..." }] } <-- raw Anthropic
-      //    { "choices": [{ "message": { "content":"..." } }] } <-- raw OpenAI
-      //  If the AI call fails, Jenna automatically falls back to the
-      //  built-in offline engine, so the CRM never loses the assistant.
+      //  JENNA — BACKEND AI (OpenRouter via /api/v1/jenna)
+      //  Models live in server .env (JENNA_MODEL_CHAT / ROUTER / EMBED).
+      //  Falls back to the offline engine if AI is off or the call fails.
       // ============================================================
       const jennaConfig = {
-        enabled: false, // <-- flip to true once your backend is live
-        endpoint: "", // <-- e.g. 'https://your-domain.com/api/jenna'
-        model: "claude-sonnet-4-6",
-        headers: { "Content-Type": "application/json" }, // add auth to YOUR backend here if needed
-        temperature: 0.3,
-        maxTokens: 700,
+        enabled: true, // tries live API; auto-falls back if disabled/unavailable
+        useBackend: true,
       };
       let jennaHistory = []; // rolling multi-turn memory (kept small)
+      let jennaBusy = false;
+      let jennaAbortController = null;
 
-      // Snapshot of the live CRM so the model can answer ANYTHING about the platform
-      function buildJennaContext() {
-        const d = jennaData();
-        const veh = d.rows
-          .map(
-            (r) =>
-              `${r.year} ${r.make} ${r.model} | VIN ${r.vin} | paid ${fmt(r.price)} | all-in ${fmt(r.totalVehicleCost)} | net ${fmtSigned(r.netProfit)} | ROI ${Math.round(r.roi)}% | ${r.sold ? "SOLD" : "active"} | rep ${r.rep}`,
-          )
-          .join("\n");
-        const exp = _expenses
-          .map(
-            (e) =>
-              `${e.name} | ${e.category} | ${fmt(e.amount)} | due ${e.dueDate} | ${e.paid ? "paid" : "unpaid"} | ${e.recurring} | vehicle:${e.vehicleVin || "none"}`,
-          )
-          .join("\n");
-        const sections = JENNA_SECTIONS.map(
-          (s) => `- ${s.title}: ${s.desc()}`,
-        ).join("\n");
-        return [
-          `Today is ${today.toDateString()}. Dealership: AutoVault CRM.`,
-          `SUMMARY: ${d.active.length} active vehicles (all-in ${fmt(d.activeInvCost)}), purchase cost ${fmt(d.purchaseCost)}, repairs ${fmt(d.repairsTot)}, commissions owed ${fmt(d.commissionOwed)}, net profit on sold ${fmtSigned(d.netProfit)}. Expenses this month ${fmt(d.monthExp)}; unpaid ${fmt(d.unpaidTot)} (${d.unpaid.length}); upcoming ${fmt(d.upcomingTot)}; recurring ~${fmt(d.recurringMonthly)}/mo; payroll+comm ${fmt(d.payrollExp)}.`,
-          `VEHICLES:\n${veh}`,
-          `EXPENSES:\n${exp}`,
-          `SECTIONS:\n${sections}`,
-        ].join("\n\n");
+      function setJennaBusy(busy) {
+        jennaBusy = !!busy;
+        var inp = document.getElementById("jennaInput");
+        var send = document.getElementById("jennaSendBtn");
+        var stop = document.getElementById("jennaStopBtn");
+        var chips = document.querySelector("#jennaPanel .jenna-chips");
+        // Keep input editable so the user can draft the next question;
+        // send / Enter / chips stay blocked until the current reply finishes.
+        if (inp) {
+          inp.disabled = false;
+          inp.placeholder = "Ask Jenna anything...";
+        }
+        if (send) send.style.display = jennaBusy ? "none" : "";
+        if (stop) {
+          stop.style.display = jennaBusy ? "flex" : "none";
+        }
+        if (chips) chips.classList.toggle("is-busy", jennaBusy);
+      }
+
+      function jennaAbort() {
+        if (jennaAbortController) {
+          try {
+            jennaAbortController.abort();
+          } catch (_) {}
+        }
       }
 
       function jennaSystemPrompt() {
-        return [
-          `You are Jenna, the built-in AI assistant for the AutoVault dealership CRM.`,
-          `Answer the user's question using ONLY the CRM data provided. Be concise, specific, and use dollar amounts. Never invent figures.`,
-          `You may drive the interface. When the user asks to open a section, open a specific vehicle, or scan/upload a document, include an action.`,
-          `Reply as STRICT JSON only, no prose outside JSON:`,
-          `{"answer": string, "action": null | {"type":"navigate","page":"dashboard|vehicles|profit|expenses"} | {"type":"vehicle","vin":string} | {"type":"scan"}}`,
-          ``,
-          `CRM DATA:\n${buildJennaContext()}`,
-        ].join("\n");
+        return ""; // context is built server-side from live SQL
       }
 
       function normalizeAIResponse(data) {
-        // Accept several backend response shapes -> {text, action}
         let text = "",
           action = null;
         if (typeof data === "string") {
           text = data;
-        } else if (data.text) {
-          text = data.text;
-          action = data.action || null;
         } else if (data.answer) {
           text = data.answer;
+          action = data.action || null;
+        } else if (data.text) {
+          text = data.text;
           action = data.action || null;
         } else if (Array.isArray(data.content)) {
           text = data.content
@@ -33238,7 +33387,6 @@
             data.choices[0].text ||
             "";
         }
-        // If the model wrapped everything in JSON inside text, try to parse it
         if (text && !action) {
           const m = text.match(/\{[\s\S]*\}/);
           if (m) {
@@ -33259,23 +33407,20 @@
         };
       }
 
-      async function askJennaAI(userText) {
-        const messages = jennaHistory
-          .slice(-8)
-          .concat([{ role: "user", content: userText }]);
-        const res = await fetch(jennaConfig.endpoint, {
-          method: "POST",
-          headers: jennaConfig.headers,
-          body: JSON.stringify({
-            system: jennaSystemPrompt(),
-            messages,
-            model: jennaConfig.model,
-            max_tokens: jennaConfig.maxTokens,
-            temperature: jennaConfig.temperature,
-          }),
+      async function askJennaAI(userText, signal) {
+        if (!window.AVApi || typeof AVApi.jennaChat !== "function") {
+          throw new Error("Jenna API unavailable");
+        }
+        const history = jennaHistory.slice(-8).map(function (m) {
+          return { role: m.role, content: m.content };
         });
-        if (!res.ok) throw new Error("AI service " + res.status);
-        const data = await res.json();
+        const data = await AVApi.jennaChat(
+          {
+            message: userText,
+            history: history,
+          },
+          { signal: signal },
+        );
         return normalizeAIResponse(data);
       }
 
@@ -33290,15 +33435,24 @@
       }
 
       function jennaAsk(q) {
+        q = String(q || "").trim();
+        if (!q) return;
+        if (jennaBusy) return;
         if (!jennaOpen) toggleJenna();
+
+        jennaAbortController = new AbortController();
+        setJennaBusy(true);
         jennaUser(q);
         jennaTyping();
-        const useAI = jennaConfig.enabled && jennaConfig.endpoint;
+
+        const useAI = jennaConfig.enabled && jennaConfig.useBackend;
         if (useAI) {
-          askJennaAI(q)
+          askJennaAI(q, jennaAbortController.signal)
             .then((r) => {
+              if (jennaAbortController && jennaAbortController.signal.aborted)
+                return;
               jennaStopTyping();
-              jennaBot(r.text);
+              jennaBot(jennaMdToHtml(r.text));
               jennaRunAction(r.action);
               jennaHistory.push(
                 { role: "user", content: q },
@@ -33307,14 +33461,33 @@
               if (jennaHistory.length > 16)
                 jennaHistory = jennaHistory.slice(-16);
             })
-            .catch(() => {
+            .catch((err) => {
               jennaStopTyping();
+              if (
+                err &&
+                (err.name === "AbortError" || err.code === "ABORTED")
+              ) {
+                jennaBot(
+                  '<span class="jenna-muted">Cancelled.</span>',
+                );
+                return;
+              }
               const local = jennaRespond(q);
+              const reason =
+                (err && err.message) || "AI service unavailable";
               jennaBot(
                 local.text +
-                  '<br><span class="jenna-muted">(offline answer \u2014 AI service unavailable)</span>',
+                  '<br><span class="jenna-muted">(offline answer \u2014 ' +
+                  String(reason)
+                    .replace(/</g, "&lt;")
+                    .slice(0, 120) +
+                  ")</span>",
               );
               if (local.action) local.action();
+            })
+            .finally(function () {
+              jennaAbortController = null;
+              setJennaBusy(false);
             });
         } else {
           setTimeout(() => {
@@ -33322,9 +33495,13 @@
             const r = jennaRespond(q);
             jennaBot(r.text);
             if (r.action) r.action();
+            setJennaBusy(false);
           }, 500);
         }
       }
+      window.jennaAbort = jennaAbort;
+      window.jennaAsk = jennaAsk;
+      window.jennaSend = jennaSend;
 
       function jennaData() {
         const rows = vehicles.map(computeRow);

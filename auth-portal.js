@@ -93,6 +93,18 @@
     }
   }
 
+  function portalFromClaims(claims) {
+    if (!claims) return null;
+    if (claims.portal) return normalizePortal(claims.portal);
+    const role = String(claims.role || "").toLowerCase();
+    if (role === "platform_owner") return "owner";
+    if (role === "wholesale_dealer") return "wholesale";
+    if (role === "sales_rep") return "sales_rep";
+    if (role === "cpa") return "cpa";
+    if (role === "owner" || role === "manager") return "admin";
+    return null;
+  }
+
   function readSession(portal) {
     const normalizedPortal = normalizePortal(portal || getRoutePortal());
     const impersonating = (function () {
@@ -118,7 +130,8 @@
     }
     const claimedPortal = impersonating
       ? "sales_rep"
-      : normalizePortal(claims.portal || localStorage.getItem("avAuthPortal"));
+      : portalFromClaims(claims) ||
+        normalizePortal(localStorage.getItem("avAuthPortal") || "admin");
     // Never overwrite the admin portal cookie/key while a support tab is open
     if (!impersonating) {
       localStorage.setItem("avAuthPortal", claimedPortal);
@@ -128,6 +141,7 @@
       portal: claimedPortal,
       name: claims.name || "",
       sub: claims.sub || "",
+      role: claims.role || "",
       impersonation: !!claims.impersonation,
     };
   }
@@ -153,7 +167,10 @@
       return;
     }
     if (session.portal !== routePortal) {
-      redirect(DASHBOARD_BY_PORTAL[session.portal]);
+      // Explicit portal URL wins: drop the other portal's shared token and
+      // send the user to this portal's login instead of bouncing to admin.
+      clearSession(routePortal);
+      redirect(LOGIN_BY_PORTAL[routePortal]);
       return;
     }
     document.documentElement.classList.remove("av-auth-pending");
@@ -165,7 +182,10 @@
     if (!session) return;
     if (session.portal === routePortal) {
       redirect(DASHBOARD_BY_PORTAL[session.portal]);
+      return;
     }
+    // Stale session from another portal (shared avAuthToken) — clear so login works.
+    clearSession(routePortal);
   }
 
   function verifySessionInBackground(onInvalid) {
@@ -181,9 +201,9 @@
         if (!resp.ok) throw new Error(data.message || "Session expired");
         const portal = normalizePortal(data.user?.portal);
         localStorage.setItem("avAuthPortal", portal);
-        const routePortal = getRoutePortal();
         if (routePortal !== portal) {
-          redirect(data.redirectDashboardPath || DASHBOARD_BY_PORTAL[portal]);
+          clearSession(routePortal);
+          redirect(LOGIN_BY_PORTAL[routePortal]);
         }
       })
       .catch(() => {
