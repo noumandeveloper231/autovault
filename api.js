@@ -400,6 +400,11 @@
         method: "POST",
         body: JSON.stringify(body),
       }),
+    removeJacketDocument: (id, documentId) =>
+      request(
+        `/api/v1/deal-jackets/${encodeURIComponent(id)}/documents/${encodeURIComponent(documentId)}`,
+        { method: "DELETE" },
+      ),
     listExpenses: (qs = "") => request(`/api/v1/expenses${qs}`),
     getExpense: (id) => request(`/api/v1/expenses/${id}`),
     createExpense: (body) =>
@@ -547,6 +552,10 @@
       request(`/api/v1/platform/dealerships${qs}`, { portal: "owner" }),
     listAuditLogs: (qs = "") => request(`/api/v1/audit-logs${qs}`),
     listFiles: (qs = "") => request(`/api/v1/files${qs}`),
+    deleteFile: (id, { purge = true } = {}) =>
+      request(`/api/v1/files/${encodeURIComponent(id)}?purge=${purge ? "true" : "false"}`, {
+        method: "DELETE",
+      }),
 
     // Dashboard sticky notes
     listDashboardNotes: () => request("/api/v1/dashboard/notes"),
@@ -588,17 +597,32 @@
         "Content-Type": mimeType,
         ...(signed.headers || {}),
       };
-      const putResp = await fetch(signed.uploadUrl, {
-        method: signed.method || "PUT",
-        headers: putHeaders,
-        body: file,
-      });
-      if (!putResp.ok) {
-        throw new Error(`R2 upload failed (${putResp.status})`);
+      try {
+        const putResp = await fetch(signed.uploadUrl, {
+          method: signed.method || "PUT",
+          headers: putHeaders,
+          body: file,
+        });
+        if (!putResp.ok) {
+          throw new Error(`R2 upload failed (${putResp.status})`);
+        }
+      } catch (err) {
+        // upload-url already created a DB row — remove orphan so it doesn't
+        // reappear as a "filled" document on the deal jacket.
+        if (signed && signed.file && signed.file.id) {
+          try {
+            await request(
+              `/api/v1/files/${encodeURIComponent(signed.file.id)}?purge=true`,
+              { method: "DELETE" },
+            );
+          } catch (_) {}
+        }
+        throw err;
       }
       return {
         file: signed.file,
         publicUrl: signed.publicUrl,
+        downloadUrl: signed.downloadUrl || null,
       };
     },
 

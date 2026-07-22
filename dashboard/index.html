@@ -29,8 +29,29 @@
         box-sizing: border-box;
       }
 
+      /* Reset native macOS/Safari select chrome so custom dark styles apply */
+      select {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        color-scheme: dark;
+        background-color: var(--panel-2);
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e7ecf3' d='M6 1.8L2.8 5h6.4L6 1.8zm0 8.4L9.2 7H2.8L6 10.2z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 8px center;
+        background-size: 10px;
+        padding-right: 26px;
+      }
+
+      select option,
+      select optgroup {
+        background-color: var(--panel-2);
+        color: var(--text);
+      }
+
       html {
         background-color: var(--bg);
+        color-scheme: dark;
         min-height: 100%;
         scrollbar-width: thin;
         scrollbar-color: rgba(255, 255, 255, 0.12) transparent;
@@ -787,7 +808,7 @@
 
       .filter-row input,
       .filter-row select {
-        background: var(--panel);
+        background-color: var(--panel);
         border: 1px solid var(--border);
         color: var(--text);
         border-radius: 7px;
@@ -801,6 +822,7 @@
       .filter-row select {
         cursor: pointer;
         font-weight: 600;
+        padding-right: 24px;
       }
 
       .filter-row select:hover {
@@ -1093,13 +1115,17 @@
       .form-group input,
       .form-group select {
         width: 100%;
-        background: var(--panel-2);
+        background-color: var(--panel-2);
         border: 1px solid var(--border);
         color: var(--text);
         border-radius: 9px;
         padding: 9px 11px;
         font-size: 13px;
         outline: none;
+      }
+
+      .form-group select {
+        padding-right: 28px;
       }
 
       .form-group input:focus,
@@ -1585,13 +1611,14 @@
         position: absolute;
         inset: 0;
         width: 100%;
-        background: var(--panel-2);
+        background-color: var(--panel-2);
         border: 1px solid var(--blue);
         border-radius: 7px;
         color: var(--text);
         font-size: 11px;
         font-weight: 700;
         padding: 2px 4px;
+        padding-right: 18px;
         outline: none;
         cursor: pointer;
         opacity: 0;
@@ -1644,13 +1671,14 @@
         position: absolute;
         inset: 0;
         width: 100%;
-        background: var(--panel-2);
+        background-color: var(--panel-2);
         border: 1px solid var(--blue);
         border-radius: 7px;
         color: var(--text);
         font-size: 11px;
         font-weight: 700;
         padding: 2px 4px;
+        padding-right: 18px;
         outline: none;
         cursor: pointer;
         opacity: 0;
@@ -2262,11 +2290,12 @@
       }
 
       .vdp-status-select {
-        background: var(--panel-2);
+        background-color: var(--panel-2);
         border: 1px solid var(--border);
         color: var(--text);
         border-radius: 9px;
         padding: 9px 12px;
+        padding-right: 28px;
         font-size: 13px;
         font-weight: 600;
         outline: none;
@@ -3258,6 +3287,46 @@
         margin: 0 auto;
       }
 
+      .scan-preview-wrap.is-file {
+        background: #111827;
+        min-height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .scan-preview-wrap.is-file img {
+        max-width: 120px;
+        max-height: 140px;
+        object-fit: contain;
+      }
+
+      .scan-saving-overlay {
+        position: absolute;
+        inset: 0;
+        background: rgba(8, 12, 20, 0.72);
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        z-index: 5;
+        border-radius: 14px;
+      }
+
+      .scan-modal {
+        position: relative;
+      }
+
+      .scan-modal.saving .scan-saving-overlay {
+        display: flex;
+      }
+
+      .scan-modal.saving .modal-foot button {
+        pointer-events: none;
+        opacity: 0.65;
+      }
+
       .scan-scanned-badge {
         position: absolute;
         top: 10px;
@@ -3325,6 +3394,21 @@
         height: 100%;
         object-fit: cover;
         display: block;
+      }
+
+      .doc-thumb.is-file {
+        background: #111827;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .doc-thumb.is-file img {
+        object-fit: contain;
+        width: 68%;
+        height: 68%;
+        padding: 0;
+        background: transparent;
       }
 
       .doc-thumb .doc-name {
@@ -3596,13 +3680,17 @@
       #page-deal-jacket .form-group input,
       #page-deal-jacket .form-group select {
         width: 100%;
-        background: var(--panel-2);
+        background-color: var(--panel-2);
         border: 1px solid var(--border);
         color: var(--text);
         border-radius: 9px;
         padding: 9px 11px;
         font-size: 13px;
         outline: none;
+      }
+
+      #page-deal-jacket .form-group select {
+        padding-right: 28px;
       }
 
       #page-deal-jacket .form-group input:focus,
@@ -4530,6 +4618,34 @@
         justify-content: center;
         font-weight: 800;
         z-index: 2;
+      }
+
+      .doc-remove {
+        position: absolute;
+        top: 5px;
+        left: 5px;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: none;
+        background: rgba(0, 0, 0, 0.72);
+        color: #fff;
+        font-size: 12px;
+        line-height: 1;
+        cursor: pointer;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 3;
+        padding: 0;
+      }
+
+      .doc-thumb:hover .doc-remove {
+        display: flex;
+      }
+
+      .doc-remove:hover {
+        background: var(--red);
       }
 
       .pay-pill {
@@ -7113,6 +7229,101 @@
         color: var(--blue);
       }
 
+      #page-vehicles .veh-kpi-board {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      #page-vehicles .veh-kpi-row {
+        display: flex;
+        gap: 16px;
+        align-items: stretch;
+        flex-wrap: wrap;
+      }
+
+      #page-vehicles .veh-kpi-group {
+        min-width: 0;
+      }
+
+      /* 3 cards : 2 cards → equal card widths across the top row */
+      #page-vehicles .veh-kpi-group.inventory {
+        flex: 3 1 0;
+      }
+
+      #page-vehicles .veh-kpi-group.month {
+        flex: 2 1 0;
+      }
+
+      #page-vehicles .veh-kpi-group.costs {
+        flex: 1 1 100%;
+      }
+
+      #page-vehicles .veh-kpi-group-label {
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 0 0 8px 2px;
+      }
+
+      #page-vehicles .veh-kpi-group .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+        margin-bottom: 0;
+      }
+
+      #page-vehicles .veh-kpi-group.inventory .kpi-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      #page-vehicles .veh-kpi-group.month .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      #page-vehicles .veh-kpi-group.costs .kpi-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      #page-vehicles .veh-kpi-group .kpi {
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+      }
+
+      #page-vehicles .veh-kpi-group .kpi-label {
+        font-size: 10px;
+        letter-spacing: 0.8px;
+      }
+
+      #page-vehicles .veh-kpi-group .kpi-value {
+        font-size: 20px;
+        margin-top: 6px;
+      }
+
+      #page-vehicles .veh-kpi-group .kpi-foot {
+        font-size: 10px;
+        margin-top: 4px;
+      }
+
+      @media (max-width: 1100px) {
+        #page-vehicles .veh-kpi-group.costs .kpi-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 720px) {
+        #page-vehicles .veh-kpi-group.inventory .kpi-grid,
+        #page-vehicles .veh-kpi-group.month .kpi-grid,
+        #page-vehicles .veh-kpi-group.costs .kpi-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
       #page-dashboard .kpi-grid {
         gap: 10px;
         margin-bottom: 16px;
@@ -9106,13 +9317,17 @@
       }
 
       .cpa-note-input {
-        background: var(--panel);
+        background-color: var(--panel);
         border: 1px solid var(--border);
         color: var(--text);
         border-radius: 9px;
         padding: 9px 13px;
         font-size: 13px;
         outline: none;
+      }
+
+      select.cpa-note-input {
+        padding-right: 28px;
       }
 
       .cpa-note-input:focus {
@@ -9714,7 +9929,8 @@
       .vdp-section.is-loading > .vdp-status-select {
         display: none;
       }
-      .vdp-quick-list.is-loading #vdpQuickList {
+      .vdp-quick-list.is-loading #vdpQuickList,
+      .vdp-quick-list.is-loading #djRestList {
         display: none;
       }
       .vdp-quick-list.is-loading .vdp-sk {
@@ -9728,6 +9944,32 @@
       }
       .veh-ticker.is-loading .vdp-sk {
         display: block;
+      }
+
+      /* Deal Jacket — same per-panel skeleton pattern as VDP / dashboard */
+      #page-deal-jacket .vdp-hero.is-loading #djTitle,
+      #page-deal-jacket .vdp-hero.is-loading #djVin,
+      #page-deal-jacket .vdp-hero.is-loading #djStatusBadge {
+        display: none;
+      }
+      #page-deal-jacket .vdp-section.is-loading > .dj-section-body,
+      #page-deal-jacket .vdp-section.is-loading > .dj-form-title .dj-scan-inline,
+      #page-deal-jacket .dj-save-bar.is-loading {
+        display: none !important;
+      }
+      #page-deal-jacket .dj-save-bar.is-loading + .dj-save-sk,
+      #page-deal-jacket .dj-save-sk {
+        display: none;
+      }
+      #page-deal-jacket.dj-loading .dj-save-sk {
+        display: block;
+        margin-top: 6px;
+      }
+      #page-deal-jacket.dj-loading .dj-save-bar {
+        display: none !important;
+      }
+      #page-deal-jacket .vdp-section.is-loading > .dj-form-title {
+        opacity: 0.55;
       }
 
       /* ── Sold form read-only styling ─────────────────────────────────── */
@@ -10603,7 +10845,7 @@
 
       .rc-input {
         width: 100%;
-        background: var(--panel-2);
+        background-color: var(--panel-2);
         border: 1px solid var(--border);
         color: var(--text);
         border-radius: 10px;
@@ -10612,6 +10854,10 @@
         outline: none;
         box-sizing: border-box;
         font-family: inherit;
+      }
+
+      select.rc-input {
+        padding-right: 28px;
       }
 
       .rc-input:focus {
@@ -11909,7 +12155,7 @@
       .ws-si-field input,
       .ws-si-field select {
         width: 100%;
-        background: var(--panel-2);
+        background-color: var(--panel-2);
         border: 1px solid var(--border);
         color: var(--text);
         border-radius: 8px;
@@ -11917,6 +12163,10 @@
         font-size: 13px;
         outline: none;
         box-sizing: border-box;
+      }
+
+      .ws-si-field select {
+        padding-right: 28px;
       }
 
       .ws-si-field input:focus,
@@ -12195,6 +12445,14 @@
 
       html.av-auth-pending body {
         visibility: hidden;
+      }
+
+      /* Keep custom select chevron even when shorthand background is set inline */
+      select {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e7ecf3' d='M6 1.8L2.8 5h6.4L6 1.8zm0 8.4L9.2 7H2.8L6 10.2z'/%3E%3C/svg%3E") !important;
+        background-repeat: no-repeat !important;
+        background-position: right 8px center !important;
+        background-size: 10px !important;
       }
     </style>
     <script src="/auth-portal.js"></script>
@@ -15440,11 +15698,11 @@
                         id="vdpSaleRep"
                         style="
                           width: 100%;
-                          background: var(--panel);
+                          background-color: var(--panel);
                           border: 1px solid var(--border);
                           color: var(--text);
                           border-radius: 9px;
-                          padding: 9px 12px;
+                          padding: 9px 28px 9px 12px;
                           font-size: 13px;
                           outline: none;
                         "
@@ -18054,70 +18312,94 @@
           </div>
 
           <!-- KPI STAT STRIP -->
-          <div class="kpi-grid">
-            <div class="kpi" style="--accent: var(--blue)">
-              <div class="kpi-label">Total Inventory</div>
-              <div class="kpi-value" id="kpiTotalInventory">0</div>
-              <div class="kpi-foot">vehicles on lot</div>
+          <div class="veh-kpi-board" id="vehKpiBoard">
+            <div class="veh-kpi-row">
+              <div class="veh-kpi-group inventory">
+                <div class="veh-kpi-group-label">Inventory</div>
+                <div class="kpi-grid">
+                  <div class="kpi" style="--accent: var(--blue)">
+                    <div class="kpi-label">Total Inventory</div>
+                    <div class="kpi-value" id="kpiTotalInventory">0</div>
+                    <div class="kpi-foot">vehicles on lot</div>
+                  </div>
+                  <div
+                    class="kpi clickable"
+                    style="--accent: var(--green)"
+                    id="titlesBox"
+                    onclick="toggleTitlesFilter()"
+                    title="Click to view vehicles with present titles"
+                  >
+                    <div class="kpi-label">Titles Present</div>
+                    <div class="kpi-value" id="kpiTitles">0 of 0</div>
+                    <div class="kpi-foot">click to view present titles</div>
+                  </div>
+                  <div
+                    class="kpi clickable"
+                    style="--accent: var(--orange)"
+                    id="kpiUpcomingCard"
+                    onclick="toggleUpcomingFloored()"
+                    title="Show vehicles floored 30+ days"
+                  >
+                    <div class="kpi-label">Upcoming Floored</div>
+                    <div class="kpi-value" id="kpiUpcomingFloored">0</div>
+                    <div class="kpi-foot">
+                      floored 30+ days · pay off soon
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="veh-kpi-group month">
+                <div class="veh-kpi-group-label">This Month</div>
+                <div class="kpi-grid">
+                  <div class="kpi" style="--accent: var(--green)">
+                    <div class="kpi-label">Sold This Month</div>
+                    <div class="kpi-value" id="kpiSoldMonth">0</div>
+                    <div class="kpi-foot">units moved</div>
+                  </div>
+                  <div class="kpi" style="--accent: var(--green)">
+                    <div class="kpi-label">Profit This Month</div>
+                    <div class="kpi-value" id="kpiProfitMonth">$0</div>
+                    <div class="kpi-foot">net, sold this month</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="kpi" style="--accent: var(--orange)">
-              <div class="kpi-label">Purchase Cost</div>
-              <div class="kpi-value" id="kpiPurchaseCost">$0</div>
-              <div class="kpi-foot">acquisition spend</div>
-            </div>
-            <div class="kpi" style="--accent: var(--purple)">
-              <div class="kpi-label">Total Fees</div>
-              <div class="kpi-value" id="kpiFees">$0</div>
-              <div class="kpi-foot">title / admin / doc</div>
-            </div>
-            <div
-              class="kpi clickable"
-              style="--accent: var(--orange)"
-              id="kpiUpcomingCard"
-              onclick="toggleUpcomingFloored()"
-              title="Show vehicles floored 30+ days"
-            >
-              <div class="kpi-label">Upcoming Floored</div>
-              <div class="kpi-value" id="kpiUpcomingFloored">0</div>
-              <div class="kpi-foot">floored 30+ days · pay off soon</div>
-            </div>
-            <div class="kpi" style="--accent: var(--red)">
-              <div class="kpi-label">Total Repairs</div>
-              <div class="kpi-value" id="kpiRepairs">$0</div>
-              <div class="kpi-foot">recon + parts</div>
-            </div>
-            <div class="kpi" style="--accent: var(--green)">
-              <div class="kpi-label">Total Vehicle Cost</div>
-              <div class="kpi-value" id="kpiTotalCost">$0</div>
-              <div class="kpi-foot">all-in, incl. flooring</div>
-            </div>
-            <div class="kpi" style="--accent: var(--blue)">
-              <div class="kpi-label">Sales Tax</div>
-              <div class="kpi-value" id="kpiSalesTax">$0</div>
-              <div class="kpi-foot">paid at acquisition</div>
-            </div>
-            <!--
-            <div class="kpi" style="--accent: var(--purple)">
-              <div class="kpi-label">Commission</div>
-              <div class="kpi-value" id="kpiCommission">$0</div>
-              <div class="kpi-foot">owed to reps</div>
-            </div>
-            -->
-            <div
-              class="kpi clickable"
-              style="--accent: var(--green)"
-              id="titlesBox"
-              onclick="toggleTitlesFilter()"
-              title="Click to view vehicles with present titles"
-            >
-              <div class="kpi-label">Titles Present</div>
-              <div class="kpi-value" id="kpiTitles">0 of 0</div>
-              <div class="kpi-foot">click to view present titles</div>
-            </div>
-            <div class="kpi" style="--accent: var(--green)">
-              <div class="kpi-label">Sold This Month</div>
-              <div class="kpi-value" id="kpiSoldMonth">0</div>
-              <div class="kpi-foot">units moved</div>
+
+            <div class="veh-kpi-group costs">
+              <div class="veh-kpi-group-label">Costs</div>
+              <div class="kpi-grid">
+                <div class="kpi" style="--accent: var(--orange)">
+                  <div class="kpi-label">Purchase Cost</div>
+                  <div class="kpi-value" id="kpiPurchaseCost">$0</div>
+                  <div class="kpi-foot">acquisition spend</div>
+                </div>
+                <div class="kpi" style="--accent: var(--purple)">
+                  <div class="kpi-label">Total Fees</div>
+                  <div class="kpi-value" id="kpiFees">$0</div>
+                  <div class="kpi-foot">title / admin / doc</div>
+                </div>
+                <div class="kpi" style="--accent: var(--red)">
+                  <div class="kpi-label">Total Repairs</div>
+                  <div class="kpi-value" id="kpiRepairs">$0</div>
+                  <div class="kpi-foot">recon + parts</div>
+                </div>
+                <div class="kpi" style="--accent: var(--blue)">
+                  <div class="kpi-label">Sales Tax</div>
+                  <div class="kpi-value" id="kpiSalesTax">$0</div>
+                  <div class="kpi-foot">paid at acquisition</div>
+                </div>
+                <div class="kpi" style="--accent: var(--purple)">
+                  <div class="kpi-label">Commission</div>
+                  <div class="kpi-value" id="kpiCommission">$0</div>
+                  <div class="kpi-foot">owed to reps</div>
+                </div>
+                <div class="kpi" style="--accent: var(--green)">
+                  <div class="kpi-label">Total Vehicle Cost</div>
+                  <div class="kpi-value" id="kpiTotalCost">$0</div>
+                  <div class="kpi-foot">all-in, incl. flooring</div>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -18692,16 +18974,33 @@
           </div>
 
           <!-- VEHICLE HERO -->
-          <div class="vdp-hero">
+          <div class="vdp-hero" id="djHero">
             <div>
               <div class="vdp-title" id="djTitle">—</div>
               <div class="vdp-subtitle" id="djVin">—</div>
             </div>
             <div id="djStatusBadge"></div>
+            <div class="vdp-sk">
+              <div class="sk-bar sk-text lg" style="width: 55%"></div>
+              <div
+                class="sk-bar sk-text"
+                style="width: 38%; margin-top: 6px"
+              ></div>
+              <div
+                class="sk-bar"
+                style="
+                  width: 90px;
+                  height: 26px;
+                  border-radius: 20px;
+                  align-self: center;
+                  margin-left: auto;
+                "
+              ></div>
+            </div>
           </div>
 
           <!-- LIVE DEAL SUMMARY -->
-          <div class="vdp-kpi-strip">
+          <div class="vdp-kpi-strip" id="djKpiStrip">
             <div class="vdp-kpi" style="--accent: var(--blue)">
               <div class="vdp-kpi-label">Sold Price</div>
               <div class="vdp-kpi-value" id="djKpiSold">—</div>
@@ -18732,13 +19031,33 @@
               <div class="vdp-kpi-value" id="djKpiCost">—</div>
               <div class="vdp-kpi-sub">before commission</div>
             </div>
+            <div class="vdp-sk">
+              <div class="sk-kpi"><div class="sk-bar"></div><div class="sk-bar"></div></div>
+              <div class="sk-kpi"><div class="sk-bar"></div><div class="sk-bar"></div></div>
+              <div class="sk-kpi"><div class="sk-bar"></div><div class="sk-bar"></div></div>
+              <div class="sk-kpi"><div class="sk-bar"></div><div class="sk-bar"></div></div>
+              <div class="sk-kpi"><div class="sk-bar"></div><div class="sk-bar"></div></div>
+              <div class="sk-kpi"><div class="sk-bar"></div><div class="sk-bar"></div></div>
+            </div>
           </div>
 
           <div class="vdp-body">
             <!-- LEFT: sale info + combined customer / documents / notes -->
             <div>
-              <div class="vdp-section" style="margin-bottom: 18px">
+              <div class="vdp-section" id="djSaleSection" style="margin-bottom: 18px">
                 <div class="dj-form-title">Sale Information</div>
+                <div class="vdp-sk">
+                  <div class="sk-row" style="margin-bottom: 10px">
+                    <div class="sk-bar" style="width: 48%; height: 38px"></div>
+                    <div class="sk-bar" style="width: 48%; height: 38px"></div>
+                  </div>
+                  <div class="sk-bar" style="width: 100%; height: 38px; margin-bottom: 10px"></div>
+                  <div class="sk-row">
+                    <div class="sk-bar" style="width: 48%; height: 38px"></div>
+                    <div class="sk-bar" style="width: 48%; height: 38px"></div>
+                  </div>
+                </div>
+                <div class="dj-section-body">
                 <div class="form-row">
                   <div class="form-group">
                     <label>Deal Number</label
@@ -18789,9 +19108,10 @@
                   for the state — tracked here but not deducted from your
                   profit.
                 </div>
+                </div>
               </div>
 
-              <div class="vdp-section">
+              <div class="vdp-section" id="djCustomerSection">
                 <!-- Customer Information -->
                 <div class="dj-form-title">
                   Customer Information
@@ -18812,6 +19132,23 @@
                     >Scan / Upload ID
                   </button>
                 </div>
+                <div class="vdp-sk">
+                  <div class="sk-bar" style="width: 100%; height: 38px; margin-bottom: 10px"></div>
+                  <div class="sk-row" style="margin-bottom: 10px">
+                    <div class="sk-bar" style="width: 48%; height: 38px"></div>
+                    <div class="sk-bar" style="width: 48%; height: 38px"></div>
+                  </div>
+                  <div class="sk-bar" style="width: 100%; height: 38px; margin-bottom: 16px"></div>
+                  <div class="sk-bar sk-text" style="width: 40%; margin-bottom: 10px"></div>
+                  <div class="sk-row">
+                    <div class="sk-bar" style="width: 22%; height: 88px; border-radius: 9px"></div>
+                    <div class="sk-bar" style="width: 22%; height: 88px; border-radius: 9px"></div>
+                    <div class="sk-bar" style="width: 22%; height: 88px; border-radius: 9px"></div>
+                    <div class="sk-bar" style="width: 22%; height: 88px; border-radius: 9px"></div>
+                  </div>
+                  <div class="sk-bar" style="width: 100%; height: 92px; margin-top: 18px; border-radius: 9px"></div>
+                </div>
+                <div class="dj-section-body">
                 <div class="form-group">
                   <label>Full Name</label
                   ><input
@@ -18920,18 +19257,37 @@
                     line-height: 1.5;
                   "
                 ></textarea>
+                </div>
               </div>
             </div>
 
             <!-- RIGHT: breakdown + rep + add-ons -->
             <div>
-              <div class="vdp-section" style="margin-bottom: 18px">
+              <div class="vdp-section" id="djBreakdownSection" style="margin-bottom: 18px">
                 <div class="dj-form-title">Cost Breakdown</div>
-                <div id="djBreakdown"></div>
+                <div class="vdp-sk">
+                  <div class="sk-row"><div class="sk-bar" style="width: 42%"></div><div class="sk-bar" style="width: 28%"></div></div>
+                  <div class="sk-row"><div class="sk-bar" style="width: 36%"></div><div class="sk-bar" style="width: 22%"></div></div>
+                  <div class="sk-row"><div class="sk-bar" style="width: 40%"></div><div class="sk-bar" style="width: 24%"></div></div>
+                  <div class="sk-row"><div class="sk-bar" style="width: 48%"></div><div class="sk-bar" style="width: 30%"></div></div>
+                  <div class="sk-row"><div class="sk-bar" style="width: 38%"></div><div class="sk-bar" style="width: 26%"></div></div>
+                </div>
+                <div class="dj-section-body">
+                  <div id="djBreakdown"></div>
+                </div>
               </div>
 
-              <div class="vdp-section" style="margin-bottom: 18px">
+              <div class="vdp-section" id="djRepSection" style="margin-bottom: 18px">
                 <div class="dj-form-title">Sales Rep &amp; Commission</div>
+                <div class="vdp-sk">
+                  <div class="sk-bar" style="width: 100%; height: 38px; margin-bottom: 10px"></div>
+                  <div class="sk-row" style="margin-bottom: 10px">
+                    <div class="sk-bar" style="width: 48%; height: 38px"></div>
+                    <div class="sk-bar" style="width: 48%; height: 38px"></div>
+                  </div>
+                  <div class="sk-bar" style="width: 100%; height: 44px; border-radius: 10px"></div>
+                </div>
+                <div class="dj-section-body">
                 <div class="form-group">
                   <label>Sales Rep</label
                   ><select id="djRep" onchange="djRepChanged()"></select>
@@ -18981,9 +19337,10 @@
                     text-align: right;
                   "
                 ></div>
+                </div>
               </div>
 
-              <div class="vdp-section">
+              <div class="vdp-section" id="djAddonSection">
                 <div class="dj-form-title">
                   Add-On Upcharges
                   <button
@@ -18993,13 +19350,20 @@
                     + Add Item
                   </button>
                 </div>
-                <div id="djAddOnList"></div>
+                <div class="vdp-sk">
+                  <div class="sk-bar" style="width: 100%; height: 52px; border-radius: 10px; margin-bottom: 8px"></div>
+                  <div class="sk-bar" style="width: 100%; height: 52px; border-radius: 10px"></div>
+                </div>
+                <div class="dj-section-body">
+                  <div id="djAddOnList"></div>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- SAVE BAR -->
           <div
+            class="dj-save-bar"
             style="
               display: flex;
               align-items: center;
@@ -19045,6 +19409,9 @@
               Save Deal &amp; Mark Sold
             </button>
           </div>
+          <div class="dj-save-sk">
+            <div class="sk-bar" style="width: 100%; height: 48px; border-radius: 10px"></div>
+          </div>
 
           <!-- REST OF INVENTORY -->
           <div class="section-heading">
@@ -19053,10 +19420,15 @@
               Click any vehicle to mark it sold next
             </div>
           </div>
-          <div class="vdp-quick-list">
+          <div class="vdp-quick-list" id="djRestListWrap">
             <div class="vdp-quick-list-head">
               <span id="djRestHeadLabel">Active vehicles</span
               ><span id="djRestCount" style="color: var(--muted)"></span>
+            </div>
+            <div class="vdp-sk">
+              <div class="sk-row"><div class="sk-bar" style="width: 55%"></div><div class="sk-bar" style="width: 20%"></div></div>
+              <div class="sk-row"><div class="sk-bar" style="width: 48%"></div><div class="sk-bar" style="width: 18%"></div></div>
+              <div class="sk-row"><div class="sk-bar" style="width: 60%"></div><div class="sk-bar" style="width: 22%"></div></div>
             </div>
             <div id="djRestList"></div>
           </div>
@@ -20055,11 +20427,11 @@
                   id="addOnType"
                   style="
                     width: 100%;
-                    background: var(--panel);
+                    background-color: var(--panel);
                     border: 1px solid var(--border);
                     color: var(--text);
                     border-radius: 9px;
-                    padding: 9px 12px;
+                    padding: 9px 28px 9px 12px;
                     font-size: 13px;
                     outline: none;
                   "
@@ -20220,11 +20592,11 @@
               id="fdLender"
               style="
                 width: 100%;
-                background: var(--panel-2);
+                background-color: var(--panel-2);
                 border: 1px solid var(--border);
                 color: var(--text);
                 border-radius: 9px;
-                padding: 9px 12px;
+                padding: 9px 28px 9px 12px;
                 font-size: 13px;
                 outline: none;
               "
@@ -21676,7 +22048,13 @@
 
     <!-- ===================== SCAN / DOCUMENT MODAL ===================== -->
     <div class="modal-overlay" id="scanModal">
-      <div class="modal" style="max-width: 520px">
+      <div class="modal scan-modal" style="max-width: 520px">
+        <div class="scan-saving-overlay" id="scanSavingOverlay" aria-live="polite">
+          <div class="scan-spinner"></div>
+          <div class="sp-txt" style="color: var(--text); font-weight: 700">
+            Saving document…
+          </div>
+        </div>
         <div class="modal-head">
           <h3>
             <svg
@@ -21738,11 +22116,11 @@
                 </svg>
                 <div class="sc-title">Upload file</div>
                 <div class="sc-sub">
-                  Choose an image or PDF from this device
+                  Choose an image, PDF, or DOC from this device
                 </div>
                 <input
                   type="file"
-                  accept="image/*,.pdf"
+                  accept="image/*,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   style="display: none"
                   onchange="handleScanFile(this)"
                 />
@@ -28454,7 +28832,31 @@
             renderDealJacketsList();
         },
         "deal-jacket": function () {
-          /* rendered by openDealJacket */
+          var vin = currentDealVin || getPageParam();
+          if (!vin) return;
+          currentDealVin = vin;
+          try {
+            var savedCtx = sessionStorage.getItem("avDjContext");
+            if (savedCtx) djContext = savedCtx;
+          } catch (_) {}
+          if (typeof renderDealJacket === "function") {
+            var v =
+              typeof vehicles !== "undefined"
+                ? vehicles.find(function (x) {
+                    return x && x.vin === vin;
+                  })
+                : null;
+            if (v) {
+              if (
+                !Array.isArray(v.djDocs) &&
+                typeof bootstrapDjDocs === "function"
+              )
+                bootstrapDjDocs(v);
+              renderDealJacket(vin);
+            } else if (typeof showDjSkeleton === "function") {
+              showDjSkeleton();
+            }
+          }
         },
         tax: function () {
           if (typeof renderTaxPage === "function") renderTaxPage();
@@ -28740,6 +29142,10 @@
           if (promises.length) return Promise.all(promises);
         },
         "deal-jackets": function () {
+          var veh = ensureVehiclesForPage();
+          if (veh) return veh;
+        },
+        "deal-jacket": function () {
           var veh = ensureVehiclesForPage();
           if (veh) return veh;
         },
@@ -29663,15 +30069,16 @@
           if (count) count.textContent = "Loading inventory\u2026";
           const kpiIds = [
             "kpiTotalInventory",
+            "kpiTitles",
+            "kpiUpcomingFloored",
+            "kpiSoldMonth",
+            "kpiProfitMonth",
             "kpiPurchaseCost",
             "kpiFees",
-            "kpiUpcomingFloored",
             "kpiRepairs",
-            "kpiTotalCost",
             "kpiSalesTax",
             "kpiCommission",
-            "kpiTitles",
-            "kpiSoldMonth",
+            "kpiTotalCost",
             "totalFlooringCost",
           ];
           kpiIds.forEach((id) => {
@@ -29679,17 +30086,13 @@
             if (!el) return;
             const kpi = el.closest(".kpi") || el.closest(".fb-stat");
             if (kpi) kpi.classList.add("is-loading");
+            const short =
+              id === "kpiTotalInventory" ||
+              id === "kpiUpcomingFloored" ||
+              id === "kpiTitles" ||
+              id === "kpiSoldMonth";
             el.innerHTML =
-              typeof skVal === "function"
-                ? skVal(
-                    id === "kpiTotalInventory" ||
-                      id === "kpiUpcomingFloored" ||
-                      id === "kpiTitles" ||
-                      id === "kpiSoldMonth"
-                      ? 48
-                      : 72,
-                  )
-                : "\u2026";
+              typeof skVal === "function" ? skVal(short ? 48 : 72) : "\u2026";
           });
           return;
         }
@@ -29835,6 +30238,10 @@
       }
 
       function renderKPIs(rows) {
+        const set = (id, val) => {
+          const el = document.getElementById(id);
+          if (el) el.textContent = val;
+        };
         const active = rows.filter((r) => !r.sold);
         const totalInv = active.length;
         const purchaseCost = rows.reduce((s, r) => s + r.price, 0);
@@ -29847,31 +30254,46 @@
           .filter((r) => !r.sold)
           .reduce((s, r) => s + r.flooringCost, 0);
         const titlesInHand = rows.filter((r) => r && r.titlePresent).length;
-        const soldThisMonth = rows.filter(
+        const soldThisMonthRows = rows.filter(
           (r) =>
             r.sold &&
             r.soldDate &&
-            new Date(r.soldDate).getMonth() === today.getMonth(),
-        ).length;
+            new Date(r.soldDate).getMonth() === today.getMonth() &&
+            new Date(r.soldDate).getFullYear() === today.getFullYear(),
+        );
+        const soldThisMonth = soldThisMonthRows.length;
+        const profitThisMonth = soldThisMonthRows.reduce(
+          (s, r) => s + (Number(r.netProfit) || 0),
+          0,
+        );
 
-        document.getElementById("vehicleCountLabel").textContent =
-          `${totalInv} vehicles in active inventory · ${rows.length} total tracked`;
-        document.getElementById("kpiTotalInventory").textContent = totalInv;
-        document.getElementById("kpiPurchaseCost").textContent =
-          fmt(purchaseCost);
-        document.getElementById("kpiFees").textContent = fmt(fees);
-        document.getElementById("kpiRepairs").textContent = fmt(repairs);
-        document.getElementById("kpiTotalCost").textContent = fmt(totalCost);
-        document.getElementById("kpiSalesTax").textContent = fmt(salesTax);
-        document.getElementById("kpiCommission").textContent = fmt(commission);
-        document.getElementById("kpiTitles").textContent =
-          `${titlesInHand} of ${rows.length}`;
-        document.getElementById("kpiSoldMonth").textContent = soldThisMonth;
-        document.getElementById("kpiUpcomingFloored").textContent = rows.filter(
-          (r) => !r.sold && r.floored && r.daysOnLot > 30,
-        ).length;
-        document.getElementById("totalFlooringCost").textContent =
-          flooringTotal > 0 ? fmt(flooringTotal) : "$0";
+        set(
+          "vehicleCountLabel",
+          `${totalInv} vehicles in active inventory · ${rows.length} total tracked`,
+        );
+        set("kpiTotalInventory", totalInv);
+        set("kpiPurchaseCost", fmt(purchaseCost));
+        set("kpiFees", fmt(fees));
+        set("kpiRepairs", fmt(repairs));
+        set("kpiTotalCost", fmt(totalCost));
+        set("kpiSalesTax", fmt(salesTax));
+        set("kpiCommission", fmt(commission));
+        set("kpiTitles", `${titlesInHand} of ${rows.length}`);
+        set("kpiSoldMonth", soldThisMonth);
+        set("kpiProfitMonth", fmtSigned(profitThisMonth));
+        const profitEl = document.getElementById("kpiProfitMonth");
+        if (profitEl) {
+          profitEl.style.color =
+            profitThisMonth >= 0 ? "var(--green)" : "var(--red)";
+        }
+        set(
+          "kpiUpcomingFloored",
+          rows.filter((r) => !r.sold && r.floored && r.daysOnLot > 30).length,
+        );
+        set(
+          "totalFlooringCost",
+          flooringTotal > 0 ? fmt(flooringTotal) : "$0",
+        );
       }
 
       function renderColumnTotals(rows) {
@@ -31448,9 +31870,23 @@
         // Notes
         document.getElementById("vdpNotes").value = v.notes || "";
 
-        // Status dropdown
+        // Status dropdown — dynamically include current status so sel.value always matches
         const sel = document.getElementById("vdpStatusSelect");
-        sel.value = r.status || (r.sold ? "Sold" : "");
+        const curStatus = r.status || (r.sold ? "Sold" : "");
+        const vdpStatusOpts = [
+          { value: "", label: "Set Status\u2026" },
+          { value: "Mark as Sold", label: "Mark as Sold" },
+          { value: "Arbitration", label: "Arbitration" },
+          { value: "Sold Loss", label: "Sold Loss" },
+          { value: "Wholesale", label: "Wholesale" },
+          { value: "Out of State Sale", label: "Out of State Sale" },
+        ];
+        if (curStatus && !vdpStatusOpts.find(function (o) { return o.value === curStatus; })) {
+          vdpStatusOpts.push({ value: curStatus, label: curStatus });
+        }
+        sel.innerHTML = vdpStatusOpts.map(function (o) {
+          return '<option value="' + o.value + '"' + (o.value === curStatus ? ' selected' : '') + '>' + o.label + '</option>';
+        }).join("");
         const statusLabel = document.getElementById("vdpStatusLabel");
         statusLabel.textContent = eff === "Active" ? "" : eff;
         statusLabel.style.color = getStatusColor(eff);
@@ -31526,11 +31962,16 @@
         const v = vehicles.find((x) => x.vin === currentVdpVin);
         if (!v || !newStatus) return;
         if (newStatus === "Mark as Sold" || newStatus === "Sold") {
-          document.getElementById("vdpSoldForm").classList.add("open");
-          document.getElementById("vdpStatusLabel").textContent =
-            "Mark as Sold";
-          document.getElementById("vdpStatusLabel").style.color =
-            getStatusColor("Sold");
+          const alreadySold = v.sold || v.status === "Sold";
+          if (alreadySold) {
+            document.getElementById("vdpSoldForm").classList.add("open");
+            document.getElementById("vdpStatusLabel").textContent =
+              "Mark as Sold";
+            document.getElementById("vdpStatusLabel").style.color =
+              getStatusColor("Sold");
+            return;
+          }
+          openDealJacket(currentVdpVin);
           return;
         }
         const vdpSel = document.getElementById("vdpStatusSelect");
@@ -31538,7 +31979,6 @@
         try {
           await updateStatus(currentVdpVin, newStatus);
           document.getElementById("vdpSoldForm").classList.remove("open");
-          renderVehicleDetailPage(currentVdpVin);
         } finally {
           if (vdpSel) vdpSel.classList.remove("is-busy");
         }
@@ -33065,7 +33505,14 @@
         const rc = document.getElementById("edpReceipt");
         let rcHtml = "";
         if (e.receiptImg) {
-          rcHtml += `<div class="doc-grid"><div class="doc-thumb" onclick="viewExpenseReceipt('${e.id}')"><img src="${e.receiptImg}" alt="${e.receiptName || "Receipt"}"><div class="doc-name">${e.receiptName || "Receipt"}</div></div></div>`;
+          rcHtml +=
+            `<div class="doc-grid">` +
+            docThumbMarkup({
+              onclick: `viewExpenseReceipt('${e.id}')`,
+              name: e.receiptName || e.receipt || "Receipt",
+              img: e.receiptImg,
+            }) +
+            `</div>`;
         } else if (e.receipt) {
           rcHtml += `<div class="receipt-chip" style="font-size:13px;" onclick="openExpenseModal('${e.id}')">${receiptSvg()} ${e.receiptName || "Receipt"}</div>`;
         } else {
@@ -34089,12 +34536,214 @@
       // ================= SCAN / DOCUMENTS =================
       let scanTarget = null,
         scanCleaned = null,
-        scanRawName = "";
+        scanRawName = "",
+        scanSaving = false;
+
+      const DOC_ICON_PDF = "/img/pdf.png";
+      const DOC_ICON_DOC = "/img/doc.png";
+
+      function isPdfDoc(value) {
+        const s = String(value || "");
+        return (
+          /\.pdf($|\?|#)/i.test(s) ||
+          /^data:application\/pdf/i.test(s) ||
+          /application\/pdf/i.test(s)
+        );
+      }
+      function isWordDoc(value) {
+        const s = String(value || "");
+        return (
+          /\.(docx?|rtf)($|\?|#)/i.test(s) ||
+          /msword|officedocument\.wordprocessingml/i.test(s)
+        );
+      }
+      function isFileTypeDoc(doc) {
+        if (!doc) return false;
+        return (
+          isPdfDoc(doc.name) ||
+          isWordDoc(doc.name) ||
+          isPdfDoc(doc.mimeType) ||
+          isWordDoc(doc.mimeType) ||
+          isPdfDoc(doc.img)
+        );
+      }
+      function docPreviewSrc(doc) {
+        if (!doc) return DOC_ICON_DOC;
+        if (isPdfDoc(doc.name) || isPdfDoc(doc.mimeType) || isPdfDoc(doc.img))
+          return DOC_ICON_PDF;
+        if (
+          isWordDoc(doc.name) ||
+          isWordDoc(doc.mimeType) ||
+          isWordDoc(doc.img)
+        )
+          return DOC_ICON_DOC;
+        return doc.img || DOC_ICON_DOC;
+      }
+      function docThumbMarkup(opts) {
+        const {
+          onclick,
+          name,
+          label,
+          img,
+          mimeType,
+          showBadge,
+          docId,
+          vin,
+          showRemove,
+        } = opts;
+        const doc = { name: name || label || "", img: img || "", mimeType };
+        const src = docPreviewSrc(doc);
+        const fileCls = isFileTypeDoc(doc) ? " is-file" : "";
+        const title = label || name || "Document";
+        const badge = showBadge
+          ? '<div class="doc-badge">\u2713</div>'
+          : "";
+        const remove =
+          showRemove && docId && vin
+            ? `<button type="button" class="doc-remove" title="Remove document" onclick="event.stopPropagation(); removeVehicleDoc('${vin}','${docId}')">\u00d7</button>`
+            : "";
+        return `<div class="doc-thumb${fileCls}" onclick="${onclick}" title="View ${title}">${remove}<img src="${src}" alt="${title}" loading="lazy">${badge}<div class="doc-name">${title}</div></div>`;
+      }
+
+      async function removeVehicleDoc(vin, docId) {
+        const v = vehicles.find((x) => x.vin === vin);
+        if (!v || !docId) return;
+        const ok =
+          typeof confirm === "function"
+            ? confirm("Remove this document?")
+            : true;
+        if (!ok) return;
+
+        // Deal jacket working docs — local only until Save
+        if (currentDealVin === vin && Array.isArray(v.djDocs)) {
+          const doc = v.djDocs.find((d) => d && d.id === docId);
+          if (doc) {
+            if (!doc.pending && !String(docId).startsWith("pending-")) {
+              v.djDocsRemoved = v.djDocsRemoved || [];
+              if (!v.djDocsRemoved.includes(docId)) v.djDocsRemoved.push(docId);
+            }
+            v.djDocs = v.djDocs.filter((d) => d && d.id !== docId);
+            renderDealDocs(vin);
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Document removed");
+            return;
+          }
+        }
+
+        const beforeDocs = v.vehicleDocs || [];
+        const beforeJacket = v.documents || [];
+        v.vehicleDocs = beforeDocs.filter((d) => d && d.id !== docId);
+        v.documents = beforeJacket.filter((d) => d && d.id !== docId);
+        if (typeof renderDealDocs === "function" && currentDealVin === vin)
+          renderDealDocs(vin);
+        if (typeof renderVehicleDocs === "function" && currentVdpVin === vin)
+          renderVehicleDocs(vin);
+
+        const isLocalOnly =
+          String(docId).startsWith("doc") ||
+          String(docId).startsWith("pending-");
+        if (
+          !isLocalOnly &&
+          window.AVApi &&
+          typeof AVApi.deleteFile === "function"
+        ) {
+          try {
+            await AVApi.deleteFile(docId, { purge: true });
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Document removed");
+          } catch (err) {
+            v.vehicleDocs = beforeDocs;
+            v.documents = beforeJacket;
+            if (typeof renderDealDocs === "function" && currentDealVin === vin)
+              renderDealDocs(vin);
+            if (
+              typeof renderVehicleDocs === "function" &&
+              currentVdpVin === vin
+            )
+              renderVehicleDocs(vin);
+            if (typeof AVToast !== "undefined")
+              AVToast.error(err.message || "Failed to remove document");
+          }
+        } else if (typeof AVToast !== "undefined") {
+          AVToast.success("Document removed");
+        }
+      }
+
+      function bootstrapDjDocs(v) {
+        if (!v) return;
+        v.djDocsRemoved = [];
+        if (v.dealSaved && Array.isArray(v.documents) && v.documents.length) {
+          v.djDocs = v.documents.map((d) => ({
+            id: d.id,
+            name: d.name,
+            img: d.img || "",
+            mimeType: d.mimeType || "",
+            pending: false,
+          }));
+        } else {
+          // Create flow: never pull vehicle file history — start empty
+          v.djDocs = [];
+        }
+      }
+
+      function isDealJacketScanTarget(tgt) {
+        if (!tgt || tgt.type !== "vehicle") return false;
+        if (tgt.dealJacket) return true;
+        if (tgt.docName) return true;
+        const page = document.getElementById("page-deal-jacket");
+        return (
+          typeof currentDealVin !== "undefined" &&
+          currentDealVin === tgt.vin &&
+          page &&
+          page.style.display !== "none"
+        );
+      }
+
+      function replaceDjDocSlot(v, name, docNameHint) {
+        v.djDocs = v.djDocs || [];
+        v.djDocsRemoved = v.djDocsRemoved || [];
+        const slot =
+          DEAL_DOC_SLOTS.find(
+            (s) =>
+              (docNameHint && s.label === docNameHint) || s.re.test(name || ""),
+          ) || null;
+        if (!slot) return;
+        const matched = v.djDocs.filter((d) => d && slot.re.test(d.name || ""));
+        matched.forEach((d) => {
+          if (!d.pending && d.id && !String(d.id).startsWith("pending-")) {
+            if (!v.djDocsRemoved.includes(d.id)) v.djDocsRemoved.push(d.id);
+          }
+        });
+        v.djDocs = v.djDocs.filter((d) => !(d && slot.re.test(d.name || "")));
+      }
+
+      function setScanSaving(busy) {
+        scanSaving = !!busy;
+        const modal = document.querySelector("#scanModal .scan-modal");
+        if (modal) modal.classList.toggle("saving", scanSaving);
+        const saveBtn = document.getElementById("scanSaveBtn");
+        const retakeBtn = document.getElementById("scanRetakeBtn");
+        const nameInput = document.getElementById("scanDocName");
+        const targetSel = document.getElementById("scanTargetSelect");
+        if (saveBtn) {
+          saveBtn.disabled = scanSaving;
+          saveBtn.classList.toggle("av-btn-loading", scanSaving);
+          saveBtn.innerHTML = scanSaving
+            ? '<span class="av-btn-spinner" aria-hidden="true"></span>Saving\u2026'
+            : "Save Document";
+        }
+        if (retakeBtn) retakeBtn.disabled = scanSaving;
+        if (nameInput) nameInput.disabled = scanSaving;
+        if (targetSel) targetSel.disabled = scanSaving;
+      }
+
       function openScanModal(target) {
+        if (scanSaving) return;
         scanTarget = target || null;
         scanCleaned = null;
         scanRawName = "";
         scanReset();
+        setScanSaving(false);
         const pill = document.getElementById("scanTargetPillWrap");
         const selWrap = document.getElementById("scanTargetSelectWrap");
         const sel = document.getElementById("scanTargetSelect");
@@ -34130,14 +34779,19 @@
         return "";
       }
       function closeScanModal() {
+        if (scanSaving) return;
         document.getElementById("scanModal").classList.remove("open");
+        setScanSaving(false);
       }
       function scanReset() {
+        if (scanSaving) return;
         document.getElementById("scanStep1").style.display = "";
         document.getElementById("scanStep2").style.display = "none";
         document.getElementById("scanStep3").style.display = "none";
         document.getElementById("scanSaveBtn").style.display = "none";
         document.getElementById("scanRetakeBtn").style.display = "none";
+        const wrap = document.querySelector(".scan-preview-wrap");
+        if (wrap) wrap.classList.remove("is-file");
         scanCleaned = null;
       }
       function handleScanFile(input) {
@@ -34150,9 +34804,11 @@
         reader.onload = function (ev) {
           const isPdf =
             f.type === "application/pdf" || /\.pdf$/i.test(scanRawName);
-          if (isPdf) {
+          const isDoc =
+            isWordDoc(f.type) || isWordDoc(scanRawName);
+          if (isPdf || isDoc) {
             scanCleaned = ev.target.result;
-            setTimeout(() => scanShowPreview(ev.target.result, true), 700);
+            setTimeout(() => scanShowPreview(ev.target.result, isPdf ? "pdf" : "doc"), 500);
           } else
             cleanupScan(ev.target.result, (cleaned) => {
               scanCleaned = cleaned;
@@ -34202,24 +34858,32 @@
         };
         img.src = dataUrl;
       }
-      function scanShowPreview(src, isPdf) {
+      function scanShowPreview(src, fileKind) {
         document.getElementById("scanStep2").style.display = "none";
         document.getElementById("scanStep3").style.display = "";
+        const wrap = document.querySelector(".scan-preview-wrap");
         const img = document.getElementById("scanPreviewImg");
-        if (isPdf)
-          img.src =
-            "data:image/svg+xml;utf8," +
-            encodeURIComponent(
-              '<svg xmlns="http://www.w3.org/2000/svg" width="220" height="280"><rect width="220" height="280" fill="#f0f0f0"/><text x="110" y="150" font-size="26" font-family="sans-serif" text-anchor="middle" fill="#999">PDF</text></svg>',
-            );
+        const kind =
+          fileKind === true
+            ? "pdf"
+            : fileKind === false || !fileKind
+              ? "image"
+              : String(fileKind);
+        const isFile = kind === "pdf" || kind === "doc";
+        if (wrap) wrap.classList.toggle("is-file", isFile);
+        if (kind === "pdf") img.src = DOC_ICON_PDF;
+        else if (kind === "doc") img.src = DOC_ICON_DOC;
         else img.src = src;
         const base = scanRawName.replace(/\.[^.]+$/, "") || "Scanned document";
-        let defName = base + (isPdf ? ".pdf" : ".jpg");
+        const ext =
+          kind === "pdf" ? ".pdf" : kind === "doc" ? ".docx" : ".jpg";
+        let defName = base + ext;
         if (scanTarget && scanTarget.docName)
-          defName = scanTarget.docName + (isPdf ? ".pdf" : ".jpg");
+          defName = scanTarget.docName + ext;
         document.getElementById("scanDocName").value = defName;
         document.getElementById("scanSaveBtn").style.display = "inline-flex";
         document.getElementById("scanRetakeBtn").style.display = "inline-flex";
+        setScanSaving(false);
       }
       function dataUrlToBlob(dataUrl) {
         const parts = dataUrl.split(",");
@@ -34232,6 +34896,7 @@
       }
 
       async function saveScan() {
+        if (scanSaving) return;
         let tgt = scanTarget;
         if (!tgt) {
           const val = document.getElementById("scanTargetSelect").value;
@@ -34247,59 +34912,100 @@
         const name =
           document.getElementById("scanDocName").value.trim() ||
           "Scanned document.jpg";
-        if (tgt.type === "vehicle") {
-          const v = vehicles.find((x) => x.vin === tgt.vin);
-          if (!v) {
-            closeScanModal();
-            return;
+        setScanSaving(true);
+        try {
+          if (tgt.type === "vehicle") {
+            const v = vehicles.find((x) => x.vin === tgt.vin);
+            if (!v) {
+              setScanSaving(false);
+              closeScanModal();
+              return;
+            }
+
+            // Deal Jacket: keep local preview only — upload happens on Save Deal
+            if (isDealJacketScanTarget(tgt)) {
+              v.djDocs = v.djDocs || [];
+              replaceDjDocSlot(v, name, tgt.docName || null);
+              const mime = isPdfDoc(name)
+                ? "application/pdf"
+                : isWordDoc(name)
+                  ? "application/msword"
+                  : (scanCleaned.split(";")[0] || "").replace(
+                      "data:",
+                      "",
+                    ) || "image/jpeg";
+              v.djDocs.push({
+                id: "pending-" + Date.now(),
+                name,
+                mimeType: mime,
+                img: scanCleaned,
+                pending: true,
+                ts: Date.now(),
+              });
+              renderDealDocs(v.vin);
+              jennaFileConfirm(name, `${v.year} ${v.make} ${v.model}`);
+              setScanSaving(false);
+              closeScanModal();
+              if (typeof AVToast !== "undefined")
+                AVToast.success("Preview added — uploads when you save the deal");
+              return;
+            }
+
+            v.vehicleDocs = v.vehicleDocs || [];
+            try {
+              const blob = dataUrlToBlob(scanCleaned);
+              const result = await AVApi.uploadFile(blob, {
+                fileName: name,
+                sourceEntity: "vehicle",
+                sourceEntityId: v.id,
+              });
+              v.vehicleDocs.push({
+                id: result.file.id,
+                name,
+                mimeType: blob.type || result.file.mimeType || "",
+                img:
+                  result.downloadUrl ||
+                  result.publicUrl ||
+                  scanCleaned,
+                ts: Date.now(),
+              });
+            } catch (err) {
+              console.warn("[saveScan] R2 upload failed, storing locally:", err);
+              v.vehicleDocs.push({
+                id: "doc" + Date.now(),
+                name,
+                mimeType: isPdfDoc(name)
+                  ? "application/pdf"
+                  : "image/jpeg",
+                img: scanCleaned,
+                ts: Date.now(),
+              });
+            }
+            if (
+              currentVdpVin === v.vin &&
+              document.getElementById("page-vehicle-detail").style.display !==
+                "none"
+            )
+              renderVehicleDocs(v.vin);
+            jennaFileConfirm(name, `${v.year} ${v.make} ${v.model}`);
+          } else if (tgt.type === "expense") {
+            const e = _expenses.find((x) => x.id === tgt.id);
+            e.receipt = name;
+            e.receiptName = name;
+            e.receiptImg = scanCleaned;
+            renderExpenses();
+            refreshEdpIfOpen();
+            jennaFileConfirm(name, e.name);
           }
-          v.vehicleDocs = v.vehicleDocs || [];
-          try {
-            const blob = dataUrlToBlob(scanCleaned);
-            const result = await AVApi.uploadFile(blob, {
-              fileName: name,
-              sourceEntity: "vehicle",
-              sourceEntityId: v.id,
-            });
-            v.vehicleDocs.push({
-              id: result.file.id,
-              name,
-              img: result.publicUrl || result.file.storagePath,
-              ts: Date.now(),
-            });
-          } catch (err) {
-            console.warn("[saveScan] R2 upload failed, storing locally:", err);
-            v.vehicleDocs.push({
-              id: "doc" + Date.now(),
-              name,
-              img: scanCleaned,
-              ts: Date.now(),
-            });
-          }
-          if (
-            currentVdpVin === v.vin &&
-            document.getElementById("page-vehicle-detail").style.display !==
-              "none"
-          )
-            renderVehicleDocs(v.vin);
-          if (
-            typeof currentDealVin !== "undefined" &&
-            currentDealVin === v.vin &&
-            document.getElementById("page-deal-jacket").style.display !==
-              "none" &&
-            typeof renderDealDocs === "function"
-          )
-            renderDealDocs(v.vin);
-          jennaFileConfirm(name, `${v.year} ${v.make} ${v.model}`);
-        } else if (tgt.type === "expense") {
-          const e = _expenses.find((x) => x.id === tgt.id);
-          e.receipt = name;
-          e.receiptImg = scanCleaned;
-          renderExpenses();
-          refreshEdpIfOpen();
-          jennaFileConfirm(name, e.name);
+          setScanSaving(false);
+          closeScanModal();
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Document saved");
+        } catch (err) {
+          setScanSaving(false);
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to save document");
         }
-        closeScanModal();
       }
 
       async function loadVehicleDocs(vin) {
@@ -34309,12 +35015,23 @@
           const qs =
             "?sourceEntity=vehicle&sourceEntityId=" + encodeURIComponent(v.id);
           const data = await AVApi.listFiles(qs);
-          v.vehicleDocs = (data.files || []).map((f) => ({
+          const remote = (data.files || []).map((f) => ({
             id: f.id,
             name: f.originalName,
-            img: f.publicUrl || f.downloadUrl || "",
+            mimeType: f.mimeType || "",
+            img: f.downloadUrl || f.publicUrl || "",
             ts: f.uploadedAt,
           }));
+          const remoteIds = new Set(remote.map((d) => d.id));
+          const localOnly = (v.vehicleDocs || []).filter(
+            (d) =>
+              d &&
+              d.id &&
+              !remoteIds.has(d.id) &&
+              (String(d.id).startsWith("doc") ||
+                (d.img && String(d.img).startsWith("data:"))),
+          );
+          v.vehicleDocs = remote.concat(localOnly);
         } catch (err) {
           console.warn("[loadVehicleDocs] failed:", err);
         }
@@ -34335,15 +35052,34 @@
       }
       function viewExpenseReceipt(id) {
         const e = _expenses.find((x) => x.id === id);
-        if (e && e.receiptImg) openDocViewer(e.receiptImg);
+        if (!e || !e.receiptImg) return;
+        const doc = {
+          name: e.receiptName || e.receipt || "",
+          img: e.receiptImg,
+        };
+        if (isFileTypeDoc(doc) && !String(e.receiptImg).startsWith("data:image")) {
+          window.open(e.receiptImg, "_blank", "noopener");
+          return;
+        }
+        if (isPdfDoc(doc.name) || isPdfDoc(e.receiptImg)) {
+          window.open(e.receiptImg, "_blank", "noopener");
+          return;
+        }
+        openDocViewer(e.receiptImg);
       }
       function viewVehicleDoc(vin, docId) {
         const v = vehicles.find((x) => x.vin === vin);
         if (!v) return;
         const dd =
+          (v.djDocs || []).find((x) => x.id === docId) ||
           (v.documents || []).find((x) => x.id === docId) ||
           (v.vehicleDocs || []).find((x) => x.id === docId);
-        if (dd && dd.img) openDocViewer(dd.img);
+        if (!dd || !dd.img) return;
+        if (isFileTypeDoc(dd)) {
+          window.open(dd.img, "_blank", "noopener");
+          return;
+        }
+        openDocViewer(dd.img);
       }
 
       function renderVehicleDocs(vin) {
@@ -34365,9 +35101,16 @@
           host.innerHTML =
             `<div class="doc-grid">` +
             allDocs
-              .map(
-                (dd) =>
-                  `<div class="doc-thumb" onclick="viewVehicleDoc('${vin}','${dd.id}')"><img src="${dd.img}" alt="${dd.name}" onerror="this.style.display='none'" loading="lazy"><div class="doc-name">${dd.name}</div></div>`,
+              .map((dd) =>
+                docThumbMarkup({
+                  onclick: `viewVehicleDoc('${vin}','${dd.id}')`,
+                  name: dd.name,
+                  img: dd.img,
+                  mimeType: dd.mimeType,
+                  showRemove: true,
+                  docId: dd.id,
+                  vin,
+                }),
               )
               .join("") +
             `</div>`;
@@ -34465,7 +35208,7 @@
           document.getElementById("msSearch").value || ""
         ).toLowerCase();
         const rows = vehicles
-          .filter((v) => !v.sold)
+          .filter((v) => !v.sold && v.status !== "Sold" && v.status !== "Sold Loss")
           .filter((v) =>
             `${v.year} ${v.make} ${v.model} ${v.vin}`.toLowerCase().includes(q),
           );
@@ -34513,6 +35256,34 @@
           openMarkSold();
         }
       }
+      var _djSkTimer = null;
+      function showDjSkeleton() {
+        var page = document.getElementById("page-deal-jacket");
+        if (page) page.classList.add("dj-loading");
+        var els = document.querySelectorAll(
+          "#page-deal-jacket .vdp-hero, #page-deal-jacket .vdp-kpi-strip, #page-deal-jacket .vdp-section, #page-deal-jacket .vdp-quick-list",
+        );
+        for (var i = 0; i < els.length; i++) els[i].classList.add("is-loading");
+        if (_djSkTimer) clearTimeout(_djSkTimer);
+        _djSkTimer = setTimeout(function () {
+          hideDjSkeleton();
+          _djSkTimer = null;
+        }, 12000);
+      }
+      function hideDjSkeleton() {
+        var page = document.getElementById("page-deal-jacket");
+        if (page) page.classList.remove("dj-loading");
+        var els = document.querySelectorAll(
+          "#page-deal-jacket .vdp-hero, #page-deal-jacket .vdp-kpi-strip, #page-deal-jacket .vdp-section, #page-deal-jacket .vdp-quick-list",
+        );
+        for (var i = 0; i < els.length; i++)
+          els[i].classList.remove("is-loading");
+        if (_djSkTimer) {
+          clearTimeout(_djSkTimer);
+          _djSkTimer = null;
+        }
+      }
+
       function openDealJacket(vin, context) {
         currentDealVin = vin;
         djContext =
@@ -34525,6 +35296,9 @@
                 : context === "sold"
                   ? "sold"
                   : "inventory";
+        try {
+          sessionStorage.setItem("avDjContext", djContext);
+        } catch (_) {}
         {
           const bt = document.getElementById("djBackText");
           if (bt)
@@ -34549,13 +35323,25 @@
             : '[data-nav="deal-jackets"]';
         const nav = document.querySelector(navSel);
         if (nav) nav.classList.add("active");
-        navigateToPage("deal-jacket");
-        renderDealJacket(vin);
+        _hashUpdating = true;
+        location.hash = "deal-jacket/" + encodeURIComponent(vin);
+        _hashUpdating = false;
+        const vOpen = vehicles.find((x) => x.vin === vin);
+        if (!vOpen) showDjSkeleton();
+        showPageDirect("deal-jacket");
+        if (vOpen) {
+          bootstrapDjDocs(vOpen);
+          renderDealJacket(vin);
+        }
       }
 
       function renderDealJacket(vin) {
         const v = vehicles.find((x) => x.vin === vin);
-        if (!v) return;
+        if (!v) {
+          showDjSkeleton();
+          return;
+        }
+        hideDjSkeleton();
         document.getElementById("djSavedBanner").classList.remove("show");
         document.getElementById("djTitle").textContent =
           `${v.year} ${v.make} ${v.model}`;
@@ -34833,7 +35619,8 @@
       ];
       function renderDealDocs(vin) {
         const v = vehicles.find((x) => x.vin === vin);
-        const docs = (v && v.documents) || [];
+        // Deal jacket uses local working docs only — never vehicleDocs / files API
+        const docs = Array.isArray(v && v.djDocs) ? v.djDocs.slice() : [];
         const isId = (d) => /\bid\b|licen|passport|driver/i.test(d.name);
         const idDocs = docs.filter(isId);
         const idHost = document.getElementById("djIdDoc");
@@ -34841,9 +35628,17 @@
           idHost.innerHTML = idDocs.length
             ? `<div class="doc-grid">` +
               idDocs
-                .map(
-                  (d) =>
-                    `<div class="doc-thumb" onclick="viewVehicleDoc('${vin}','${d.id}')"><img src="${d.img}" alt="${d.name}"><div class="doc-badge">\u2713</div><div class="doc-name">${d.name}</div></div>`,
+                .map((d) =>
+                  docThumbMarkup({
+                    onclick: `viewVehicleDoc('${vin}','${d.id}')`,
+                    name: d.name,
+                    img: d.img,
+                    mimeType: d.mimeType,
+                    showBadge: true,
+                    showRemove: true,
+                    docId: d.id,
+                    vin,
+                  }),
                 )
                 .join("") +
               `</div>`
@@ -34858,7 +35653,17 @@
           );
           if (doc) {
             used.add(doc.id);
-            cards += `<div class="doc-thumb" onclick="viewVehicleDoc('${vin}','${doc.id}')" title="View ${slot.label}"><img src="${doc.img}" alt="${slot.label}"><div class="doc-badge">\u2713</div><div class="doc-name">${slot.label}</div></div>`;
+            cards += docThumbMarkup({
+              onclick: `viewVehicleDoc('${vin}','${doc.id}')`,
+              name: doc.name,
+              label: slot.label,
+              img: doc.img,
+              mimeType: doc.mimeType,
+              showBadge: true,
+              showRemove: true,
+              docId: doc.id,
+              vin,
+            });
           } else {
             cards += `<div class="doc-slot" onclick="scanForDeal('${slot.label}')" title="Scan or upload ${slot.label}"><div class="doc-slot-ic">+</div><div class="doc-slot-name">${slot.label}</div><div class="doc-slot-sub">Scan / upload</div></div>`;
           }
@@ -34866,7 +35671,16 @@
         nonId
           .filter((d) => !used.has(d.id))
           .forEach((d) => {
-            cards += `<div class="doc-thumb" onclick="viewVehicleDoc('${vin}','${d.id}')" title="View ${d.name}"><img src="${d.img}" alt="${d.name}"><div class="doc-badge">\u2713</div><div class="doc-name">${d.name}</div></div>`;
+            cards += docThumbMarkup({
+              onclick: `viewVehicleDoc('${vin}','${d.id}')`,
+              name: d.name,
+              img: d.img,
+              mimeType: d.mimeType,
+              showBadge: true,
+              showRemove: true,
+              docId: d.id,
+              vin,
+            });
           });
         document.getElementById("djDocsList").innerHTML =
           `<div class="doc-grid">${cards}</div>`;
@@ -34966,6 +35780,7 @@
           type: "vehicle",
           vin: currentDealVin,
           docName: docName,
+          dealJacket: true,
         });
       }
 
@@ -35079,25 +35894,64 @@
           });
           if (
             markResp &&
-            markResp.dealJacket &&
-            Array.isArray(v.documents) &&
-            v.documents.length > 0
+            markResp.dealJacket
           ) {
             const jacketId = markResp.dealJacket.id;
-            for (const doc of v.documents) {
-              if (!doc.img || doc.id.startsWith("api-")) continue;
+            const removed = Array.isArray(v.djDocsRemoved)
+              ? v.djDocsRemoved.slice()
+              : [];
+            for (const docId of removed) {
+              if (!docId || String(docId).startsWith("pending-")) continue;
               try {
-                const isPdf = /\.pdf$/i.test(doc.name);
+                await AVApi.removeJacketDocument(jacketId, docId);
+              } catch (delErr) {
+                console.warn("Doc remove failed:", docId, delErr);
+              }
+            }
+
+            const pending = (v.djDocs || []).filter(
+              (d) => d && d.pending && d.img,
+            );
+            for (const doc of pending) {
+              try {
+                let fileUrl = doc.img;
+                let fileType =
+                  doc.mimeType ||
+                  (isPdfDoc(doc.name)
+                    ? "application/pdf"
+                    : isWordDoc(doc.name)
+                      ? "application/msword"
+                      : "image/jpeg");
+                // Upload binary files to R2 once on deal save
+                if (
+                  String(doc.img).startsWith("data:") &&
+                  window.AVApi &&
+                  typeof AVApi.uploadFile === "function"
+                ) {
+                  const blob = dataUrlToBlob(doc.img);
+                  const uploaded = await AVApi.uploadFile(blob, {
+                    fileName: doc.name,
+                    sourceEntity: "deal_jacket",
+                    sourceEntityId: jacketId,
+                  });
+                  fileUrl =
+                    uploaded.publicUrl ||
+                    uploaded.downloadUrl ||
+                    doc.img;
+                  fileType = blob.type || fileType;
+                }
                 await AVApi.addJacketDocument(jacketId, {
-                  fileUrl: doc.img,
+                  fileUrl,
                   documentName: doc.name,
-                  fileType: isPdf ? "application/pdf" : "image/jpeg",
+                  fileType,
                 });
               } catch (docErr) {
                 console.warn("Doc upload failed:", doc.name, docErr);
               }
             }
             await AVVehicles.loadAllVehicles();
+            const refreshed = vehicles.find((x) => x.vin === currentDealVin);
+            if (refreshed) bootstrapDjDocs(refreshed);
           }
           const updated = vehicles.find((x) => x.vin === currentDealVin);
           if (updated) {
@@ -39505,14 +40359,16 @@
       // ---------- KPI COLOR PICKER ----------
       const KPI_COLOR_IDS = [
         "kpiTotalInventory",
+        "kpiTitles",
+        "kpiUpcomingFloored",
+        "kpiSoldMonth",
+        "kpiProfitMonth",
         "kpiPurchaseCost",
         "kpiFees",
         "kpiRepairs",
-        "kpiTotalCost",
         "kpiSalesTax",
         "kpiCommission",
-        "kpiTitles",
-        "kpiSoldMonth",
+        "kpiTotalCost",
         "totalFlooringCost",
       ];
 
@@ -39928,6 +40784,22 @@
               "vehicle-detail",
               document.querySelector('[data-page="vehicles"]'),
             );
+          } else if (hashPage === "deal-jacket" && hashParam) {
+            currentDealVin = hashParam;
+            try {
+              var savedDjCtx = sessionStorage.getItem("avDjContext");
+              if (savedDjCtx) djContext = savedDjCtx;
+            } catch (_) {}
+            if (typeof showDjSkeleton === "function") showDjSkeleton();
+            showPage(
+              "deal-jacket",
+              document.querySelector('[data-nav="deal-jackets"]'),
+            );
+          } else if (hashPage === "deal-jacket" && !hashParam) {
+            showPage(
+              "deal-jackets",
+              document.querySelector('[data-nav="deal-jackets"]'),
+            );
           } else {
             renderDashboard();
             showPage(
@@ -39960,6 +40832,18 @@
         var param = getPageParam();
         if (pageId === "vehicle-detail" && param) {
           currentVdpVin = param;
+        }
+        if (pageId === "deal-jacket" && param) {
+          currentDealVin = param;
+          try {
+            var savedDjCtx2 = sessionStorage.getItem("avDjContext");
+            if (savedDjCtx2) djContext = savedDjCtx2;
+          } catch (_) {}
+        }
+        if (pageId === "deal-jacket" && !param) {
+          showPageDirect("deal-jackets");
+          _hashUpdating = false;
+          return;
         }
         showPageDirect(pageId);
         _hashUpdating = false;
@@ -40002,9 +40886,25 @@
                 renderCpaOverview(true);
               if (typeof loadCpaNotes === "function") loadCpaNotes(true);
             } else {
+              var curParam =
+                typeof getPageParam === "function" ? getPageParam() : null;
+              if (curPage === "deal-jacket" && curParam) {
+                currentDealVin = curParam;
+                try {
+                  var savedCtx = sessionStorage.getItem("avDjContext");
+                  if (savedCtx) djContext = savedCtx;
+                } catch (_) {}
+              }
+              if (curPage === "vehicle-detail" && curParam) {
+                currentVdpVin = curParam;
+              }
               var curRenderer = PAGE_RENDERERS[curPage];
               if (curRenderer) curRenderer();
-              if (typeof renderDashboard === "function") renderDashboard();
+              if (
+                curPage === "dashboard" &&
+                typeof renderDashboard === "function"
+              )
+                renderDashboard();
             }
             if (typeof loadDashNotes === "function" && !dashNotesLoaded)
               loadDashNotes();
