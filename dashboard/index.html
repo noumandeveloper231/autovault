@@ -560,7 +560,14 @@
       }
 
       #editorConfirmModal,
-      #addAdminModal {
+      #addAdminModal,
+      #deleteVehicleModal,
+      #removeDocModal,
+      #markAllReadModal,
+      #deleteLeadModal,
+      #convertLeadModal,
+      #deleteExpenseModal,
+      #deactivateEmpModal {
         z-index: 210;
       }
 
@@ -15392,11 +15399,129 @@
             <button
               class="btn-danger vdp-delete-btn"
               type="button"
-              onclick="deleteCurrentVehicle()"
+              onclick="openDeleteVehicleModal()"
               style="padding: 8px 14px; font-size: 12px"
             >
               Delete Vehicle
             </button>
+          </div>
+
+          <div
+            class="modal-overlay"
+            id="deleteVehicleModal"
+            onclick="if (event.target === this) closeDeleteVehicleModal();"
+          >
+            <div class="modal" style="max-width: 410px">
+              <div class="modal-head">
+                <h3>
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--red)"
+                    stroke-width="2"
+                  >
+                    <polyline points="3 6 5 6 21 6" />
+                    <path
+                      d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                    />
+                    <line x1="10" y1="11" x2="10" y2="17" />
+                    <line x1="14" y1="11" x2="14" y2="17" />
+                  </svg>
+                  Delete Vehicle
+                </h3>
+                <button class="modal-close" onclick="closeDeleteVehicleModal()">
+                  &times;
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="ec-msg">
+                  Are you sure you want to delete
+                  <b id="deleteVehLabel">this vehicle</b> from inventory?
+                </div>
+                <div class="ec-sub">
+                  This action cannot be undone. All data associated with this
+                  vehicle including expenses, repairs, and documents will be
+                  permanently removed.
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 18px">
+                  <button
+                    class="btn-ghost"
+                    id="deleteVehCancelBtn"
+                    style="flex: 1"
+                    onclick="closeDeleteVehicleModal()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn-danger"
+                    id="deleteVehConfirmBtn"
+                    style="flex: 1; box-shadow: none"
+                    onclick="confirmDeleteVehicle()"
+                  >
+                    Delete Vehicle
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="modal-overlay"
+            id="removeDocModal"
+            onclick="if (event.target === this) closeRemoveDocModal();"
+          >
+            <div class="modal" style="max-width: 410px">
+              <div class="modal-head">
+                <h3>
+                  <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--red)"
+                    stroke-width="2"
+                  >
+                    <polyline points="3 6 5 6 21 6" />
+                    <path
+                      d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                    />
+                  </svg>
+                  Remove Document
+                </h3>
+                <button class="modal-close" onclick="closeRemoveDocModal()">
+                  &times;
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="ec-msg">
+                  Are you sure you want to remove this document?
+                </div>
+                <div class="ec-sub">
+                  The document will be permanently removed from this vehicle's
+                  file list. You can re-upload it later if needed.
+                </div>
+                <div style="display: flex; gap: 10px; margin-top: 18px">
+                  <button
+                    class="btn-ghost"
+                    id="removeDocCancelBtn"
+                    style="flex: 1"
+                    onclick="closeRemoveDocModal()"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    class="btn-danger"
+                    id="removeDocConfirmBtn"
+                    style="flex: 1; box-shadow: none"
+                    onclick="confirmRemoveDoc()"
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="veh-ticker is-loading" id="vdpTicker">
@@ -16030,11 +16155,7 @@
                   <div style="display: flex; gap: 6px">
                     <button
                       class="imsg-compose-btn"
-                      onclick="
-                        if (confirm('Mark all conversations as read?')) {
-                          msgMarkAllRead();
-                        }
-                      "
+                      onclick="openMarkAllReadModal()"
                       title="Mark all as read"
                     >
                       <svg
@@ -16148,6 +16269,60 @@
                   >
                     <path d="M12 19V5M5 12l7-7 7 7" />
                   </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal-overlay"
+          id="markAllReadModal"
+          onclick="if (event.target === this) closeMarkAllReadModal();"
+        >
+          <div class="modal" style="max-width: 410px">
+            <div class="modal-head">
+              <h3>
+                <svg
+                  width="17"
+                  height="17"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M1 12l4-4M9 12l4-4M17 12l4-4" />
+                </svg>
+                Mark All as Read
+              </h3>
+              <button class="modal-close" onclick="closeMarkAllReadModal()">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="ec-msg">
+                Mark all conversations as read?
+              </div>
+              <div class="ec-sub">
+                This will mark every unread message in your inbox as read. You
+                can still view all conversations afterwards.
+              </div>
+              <div style="display: flex; gap: 10px; margin-top: 18px">
+                <button
+                  class="btn-ghost"
+                  id="markAllReadCancelBtn"
+                  style="flex: 1"
+                  onclick="closeMarkAllReadModal()"
+                >
+                  Cancel
+                </button>
+                <button
+                  class="btn-primary"
+                  id="markAllReadConfirmBtn"
+                  style="flex: 1; box-shadow: none"
+                  onclick="confirmMarkAllRead()"
+                >
+                  Mark All Read
                 </button>
               </div>
             </div>
@@ -19975,6 +20150,61 @@
       </div>
     </div>
 
+    <div
+      class="modal-overlay"
+      id="deleteExpenseModal"
+      onclick="if (event.target === this) closeDeleteExpenseModal();"
+    >
+      <div class="modal" style="max-width: 410px">
+        <div class="modal-head">
+          <h3>
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--red)"
+              stroke-width="2"
+            >
+              <polyline points="3 6 5 6 21 6" />
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              />
+            </svg>
+            Delete Expense
+          </h3>
+          <button class="modal-close" onclick="closeDeleteExpenseModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="ec-msg">Are you sure you want to delete this expense?</div>
+          <div class="ec-sub">
+            This will permanently remove the expense record and adjust your P&L
+            calculations. This action cannot be undone.
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 18px">
+            <button
+              class="btn-ghost"
+              id="deleteExpCancelBtn"
+              style="flex: 1"
+              onclick="closeDeleteExpenseModal()"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn-danger"
+              id="deleteExpConfirmBtn"
+              style="flex: 1; box-shadow: none"
+              onclick="confirmDeleteExpense()"
+            >
+              Delete Expense
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- FLOORING MODAL -->
     <div class="modal-overlay" id="flooringModal">
       <div class="modal">
@@ -21428,7 +21658,7 @@
               class="btn-danger"
               id="custLeadDeleteBtn"
               style="display: none"
-              onclick="deleteCustLead()"
+              onclick="openDeleteLeadModal()"
             >
               Delete
             </button>
@@ -21436,7 +21666,7 @@
               class="btn-ghost"
               id="custLeadConvertBtn"
               style="display: none"
-              onclick="convertCustLead()"
+              onclick="openConvertLeadModal()"
             >
               Convert to Customer
             </button>
@@ -21446,6 +21676,118 @@
               onclick="saveCustLead()"
             >
               Save Lead
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay"
+      id="deleteLeadModal"
+      onclick="if (event.target === this) closeDeleteLeadModal();"
+    >
+      <div class="modal" style="max-width: 410px">
+        <div class="modal-head">
+          <h3>
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--red)"
+              stroke-width="2"
+            >
+              <polyline points="3 6 5 6 21 6" />
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              />
+            </svg>
+            Delete Lead
+          </h3>
+          <button class="modal-close" onclick="closeDeleteLeadModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="ec-msg">Are you sure you want to delete this lead?</div>
+          <div class="ec-sub">
+            This will permanently remove the lead from your pipeline. This
+            action cannot be undone.
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 18px">
+            <button
+              class="btn-ghost"
+              id="deleteLeadCancelBtn"
+              style="flex: 1"
+              onclick="closeDeleteLeadModal()"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn-danger"
+              id="deleteLeadConfirmBtn"
+              style="flex: 1; box-shadow: none"
+              onclick="confirmDeleteLead()"
+            >
+              Delete Lead
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay"
+      id="convertLeadModal"
+      onclick="if (event.target === this) closeConvertLeadModal();"
+    >
+      <div class="modal" style="max-width: 410px">
+        <div class="modal-head">
+          <h3>
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+            Convert to Customer
+          </h3>
+          <button class="modal-close" onclick="closeConvertLeadModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="ec-msg">
+            Convert this lead to a paid customer?
+          </div>
+          <div class="ec-sub">
+            The lead will be moved to the Customers list and you will be able to
+            track sales, commissions, and activity for this customer.
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 18px">
+            <button
+              class="btn-ghost"
+              id="convertLeadCancelBtn"
+              style="flex: 1"
+              onclick="closeConvertLeadModal()"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn-primary"
+              id="convertLeadConfirmBtn"
+              style="flex: 1; box-shadow: none"
+              onclick="confirmConvertLead()"
+            >
+              Convert to Customer
             </button>
           </div>
         </div>
@@ -22605,7 +22947,7 @@
             class="btn-ghost"
             id="empDeleteBtn"
             style="display: none; color: var(--red); border-color: var(--red)"
-            onclick="deleteEmployee()"
+            onclick="openDeactivateEmpModal()"
           >
             Remove
           </button>
@@ -22630,6 +22972,63 @@
                 <path d="M5 13l4 4L19 7" />
               </svg>
               Save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay"
+      id="deactivateEmpModal"
+      onclick="if (event.target === this) closeDeactivateEmpModal();"
+    >
+      <div class="modal" style="max-width: 410px">
+        <div class="modal-head">
+          <h3>
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--red)"
+              stroke-width="2"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="18" y1="8" x2="23" y2="13" />
+              <line x1="23" y1="8" x2="18" y2="13" />
+            </svg>
+            Deactivate Employee
+          </h3>
+          <button class="modal-close" onclick="closeDeactivateEmpModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="ec-msg">
+            Are you sure you want to deactivate this employee?
+          </div>
+          <div class="ec-sub">
+            The employee will be removed from the active payroll list. Their
+            historical records and payment history will be preserved.
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 18px">
+            <button
+              class="btn-ghost"
+              id="deactivateEmpCancelBtn"
+              style="flex: 1"
+              onclick="closeDeactivateEmpModal()"
+            >
+              Cancel
+            </button>
+            <button
+              class="btn-danger"
+              id="deactivateEmpConfirmBtn"
+              style="flex: 1; box-shadow: none"
+              onclick="confirmDeactivateEmp()"
+            >
+              Deactivate
             </button>
           </div>
         </div>
@@ -25215,59 +25614,11 @@
           }
         }
       }
-      async function deleteCustLead() {
-        if (!editingCustLead) return;
-        if (!confirm("Delete this lead?")) return;
-        if (!window.AVCustomers) {
-          if (typeof AVToast !== "undefined")
-            AVToast.error("Customers API not loaded");
-          return;
-        }
-        try {
-          if (typeof AVToast !== "undefined")
-            AVToast.info("Deleting lead\u2026");
-          await AVCustomers.removeLead(editingCustLead);
-          closeCustLeadModal();
-          if (typeof AVToast !== "undefined") AVToast.success("Lead deleted");
-        } catch (err) {
-          if (typeof AVToast !== "undefined")
-            AVToast.error(err.message || "Failed to delete lead");
-        }
+      function deleteCustLead() {
+        openDeleteLeadModal();
       }
-      async function convertCustLead() {
-        if (!editingCustLead) return;
-        if (!window.AVCustomers) {
-          if (typeof AVToast !== "undefined")
-            AVToast.error("Customers API not loaded");
-          return;
-        }
-        if (
-          !confirm(
-            "Convert this lead to a paid customer? They will move to the Customers list.",
-          )
-        )
-          return;
-        const btn = document.getElementById("custLeadConvertBtn");
-        if (btn) {
-          btn.disabled = true;
-          btn.classList.add("veh-busy");
-        }
-        try {
-          if (typeof AVToast !== "undefined") AVToast.info("Converting\u2026");
-          await AVCustomers.convertLead(editingCustLead);
-          closeCustLeadModal();
-          if (typeof AVToast !== "undefined")
-            AVToast.success("Lead converted to customer");
-          if (typeof renderCustomersPage === "function") renderCustomersPage();
-        } catch (err) {
-          if (typeof AVToast !== "undefined")
-            AVToast.error(err.message || "Failed to convert lead");
-        } finally {
-          if (btn) {
-            btn.disabled = false;
-            btn.classList.remove("veh-busy");
-          }
-        }
+      function convertCustLead() {
+        openConvertLeadModal();
       }
       function renderCustomerLeads() {
         const host = document.getElementById("custLeadBody");
@@ -28398,6 +28749,30 @@
         showPage("dashboard", document.querySelector("[data-nav=dashboard]"));
         if (typeof renderDashboard === "function") renderDashboard();
       }
+      function handleLogout() {
+        var portal =
+          (window.AVPortal && AVPortal.getRoutePortal()) || "admin";
+        switch (portal) {
+          case "cpa":
+            exitCpaMode();
+            break;
+          case "sales_rep":
+            exitRepMode();
+            break;
+          case "wholesale":
+            exitWholesale();
+            break;
+          case "owner":
+            exitOwner();
+            break;
+          default:
+            localStorage.removeItem("avAuthToken");
+            localStorage.removeItem("avRefreshToken");
+            localStorage.removeItem("avAuthPortal");
+            location.href = "/login";
+            break;
+        }
+      }
       function ownerFmtLogin(dt) {
         if (!dt) return "—";
         const d = new Date(dt);
@@ -29734,6 +30109,8 @@
         html += `<div class="am-divider" style="border-top:1px solid var(--border);margin:8px 0;"></div>`;
         html += `<div class="am-row" style="cursor:pointer;" onclick="openChangePassword()"><div class="am-av" style="background:var(--border);font-size:13px;">&#9881;</div><div class="am-info"><div class="am-name">Change Password</div><div class="am-role">Update your login password</div></div></div>`;
         html += `<div class="am-row" style="cursor:pointer;" onclick="openAuditLog()"><div class="am-av" style="background:var(--border);font-size:13px;">&#128196;</div><div class="am-info"><div class="am-name">Audit Log</div><div class="am-role">View recent activity</div></div></div>`;
+        html += `<div class="am-divider" style="border-top:1px solid var(--red);margin:8px 0;opacity:0.3;"></div>`;
+        html += `<div class="am-row" style="cursor:pointer;" onclick="handleLogout()"><div class="am-av" style="background:var(--red);color:#fff;font-size:13px;">&#8592;</div><div class="am-info"><div class="am-name" style="color:var(--red);">Log Out</div><div class="am-role">Sign out of your account</div></div></div>`;
         list.innerHTML = html;
       }
       let pendingEditorIdx = null;
@@ -29773,6 +30150,307 @@
         const m = document.getElementById("editorConfirmModal");
         if (m) m.classList.remove("open");
       }
+
+      /* ---- Mark All Read Confirm Modal ---- */
+      function openMarkAllReadModal() {
+        const m = document.getElementById("markAllReadModal");
+        if (m) m.classList.add("open");
+      }
+      function closeMarkAllReadModal() {
+        const m = document.getElementById("markAllReadModal");
+        if (m) m.classList.remove("open");
+      }
+      async function confirmMarkAllRead() {
+        const btn = document.getElementById("markAllReadConfirmBtn");
+        const cancelBtn = document.getElementById("markAllReadCancelBtn");
+        try {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.inc();
+            AVBusy.setBtnLoading(btn, true, "Marking…");
+          }
+          if (cancelBtn) cancelBtn.disabled = true;
+          await msgMarkAllRead();
+          closeMarkAllReadModal();
+          if (typeof AVToast !== "undefined")
+            AVToast.success("All conversations marked as read");
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to mark as read");
+        } finally {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.setBtnLoading(btn, false, "Mark All Read");
+            AVBusy.dec();
+          }
+          if (cancelBtn) cancelBtn.disabled = false;
+        }
+      }
+
+      /* ---- Delete Lead Confirm Modal ---- */
+      function openDeleteLeadModal() {
+        if (!editingCustLead) return;
+        const m = document.getElementById("deleteLeadModal");
+        if (m) m.classList.add("open");
+      }
+      function closeDeleteLeadModal() {
+        const m = document.getElementById("deleteLeadModal");
+        if (m) m.classList.remove("open");
+      }
+      async function confirmDeleteLead() {
+        if (!editingCustLead) return;
+        if (!window.AVCustomers) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error("Customers API not loaded");
+          closeDeleteLeadModal();
+          return;
+        }
+        const btn = document.getElementById("deleteLeadConfirmBtn");
+        const cancelBtn = document.getElementById("deleteLeadCancelBtn");
+        try {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.inc();
+            AVBusy.setBtnLoading(btn, true, "Deleting…");
+          }
+          if (cancelBtn) cancelBtn.disabled = true;
+          await AVCustomers.removeLead(editingCustLead);
+          closeDeleteLeadModal();
+          closeCustLeadModal();
+          if (typeof AVToast !== "undefined") AVToast.success("Lead deleted");
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to delete lead");
+        } finally {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.setBtnLoading(btn, false, "Delete Lead");
+            AVBusy.dec();
+          }
+          if (cancelBtn) cancelBtn.disabled = false;
+        }
+      }
+
+      /* ---- Convert Lead Confirm Modal ---- */
+      function openConvertLeadModal() {
+        if (!editingCustLead) return;
+        const m = document.getElementById("convertLeadModal");
+        if (m) m.classList.add("open");
+      }
+      function closeConvertLeadModal() {
+        const m = document.getElementById("convertLeadModal");
+        if (m) m.classList.remove("open");
+      }
+      async function confirmConvertLead() {
+        if (!editingCustLead) return;
+        if (!window.AVCustomers) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error("Customers API not loaded");
+          closeConvertLeadModal();
+          return;
+        }
+        const btn = document.getElementById("convertLeadConfirmBtn");
+        const cancelBtn = document.getElementById("convertLeadCancelBtn");
+        try {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.inc();
+            AVBusy.setBtnLoading(btn, true, "Converting…");
+          }
+          if (cancelBtn) cancelBtn.disabled = true;
+          await AVCustomers.convertLead(editingCustLead);
+          closeConvertLeadModal();
+          closeCustLeadModal();
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Lead converted to customer");
+          if (typeof renderCustomersPage === "function")
+            renderCustomersPage();
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to convert lead");
+        } finally {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.setBtnLoading(btn, false, "Convert to Customer");
+            AVBusy.dec();
+          }
+          if (cancelBtn) cancelBtn.disabled = false;
+        }
+      }
+
+      /* ---- Delete Expense Confirm Modal (shared) ---- */
+      let _pendingDeleteExpId = null;
+      let _pendingDeleteExpContext = null;
+      function openDeleteExpenseModal(id, context) {
+        _pendingDeleteExpId = id;
+        _pendingDeleteExpContext = context || "modal";
+        const m = document.getElementById("deleteExpenseModal");
+        if (m) m.classList.add("open");
+      }
+      function closeDeleteExpenseModal() {
+        _pendingDeleteExpId = null;
+        _pendingDeleteExpContext = null;
+        const m = document.getElementById("deleteExpenseModal");
+        if (m) m.classList.remove("open");
+      }
+      async function confirmDeleteExpense() {
+        if (!_pendingDeleteExpId) return;
+        const id = _pendingDeleteExpId;
+        const btn = document.getElementById("deleteExpConfirmBtn");
+        const cancelBtn = document.getElementById("deleteExpCancelBtn");
+        try {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.inc();
+            AVBusy.setBtnLoading(btn, true, "Deleting…");
+          }
+          if (cancelBtn) cancelBtn.disabled = true;
+          await AVApi.deleteExpense(id);
+          closeDeleteExpenseModal();
+          if (_pendingDeleteExpContext === "detail") {
+            closeExpenseModal();
+          } else {
+            closeExpenseModal();
+          }
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Expense deleted");
+          await loadExpensesFromApi();
+          if (typeof render === "function") render();
+          refreshAllPnl();
+          if (
+            _pendingDeleteExpContext === "detail" &&
+            typeof currentEdpId !== "undefined"
+          ) {
+            currentEdpId = null;
+            navigateToPage("expenses");
+          }
+        } catch (e) {
+          console.error("Failed to delete expense", e);
+          if (typeof AVToast !== "undefined")
+            AVToast.error(
+              "Failed to delete: " + (e.message || "Unknown error"),
+            );
+        } finally {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.setBtnLoading(btn, false, "Delete Expense");
+            AVBusy.dec();
+          }
+          if (cancelBtn) cancelBtn.disabled = false;
+        }
+      }
+
+      /* ---- Remove Vehicle Doc Confirm Modal ---- */
+      let _pendingRemoveDocVin = null;
+      let _pendingRemoveDocId = null;
+      function openRemoveDocModal(vin, docId) {
+        _pendingRemoveDocVin = vin;
+        _pendingRemoveDocId = docId;
+        const m = document.getElementById("removeDocModal");
+        if (m) m.classList.add("open");
+      }
+      function closeRemoveDocModal() {
+        _pendingRemoveDocVin = null;
+        _pendingRemoveDocId = null;
+        const m = document.getElementById("removeDocModal");
+        if (m) m.classList.remove("open");
+      }
+      async function confirmRemoveDoc() {
+        const vin = _pendingRemoveDocVin;
+        const docId = _pendingRemoveDocId;
+        closeRemoveDocModal();
+        if (!vin || !docId) return;
+        const v = vehicles.find((x) => x.vin === vin);
+        if (!v) return;
+
+        if (currentDealVin === vin && Array.isArray(v.djDocs)) {
+          const doc = v.djDocs.find((d) => d && d.id === docId);
+          if (doc) {
+            if (!doc.pending && !String(docId).startsWith("pending-")) {
+              v.djDocsRemoved = v.djDocsRemoved || [];
+              if (!v.djDocsRemoved.includes(docId))
+                v.djDocsRemoved.push(docId);
+            }
+            v.djDocs = v.djDocs.filter((d) => d && d.id !== docId);
+            renderDealDocs(vin);
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Document removed");
+            return;
+          }
+        }
+
+        const beforeDocs = v.vehicleDocs || [];
+        const beforeJacket = v.documents || [];
+        v.vehicleDocs = beforeDocs.filter((d) => d && d.id !== docId);
+        v.documents = beforeJacket.filter((d) => d && d.id !== docId);
+        if (typeof renderDealDocs === "function" && currentDealVin === vin)
+          renderDealDocs(vin);
+        if (
+          typeof renderVehicleDocs === "function" &&
+          currentVdpVin === vin
+        )
+          renderVehicleDocs(vin);
+
+        const isLocalOnly =
+          String(docId).startsWith("doc") ||
+          String(docId).startsWith("pending-");
+        if (
+          !isLocalOnly &&
+          window.AVApi &&
+          typeof AVApi.deleteFile === "function"
+        ) {
+          try {
+            await AVApi.deleteFile(docId, { purge: true });
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Document removed");
+          } catch (err) {
+            v.vehicleDocs = beforeDocs;
+            v.documents = beforeJacket;
+            if (typeof renderDealDocs === "function" && currentDealVin === vin)
+              renderDealDocs(vin);
+            if (
+              typeof renderVehicleDocs === "function" &&
+              currentVdpVin === vin
+            )
+              renderVehicleDocs(vin);
+            if (typeof AVToast !== "undefined")
+              AVToast.error(err.message || "Failed to remove document");
+          }
+        } else if (typeof AVToast !== "undefined") {
+          AVToast.success("Document removed");
+        }
+      }
+
+      /* ---- Deactivate Employee Confirm Modal ---- */
+      function openDeactivateEmpModal() {
+        if (!empEditing || !empEditing.dbId) return;
+        const m = document.getElementById("deactivateEmpModal");
+        if (m) m.classList.add("open");
+      }
+      function closeDeactivateEmpModal() {
+        const m = document.getElementById("deactivateEmpModal");
+        if (m) m.classList.remove("open");
+      }
+      async function confirmDeactivateEmp() {
+        if (!empEditing || !empEditing.dbId) return;
+        const btn = document.getElementById("deactivateEmpConfirmBtn");
+        const cancelBtn = document.getElementById("deactivateEmpCancelBtn");
+        try {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.inc();
+            AVBusy.setBtnLoading(btn, true, "Deactivating…");
+          }
+          if (cancelBtn) cancelBtn.disabled = true;
+          await AVApi.deleteStaff(empEditing.dbId);
+          closeDeactivateEmpModal();
+          closeEmployeeModal();
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Employee deactivated");
+          renderPayrollPage();
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to deactivate employee");
+        } finally {
+          if (typeof AVBusy !== "undefined") {
+            AVBusy.setBtnLoading(btn, false, "Deactivate");
+            AVBusy.dec();
+          }
+          if (cancelBtn) cancelBtn.disabled = false;
+        }
+      }
+
       function removeExtraAdmin(i) {
         extraAdmins.splice(i, 1);
         renderAdminMenu();
@@ -31678,30 +32356,41 @@
         showPageDirect("vehicle-detail");
       }
 
-      async function deleteCurrentVehicle() {
+      function openDeleteVehicleModal() {
         if (!currentVdpVin) return;
         const v = vehicles.find((x) => x.vin === currentVdpVin);
         if (!v) return;
-        if (
-          !confirm(
-            `Delete ${v.year || ""} ${v.make || ""} ${v.model || ""} (${v.vin}) from inventory?`,
-          )
-        )
-          return;
+        const label = document.getElementById("deleteVehLabel");
+        if (label)
+          label.textContent =
+            `${v.year || ""} ${v.make || ""} ${v.model || ""} (${v.vin})`;
+        const m = document.getElementById("deleteVehicleModal");
+        if (m) m.classList.add("open");
+      }
+      function closeDeleteVehicleModal() {
+        const m = document.getElementById("deleteVehicleModal");
+        if (m) m.classList.remove("open");
+      }
+      async function confirmDeleteVehicle() {
+        if (!currentVdpVin) return;
         if (!window.AVVehicles) {
           const idx = vehicles.findIndex((x) => x.vin === currentVdpVin);
           if (idx >= 0) vehicles.splice(idx, 1);
+          closeDeleteVehicleModal();
           showPage("vehicles", document.querySelector("[data-page=vehicles]"));
           return;
         }
         if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
-        const delBtn = document.querySelector(".vdp-delete-btn");
+        const delBtn = document.getElementById("deleteVehConfirmBtn");
+        const cancelBtn = document.getElementById("deleteVehCancelBtn");
         try {
           if (typeof AVBusy !== "undefined") {
             AVBusy.inc();
             AVBusy.setBtnLoading(delBtn, true, "Deleting…");
           }
+          if (cancelBtn) cancelBtn.disabled = true;
           await AVVehicles.removeVehicle(currentVdpVin);
+          closeDeleteVehicleModal();
           if (typeof AVToast !== "undefined")
             AVToast.success("Vehicle deleted");
           currentVdpVin = null;
@@ -31714,6 +32403,7 @@
             AVBusy.setBtnLoading(delBtn, false, "Delete Vehicle");
             AVBusy.dec();
           }
+          if (cancelBtn) cancelBtn.disabled = false;
         }
       }
 
@@ -33383,21 +34073,10 @@
         }
       }
 
-      async function deleteExpense() {
+      function deleteExpense() {
         const id = document.getElementById("expEditId").value;
         if (!id) return;
-        if (!confirm("Delete this expense?")) return;
-        try {
-          await AVApi.deleteExpense(id);
-          closeExpenseModal();
-          AVToast.success("Expense deleted");
-          await loadExpensesFromApi();
-          if (typeof render === "function") render();
-          refreshAllPnl();
-        } catch (e) {
-          console.error("Failed to delete expense", e);
-          AVToast.error("Failed to delete: " + (e.message || "Unknown error"));
-        }
+        openDeleteExpenseModal(id, "modal");
       }
 
       // ================= EXPENSE DETAIL PAGE =================
@@ -33542,18 +34221,8 @@
             AVToast.error("Failed to update status");
           }
         };
-        document.getElementById("edpDeleteBtn").onclick = async () => {
-          if (!confirm("Delete this expense?")) return;
-          try {
-            await AVApi.deleteExpense(e.id);
-            AVToast.success("Expense deleted");
-            currentEdpId = null;
-            await loadExpensesFromApi();
-            if (typeof render === "function") render();
-            refreshAllPnl();
-          } catch (err) {
-            console.error("Failed to delete", err);
-          }
+        document.getElementById("edpDeleteBtn").onclick = () => {
+          openDeleteExpenseModal(e.id, "detail");
         };
 
         // vehicle P&L impact
@@ -34605,68 +35274,9 @@
         return `<div class="doc-thumb${fileCls}" onclick="${onclick}" title="View ${title}">${remove}<img src="${src}" alt="${title}" loading="lazy">${badge}<div class="doc-name">${title}</div></div>`;
       }
 
-      async function removeVehicleDoc(vin, docId) {
-        const v = vehicles.find((x) => x.vin === vin);
-        if (!v || !docId) return;
-        const ok =
-          typeof confirm === "function"
-            ? confirm("Remove this document?")
-            : true;
-        if (!ok) return;
-
-        // Deal jacket working docs — local only until Save
-        if (currentDealVin === vin && Array.isArray(v.djDocs)) {
-          const doc = v.djDocs.find((d) => d && d.id === docId);
-          if (doc) {
-            if (!doc.pending && !String(docId).startsWith("pending-")) {
-              v.djDocsRemoved = v.djDocsRemoved || [];
-              if (!v.djDocsRemoved.includes(docId)) v.djDocsRemoved.push(docId);
-            }
-            v.djDocs = v.djDocs.filter((d) => d && d.id !== docId);
-            renderDealDocs(vin);
-            if (typeof AVToast !== "undefined")
-              AVToast.success("Document removed");
-            return;
-          }
-        }
-
-        const beforeDocs = v.vehicleDocs || [];
-        const beforeJacket = v.documents || [];
-        v.vehicleDocs = beforeDocs.filter((d) => d && d.id !== docId);
-        v.documents = beforeJacket.filter((d) => d && d.id !== docId);
-        if (typeof renderDealDocs === "function" && currentDealVin === vin)
-          renderDealDocs(vin);
-        if (typeof renderVehicleDocs === "function" && currentVdpVin === vin)
-          renderVehicleDocs(vin);
-
-        const isLocalOnly =
-          String(docId).startsWith("doc") ||
-          String(docId).startsWith("pending-");
-        if (
-          !isLocalOnly &&
-          window.AVApi &&
-          typeof AVApi.deleteFile === "function"
-        ) {
-          try {
-            await AVApi.deleteFile(docId, { purge: true });
-            if (typeof AVToast !== "undefined")
-              AVToast.success("Document removed");
-          } catch (err) {
-            v.vehicleDocs = beforeDocs;
-            v.documents = beforeJacket;
-            if (typeof renderDealDocs === "function" && currentDealVin === vin)
-              renderDealDocs(vin);
-            if (
-              typeof renderVehicleDocs === "function" &&
-              currentVdpVin === vin
-            )
-              renderVehicleDocs(vin);
-            if (typeof AVToast !== "undefined")
-              AVToast.error(err.message || "Failed to remove document");
-          }
-        } else if (typeof AVToast !== "undefined") {
-          AVToast.success("Document removed");
-        }
+      function removeVehicleDoc(vin, docId) {
+        if (!vin || !docId) return;
+        openRemoveDocModal(vin, docId);
       }
 
       function bootstrapDjDocs(v) {
@@ -37462,17 +38072,8 @@
           }
         }
       }
-      async function deleteEmployee() {
-        if (!empEditing || !empEditing.dbId) return;
-        if (!confirm("Deactivate this employee?")) return;
-        try {
-          await AVApi.deleteStaff(empEditing.dbId);
-          AVToast.success("Employee deactivated");
-          closeEmployeeModal();
-          renderPayrollPage();
-        } catch (err) {
-          AVToast.error(err.message || "Failed to deactivate employee");
-        }
+      function deleteEmployee() {
+        openDeactivateEmpModal();
       }
 
       // ---------- SETTINGS: THEME + LANGUAGE ----------
