@@ -35,14 +35,18 @@
         const meResp = await AVApi.me().catch(() => null);
         if (meResp && meResp.user) {
           var u = meResp.user;
-          window.crmOwner = {
-            id: u.id,
-            name: u.fullName || u.name || u.email || "Dealer",
-            role: u.role || "Wholesale Dealer",
-            birthday: u.birthDate || "",
-            email: u.email || "",
-          };
-          if (typeof updateDashWelcome === "function") updateDashWelcome();
+        window.crmOwner = {
+          id: u.id,
+          name: u.fullName || u.name || u.email || "Dealer",
+          role: u.role || "Wholesale Dealer",
+          birthday: u.birthDate || "",
+          email: u.email || "",
+          introCompleted: u.introCompleted || false,
+          termsAccepted: u.termsAccepted || false,
+          termsVersion: u.termsVersion || null,
+        };
+        if (typeof updateDashWelcome === "function") updateDashWelcome();
+        if (typeof avBootGateOnce === "function") avBootGateOnce();
         }
         const summary = await AVApi.dashboardSummary().catch(() => null);
         window.AV_LIVE_SUMMARY = summary;
@@ -84,8 +88,12 @@
           role: u.role || 'Dealer Admin',
           birthday: u.birthDate || '',
           email: u.email || '',
+          introCompleted: u.introCompleted || false,
+          termsAccepted: u.termsAccepted || false,
+          termsVersion: u.termsVersion || null,
         };
         if (typeof updateDashWelcome === 'function') updateDashWelcome();
+        if (typeof avBootGateOnce === 'function') avBootGateOnce();
       }
 
       if (taxSettingsResp) {

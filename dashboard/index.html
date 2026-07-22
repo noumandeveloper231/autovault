@@ -525,21 +525,59 @@
         border-radius: 20px;
       }
 
+      .admin-logout-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 10px;
+        padding: 11px 14px;
+        border-radius: 10px;
+        border: 1px dashed var(--red);
+        background: none;
+        color: var(--red);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          color 0.15s;
+      }
+
+      .admin-logout-btn:hover {
+        background: rgba(255, 84, 112, 0.1);
+        border-color: #ff7a8f;
+        color: #ff7a8f;
+      }
+
+      .admin-logout-btn svg {
+        width: 15px;
+        height: 15px;
+        flex-shrink: 0;
+      }
+
       .admin-add-btn {
         width: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 7px;
-        margin-top: 10px;
-        padding: 10px;
+        margin-top: 8px;
+        padding: 11px 14px;
         border-radius: 10px;
         border: 1px dashed var(--border);
         background: none;
         color: var(--text);
+        font-family: inherit;
         font-size: 13px;
         font-weight: 700;
         cursor: pointer;
+        transition:
+          border-color 0.15s,
+          color 0.15s;
       }
 
       .admin-add-btn:hover {
@@ -12461,6 +12499,99 @@
         background-position: right 8px center !important;
         background-size: 10px !important;
       }
+
+      /* ===================== TERMS & ACKNOWLEDGMENT GATE ===================== */
+      .terms-overlay{position:fixed;inset:0;background:rgba(4,7,12,.93);backdrop-filter:blur(5px);display:none;align-items:center;justify-content:center;z-index:9000;padding:20px;}
+      .terms-overlay.open{display:flex;}
+      .terms-card{width:100%;max-width:720px;max-height:92vh;background:var(--panel);border:1px solid var(--border);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 30px 90px rgba(0,0,0,.6);}
+      .terms-head{display:flex;align-items:center;gap:15px;padding:20px 26px;border-bottom:1px solid var(--border);flex-shrink:0;}
+      .terms-title{font-size:17px;font-weight:800;color:var(--text);line-height:1.3;}
+      .terms-ver{font-size:11.5px;color:var(--muted);margin-top:3px;}
+      .terms-body{overflow-y:auto;padding:22px 26px;flex:1;min-height:180px;}
+      .terms-body h4{font-size:13.5px;font-weight:800;color:var(--text);margin:20px 0 7px;}
+      .terms-body h4:first-child{margin-top:0;}
+      .terms-body p{font-size:13px;color:var(--muted);line-height:1.65;margin:0 0 9px;}
+      .terms-body p.lead{color:var(--text);font-weight:600;}
+      .terms-body ul{margin:0 0 11px;padding-left:19px;}
+      .terms-body li{font-size:12.5px;color:var(--muted);line-height:1.6;margin-bottom:3px;}
+      .terms-body b{color:var(--text);}
+      .terms-hint{flex-shrink:0;padding:9px 26px;font-size:11.5px;font-weight:700;color:var(--orange);background:rgba(255,159,67,.09);border-top:1px solid var(--border);text-align:center;}
+      .terms-hint.done{display:none;}
+      .terms-form{flex-shrink:0;padding:18px 26px 22px;border-top:1px solid var(--border);background:var(--panel-2);overflow-y:auto;max-height:52vh;}
+      .terms-check{display:flex;align-items:flex-start;gap:11px;cursor:pointer;font-size:13.5px;color:var(--text);font-weight:700;line-height:1.5;}
+      .terms-check input{width:19px;height:19px;accent-color:var(--green);flex-shrink:0;margin-top:1px;cursor:pointer;}
+      .terms-check input:disabled{cursor:not-allowed;opacity:.45;}
+      .terms-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-top:16px;}
+      @media(max-width:600px){.terms-fields{grid-template-columns:1fr;}}
+      .terms-fields label,.terms-siglabel{display:block;font-size:10.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+      .terms-fields input{width:100%;background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:9px;padding:10px 12px;font-size:13.5px;outline:none;box-sizing:border-box;font-family:inherit;}
+      .terms-fields input:focus{border-color:var(--blue);}
+      .terms-siglabel{display:flex;align-items:center;justify-content:space-between;margin:16px 0 6px;}
+      .terms-sigclear{background:none;border:none;color:var(--blue);font-size:11px;font-weight:700;cursor:pointer;text-transform:none;letter-spacing:0;font-family:inherit;}
+      .terms-sigwrap{position:relative;background:var(--panel);border:1px dashed var(--border);border-radius:10px;overflow:hidden;}
+      .terms-sigwrap.signed{border-style:solid;border-color:var(--green);}
+      #termsSigPad{display:block;width:100%;height:120px;cursor:crosshair;touch-action:none;}
+      .terms-sigph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:var(--muted);pointer-events:none;}
+      .terms-sigwrap.signed .terms-sigph{display:none;}
+      .terms-datebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:13px;font-size:12px;color:var(--muted);flex-wrap:wrap;}
+      .terms-datebar b{color:var(--text);}
+      .terms-submit{width:100%;margin-top:16px;padding:14px;border-radius:11px;border:none;background:var(--green);color:#03121c;font-size:15px;font-weight:800;cursor:pointer;font-family:inherit;}
+      .terms-submit:hover:not(:disabled){filter:brightness(1.08);}
+      .terms-submit:disabled{background:var(--panel);color:var(--muted);border:1px solid var(--border);cursor:not-allowed;}
+      .terms-note{font-size:11px;color:var(--muted);line-height:1.5;margin-top:11px;text-align:center;}
+      .tr-rec{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:11px;}
+      .tr-cell-l{font-size:10.5px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);}
+      .tr-cell-v{font-size:13px;font-weight:700;color:var(--text);margin-top:3px;word-break:break-word;}
+      .tr-sig{margin-top:14px;padding-top:13px;border-top:1px solid var(--border);}
+      .tr-sig img{max-width:230px;max-height:80px;background:#fff;border-radius:8px;padding:5px;display:block;margin-top:7px;}
+
+      /* ===================== WELCOME / INTRODUCTION TOUR ===================== */
+      #welcomeModal{ z-index:4000; }
+      .wc-modal{ max-width:520px; padding:28px 30px 24px; text-align:left; }
+      .wc-head{ text-align:center; margin-bottom:22px; }
+      .wc-mark{ display:flex; justify-content:center; margin-bottom:14px; }
+      .wc-title{ font-size:24px; font-weight:800; color:var(--text); letter-spacing:.3px; }
+      .wc-sub{ font-size:13.5px; color:var(--muted); margin-top:7px; line-height:1.5; }
+      .wc-steps{ display:flex; flex-direction:column; gap:11px; }
+      .wc-step{ display:flex; gap:14px; align-items:flex-start; padding:13px 15px; border:1px solid var(--border); border-radius:12px; background:var(--panel-2); opacity:0; transform:translateY(10px); animation:wcStepIn .4s ease forwards; }
+      .wc-step:nth-child(1){ animation-delay:.1s; }
+      .wc-step:nth-child(2){ animation-delay:.2s; }
+      .wc-step:nth-child(3){ animation-delay:.3s; }
+      @keyframes wcStepIn{ to{ opacity:1; transform:translateY(0); } }
+      .wc-num{ width:28px; height:28px; border-radius:50%; background:var(--green); color:#03121c; font-size:13px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+      .wc-step-body{ flex:1; min-width:0; }
+      .wc-step-title{ font-size:14px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+      .wc-crit{ font-size:9.5px; font-weight:800; letter-spacing:.5px; text-transform:uppercase; color:var(--orange); background:rgba(255,159,67,.15); padding:2px 7px; border-radius:20px; }
+      .wc-step-text{ font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
+      .wc-note{ margin-top:18px; padding:14px 16px; border-radius:11px; background:rgba(58,160,255,.07); border:1px solid rgba(58,160,255,.22); font-size:12.5px; color:var(--muted); line-height:1.6; }
+      .wc-note b{ color:var(--text); }
+      .wc-play{ width:100%; margin-top:20px; padding:14px; border-radius:12px; border:none; background:var(--green); color:#03121c; font-size:15px; font-weight:800; cursor:pointer; font-family:inherit; display:flex; align-items:center; justify-content:center; gap:10px; transition:filter .15s, transform .12s; }
+      .wc-play:hover{ filter:brightness(1.08); transform:translateY(-1px); }
+      .wc-play-ic{ width:22px; height:22px; border-radius:50%; background:rgba(3,18,28,.18); display:flex; align-items:center; justify-content:center; }
+      .wc-play-ic svg{ width:12px; height:12px; margin-left:1px; }
+      .wc-later{ width:100%; margin-top:9px; padding:10px; border:none; background:none; color:var(--muted); font-size:12.5px; font-weight:600; cursor:pointer; font-family:inherit; transition:color .15s; }
+      .wc-later:hover{ color:var(--text); }
+
+      /* Enhanced tour overlay */
+      .tour-overlay{ position:fixed; inset:0; z-index:5000; display:none; pointer-events:none; background:rgba(6,10,18,.01); transition:background .3s ease; }
+      .tour-overlay.show{ display:block; background:rgba(6,10,18,.35); }
+      .tour-spot{ position:fixed; border-radius:12px; box-shadow:0 0 0 9999px rgba(6,10,18,.80); border:2px solid var(--blue); transition:top .4s cubic-bezier(.4,0,.2,1), left .4s cubic-bezier(.4,0,.2,1), width .4s cubic-bezier(.4,0,.2,1), height .4s cubic-bezier(.4,0,.2,1); pointer-events:none; z-index:5000; animation:tourSpotPulse 2s ease-in-out infinite; }
+      @keyframes tourSpotPulse{ 0%,100%{ box-shadow:0 0 0 9999px rgba(6,10,18,.80), 0 0 0 0 rgba(58,160,255,.3); } 50%{ box-shadow:0 0 0 9999px rgba(6,10,18,.80), 0 0 0 6px rgba(58,160,255,0); } }
+      .tour-pop{ position:fixed; width:300px; max-width:calc(100vw - 32px); background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 18px 50px rgba(0,0,0,.6); pointer-events:auto; transition:top .4s cubic-bezier(.4,0,.2,1), left .4s cubic-bezier(.4,0,.2,1), opacity .25s ease; z-index:5002; animation:tourPopIn .35s cubic-bezier(.34,1.56,.64,1); }
+      @keyframes tourPopIn{ from{ opacity:0; transform:scale(.92) translateY(8px); } to{ opacity:1; transform:scale(1) translateY(0); } }
+      .tour-pop-head{ display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+      .tour-badge{ font-size:11px; font-weight:800; color:var(--blue); background:rgba(58,160,255,.12); padding:3px 9px; border-radius:20px; }
+      .tour-skip{ background:none; border:none; color:var(--muted); font-size:11.5px; cursor:pointer; transition:color .15s; }
+      .tour-skip:hover{ color:var(--text); }
+      .tour-title{ font-size:15px; font-weight:800; color:var(--text); margin-bottom:6px; }
+      .tour-text{ font-size:12.5px; color:var(--muted); line-height:1.55; margin-bottom:14px; }
+      .tour-nav{ display:flex; gap:8px; justify-content:flex-end; }
+      .tour-back{ background:transparent; border:1px solid var(--border); color:var(--muted); font-size:12px; font-weight:700; padding:7px 14px; border-radius:9px; cursor:pointer; transition:all .15s; }
+      .tour-back:hover{ color:var(--text); border-color:var(--blue); }
+      .tour-next{ background:var(--blue); border:none; color:#fff; font-size:12px; font-weight:700; padding:7px 16px; border-radius:9px; cursor:pointer; transition:filter .15s, transform .1s; }
+      .tour-next:hover{ filter:brightness(1.1); transform:translateY(-1px); }
+      .tour-finish-anim{ animation:tourFinishPop .5s ease; }
+      @keyframes tourFinishPop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.04); } 100%{ transform:scale(1); } }
     </style>
     <script src="/auth-portal.js"></script>
     <script src="/api.js"></script>
@@ -13515,6 +13646,13 @@
                 <div class="sm-hint">
                   Numbers stay the same; only wording changes.
                 </div>
+                <div style="border-top:1px solid var(--border); margin-top:4px; padding-top:4px;">
+                  <div class="sm-row" style="cursor:pointer;" onclick="replayIntroduction()">
+                    <div class="sm-label">
+                      <span>Replay Introduction</span><small>Walk through the setup guide again</small>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="profile-wrap" id="profileWrap">
@@ -13542,6 +13680,21 @@
               <div class="admin-menu" id="adminMenu">
                 <div class="admin-menu-head">Users &amp; Access</div>
                 <div class="admin-menu-list" id="adminMenuList"></div>
+                <button class="admin-logout-btn" onclick="handleLogout()">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path
+                      d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"
+                    />
+                  </svg>
+                  Log Out
+                </button>
                 <button class="admin-add-btn" onclick="openAddAdmin()">
                   <svg
                     viewBox="0 0 24 24"
@@ -21216,6 +21369,131 @@
       </div>
     </div>
 
+    <!-- TERMS & ACKNOWLEDGMENT GATE -->
+    <div class="terms-overlay" id="termsOverlay">
+      <div class="terms-card">
+        <div class="terms-head">
+          <svg viewBox="0 0 92 60" width="44" fill="none" style="flex-shrink:0;"><path d="M9 6 L33 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/><path d="M33 54 L57 6" stroke="#1c7a46" stroke-width="11" stroke-linecap="round"/><path d="M57 6 L83 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/></svg>
+          <div>
+            <div class="terms-title">AutoVault User Agreement &amp; Acknowledgment</div>
+            <div class="terms-ver">Version <span id="termsVerLbl">1.0</span> &middot; Please read in full before continuing</div>
+          </div>
+        </div>
+        <div class="terms-body" id="termsBody">
+          <p class="lead">Welcome to AutoVault.</p>
+          <p>AutoVault is a dealership management platform designed to help dealerships organize, store, and manage their business information in one centralized location. AutoVault is a software platform only and does not provide accounting, tax, legal, financial, or compliance services.</p>
+          <p>By signing this agreement, you acknowledge and agree to the following:</p>
+          <h4>1. Responsibility for Information</h4>
+          <p>You are solely responsible for all information entered into AutoVault, including but not limited to:</p>
+          <ul>
+            <li>Vehicle information</li><li>Purchase and sale prices</li><li>Profit and loss calculations</li><li>Expenses</li><li>Payroll and commissions</li><li>Sales tax amounts</li><li>Registration fees</li><li>Flooring costs</li><li>CPA information</li><li>Financial reports</li><li>Customer information</li><li>Deal jacket information</li><li>Documents uploaded to the platform</li>
+          </ul>
+          <p>AutoVault does not verify, audit, review, or guarantee the accuracy of any information entered by users.</p>
+          <h4>2. Taxes and Government Filings</h4>
+          <p>AutoVault is not responsible for preparing, calculating, reviewing, filing, or submitting any tax returns, sales tax reports, DMV documents, licensing documents, payroll filings, or any federal, state, or local government filings.</p>
+          <p>The dealership is solely responsible for:</p>
+          <ul>
+            <li>Verifying all financial information</li><li>Confirming all tax amounts</li><li>Filing all required tax returns</li><li>Meeting all filing deadlines</li><li>Paying all taxes and fees</li><li>Maintaining compliance with all applicable laws and regulations</li>
+          </ul>
+          <p>Any reminders or due dates displayed inside AutoVault are provided solely as organizational tools and should never be relied upon as official legal or tax advice.</p>
+          <h4>3. No Professional Advice</h4>
+          <p>AutoVault does not provide legal, accounting, bookkeeping, tax, or financial advice. Users should consult licensed professionals regarding tax filings, accounting practices, legal matters, and regulatory compliance.</p>
+          <h4>4. Accuracy of Calculations</h4>
+          <p>Certain reports, dashboards, and calculations within AutoVault are generated automatically based on the information entered by users.</p>
+          <p>Users agree that they are solely responsible for reviewing and verifying all reports, calculations, totals, profits, losses, taxes, commissions, expenses, and other financial information before relying on it for business decisions.</p>
+          <h4>5. Limitation of Liability</h4>
+          <p>To the fullest extent permitted by law, AutoVault, its owners, employees, affiliates, developers, and partners shall not be liable for any:</p>
+          <ul>
+            <li>Financial losses</li><li>Lost profits</li><li>Tax penalties</li><li>Interest charges</li><li>Government fines</li><li>Audit findings</li><li>Accounting errors</li><li>Business interruptions</li><li>Data entry mistakes</li><li>Missed filing deadlines</li><li>Compliance violations</li><li>Indirect, incidental, special, or consequential damages</li>
+          </ul>
+          <p>arising from the use of, or inability to use, the AutoVault platform.</p>
+          <h4>6. Data Responsibility</h4>
+          <p>Users are responsible for maintaining accurate and current records within AutoVault. AutoVault is not responsible for incorrect, incomplete, outdated, or duplicate information entered by users.</p>
+          <h4>7. Subscription Billing</h4>
+          <p>By signing this agreement, you authorize AutoVault to charge your selected payment method according to your chosen subscription plan. You understand and agree that:</p>
+          <ul>
+            <li>Your subscription renews automatically each billing cycle unless canceled.</li>
+            <li>Charges will continue until your subscription is canceled in accordance with AutoVault's cancellation policy.</li>
+            <li>Failure to pay may result in suspension or termination of access to the platform.</li>
+          </ul>
+          <h4>8. Availability of Service</h4>
+          <p>While AutoVault strives for reliable uptime and secure data storage, uninterrupted availability cannot be guaranteed. Temporary maintenance, updates, internet outages, or unforeseen technical issues may affect access to the platform.</p>
+          <h4>9. Acceptable Use</h4>
+          <p>Users agree not to misuse the platform, attempt unauthorized access, upload malicious software, interfere with platform operations, or use AutoVault for unlawful purposes.</p>
+          <h4>10. Updates to the Agreement</h4>
+          <p>AutoVault may update these Terms from time to time. Continued use of the platform after an updated agreement becomes effective constitutes acceptance of the revised terms. Users may be required to accept updated versions before continuing to use the platform.</p>
+          <h4>User Acknowledgment</h4>
+          <p>By checking the box below and providing my electronic signature, I acknowledge and agree that:</p>
+          <ul>
+            <li>I have read and understand this agreement.</li>
+            <li>I understand AutoVault is software only and not an accounting, tax, bookkeeping, legal, or compliance service.</li>
+            <li>I am solely responsible for verifying all information entered into AutoVault.</li>
+            <li>I am solely responsible for filing and paying all taxes and government filings.</li>
+            <li>I understand AutoVault does not guarantee the accuracy of any calculations or reports.</li>
+            <li>I authorize recurring billing for my selected subscription until canceled.</li>
+            <li>I agree to the AutoVault Terms of Service and Privacy Policy.</li>
+          </ul>
+        </div>
+        <div class="terms-hint" id="termsHint">Scroll to the end of the agreement to continue</div>
+        <div class="terms-form">
+          <label class="terms-check"><input type="checkbox" id="termsAgree" disabled onchange="termsValidate()"><span>I have read and agree to the AutoVault User Agreement.</span></label>
+          <div class="terms-fields">
+            <div><label for="termsName">Printed Name</label><input type="text" id="termsName" placeholder="Full legal name" oninput="termsValidate()" autocomplete="off"></div>
+            <div><label for="termsDealer">Dealership Name</label><input type="text" id="termsDealer" placeholder="Dealership / business name" oninput="termsValidate()" autocomplete="off"></div>
+          </div>
+          <div class="terms-siglabel">Electronic Signature <button type="button" class="terms-sigclear" onclick="termsClearSig()">Clear</button></div>
+          <div class="terms-sigwrap" id="termsSigWrap">
+            <canvas id="termsSigPad"></canvas>
+            <div class="terms-sigph">Sign here using your mouse or finger</div>
+          </div>
+          <div class="terms-datebar"><span>Date: <b id="termsDate">&mdash;</b></span><span id="termsIpLbl">Recording session details&hellip;</span></div>
+          <button class="terms-submit" id="termsSubmit" disabled onclick="termsAccept()">Agree &amp; Continue</button>
+          <div class="terms-note">You must accept this agreement to access AutoVault. A copy of your signed agreement is saved to your account.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="welcomeModal">
+      <div class="modal wc-modal">
+        <div class="wc-head">
+          <div class="wc-mark"><svg viewBox="0 0 92 60" width="52" fill="none"><path d="M9 6 L33 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/><path d="M33 54 L57 6" stroke="#1c7a46" stroke-width="11" stroke-linecap="round"/><path d="M57 6 L83 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/></svg></div>
+          <div class="wc-title">Welcome to AutoVault</div>
+          <div class="wc-sub">The first three steps to get your platform running.</div>
+        </div>
+        <div class="wc-steps">
+          <div class="wc-step">
+            <div class="wc-num">1</div>
+            <div class="wc-step-body">
+              <div class="wc-step-title">Add all vehicles <span class="wc-crit">Critical</span></div>
+              <div class="wc-step-text">Every unit on your lot, tied to its VIN.</div>
+            </div>
+          </div>
+          <div class="wc-step">
+            <div class="wc-num">2</div>
+            <div class="wc-step-body">
+              <div class="wc-step-title">Add all sales reps &amp; commission <span class="wc-crit">Critical</span></div>
+              <div class="wc-step-text">Set each rep&rsquo;s commission so deals calculate correctly.</div>
+            </div>
+          </div>
+          <div class="wc-step">
+            <div class="wc-num">3</div>
+            <div class="wc-step-body">
+              <div class="wc-step-title">Add all expenses</div>
+              <div class="wc-step-text">Rent, payroll, flooring, marketing &mdash; everything that hits your books.</div>
+            </div>
+          </div>
+        </div>
+        <div class="wc-note">
+          <b>Steps 1 and 2 are critical for your system to work.</b> AutoVault is designed so everything works together once your vehicles and sales rep commissions are added. As you mark vehicles as sold, it automatically calculates your sales rep&rsquo;s commission into the deal.
+        </div>
+        <button class="wc-play" onclick="startSetupTour()">
+          <span class="wc-play-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
+          Click here to see how
+        </button>
+        <button class="wc-later" onclick="closeWelcome()">I&rsquo;ll explore on my own</button>
+      </div>
+    </div>
+
     <div class="tour-overlay" id="tourOverlay">
       <div class="tour-spot" id="tourSpot"></div>
       <div class="tour-pop" id="tourPop">
@@ -23341,6 +23619,222 @@
           btn.title = collapsed ? "Expand menu" : "Collapse menu";
         }
       }
+      /* ===================== TERMS & ACKNOWLEDGMENT GATE ===================== */
+      const AV_TERMS_VERSION = '1.0';
+      let _termsCtx = null, _termsDrawing = false, _termsIp = 'Unavailable';
+      function termsSetupPad() {
+        var c = document.getElementById('termsSigPad');
+        if (!c) return;
+        var wrap = c.parentElement;
+        var ratio = window.devicePixelRatio || 1;
+        var w = wrap.clientWidth || 480, h = 120;
+        c.width = w * ratio; c.height = h * ratio;
+        var ctx = c.getContext('2d');
+        ctx.scale(ratio, ratio);
+        ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#ffffff';
+        _termsCtx = ctx;
+        wrap.classList.remove('signed');
+        var pos = function(e) { var r = c.getBoundingClientRect(); var t = e.touches ? e.touches[0] : e; return { x: t.clientX - r.left, y: t.clientY - r.top }; };
+        var down = function(e) { e.preventDefault(); _termsDrawing = true; var p = pos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); };
+        var move = function(e) { if (!_termsDrawing) return; e.preventDefault(); var p = pos(e); ctx.lineTo(p.x, p.y); ctx.stroke();
+          if (!wrap.classList.contains('signed')) { wrap.classList.add('signed'); termsValidate(); } };
+        var up = function() { _termsDrawing = false; };
+        c.addEventListener('mousedown', down); c.addEventListener('mousemove', move);
+        window.addEventListener('mouseup', up);
+        c.addEventListener('touchstart', down, { passive: false }); c.addEventListener('touchmove', move, { passive: false }); c.addEventListener('touchend', up);
+      }
+      function termsClearSig() {
+        var c = document.getElementById('termsSigPad');
+        if (!c || !_termsCtx) return;
+        var ratio = window.devicePixelRatio || 1;
+        _termsCtx.clearRect(0, 0, c.width / ratio, c.height / ratio);
+        var wrap = document.getElementById('termsSigWrap');
+        if (wrap) wrap.classList.remove('signed');
+        termsValidate();
+      }
+      function termsValidate() {
+        var agree = document.getElementById('termsAgree');
+        var nm = (document.getElementById('termsName') || {}).value || '';
+        var dl = (document.getElementById('termsDealer') || {}).value || '';
+        var wrap = document.getElementById('termsSigWrap');
+        var signed = wrap && wrap.classList.contains('signed');
+        var ok = agree && agree.checked && signed && nm.trim().length > 1 && dl.trim().length > 1;
+        var btn = document.getElementById('termsSubmit');
+        if (btn) btn.disabled = !ok;
+      }
+      function termsScrollWatch() {
+        var body = document.getElementById('termsBody');
+        if (!body) return;
+        var check = function() {
+          if (body.scrollTop + body.clientHeight >= body.scrollHeight - 24) {
+            var cb = document.getElementById('termsAgree');
+            if (cb) cb.disabled = false;
+            var h = document.getElementById('termsHint');
+            if (h) h.classList.add('done');
+            body.removeEventListener('scroll', check);
+          }
+        };
+        body.addEventListener('scroll', check);
+        setTimeout(function() { if (body.scrollHeight <= body.clientHeight + 24) check(); }, 100);
+      }
+      function openTerms() {
+        var ov = document.getElementById('termsOverlay');
+        if (!ov) return;
+        var d = document.getElementById('termsDate');
+        if (d) d.textContent = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        var vl = document.getElementById('termsVerLbl');
+        if (vl) vl.textContent = AV_TERMS_VERSION;
+        ov.classList.add('open');
+        document.body.style.overflow = 'hidden';
+        setTimeout(function() { termsSetupPad(); termsScrollWatch(); termsValidate(); }, 60);
+        termsFetchIp();
+      }
+      function termsFetchIp() {
+        var lbl = document.getElementById('termsIpLbl');
+        var ctrl = new AbortController();
+        var to = setTimeout(function() { ctrl.abort(); }, 4000);
+        fetch('https://api.ipify.org?format=json', { signal: ctrl.signal })
+          .then(function(r) { return r.ok ? r.json() : Promise.reject(); })
+          .then(function(j) { clearTimeout(to); if (j && j.ip) { _termsIp = j.ip; if (lbl) lbl.textContent = 'IP ' + j.ip; } })
+          .catch(function() { clearTimeout(to); _termsIp = 'Unavailable'; if (lbl) lbl.textContent = 'IP unavailable'; });
+      }
+      async function termsAccept() {
+        var c = document.getElementById('termsSigPad');
+        var sig = '';
+        try { sig = c ? c.toDataURL('image/png') : ''; } catch (e) { sig = ''; }
+        var now = new Date();
+        var rec = {
+          termsAccepted: true,
+          termsVersion: AV_TERMS_VERSION,
+          termsPrintedName: (document.getElementById('termsName').value || '').trim(),
+          termsDealership: (document.getElementById('termsDealer').value || '').trim(),
+          termsSignature: sig,
+          termsIp: _termsIp,
+          termsUserAgent: (navigator.userAgent || '').slice(0, 180),
+        };
+        var btn = document.getElementById('termsSubmit');
+        if (btn) { btn.disabled = true; btn.textContent = 'Saving\u2026'; }
+        try {
+          await AVApi.request('/api/v1/users/me/terms', {
+            method: 'POST',
+            body: JSON.stringify(rec),
+          });
+        } catch (e) { console.warn('[terms] save failed', e); }
+        if (window.crmOwner) window.crmOwner.termsAccepted = true;
+        try {
+          sessionStorage.setItem('av_terms_accepted', '1');
+          if (localStorage) localStorage.setItem('av_terms_accepted_db', '1');
+        } catch (e) {}
+        var ov = document.getElementById('termsOverlay');
+        if (ov) ov.classList.remove('open');
+        document.body.style.overflow = '';
+        maybeShowWelcome();
+      }
+      function termsNeedsSigning() {
+        try { if (sessionStorage.getItem('av_terms_accepted') === '1') return false; } catch (e) {}
+        if (window.crmOwner && window.crmOwner.termsAccepted) return false;
+        try { if (localStorage && localStorage.getItem('av_terms_accepted_db') === '1') return false; } catch (e) {}
+        return true;
+      }
+      function avBootGate() {
+        if (termsNeedsSigning()) openTerms();
+        else maybeShowWelcome();
+      }
+      /* ===================== WELCOME / INTRODUCTION TOUR ===================== */
+      const SETUP_TOUR = [
+        {
+          sel: "#qaAddVehicle",
+          title: "Step 1 \u2014 Add your vehicles",
+          text: "Start here. Click \"+ Add Vehicle\" to log every unit on your lot. Scan or type the VIN and AutoVault decodes the year, make and model for you.",
+          page: "dashboard",
+        },
+        {
+          sel: '[data-page="reps"]',
+          title: "Step 2 \u2014 Add sales reps & commission",
+          text: "Open Sales Reps and set each rep\u2019s commission. This is what lets AutoVault auto-calculate commission into every deal you close.",
+          page: "dashboard",
+        },
+        {
+          sel: '[data-page="expenses"]',
+          title: "Step 3 \u2014 Add your expenses",
+          text: "Log rent, payroll, flooring, marketing and the rest. Once these are in, your profit and P&L reflect the real cost of doing business.",
+          page: "dashboard",
+        },
+      ];
+      function openWelcome() {
+        var m = document.getElementById("welcomeModal");
+        if (m) m.classList.add("open");
+      }
+      function closeWelcome() {
+        var m = document.getElementById("welcomeModal");
+        if (m) m.classList.remove("open");
+        markIntroCompleted();
+      }
+      function maybeShowWelcome() {
+        try {
+          var sv = sessionStorage.getItem("av_intro_completed");
+          if (sv === "1") return;
+          if (sv === "0") {
+            setTimeout(openWelcome, 600);
+            return;
+          }
+        } catch (e) {}
+        try {
+          if (localStorage && localStorage.getItem("av_intro_completed") === "1")
+            return;
+        } catch (e) {}
+        if (window.crmOwner && window.crmOwner.introCompleted) {
+          try {
+            if (localStorage) localStorage.setItem("av_intro_completed", "1");
+          } catch (e) {}
+          return;
+        }
+        var role = window.crmOwner && window.crmOwner.role;
+        if (role !== "owner" && role !== "manager") return;
+        setTimeout(openWelcome, 600);
+      }
+      async function markIntroCompleted() {
+        try {
+          if (localStorage) localStorage.setItem("av_intro_completed", "1");
+          if (sessionStorage) sessionStorage.setItem("av_intro_completed", "1");
+        } catch (e) {}
+        try {
+          await AVApi.request("/api/v1/users/me/intro", {
+            method: "PATCH",
+            body: JSON.stringify({ introCompleted: true }),
+          });
+        } catch (e) {}
+      }
+      var _bootGateDone = false;
+      function avBootGateOnce() {
+        if (_bootGateDone) return;
+        _bootGateDone = true;
+        avBootGate();
+      }
+      avBootGateOnce();
+      function startSetupTour() {
+        closeWelcome();
+        activeTour = SETUP_TOUR;
+        tourIdx = 0;
+        showPage("dashboard", document.querySelector("[data-page=dashboard]"));
+        var ov = document.getElementById("tourOverlay");
+        if (ov) ov.classList.add("show");
+        window.addEventListener("scroll", positionTour, true);
+        window.addEventListener("resize", positionTour);
+        setTimeout(renderTourStep, 220);
+      }
+      function replayIntroduction() {
+        try {
+          if (localStorage) localStorage.removeItem("av_intro_completed");
+        } catch (e) {}
+        AVApi.request("/api/v1/users/me/intro/reset", { method: "POST" }).catch(
+          function () {}
+        );
+        if (window.crmOwner) window.crmOwner.introCompleted = false;
+        var sm = document.getElementById("settingsMenu");
+        if (sm) sm.classList.remove("open");
+        openWelcome();
+      }
       const VEH_TOUR = [
         {
           sel: ".kpi-grid",
@@ -23369,7 +23863,9 @@
         },
       ];
       let tourIdx = 0;
+      let activeTour = VEH_TOUR;
       function startVehiclesTour() {
+        activeTour = VEH_TOUR;
         showPage("vehicles", document.querySelector("[data-page=vehicles]"));
         tourIdx = 0;
         document.getElementById("tourOverlay").classList.add("show");
@@ -23378,22 +23874,22 @@
         setTimeout(renderTourStep, 180);
       }
       function renderTourStep() {
-        const step = VEH_TOUR[tourIdx];
+        const step = activeTour[tourIdx];
         if (!step) return;
         document.getElementById("tourBadge").textContent =
-          `${tourIdx + 1} / ${VEH_TOUR.length}`;
+          `${tourIdx + 1} / ${activeTour.length}`;
         document.getElementById("tourTitle").textContent = step.title;
         document.getElementById("tourText").textContent = step.text;
         document.getElementById("tourBack").style.visibility =
           tourIdx === 0 ? "hidden" : "visible";
         document.getElementById("tourNext").textContent =
-          tourIdx === VEH_TOUR.length - 1 ? "Finish" : "Next";
+          tourIdx === activeTour.length - 1 ? "Finish" : "Next";
         const el = document.querySelector(step.sel);
         if (el) el.scrollIntoView({ block: "center", behavior: "smooth" });
         setTimeout(positionTour, 320);
       }
       function positionTour() {
-        const step = VEH_TOUR[tourIdx];
+        const step = activeTour[tourIdx];
         if (!step) return;
         const el = document.querySelector(step.sel);
         if (!el) return;
@@ -23418,7 +23914,7 @@
         pop.style.left = left + "px";
       }
       function tourNext() {
-        if (tourIdx < VEH_TOUR.length - 1) {
+        if (tourIdx < activeTour.length - 1) {
           tourIdx++;
           renderTourStep();
         } else endTour();
@@ -23430,9 +23926,15 @@
         }
       }
       function endTour() {
-        document.getElementById("tourOverlay").classList.remove("show");
+        var pop = document.getElementById("tourPop");
+        if (pop) pop.classList.add("tour-finish-anim");
+        setTimeout(function () {
+          document.getElementById("tourOverlay").classList.remove("show");
+          if (pop) pop.classList.remove("tour-finish-anim");
+        }, 400);
         window.removeEventListener("scroll", positionTour, true);
         window.removeEventListener("resize", positionTour);
+        markIntroCompleted();
       }
       let typingInputTimer = null;
       function handleTypingInput() {
@@ -30109,8 +30611,6 @@
         html += `<div class="am-divider" style="border-top:1px solid var(--border);margin:8px 0;"></div>`;
         html += `<div class="am-row" style="cursor:pointer;" onclick="openChangePassword()"><div class="am-av" style="background:var(--border);font-size:13px;">&#9881;</div><div class="am-info"><div class="am-name">Change Password</div><div class="am-role">Update your login password</div></div></div>`;
         html += `<div class="am-row" style="cursor:pointer;" onclick="openAuditLog()"><div class="am-av" style="background:var(--border);font-size:13px;">&#128196;</div><div class="am-info"><div class="am-name">Audit Log</div><div class="am-role">View recent activity</div></div></div>`;
-        html += `<div class="am-divider" style="border-top:1px solid var(--red);margin:8px 0;opacity:0.3;"></div>`;
-        html += `<div class="am-row" style="cursor:pointer;" onclick="handleLogout()"><div class="am-av" style="background:var(--red);color:#fff;font-size:13px;">&#8592;</div><div class="am-info"><div class="am-name" style="color:var(--red);">Log Out</div><div class="am-role">Sign out of your account</div></div></div>`;
         list.innerHTML = html;
       }
       let pendingEditorIdx = null;
