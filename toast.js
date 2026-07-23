@@ -6,7 +6,7 @@
     ".av-toast-wrap{position:fixed;top:18px;right:18px;z-index:99999;display:flex;flex-direction:column;gap:12px;pointer-events:none;max-width:min(92vw,460px)}",
     ".av-toast{pointer-events:auto;background:linear-gradient(180deg,#171C22 0%,#12161B 100%);border:1px solid #232A32;color:#EAECEF;border-radius:13px;padding:14px 16px;box-shadow:0 16px 40px rgba(0,0,0,.36);font-family:Inter,system-ui,sans-serif;display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:start;transform:translateY(-12px) scale(.98);opacity:0;transition:opacity .34s cubic-bezier(.16,.84,.44,1),transform .34s cubic-bezier(.16,.84,.44,1)}",
     ".av-toast.show{opacity:1;transform:translateY(0) scale(1)}",
-    ".av-toast-icon{width:10px;height:10px;border-radius:50%;margin-top:8px;background:#46B074;box-shadow:0 0 0 4px rgba(70,176,116,.18)}",
+    ".av-toast-icon{width:10px;height:10px;border-radius:50%;margin-top:8px;background:#46B074;box-shadow:0 0 0 4px rgba(70,176,116,.18);border:0;animation:none;transition:background .2s ease,box-shadow .2s ease,width .2s ease,height .2s ease,margin-top .2s ease}",
     ".av-toast-title{font-weight:800;font-size:15px;line-height:1.24;margin:0 0 3px}",
     ".av-toast-msg{font-size:14px;line-height:1.5;color:#AAB3BE}",
     ".av-toast-close{background:none;border:0;color:#7F8A97;font-size:18px;line-height:1;cursor:pointer;padding:0 1px;transition:color .2s ease}",
@@ -31,6 +31,18 @@
     return wrap;
   }
 
+  function dismissToast(node, delay) {
+    function remove() {
+      node.classList.remove("show");
+      setTimeout(function () {
+        if (node.parentNode) node.parentNode.removeChild(node);
+      }, 360);
+    }
+    if (delay == null) remove();
+    else setTimeout(remove, Math.max(1500, delay));
+    return remove;
+  }
+
   function notify(options) {
     var opts = options || {};
     var type = opts.type || "success";
@@ -47,19 +59,37 @@
     node.querySelector(".av-toast-title").textContent = title;
     node.querySelector(".av-toast-msg").textContent = message;
 
-    function remove() {
-      node.classList.remove("show");
-      setTimeout(function () {
-        if (node.parentNode) node.parentNode.removeChild(node);
-      }, 360);
-    }
-
-    node.querySelector(".av-toast-close").addEventListener("click", remove);
+    var remove = dismissToast.bind(null, node);
+    node.querySelector(".av-toast-close").addEventListener("click", function () {
+      remove();
+    });
     getWrap().appendChild(node);
     requestAnimationFrame(function () {
       node.classList.add("show");
     });
-    setTimeout(remove, Math.max(1500, duration));
+    dismissToast(node, duration);
+  }
+
+  function settleToast(node, type, title, message, duration) {
+    node.className = "av-toast show av-" + type;
+    var titleEl = node.querySelector(".av-toast-title");
+    var msgEl = node.querySelector(".av-toast-msg");
+    if (titleEl) titleEl.textContent = title;
+    if (msgEl) msgEl.textContent = message;
+
+    if (!node.querySelector(".av-toast-close")) {
+      var close = document.createElement("button");
+      close.className = "av-toast-close";
+      close.type = "button";
+      close.setAttribute("aria-label", "Close");
+      close.textContent = "×";
+      close.addEventListener("click", function () {
+        dismissToast(node);
+      });
+      node.appendChild(close);
+    }
+
+    dismissToast(node, duration == null ? 3800 : duration);
   }
 
   window.AVToast = {
@@ -90,30 +120,25 @@
         node.classList.add("show");
       });
 
-      function removeLoading() {
-        node.classList.remove("show");
-        setTimeout(function () {
-          if (node.parentNode) node.parentNode.removeChild(node);
-        }, 360);
-      }
-
       return Promise.resolve(promise)
         .then(function (val) {
-          removeLoading();
-          notify({
-            type: "success",
-            title: o.successTitle || "Success",
-            message: o.success || "Saved",
-          });
+          settleToast(
+            node,
+            "success",
+            o.successTitle || "Success",
+            o.success || "Saved",
+            o.duration
+          );
           return val;
         })
         .catch(function (err) {
-          removeLoading();
-          notify({
-            type: "error",
-            title: o.errorTitle || "Something went wrong",
-            message: (err && err.message) || o.error || "Something went wrong",
-          });
+          settleToast(
+            node,
+            "error",
+            o.errorTitle || "Something went wrong",
+            (err && err.message) || o.error || "Something went wrong",
+            o.duration
+          );
           throw err;
         });
     },

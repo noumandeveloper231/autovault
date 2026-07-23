@@ -183,10 +183,9 @@
       status: statusUi,
       statusDate: null,
       repairsList,
+      /* Only treat a positive stored fee as a manual override; $0 + start date = auto-calc from purchase date */
       flooringOverride:
-        flooringFees != null && (flooringFees > 0 || api.flooringStartDate)
-          ? flooringFees
-          : null,
+        flooringFees != null && flooringFees > 0 ? flooringFees : null,
       isWholesale: !!api.isWholesale,
       documents: (jacket && Array.isArray(jacket.documents))
         ? jacket.documents.map(d => ({ id: d.id, name: d.documentName, img: d.fileUrl, ts: d.uploadedAt }))
@@ -212,8 +211,12 @@
   function replaceVehicleInPlace(ui) {
     const list = getVehiclesList();
     const idx = list.findIndex((v) => v.id === ui.id || v.vin === ui.vin);
-    if (idx >= 0) list[idx] = ui;
-    else list.unshift(ui);
+    if (idx >= 0) {
+      const prev = list[idx];
+      if (prev && prev._undo) ui._undo = prev._undo;
+      if (prev && prev.flooringDetail) ui.flooringDetail = prev.flooringDetail;
+      list[idx] = ui;
+    } else list.unshift(ui);
   }
 
   function refreshUi() {
@@ -360,6 +363,11 @@
   }
 
   async function createFromForm(fields) {
+    const dateStr =
+      fields.date && /^\d{4}-\d{2}-\d{2}$/.test(fields.date)
+        ? fields.date
+        : new Date().toISOString().slice(0, 10);
+    const acqIso = new Date(dateStr + "T12:00:00").toISOString();
     const body = {
       vin: fields.vin,
       year: Number(fields.year) || new Date().getFullYear(),
@@ -367,16 +375,17 @@
       model: fields.model || "Unknown",
       acquisitionCost: Number(fields.price) || 0,
       auctionFees: Number(fields.fees) || 0,
-      acquisitionDate: new Date().toISOString(),
+      acquisitionDate: acqIso,
       titleReceived: !!fields.titlePresent,
       status: "in_stock",
-      flooringStartDate: fields.floored ? new Date().toISOString() : null,
+      flooringStartDate: fields.floored ? acqIso : null,
       notes: fields.notes || null,
     };
     const { vehicle } = await AVApi.createVehicle(body);
     const ui = mapApiToUi(vehicle, []);
     ui.floored = !!fields.floored;
     ui.titlePresent = !!fields.titlePresent;
+    ui.date = dateStr;
     getVehiclesList().unshift(ui);
     refreshUi();
     return ui;
@@ -396,17 +405,40 @@
     const patch = {};
     if (field === "price") patch.acquisitionCost = value;
     else if (field === "fees") patch.auctionFees = value;
-    else if (field === "flooring") {
-      patch.flooringFees = value;
-      if (value > 0) {
-        patch.flooringStartDate = new Date().toISOString();
+    else if (field === "flooring" || field === "flooringOverride") {
+      if (value === null || value === undefined) {
+        patch.flooringFees = 0;
       } else {
-        patch.flooringStartDate = null;
+        patch.flooringFees = value;
+        if (value > 0) {
+          const v = findUiVehicle(vin);
+          if (v && !v._raw?.flooringStartDate) {
+            patch.flooringStartDate = (v.date
+              ? new Date(v.date + "T12:00:00")
+              : new Date()
+            ).toISOString();
+          }
+        }
       }
     } else if (field === "soldPrice") patch.soldPrice = value;
-    else if (field === "commission") {
+    else if (field === "regFees") patch.registrationFees = value;
+    else if (field === "date") {
+      const dateStr = String(value || "").slice(0, 10);
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return null;
+      patch.acquisitionDate = new Date(dateStr + "T12:00:00").toISOString();
+      const v = findUiVehicle(vin);
+      if (v) v.date = dateStr;
+    } else if (field === "commission" || field === "commissionOverride") {
       const v = findUiVehicle(vin);
       if (v) v.commissionOverride = value;
+      refreshUi();
+      return v;
+    } else if (field === "salesTax") {
+      const v = findUiVehicle(vin);
+      if (v) {
+        v.salesTax = value;
+        v.customerSalesTax = value;
+      }
       refreshUi();
       return v;
     } else if (field === "addOns") {

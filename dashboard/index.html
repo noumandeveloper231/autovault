@@ -2303,6 +2303,107 @@
         word-break: break-word;
       }
 
+      /* click-to-edit VDP cost / purchase date */
+      .vdp-ed {
+        cursor: pointer;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.22);
+        padding-bottom: 1px;
+        transition:
+          color 0.12s,
+          border-color 0.12s;
+      }
+      .vdp-ed:hover {
+        color: var(--blue) !important;
+        border-bottom-color: var(--blue);
+      }
+      .vdp-ed::after {
+        content: "\270E";
+        font-size: 10px;
+        opacity: 0;
+        margin-left: 5px;
+      }
+      .vdp-ed:hover::after {
+        opacity: 0.75;
+      }
+      .vdp-edit-input {
+        width: 112px;
+        background: var(--panel-2);
+        border: 1px solid var(--blue);
+        color: var(--text);
+        border-radius: 7px;
+        padding: 3px 7px;
+        font-size: 13px;
+        font-weight: 700;
+        font-family: var(--mono);
+        text-align: right;
+        outline: none;
+        box-sizing: border-box;
+      }
+      .vdp-edit-input.date {
+        width: 150px;
+        font-size: 12px;
+      }
+      .vdp-auto-tag {
+        font-size: 9.5px;
+        font-weight: 800;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 1px 6px;
+        margin-right: 7px;
+        vertical-align: middle;
+      }
+      .vdp-reset {
+        background: none;
+        border: none;
+        color: var(--blue);
+        font-size: 10.5px;
+        font-weight: 700;
+        cursor: pointer;
+        margin-right: 7px;
+        font-family: inherit;
+        padding: 0;
+      }
+      .vdp-reset:hover {
+        text-decoration: underline;
+      }
+      .vdp-sub-ed {
+        cursor: pointer;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
+      }
+      .vdp-sub-ed:hover {
+        color: var(--blue);
+        border-bottom-color: var(--blue);
+      }
+      .vdp-undo {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 700;
+        font-family: var(--mono);
+        border-radius: 20px;
+        padding: 1px 8px;
+        margin-right: 7px;
+        cursor: pointer;
+        vertical-align: middle;
+        white-space: nowrap;
+      }
+      .vdp-undo:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+      }
+      .tbl-date-ed {
+        cursor: pointer;
+        border-bottom: 1px dashed rgba(255, 255, 255, 0.2);
+      }
+      .tbl-date-ed:hover {
+        color: var(--blue);
+        border-bottom-color: var(--blue);
+      }
+
       .vdp-row.subtotal {
         border-top: 1px dashed rgba(255, 255, 255, 0.1);
         padding-top: 10px;
@@ -22571,6 +22672,21 @@
               ><input id="avModel" class="rc-input" placeholder="Model" />
             </div>
           </div>
+          <div>
+            <label class="av-label">Purchase Date</label>
+            <input id="avDate" class="rc-input" type="date" />
+            <div
+              style="
+                font-size: 10.5px;
+                color: var(--muted);
+                margin-top: 4px;
+                margin-bottom: 12px;
+                line-height: 1.4;
+              "
+            >
+              Backdate this for vehicles bought in a previous month.
+            </div>
+          </div>
           <div class="av-grid2">
             <div>
               <label class="av-label">Purchase Price ($)</label
@@ -26280,6 +26396,15 @@
       }
 
       let editingVehicleVin = null;
+      function avDefaultPurchaseDate() {
+        try {
+          return (typeof today !== "undefined" ? today : new Date())
+            .toISOString()
+            .slice(0, 10);
+        } catch (e) {
+          return new Date().toISOString().slice(0, 10);
+        }
+      }
       function openAddVeh() {
         editingVehicleVin = null;
         const m = document.getElementById("addVehModal");
@@ -26287,12 +26412,21 @@
         document.getElementById("addVehTitle").textContent = "Add Vehicle";
         document.getElementById("avSaveBtn").textContent =
           "Add Vehicle to Inventory";
-        ["avVin", "avYear", "avMake", "avModel", "avPrice", "avFees"].forEach(
-          (id) => {
-            const el = document.getElementById(id);
-            if (el) el.value = "";
-          },
-        );
+        [
+          "avVin",
+          "avYear",
+          "avMake",
+          "avModel",
+          "avPrice",
+          "avFees",
+        ].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
+        {
+          const d = document.getElementById("avDate");
+          if (d) d.value = avDefaultPurchaseDate();
+        }
         {
           const t = document.getElementById("avTitle");
           if (t) t.checked = false;
@@ -26337,6 +26471,18 @@
         document.getElementById("avModel").value = v.model || "";
         document.getElementById("avPrice").value = v.price || "";
         document.getElementById("avFees").value = v.fees || "";
+        {
+          const d = document.getElementById("avDate");
+          if (d) d.value = (v.date || "").slice(0, 10) || avDefaultPurchaseDate();
+        }
+        {
+          const fl = document.getElementById("avFlooring");
+          if (fl) fl.checked = !!v.floored;
+        }
+        {
+          const t = document.getElementById("avTitle");
+          if (t) t.checked = !!v.titlePresent;
+        }
         document.getElementById("avDecoded").innerHTML = "";
         document.getElementById("avMsg").innerHTML = "";
         m.classList.add("open");
@@ -26763,6 +26909,11 @@
         const model = document.getElementById("avModel").value.trim();
         const price = parseFloat(document.getElementById("avPrice").value) || 0;
         const fees = parseFloat(document.getElementById("avFees").value) || 0;
+        const dEl = document.getElementById("avDate");
+        const purchaseDate =
+          dEl && dEl.value && /^\d{4}-\d{2}-\d{2}$/.test(dEl.value)
+            ? dEl.value
+            : avDefaultPurchaseDate();
         if (isWs && !window.AVWholesale) {
           avMsg("Wholesale API not loaded.", false);
           return;
@@ -26796,6 +26947,7 @@
                 model: model || undefined,
                 acquisitionCost: price,
                 auctionFees: fees,
+                acquisitionDate: purchaseDate,
                 floored: floored,
                 titlePresent: titlePresent,
               });
@@ -26820,6 +26972,7 @@
                 model: model || "Unknown",
                 acquisitionCost: price,
                 auctionFees: fees,
+                acquisitionDate: purchaseDate,
                 floored: floored,
                 titlePresent: titlePresent,
                 isWholesale: true,
@@ -26834,7 +26987,7 @@
               if (typeof AVToast !== "undefined")
                 AVToast.success("Vehicle added to wholesale inventory");
               avMsg(
-                `Added ${[year, make, model].filter(Boolean).join(" ") || "vehicle"} to inventory — add another or close.`,
+                `Added ${[year, make, model].filter(Boolean).join(" ") || "vehicle"} — purchased ${typeof fmtDate === "function" ? fmtDate(purchaseDate) : purchaseDate}. Add another or close.`,
                 true,
               );
               [
@@ -26849,6 +27002,10 @@
                 if (el) el.value = "";
               });
               {
+                const d = document.getElementById("avDate");
+                if (d) d.value = avDefaultPurchaseDate();
+              }
+              {
                 const t = document.getElementById("avTitle");
                 if (t) t.checked = false;
               }
@@ -26859,6 +27016,10 @@
             const v = vehicles.find((x) => x.vin === editingVehicleVin);
             if (!v || !v.id)
               throw new Error("Vehicle not found — reload inventory");
+            const floored = !!(document.getElementById("avFlooring") || {})
+              .checked;
+            const titlePresent = !!(document.getElementById("avTitle") || {})
+              .checked;
             const patch = {
               vin,
               year,
@@ -26866,6 +27027,11 @@
               model,
               acquisitionCost: price,
               auctionFees: fees,
+              acquisitionDate: purchaseDate,
+              titleReceived: titlePresent,
+              flooringStartDate: floored
+                ? new Date(purchaseDate + "T12:00:00").toISOString()
+                : null,
             };
             await AVVehicles.persistPatch(editingVehicleVin, patch);
             try {
@@ -26889,6 +27055,7 @@
               model,
               price,
               fees,
+              date: purchaseDate,
               floored,
               titlePresent,
             });
@@ -26900,7 +27067,7 @@
               if (typeof updateNotifBadge === "function") updateNotifBadge();
             } catch (e) {}
             avMsg(
-              `Added ${[year, make, model].filter(Boolean).join(" ") || "vehicle"} to inventory — add another or close.`,
+              `Added ${[year, make, model].filter(Boolean).join(" ") || "vehicle"} — purchased ${typeof fmtDate === "function" ? fmtDate(purchaseDate) : purchaseDate}. Add another or close.`,
               true,
             );
             [
@@ -26914,6 +27081,10 @@
               const el = document.getElementById(id);
               if (el) el.value = "";
             });
+            {
+              const d = document.getElementById("avDate");
+              if (d) d.value = avDefaultPurchaseDate();
+            }
             {
               const t = document.getElementById("avTitle");
               if (t) t.checked = false;
@@ -31337,7 +31508,7 @@
               filtered,
               (r) => `
     <tr>
-      <td>${fmtDate(r.date)}</td>
+      <td><span class="tbl-date-ed" onclick="tblEditDate(event, this, '${r.vin}')" title="Click to edit purchase date">${fmtDate(r.date)}</span></td>
       <td class="veh-cell" style="cursor:pointer;" onclick="showVehicleDetail('${r.vin}')">
         <div class="veh-name" style="color:var(--blue);text-decoration:none;">${r.year} ${r.make} ${r.model}</div>
         <div class="veh-trim" style="${r.sold || r.status ? `color:${getStatusColor(r.status || (r.sold ? "Sold" : ""))};font-weight:700;` : ""}">${(() => {
@@ -32522,11 +32693,15 @@
           refreshAllPnl();
           return;
         }
-        if (typeof AVBusy !== "undefined" && !AVBusy.guard()) {
-          render();
-          refreshAllPnl();
-          return;
-        }
+        const fieldLabels = {
+          price: "Purchase Price",
+          fees: "Auction Fees",
+          flooring: "Flooring Cost",
+          commission: "Commission",
+          soldPrice: "Sale Price",
+          addOns: "Add-ons",
+        };
+        const label = fieldLabels[field] || "Value";
         switch (field) {
           case "price":
             v.price = safeValue;
@@ -32547,19 +32722,24 @@
             v.addOns = safeValue;
             break;
         }
+        input.disabled = true;
+        input.style.opacity = "0.55";
         render();
         refreshAllPnl();
         try {
-          if (typeof AVBusy !== "undefined") AVBusy.inc();
-          await AVVehicles.persistMoneyField(vin, field, safeValue);
+          await vehEditSave(
+            AVVehicles.persistMoneyField(vin, field, safeValue),
+            {
+              loading: `Saving ${label}…`,
+              loadingMsg: "Updating vehicle costs",
+              success: `${label} updated`,
+              error: `Failed to save ${label.toLowerCase()}`,
+            },
+          );
         } catch (err) {
-          if (typeof AVToast !== "undefined")
-            AVToast.error(err.message || "Failed to save");
           try {
             await AVVehicles.loadAllVehicles();
           } catch (_) {}
-        } finally {
-          if (typeof AVBusy !== "undefined") AVBusy.dec();
         }
       }
 
@@ -32945,6 +33125,336 @@
           )
           .join('<span class="vt-sep">\u2022</span>');
       }
+
+      // ---------- VDP INLINE EDITING (cost breakdown + purchase date) ----------
+      const VDP_EDIT_FIELDS = {
+        price: { label: "Purchase Price" },
+        fees: { label: "Auction / Doc Fees" },
+        salesTax: { label: "Sales Tax" },
+        regFees: { label: "Reg. Fees" },
+        addOns: { label: "Add-ons cost" },
+        soldPrice: { label: "Sale Price" },
+        flooringOverride: { label: "Flooring Cost", override: true },
+        commissionOverride: { label: "Commission", override: true },
+        date: { label: "Purchase Date" },
+      };
+      function vehEditLabel(field) {
+        return (VDP_EDIT_FIELDS[field] && VDP_EDIT_FIELDS[field].label) || field;
+      }
+      async function vehEditSave(promise, opts) {
+        const o = opts || {};
+        if (typeof AVBusy !== "undefined" && !AVBusy.guard()) {
+          if (typeof AVToast !== "undefined")
+            AVToast.info("Please wait — a save is already in progress.");
+          throw new Error("A save is already in progress.");
+        }
+        if (typeof AVBusy !== "undefined") AVBusy.inc();
+        try {
+          if (typeof AVToast !== "undefined" && AVToast.promise) {
+            return await AVToast.promise(promise, {
+              loading: o.loading || "Saving…",
+              loadingMsg: o.loadingMsg || "Updating vehicle",
+              success: o.success || "Saved",
+              successTitle: o.successTitle || "Updated",
+              error: o.error || "Failed to save",
+              errorTitle: o.errorTitle || "Something went wrong",
+            });
+          }
+          return await promise;
+        } finally {
+          if (typeof AVBusy !== "undefined") AVBusy.dec();
+        }
+      }
+      function vdpSetSaving(host, on) {
+        if (!host) return;
+        if (on) {
+          host.classList.add("vdp-saving");
+          host.style.opacity = "0.55";
+          host.style.pointerEvents = "none";
+          const inp = host.querySelector("input");
+          if (inp) inp.disabled = true;
+        } else {
+          host.classList.remove("vdp-saving");
+          host.style.opacity = "";
+          host.style.pointerEvents = "";
+        }
+      }
+      function vdpCurrentValue(v, field) {
+        const r = computeRow(v);
+        if (field === "flooringOverride") return Math.round(r.flooringCost);
+        if (field === "commissionOverride") return Math.round(r.commission);
+        if (field === "soldPrice")
+          return Math.round(v.soldPrice || r.baseSale || 0);
+        return Math.round(Number(v[field]) || 0);
+      }
+      function vdpEditCost(field) {
+        if (!VDP_EDIT_FIELDS[field]) return;
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v) return;
+        const host = document.getElementById("vdpEd_" + field);
+        if (!host || host.querySelector("input")) return;
+        const cur = vdpCurrentValue(v, field);
+        host.innerHTML = `<input class="vdp-edit-input" type="number" step="1" min="0" value="${cur}"
+    onblur="vdpCommitCost('${field}', this.value)"
+    onkeydown="if(event.key==='Enter'){this.blur();}else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
+        const inp = host.querySelector("input");
+        if (inp) {
+          inp.focus();
+          inp.select();
+        }
+      }
+      async function vdpCommitCost(field, raw) {
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v) return;
+        const host = document.getElementById("vdpEd_" + field);
+        const inp = host ? host.querySelector("input") : null;
+        if (inp && inp.dataset.cancel === "1") {
+          renderVehicleDetailPage(currentVdpVin);
+          return;
+        }
+        let n = parseFloat(raw);
+        if (!isFinite(n) || n < 0) n = 0;
+        n = Math.round(n * 100) / 100;
+        const oldVal = v[field];
+        const oldEffective = vdpCurrentValue(v, field);
+        if (n === oldEffective && oldVal !== undefined) {
+          renderVehicleDetailPage(currentVdpVin);
+          return;
+        }
+        const label = vehEditLabel(field);
+        vdpRememberPrev(
+          v,
+          field,
+          oldVal === undefined || oldVal === null ? oldEffective : oldVal,
+        );
+        v[field] = n;
+        if (field === "salesTax") v.customerSalesTax = n;
+        vdpSetSaving(host, true);
+        try {
+          if (window.AVVehicles && v.id) {
+            await vehEditSave(
+              AVVehicles.persistMoneyField(currentVdpVin, field, n),
+              {
+                loading: `Saving ${label}…`,
+                loadingMsg: "Updating cost breakdown",
+                success: `${label} updated`,
+                error: `Failed to save ${label.toLowerCase()}`,
+              },
+            );
+          }
+        } catch (err) {
+          try {
+            if (window.AVVehicles) await AVVehicles.loadAllVehicles();
+          } catch (_) {}
+        } finally {
+          vdpSetSaving(host, false);
+        }
+        vdpAfterEdit();
+      }
+      async function vdpResetCost(field) {
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v) return;
+        const label = vehEditLabel(field);
+        const host = document.getElementById("vdpEd_" + field);
+        vdpRememberPrev(v, field, v[field]);
+        v[field] = null;
+        vdpSetSaving(host, true);
+        try {
+          if (window.AVVehicles && v.id) {
+            await vehEditSave(
+              AVVehicles.persistMoneyField(currentVdpVin, field, null),
+              {
+                loading: `Resetting ${label}…`,
+                loadingMsg: "Restoring auto-calculated value",
+                success: `${label} reset to auto`,
+                error: `Failed to reset ${label.toLowerCase()}`,
+              },
+            );
+          }
+        } catch (err) {
+          try {
+            if (window.AVVehicles) await AVVehicles.loadAllVehicles();
+          } catch (_) {}
+        } finally {
+          vdpSetSaving(host, false);
+        }
+        vdpAfterEdit();
+      }
+      function vdpEditDate() {
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v) return;
+        const host = document.getElementById("vdpEd_date");
+        if (!host || host.querySelector("input")) return;
+        const cur = (v.date || "").slice(0, 10);
+        host.outerHTML = `<input class="vdp-edit-input date" id="vdpEd_date" type="date" value="${cur}"
+    onblur="vdpCommitDate(this.value)"
+    onkeydown="if(event.key==='Enter'){this.blur();}else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
+        const inp = document.getElementById("vdpEd_date");
+        if (inp) inp.focus();
+      }
+      async function vdpCommitDate(val) {
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v) return;
+        const inp = document.getElementById("vdpEd_date");
+        if (inp && inp.dataset && inp.dataset.cancel === "1") {
+          renderVehicleDetailPage(currentVdpVin);
+          return;
+        }
+        if (val && /^\d{4}-\d{2}-\d{2}$/.test(val) && val !== v.date) {
+          vdpRememberPrev(v, "date", v.date);
+          v.date = val;
+          if (inp) {
+            inp.disabled = true;
+            inp.style.opacity = "0.55";
+          }
+          try {
+            if (window.AVVehicles && v.id) {
+              await vehEditSave(
+                AVVehicles.persistMoneyField(currentVdpVin, "date", val),
+                {
+                  loading: "Saving purchase date…",
+                  loadingMsg: "Recalculating days & flooring",
+                  success: "Purchase date updated",
+                  error: "Failed to save purchase date",
+                },
+              );
+            }
+          } catch (err) {
+            try {
+              if (window.AVVehicles) await AVVehicles.loadAllVehicles();
+            } catch (_) {}
+          }
+        }
+        vdpAfterEdit();
+      }
+      function tblEditDate(ev, el, vin) {
+        if (ev) ev.stopPropagation();
+        if (!el || el.querySelector("input")) return;
+        const v = vehicles.find((x) => x.vin === vin);
+        if (!v) return;
+        const cur = (v.date || "").slice(0, 10);
+        el.innerHTML = `<input class="vdp-edit-input date" type="date" value="${cur}"
+    onclick="event.stopPropagation()"
+    onblur="tblCommitDate(this,'${vin}')"
+    onkeydown="event.stopPropagation(); if(event.key==='Enter'){this.blur();} else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
+        const inp = el.querySelector("input");
+        if (inp) inp.focus();
+      }
+      async function tblCommitDate(inp, vin) {
+        const v = vehicles.find((x) => x.vin === vin);
+        if (!v) return;
+        const val = inp ? inp.value : "";
+        const cancelled = !!(inp && inp.dataset.cancel === "1");
+        if (
+          !cancelled &&
+          val &&
+          /^\d{4}-\d{2}-\d{2}$/.test(val) &&
+          val !== v.date
+        ) {
+          if (!v._undo) v._undo = {};
+          v._undo.date = v.date;
+          v.date = val;
+          if (inp) {
+            inp.disabled = true;
+            inp.style.opacity = "0.55";
+          }
+          try {
+            if (window.AVVehicles && v.id) {
+              await vehEditSave(
+                AVVehicles.persistMoneyField(vin, "date", val),
+                {
+                  loading: "Saving purchase date…",
+                  loadingMsg: "Recalculating days & flooring",
+                  success: "Purchase date updated",
+                  error: "Failed to save purchase date",
+                },
+              );
+            }
+          } catch (err) {
+            try {
+              if (window.AVVehicles) await AVVehicles.loadAllVehicles();
+            } catch (_) {}
+          }
+        }
+        try {
+          if (typeof render === "function") render();
+        } catch (e) {}
+        try {
+          if (typeof renderProfitPage === "function") renderProfitPage();
+        } catch (e) {}
+        try {
+          if (typeof renderDashboard === "function") renderDashboard();
+        } catch (e) {}
+        try {
+          if (typeof refreshAllPnl === "function") refreshAllPnl();
+        } catch (e) {}
+      }
+      function vdpUndoBtn(v, field) {
+        if (
+          !v ||
+          !v._undo ||
+          v._undo[field] === undefined ||
+          v._undo[field] === null
+        )
+          return "";
+        const prev = v._undo[field];
+        const shown = field === "date" ? fmtDate(prev) : fmt(prev);
+        return `<button class="vdp-undo" onclick="event.stopPropagation(); vdpUndo('${field}')" title="Revert to your previous value">\u21BA ${shown}</button>`;
+      }
+      function vdpRememberPrev(v, field, oldVal) {
+        if (!v._undo) v._undo = {};
+        v._undo[field] = oldVal;
+      }
+      async function vdpUndo(field) {
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v || !v._undo) return;
+        const prev = v._undo[field];
+        if (prev === undefined) return;
+        const cur = field === "date" ? v.date : v[field];
+        const label = vehEditLabel(field);
+        const host = document.getElementById(
+          field === "date" ? "vdpEd_date" : "vdpEd_" + field,
+        );
+        v[field] = prev;
+        v._undo[field] = cur;
+        vdpSetSaving(host, true);
+        try {
+          if (window.AVVehicles && v.id) {
+            await vehEditSave(
+              AVVehicles.persistMoneyField(currentVdpVin, field, prev),
+              {
+                loading: `Reverting ${label}…`,
+                loadingMsg: "Restoring previous value",
+                success: `${label} reverted`,
+                error: `Failed to revert ${label.toLowerCase()}`,
+              },
+            );
+          }
+        } catch (err) {
+          try {
+            if (window.AVVehicles) await AVVehicles.loadAllVehicles();
+          } catch (_) {}
+        } finally {
+          vdpSetSaving(host, false);
+        }
+        vdpAfterEdit();
+      }
+      function vdpAfterEdit() {
+        renderVehicleDetailPage(currentVdpVin);
+        try {
+          if (typeof render === "function") render();
+        } catch (e) {}
+        try {
+          if (typeof renderProfitPage === "function") renderProfitPage();
+        } catch (e) {}
+        try {
+          if (typeof renderDashboard === "function") renderDashboard();
+        } catch (e) {}
+        try {
+          if (typeof refreshAllPnl === "function") refreshAllPnl();
+        } catch (e) {}
+      }
+
       function renderVehicleDetailPage(vin) {
         const v = vehicles.find((x) => x.vin === vin);
         if (!v) return false;
@@ -32960,8 +33470,8 @@
         // Hero
         document.getElementById("vdpTitle").textContent =
           `${r.year} ${r.make} ${r.model}`;
-        document.getElementById("vdpSubtitle").textContent =
-          `VIN: ${r.vin}  ·  ${r.category}  ·  Purchased ${fmtDate(r.date)}`;
+        document.getElementById("vdpSubtitle").innerHTML =
+          `VIN: ${r.vin}  ·  ${r.category}  ·  Purchased <span class="vdp-sub-ed" id="vdpEd_date" onclick="vdpEditDate()" title="Click to change the purchase date">${fmtDate(r.date)}</span> ${vdpUndoBtn(v, "date")}`;
 
         // Status badge
         const eff = r.status || (r.sold ? "Sold" : "Active");
@@ -32994,16 +33504,16 @@
           r.totalVehicleCost,
         );
 
-        // Financial breakdown
+        // Financial breakdown (click any amount to edit — totals recalculate across the CRM)
         document.getElementById("vdpBreakdown").innerHTML = `
-    <div class="vdp-row"><span class="vdp-row-label">Purchase Price</span><span class="vdp-row-value">${fmt(r.price)}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Auction / Doc Fees</span><span class="vdp-row-value">${fmt(r.fees)}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Repairs (${(r.repairsList || []).length} items)</span><span class="vdp-row-value">${fmt(r.repairs)}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Flooring Cost${r.flooringDetail?.lender ? " — " + r.flooringDetail.lender : ""}</span><span class="vdp-row-value" style="color:var(--red);">${r.flooringCost > 0 ? fmt(r.flooringCost) : "—"}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Sales Tax</span><span class="vdp-row-value">${fmt(r.salesTax)}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Reg. Fees</span><span class="vdp-row-value">${fmt(r.regFees)}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Add-ons (cost)</span><span class="vdp-row-value">${r.addOns > 0 ? fmt(r.addOns) : "—"}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Commission</span><span class="vdp-row-value" style="color:var(--purple);">${fmt(r.commission)}</span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Purchase Price</span><span class="vdp-row-value" id="vdpEd_price">${vdpUndoBtn(v, "price")}<span class="vdp-ed" onclick="vdpEditCost('price')" title="Click to edit">${fmt(r.price)}</span></span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Auction / Doc Fees</span><span class="vdp-row-value" id="vdpEd_fees">${vdpUndoBtn(v, "fees")}<span class="vdp-ed" onclick="vdpEditCost('fees')" title="Click to edit">${fmt(r.fees)}</span></span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Repairs (${(r.repairsList || []).length} items)</span><span class="vdp-row-value"><span class="vdp-ed" onclick="openRepairsModal('${r.vin}')" title="Click to edit repair items">${fmt(r.repairs)}</span></span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Flooring Cost${r.flooringDetail?.lender ? " — " + r.flooringDetail.lender : ""}</span><span class="vdp-row-value" id="vdpEd_flooringOverride" style="color:var(--red);">${vdpUndoBtn(v, "flooringOverride")}${v.flooringOverride !== null && v.flooringOverride !== undefined ? `<button class="vdp-reset" onclick="vdpResetCost('flooringOverride')" title="Back to auto-calculated">reset</button>` : `<span class="vdp-auto-tag">auto</span>`}<span class="vdp-ed" onclick="vdpEditCost('flooringOverride')" title="Click to edit">${r.flooringCost > 0 ? fmt(r.flooringCost) : "—"}</span></span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Sales Tax</span><span class="vdp-row-value" id="vdpEd_salesTax">${vdpUndoBtn(v, "salesTax")}<span class="vdp-ed" onclick="vdpEditCost('salesTax')" title="Click to edit">${fmt(r.salesTax)}</span></span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Reg. Fees</span><span class="vdp-row-value" id="vdpEd_regFees">${vdpUndoBtn(v, "regFees")}<span class="vdp-ed" onclick="vdpEditCost('regFees')" title="Click to edit">${fmt(r.regFees)}</span></span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Add-ons (cost)</span><span class="vdp-row-value" id="vdpEd_addOns">${vdpUndoBtn(v, "addOns")}<span class="vdp-ed" onclick="vdpEditCost('addOns')" title="Click to edit">${r.addOns > 0 ? fmt(r.addOns) : "—"}</span></span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Commission</span><span class="vdp-row-value" id="vdpEd_commissionOverride" style="color:var(--purple);">${vdpUndoBtn(v, "commissionOverride")}${v.commissionOverride !== null && v.commissionOverride !== undefined ? `<button class="vdp-reset" onclick="vdpResetCost('commissionOverride')" title="Back to auto-calculated">reset</button>` : `<span class="vdp-auto-tag">auto</span>`}<span class="vdp-ed" onclick="vdpEditCost('commissionOverride')" title="Click to edit">${fmt(r.commission)}</span></span></div>
     <div class="vdp-row subtotal"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Total Vehicle Cost</span><span class="vdp-row-value" style="font-size:15px;color:var(--orange);">${fmt(r.totalVehicleCost)}</span></div>
     ${
       v.customerSalesTax || v.customerRegFees
@@ -33017,7 +33527,7 @@
         : ""
     }
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,0.1);">
-      <div class="vdp-row" style="border-top:none;"><span class="vdp-row-label">Vehicle Sale Price</span><span class="vdp-row-value" style="color:var(--blue);">${r.soldPrice ? fmt(r.soldPrice) : fmt(r.estimatedSale - r.addOnRevenue) + " (est.)"}</span></div>
+      <div class="vdp-row" style="border-top:none;"><span class="vdp-row-label">Vehicle Sale Price</span><span class="vdp-row-value" id="vdpEd_soldPrice" style="color:var(--blue);">${vdpUndoBtn(v, "soldPrice")}<span class="vdp-ed" onclick="vdpEditCost('soldPrice')" title="Click to edit">${r.soldPrice ? fmt(r.soldPrice) : fmt(r.estimatedSale - r.addOnRevenue) + " (est.)"}</span></span></div>
       ${r.addOnRevenue > 0 ? `<div class="vdp-row"><span class="vdp-row-label">Add-On Revenue (${(r.addOnItems || []).length} items)</span><span class="vdp-row-value" style="color:var(--green);">+ ${fmt(r.addOnRevenue)}</span></div>` : ""}
       ${r.addOnRevenue > 0 ? `<div class="vdp-row"><span class="vdp-row-label" style="font-weight:700;">Total Revenue</span><span class="vdp-row-value" style="color:var(--blue);font-size:14px;">${fmt(r.estimatedSale)}</span></div>` : ""}
       <div class="vdp-row" style="padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);">
