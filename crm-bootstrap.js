@@ -44,8 +44,20 @@
           introCompleted: u.introCompleted || false,
           termsAccepted: u.termsAccepted || false,
           termsVersion: u.termsVersion || null,
+          termsPrintedName: u.termsPrintedName || null,
+          termsDealership: u.termsDealership || null,
+          termsSignature: u.termsSignature || null,
+          termsAcceptedAt: u.termsAcceptedAt || null,
+          dealershipName: u.dealership || null,
         };
         if (typeof updateDashWelcome === "function") updateDashWelcome();
+        try {
+          sessionStorage.setItem(
+            "av_terms_accepted",
+            u.termsAccepted ? "1" : "0",
+          );
+          localStorage.removeItem("av_terms_accepted_db");
+        } catch (e) {}
         if (typeof avBootGateOnce === "function") avBootGateOnce();
         }
         const summary = await AVApi.dashboardSummary().catch(() => null);
@@ -91,8 +103,20 @@
           introCompleted: u.introCompleted || false,
           termsAccepted: u.termsAccepted || false,
           termsVersion: u.termsVersion || null,
+          termsPrintedName: u.termsPrintedName || null,
+          termsDealership: u.termsDealership || null,
+          termsSignature: u.termsSignature || null,
+          termsAcceptedAt: u.termsAcceptedAt || null,
+          dealershipName: u.dealership || null,
         };
         if (typeof updateDashWelcome === 'function') updateDashWelcome();
+        try {
+          sessionStorage.setItem(
+            'av_terms_accepted',
+            u.termsAccepted ? '1' : '0',
+          );
+          localStorage.removeItem('av_terms_accepted_db');
+        } catch (e) {}
         if (typeof avBootGateOnce === 'function') avBootGateOnce();
       }
 

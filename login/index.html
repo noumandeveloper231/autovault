@@ -1939,6 +1939,10 @@
         if (data.user && data.user.introCompleted !== undefined) {
           sessionStorage.setItem('av_intro_completed', data.user.introCompleted ? '1' : '0');
         }
+        if (data.user && data.user.termsAccepted !== undefined) {
+          sessionStorage.setItem('av_terms_accepted', data.user.termsAccepted ? '1' : '0');
+        }
+        try { localStorage.removeItem('av_terms_accepted_db'); } catch (e) {}
         window.location.href = data.redirectDashboardPath || AVPortal.dashboardPath(inferredPortal) || '/dashboard';
       }catch(loginError){
         err.textContent = loginError.message || 'Invalid email or password.';

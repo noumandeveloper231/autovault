@@ -413,6 +413,22 @@
       request(`/api/v1/expenses/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
     deleteExpense: (id) =>
       request(`/api/v1/expenses/${id}`, { method: "DELETE" }),
+    getBilling: () => request("/api/v1/billing"),
+    getBillingHistory: () => request("/api/v1/billing/history"),
+    listBillingPlans: () => request("/api/v1/billing/plans"),
+    billingCheckout: (body) =>
+      request("/api/v1/billing/checkout", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    billingPortal: () =>
+      request("/api/v1/billing/portal", { method: "POST", body: "{}" }),
+    updateBillingSettings: (body) =>
+      request("/api/v1/billing/settings", {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    getTermsStatus: () => request("/api/v1/users/me/terms"),
     profitLoss: (qs = "") => request(`/api/v1/reports/profit-loss${qs}`),
     listNotifications: () => request("/api/v1/notifications"),
     listSalesReps: (qs = "") => request(`/api/v1/sales-reps${qs}`),
