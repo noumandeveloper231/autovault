@@ -140,8 +140,10 @@
       token,
       portal: claimedPortal,
       name: claims.name || "",
+      email: claims.email || "",
       sub: claims.sub || "",
       role: claims.role || "",
+      dealershipId: claims.dealershipId || null,
       impersonation: !!claims.impersonation,
     };
   }

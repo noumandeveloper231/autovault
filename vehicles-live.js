@@ -126,6 +126,25 @@
     const fees = num(api.auctionFees, 0);
     const dealerRegFees = num(api.registrationFees, 0);
     const asking = num(api.askingPrice, 0);
+    const reconCost = num(api.reconditioningCost, 0);
+    // Previous-sold / historical imports store recon+other+add-ons on the vehicle
+    // without VehicleExpense rows — seed a synthetic repair so computeRow totals match.
+    const effectiveRepairs =
+      repairsList.length > 0
+        ? repairsList
+        : reconCost > 0
+          ? [
+              {
+                id: null,
+                desc: "Reconditioning / other (imported)",
+                type: "General",
+                cost: reconCost,
+                receipt: null,
+                date: isoDate(api.acquisitionDate),
+                _synthetic: true,
+              },
+            ]
+          : [];
     const deal = api.deal || null;
     const cust = deal && deal.customer ? deal.customer : null;
     const jacket = api.dealJackets && api.dealJackets[0] ? api.dealJackets[0] : null;
@@ -182,7 +201,8 @@
       titlePresent: api.titleReceived !== false,
       status: statusUi,
       statusDate: null,
-      repairsList,
+      repairsList: effectiveRepairs,
+      reconditioningCost: reconCost,
       /* Only treat a positive stored fee as a manual override; $0 + start date = auto-calc from purchase date */
       flooringOverride:
         flooringFees != null && flooringFees > 0 ? flooringFees : null,
@@ -191,7 +211,9 @@
         ? jacket.documents.map(d => ({ id: d.id, name: d.documentName, img: d.fileUrl, ts: d.uploadedAt }))
         : [],
       vehicleDocs: [],
-      dealSaved: !!jacket,
+      dealSaved: !!(api.hasDealJacket || jacket),
+      hasDealJacket: !!(api.hasDealJacket || jacket),
+      dealJacket: !!(api.hasDealJacket || jacket),
       _raw: api,
     };
   }
@@ -541,6 +563,47 @@
     return resp;
   }
 
+  async function importPreviousSold(fields) {
+    const buy = fields.buyDate;
+    const sell = fields.sellDate;
+    const body = {
+      vin: String(fields.vin || "").toUpperCase().trim(),
+      year: Number(fields.year) || undefined,
+      make: fields.make || undefined,
+      model: fields.model || undefined,
+      acquisitionDate: buy
+        ? new Date(buy + "T12:00:00").toISOString()
+        : undefined,
+      saleDate: sell
+        ? new Date(sell + "T12:00:00").toISOString()
+        : undefined,
+      acquisitionCost: Number(fields.price) || 0,
+      auctionFees: Number(fields.fees) || 0,
+      reconditioningCost: Number(fields.repairs) || 0,
+      otherExpenses: Number(fields.otherExpenses) || 0,
+      flooringFees: Number(fields.flooring) || 0,
+      addOnsCost: Number(fields.addOns) || 0,
+      soldPrice: Number(fields.salePrice) || 0,
+      salesTaxAmount: Number(fields.salesTax) || 0,
+      licenseFees: Number(fields.regFees) || 0,
+      titleReceived: fields.titlePresent !== false,
+      customerName: fields.customer || "Previous customer",
+      notes: "Imported as a previously sold vehicle.",
+    };
+    if (fields.salesRepId) body.salesRepId = fields.salesRepId;
+    if (fields.commissionAmount != null && fields.commissionAmount !== "") {
+      body.commissionAmount = Number(fields.commissionAmount);
+    }
+    const resp = await AVApi.importPreviousSold(body);
+    await loadAllVehicles();
+    if (typeof window.loadExpensesFromApi === "function") {
+      try {
+        await window.loadExpensesFromApi();
+      } catch (_) {}
+    }
+    return resp;
+  }
+
   async function addRepair(vin, entry) {
     const v = findUiVehicle(vin);
     if (!v || !v.id) throw new Error("Vehicle not found � reload inventory");
@@ -623,6 +686,7 @@
     persistAddOnItems,
     persistStatus,
     markSoldViaForm,
+    importPreviousSold,
     removeVehicle,
     addRepair,
     deleteRepair,

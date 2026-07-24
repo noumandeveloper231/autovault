@@ -303,10 +303,19 @@
         skipAuth: true,
         portal: "owner",
       }),
-    me: (portal) =>
-      request(portal === "owner" ? "/api/owner/auth/me" : "/api/auth/me", {
-        portal,
-      }),
+    me: (portal) => {
+      const p = normalizePortal(
+        portal ||
+          (global.AVPortal && typeof global.AVPortal.getRoutePortal === "function"
+            ? global.AVPortal.getRoutePortal()
+            : null) ||
+          localStorage.getItem(PORTAL_KEY) ||
+          "admin",
+      );
+      return request(p === "owner" ? "/api/owner/auth/me" : "/api/auth/me", {
+        portal: p,
+      });
+    },
     forgotPassword: (email) =>
       request("/api/v1/auth/forgot-password", {
         method: "POST",
@@ -364,6 +373,11 @@
         method: "POST",
         body: JSON.stringify(body),
       }),
+    importPreviousSold: (body) =>
+      request("/api/v1/vehicles/previous-sold", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
     markLoss: (id, body) =>
       request(`/api/v1/vehicles/${id}/mark-loss`, {
         method: "POST",
@@ -390,6 +404,22 @@
         body: JSON.stringify(body),
       }),
     listDealJackets: (qs = "") => request(`/api/v1/deal-jackets${qs}`),
+    checkDealNumber: (rosNumber, opts = {}) => {
+      const params = new URLSearchParams({ rosNumber: String(rosNumber || "") });
+      if (opts.excludeJacketId) params.set("excludeJacketId", opts.excludeJacketId);
+      if (opts.excludeVehicleId) params.set("excludeVehicleId", opts.excludeVehicleId);
+      return request(`/api/v1/deal-jackets/check-deal-number?${params}`);
+    },
+    generateDealNumber: (opts = {}) => {
+      const params = new URLSearchParams();
+      if (opts.excludeJacketId) params.set("excludeJacketId", opts.excludeJacketId);
+      if (opts.excludeVehicleId) params.set("excludeVehicleId", opts.excludeVehicleId);
+      const qs = params.toString();
+      return request(`/api/v1/deal-jackets/generate-deal-number${qs ? `?${qs}` : ""}`, {
+        method: "POST",
+        body: "{}",
+      });
+    },
     updateDealJacket: (id, body) =>
       request(`/api/v1/deal-jackets/${id}`, {
         method: "PATCH",

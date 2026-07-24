@@ -8,18 +8,6 @@
 
   var _booted = false;
 
-  function mapExpense(e) {
-    return {
-      id: e.id,
-      date: e.expenseDate,
-      category: e.category,
-      vendor: e.vendor,
-      description: e.description,
-      amount: Number(e.amount || 0),
-      _raw: e,
-    };
-  }
-
   async function bootstrapCrmFromApi() {
     if (_booted) return { live: true, summary: window.AV_LIVE_SUMMARY || null };
     _booted = true;
@@ -35,30 +23,54 @@
         const meResp = await AVApi.me().catch(() => null);
         if (meResp && meResp.user) {
           var u = meResp.user;
-        window.crmOwner = {
-          id: u.id,
-          name: u.fullName || u.name || u.email || "Dealer",
-          role: u.role || "Wholesale Dealer",
-          birthday: u.birthDate || "",
-          email: u.email || "",
-          introCompleted: u.introCompleted || false,
-          termsAccepted: u.termsAccepted || false,
-          termsVersion: u.termsVersion || null,
-          termsPrintedName: u.termsPrintedName || null,
-          termsDealership: u.termsDealership || null,
-          termsSignature: u.termsSignature || null,
-          termsAcceptedAt: u.termsAcceptedAt || null,
-          dealershipName: u.dealership || null,
-        };
-        if (typeof updateDashWelcome === "function") updateDashWelcome();
-        try {
-          sessionStorage.setItem(
-            "av_terms_accepted",
-            u.termsAccepted ? "1" : "0",
-          );
-          localStorage.removeItem("av_terms_accepted_db");
-        } catch (e) {}
-        if (typeof avBootGateOnce === "function") avBootGateOnce();
+          if (typeof applyMeUserToProfile === "function") {
+            applyMeUserToProfile(u);
+          } else if (typeof applyCrmOwnerData === "function") {
+            applyCrmOwnerData({
+              id: u.id,
+              name: u.fullName || u.name || u.email || "Dealer",
+              fullName: u.fullName || u.name,
+              role: u.role || "wholesale_dealer",
+              birthday: u.birthDate || "",
+              email: u.email || "",
+              imageUrl: u.imageUrl || null,
+              introCompleted: u.introCompleted || false,
+              termsAccepted: u.termsAccepted || false,
+              termsVersion: u.termsVersion || null,
+              termsPrintedName: u.termsPrintedName || null,
+              termsDealership: u.termsDealership || null,
+              termsSignature: u.termsSignature || null,
+              termsAcceptedAt: u.termsAcceptedAt || null,
+              dealershipName: u.dealership || null,
+            });
+          } else {
+            window.crmOwner = {
+              id: u.id,
+              name: u.fullName || u.name || u.email || "Dealer",
+              role: u.role || "wholesale_dealer",
+              birthday: u.birthDate || "",
+              email: u.email || "",
+              imageUrl: u.imageUrl || null,
+              introCompleted: u.introCompleted || false,
+              termsAccepted: u.termsAccepted || false,
+              termsVersion: u.termsVersion || null,
+              termsPrintedName: u.termsPrintedName || null,
+              termsDealership: u.termsDealership || null,
+              termsSignature: u.termsSignature || null,
+              termsAcceptedAt: u.termsAcceptedAt || null,
+              dealershipName: u.dealership || null,
+            };
+            if (typeof updateProfileChip === "function") updateProfileChip();
+          }
+          if (typeof updateDashWelcome === "function") updateDashWelcome();
+          try {
+            sessionStorage.setItem(
+              "av_terms_accepted",
+              u.termsAccepted ? "1" : "0",
+            );
+            localStorage.removeItem("av_terms_accepted_db");
+          } catch (e) {}
+          if (typeof avBootGateOnce === "function") avBootGateOnce();
         }
         const summary = await AVApi.dashboardSummary().catch(() => null);
         window.AV_LIVE_SUMMARY = summary;
@@ -75,7 +87,7 @@
     try {
       const [summary, expenseResp, notifResp, meResp, taxSettingsResp, taxPeriodsResp, repsResp, staffResp, convResp, payrollResp] = await Promise.all([
         AVApi.dashboardSummary().catch(() => null),
-        AVApi.listExpenses("?limit=100").catch(() => ({ expenses: [] })),
+        AVApi.listExpenses("?limit=500").catch(() => ({ expenses: [] })),
         AVApi.listNotifications().catch(() => ({ notifications: [] })),
         AVApi.me().catch(() => null),
         AVApi.taxSettings().catch(() => null),
@@ -87,37 +99,62 @@
       ]);
 
       const expenseList = expenseResp.expenses || expenseResp.data || [];
-      if (typeof expenses !== "undefined" && Array.isArray(expenseList)) {
-        expenses.length = 0;
-        expenseList.forEach((e) => expenses.push(mapExpense(e)));
+      if (typeof applyExpensesList === "function") {
+        applyExpensesList(expenseList);
+      } else if (typeof loadExpensesFromApi === "function") {
+        loadExpensesFromApi().catch(function () {});
       }
 
       if (meResp && meResp.user) {
         var u = meResp.user;
-        window.crmOwner = {
-          id: u.id,
-          name: u.fullName || u.name || u.email || 'Dealer',
-          role: u.role || 'Dealer Admin',
-          birthday: u.birthDate || '',
-          email: u.email || '',
-          introCompleted: u.introCompleted || false,
-          termsAccepted: u.termsAccepted || false,
-          termsVersion: u.termsVersion || null,
-          termsPrintedName: u.termsPrintedName || null,
-          termsDealership: u.termsDealership || null,
-          termsSignature: u.termsSignature || null,
-          termsAcceptedAt: u.termsAcceptedAt || null,
-          dealershipName: u.dealership || null,
-        };
-        if (typeof updateDashWelcome === 'function') updateDashWelcome();
+        if (typeof applyMeUserToProfile === "function") {
+          applyMeUserToProfile(u);
+        } else if (typeof applyCrmOwnerData === "function") {
+          applyCrmOwnerData({
+            id: u.id,
+            name: u.fullName || u.name || u.email || "Dealer",
+            fullName: u.fullName || u.name,
+            role: u.role || "owner",
+            imageUrl: u.imageUrl || null,
+            birthday: u.birthDate || "",
+            email: u.email || "",
+            introCompleted: u.introCompleted || false,
+            termsAccepted: u.termsAccepted || false,
+            termsVersion: u.termsVersion || null,
+            termsPrintedName: u.termsPrintedName || null,
+            termsDealership: u.termsDealership || null,
+            termsSignature: u.termsSignature || null,
+            termsAcceptedAt: u.termsAcceptedAt || null,
+            dealershipName: u.dealership || null,
+          });
+        } else {
+          window.crmOwner = {
+            id: u.id,
+            name: u.fullName || u.name || u.email || "Dealer",
+            role: u.role || "owner",
+            imageUrl: u.imageUrl || null,
+            birthday: u.birthDate || "",
+            email: u.email || "",
+            introCompleted: u.introCompleted || false,
+            termsAccepted: u.termsAccepted || false,
+            termsVersion: u.termsVersion || null,
+            termsPrintedName: u.termsPrintedName || null,
+            termsDealership: u.termsDealership || null,
+            termsSignature: u.termsSignature || null,
+            termsAcceptedAt: u.termsAcceptedAt || null,
+            dealershipName: u.dealership || null,
+          };
+          if (typeof updateProfileChip === "function") updateProfileChip();
+        }
+        if (typeof updateDashWelcome === "function") updateDashWelcome();
         try {
           sessionStorage.setItem(
-            'av_terms_accepted',
-            u.termsAccepted ? '1' : '0',
+            "av_terms_accepted",
+            u.termsAccepted ? "1" : "0",
           );
-          localStorage.removeItem('av_terms_accepted_db');
+          localStorage.removeItem("av_terms_accepted_db");
         } catch (e) {}
-        if (typeof avBootGateOnce === 'function') avBootGateOnce();
+        if (typeof avBootGateOnce === "function") avBootGateOnce();
       }
 
       if (taxSettingsResp) {

@@ -377,6 +377,13 @@
         color: #fff;
         flex-shrink: 0;
         letter-spacing: 0.02em;
+        overflow: hidden;
+      }
+      .avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
       }
 
       .profile-name {
@@ -11697,6 +11704,216 @@
         font-size: 12px;
       }
 
+      .pv-intro {
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.55;
+        background: rgba(58, 160, 255, 0.07);
+        border: 1px solid rgba(58, 160, 255, 0.22);
+        border-radius: 10px;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+      }
+      .pv-intro b {
+        color: var(--text);
+      }
+      .pv-sec {
+        font-size: 10.5px;
+        font-weight: 800;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin: 18px 0 10px;
+        padding-top: 14px;
+        border-top: 1px solid var(--border);
+      }
+      .pv-sec:first-of-type {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+      }
+      .pv-hint {
+        font-size: 10px;
+        color: var(--muted);
+        margin-top: 4px;
+      }
+      .pv-summary {
+        margin-top: 20px;
+        padding: 16px 18px;
+        border-radius: 12px;
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+      }
+      .pvs-title {
+        font-size: 10.5px;
+        font-weight: 800;
+        letter-spacing: 0.7px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-bottom: 11px;
+      }
+      .pvs-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 13px;
+        padding: 5px 0;
+      }
+      .pvs-row span:first-child {
+        color: var(--muted);
+      }
+      .pvs-row span:last-child {
+        font-weight: 800;
+        font-family: var(--mono);
+        color: var(--text);
+      }
+      .pvs-row em {
+        font-style: normal;
+        font-size: 10px;
+        color: var(--muted);
+      }
+      .pvs-row.grand {
+        border-top: 1px solid var(--border);
+        margin-top: 7px;
+        padding-top: 11px;
+      }
+      .pvs-row.grand span:first-child {
+        color: var(--text);
+        font-weight: 800;
+      }
+      .pvs-row.grand span:last-child {
+        font-size: 17px;
+      }
+      .pv-next {
+        margin-top: 10px;
+        padding: 14px 16px;
+        border-radius: 11px;
+        border: 1px solid rgba(35, 209, 139, 0.35);
+        background: rgba(35, 209, 139, 0.06);
+      }
+      .pvn-title {
+        font-size: 13px;
+        font-weight: 800;
+        color: var(--text);
+        line-height: 1.45;
+      }
+      .pvn-text {
+        font-size: 12.5px;
+        color: var(--muted);
+        line-height: 1.55;
+        margin-top: 6px;
+      }
+      .pvn-choice {
+        font-size: 10.5px;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 14px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+      }
+      .pvn-btn {
+        width: 100%;
+        margin-top: 11px;
+        padding: 10px;
+        border-radius: 9px;
+        border: 1px solid var(--green);
+        background: none;
+        color: var(--green);
+        font-size: 12.5px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .pvn-btn:hover {
+        background: rgba(35, 209, 139, 0.12);
+      }
+      .pvn-btn.alt {
+        border-color: var(--border);
+        color: var(--text);
+        margin-top: 8px;
+      }
+      .pvn-btn.alt:hover {
+        background: var(--panel-2);
+        border-color: var(--blue);
+        color: var(--blue);
+      }
+      .exp-att-box {
+        margin-top: 12px;
+        border: 1px solid var(--border);
+        border-radius: 11px;
+        background: var(--panel-2);
+        overflow: hidden;
+      }
+      .exp-att-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+      }
+      .exp-att-head b {
+        color: var(--orange);
+        text-transform: none;
+        letter-spacing: 0;
+        font-size: 12px;
+      }
+      .exp-att-rows {
+        max-height: 180px;
+        overflow-y: auto;
+      }
+      .exp-att-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .exp-att-row:last-child {
+        border-bottom: none;
+      }
+      .exp-att-main {
+        min-width: 0;
+      }
+      .exp-att-name {
+        font-size: 12.5px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .exp-att-meta {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .exp-att-amt {
+        font-size: 13px;
+        font-weight: 800;
+        font-family: var(--mono);
+        color: var(--text);
+        flex-shrink: 0;
+      }
+      .exp-att-empty {
+        padding: 14px;
+        font-size: 12px;
+        color: var(--muted);
+        text-align: center;
+      }
+      .exp-att-foot {
+        padding: 9px 14px;
+        font-size: 11px;
+        color: var(--muted);
+        border-top: 1px solid var(--border);
+      }
+
       .av-dec-ok {
         color: var(--green);
         font-weight: 700;
@@ -13796,7 +14013,16 @@
             />
           </div>
           <div class="quick-actions">
-            <button class="qa-btn" onclick="openAddVeh()">+ Add Vehicle</button>
+            <button class="qa-btn" id="qaAddVehicle" onclick="openAddVeh()">
+              + Add Vehicle
+            </button>
+            <button
+              class="qa-btn accent-purple"
+              id="qaPrevSold"
+              onclick="openPrevSold()"
+            >
+              + Add Previous Sold Vehicle
+            </button>
             <button class="qa-btn accent-orange" onclick="openExpenseModal()">
               + Add Expense
             </button>
@@ -13895,10 +14121,10 @@
                 onclick="toggleAdminMenu()"
                 title="Users & access"
               >
-                <div class="avatar">JM</div>
+                <div class="avatar">—</div>
                 <div class="profile-meta">
-                  <div class="profile-name">Jordan Marsh</div>
-                  <div class="profile-role">Dealer Admin</div>
+                  <div class="profile-name">Loading…</div>
+                  <div class="profile-role">—</div>
                 </div>
                 <svg
                   class="profile-caret"
@@ -19383,7 +19609,8 @@
                 </div>
                 <div class="ps-auto-sub">
                   When on, every subscription payment is logged in your
-                  <b>Expenses</b> section under “Software / subscriptions” —
+                  <b>Expenses</b> section under Dealership Expense /
+                  Subscriptions —
                   so your books stay current without re-typing it.
                 </div>
               </div>
@@ -19769,12 +19996,36 @@
                 <div class="dj-section-body">
                 <div class="form-row">
                   <div class="form-group">
-                    <label>Deal Number</label
-                    ><input
-                      type="text"
-                      id="djRos"
-                      placeholder="e.g. DL-10482"
-                    />
+                    <label>Deal Number</label>
+                    <div style="display: flex; gap: 8px; align-items: stretch">
+                      <input
+                        type="text"
+                        id="djRos"
+                        placeholder="e.g. DL-10482"
+                        style="flex: 1"
+                        oninput="onDjRosInput()"
+                        autocomplete="off"
+                      />
+                      <button
+                        type="button"
+                        class="print-btn"
+                        id="djRosAutoBtn"
+                        onclick="autoGenerateDealNumber()"
+                        title="Generate a unique DL-##### deal number"
+                        style="white-space: nowrap; padding: 0 12px"
+                      >
+                        Auto generate
+                      </button>
+                    </div>
+                    <div
+                      id="djRosStatus"
+                      style="
+                        font-size: 11.5px;
+                        margin-top: 5px;
+                        font-weight: 700;
+                        min-height: 16px;
+                      "
+                    ></div>
                   </div>
                   <div class="form-group">
                     <label>Sale Date</label
@@ -20281,6 +20532,7 @@
                     <th><span class="th-label">ROI</span></th>
                     <th><span class="th-label">Rep</span></th>
                     <th><span class="th-label">Sold Date</span></th>
+                    <th><span class="th-label">Deal Jacket</span></th>
                     <th><span class="th-label">Docs</span></th>
                   </tr>
                 </thead>
@@ -20483,6 +20735,33 @@
         <div class="modal-body">
           <input type="hidden" id="expEditId" value="" />
 
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category</label>
+              <select
+                id="expCategory"
+                onchange="onExpCategoryChange()"
+              ></select>
+            </div>
+            <div class="form-group">
+              <label>Type</label>
+              <select id="expType" onchange="onExpTypeChange()"></select>
+            </div>
+          </div>
+
+          <div
+            class="form-group"
+            id="expOtherWrap"
+            style="display: none; margin-bottom: 14px"
+          >
+            <label>Describe this expense</label>
+            <input
+              type="text"
+              id="expOther"
+              placeholder="Type your own description"
+            />
+          </div>
+
           <div class="form-group" style="margin-bottom: 14px">
             <label>Expense name</label>
             <input
@@ -20494,11 +20773,8 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label>Category</label>
-              <select
-                id="expCategory"
-                onchange="onExpCategoryChange()"
-              ></select>
+              <label>Date</label>
+              <input type="date" id="expDueDate" />
             </div>
             <div class="form-group">
               <label>Amount ($)</label>
@@ -20512,11 +20788,7 @@
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="form-group">
-              <label>Due date</label>
-              <input type="date" id="expDueDate" />
-            </div>
+          <div class="form-row" id="expRecurWrap">
             <div class="form-group">
               <label>Frequency</label>
               <select id="expRecurring"></select>
@@ -20531,24 +20803,30 @@
                 <option value="true">Paid</option>
               </select>
             </div>
+          </div>
+          <div class="form-row" id="expVehicleRow">
             <div class="form-group">
               <label>Attach to vehicle</label>
               <select
                 id="expVehicle"
                 onchange="
-                  const v = this.value;
-                  document.getElementById('expVin').value = v;
+                  document.getElementById('expVin').value = this.value;
                   const m = document.getElementById('expVinMatch');
-                  if (v) {
+                  if (this.value) {
                     const veh = (
                       typeof vehicles !== 'undefined' ? vehicles : []
-                    ).find((x) => x.vin === v);
+                    ).find((x) => x.vin === this.value);
                     m.innerHTML = veh
-                      ? `<span style='color:var(--green);'>&#10003; Attaching to ${veh.year} ${veh.make} ${veh.model}</span>`
+                      ? '<span style=\'color:var(--green);\'>✓ Attaching to ' +
+                        veh.year +
+                        ' ' +
+                        veh.make +
+                        ' ' +
+                        veh.model +
+                        '</span>'
                       : '';
-                  } else {
-                    m.textContent = '';
-                  }
+                  } else if (m) m.textContent = '';
+                  renderExpAttachedList();
                 "
               >
                 <option value="">None &mdash; dealership expense</option>
@@ -20598,6 +20876,7 @@
             This category usually belongs to a specific car. Attaching it adds
             the cost to that vehicle&rsquo;s profit &amp; loss automatically.
           </div>
+          <div id="expAttachedList"></div>
 
           <div class="form-group" style="margin: 14px 0">
             <label>Receipt</label>
@@ -21839,34 +22118,10 @@
         <div class="wc-head">
           <div class="wc-mark"><svg viewBox="0 0 92 60" width="52" fill="none"><path d="M9 6 L33 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/><path d="M33 54 L57 6" stroke="#1c7a46" stroke-width="11" stroke-linecap="round"/><path d="M57 6 L83 54" stroke="#fff" stroke-width="11" stroke-linecap="round"/></svg></div>
           <div class="wc-title">Welcome to AutoVault</div>
-          <div class="wc-sub">The first three steps to get your platform running.</div>
+          <div class="wc-sub" id="wcSub">Get your platform running with the steps for your plan.</div>
         </div>
-        <div class="wc-steps">
-          <div class="wc-step">
-            <div class="wc-num">1</div>
-            <div class="wc-step-body">
-              <div class="wc-step-title">Add all vehicles <span class="wc-crit">Critical</span></div>
-              <div class="wc-step-text">Every unit on your lot, tied to its VIN.</div>
-            </div>
-          </div>
-          <div class="wc-step">
-            <div class="wc-num">2</div>
-            <div class="wc-step-body">
-              <div class="wc-step-title">Add all sales reps &amp; commission <span class="wc-crit">Critical</span></div>
-              <div class="wc-step-text">Set each rep&rsquo;s commission so deals calculate correctly.</div>
-            </div>
-          </div>
-          <div class="wc-step">
-            <div class="wc-num">3</div>
-            <div class="wc-step-body">
-              <div class="wc-step-title">Add all expenses</div>
-              <div class="wc-step-text">Rent, payroll, flooring, marketing &mdash; everything that hits your books.</div>
-            </div>
-          </div>
-        </div>
-        <div class="wc-note">
-          <b>Steps 1 and 2 are critical for your system to work.</b> AutoVault is designed so everything works together once your vehicles and sales rep commissions are added. As you mark vehicles as sold, it automatically calculates your sales rep&rsquo;s commission into the deal.
-        </div>
+        <div class="wc-steps" id="wcSteps"></div>
+        <div class="wc-note" id="wcNote"></div>
         <button class="wc-play" onclick="startSetupTour()">
           <span class="wc-play-ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>
           Click here to see how
@@ -22936,6 +23191,226 @@
           <button class="ps-btn" style="margin-top: 8px" onclick="closeUpdateMethod()">
             Cancel
           </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay"
+      id="prevSoldModal"
+      onclick="if(event.target===this)closePrevSold()"
+    >
+      <div class="modal" style="max-width: 640px">
+        <div class="modal-head">
+          <h3>Add Previous Sold Vehicle</h3>
+          <button class="modal-close" onclick="closePrevSold()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="pv-intro">
+            For vehicles you sold <b>before</b> joining AutoVault. This saves
+            straight into Sold Vehicles and updates every report, P&amp;L and
+            KPI as if it had been sold here.
+          </div>
+
+          <div class="pv-sec">Vehicle</div>
+          <div class="av-vin-row" style="margin-bottom: 10px">
+            <input
+              id="pvVin"
+              class="av-vin-input"
+              placeholder="17-digit VIN…"
+              oninput="pvVinInput()"
+              autocomplete="off"
+            />
+          </div>
+          <div id="pvDecoded" class="av-decoded"></div>
+          <div class="av-grid3">
+            <div>
+              <label class="av-label">Year</label>
+              <input id="pvYear" class="rc-input" type="number" placeholder="2024" />
+            </div>
+            <div>
+              <label class="av-label">Make</label>
+              <input id="pvMake" class="rc-input" placeholder="Make" />
+            </div>
+            <div>
+              <label class="av-label">Model</label>
+              <input id="pvModel" class="rc-input" placeholder="Model" />
+            </div>
+          </div>
+
+          <div class="pv-sec">Dates</div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label">Purchase Date</label>
+              <input
+                id="pvBuyDate"
+                class="rc-input"
+                type="date"
+                onchange="pvRecalc()"
+              />
+            </div>
+            <div>
+              <label class="av-label">Sale Date</label>
+              <input
+                id="pvSellDate"
+                class="rc-input"
+                type="date"
+                onchange="pvRecalc()"
+              />
+            </div>
+          </div>
+
+          <div class="pv-sec">Acquisition &amp; Costs</div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label">Purchase Price ($)</label>
+              <input
+                id="pvPrice"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+            </div>
+            <div>
+              <label class="av-label">Auction / Doc Fees ($)</label>
+              <input
+                id="pvFees"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+            </div>
+          </div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label">Repairs / Recon ($)</label>
+              <input
+                id="pvRepairs"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+            </div>
+            <div>
+              <label class="av-label">Other Expenses ($)</label>
+              <input
+                id="pvExpenses"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+            </div>
+          </div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label">Flooring Cost ($)</label>
+              <input
+                id="pvFlooring"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+              <div class="pv-hint">Leave blank for none</div>
+            </div>
+            <div>
+              <label class="av-label">Add-ons Cost ($)</label>
+              <input
+                id="pvAddOns"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+            </div>
+          </div>
+
+          <div class="pv-sec">Sale</div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label">Sale Price ($)</label>
+              <input
+                id="pvSalePrice"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+            </div>
+            <div>
+              <label class="av-label"
+                >Customer Name
+                <span style="color: var(--muted); font-weight: 400"
+                  >(optional)</span
+                ></label
+              >
+              <input id="pvCustomer" class="rc-input" placeholder="Customer" />
+            </div>
+          </div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label">Sales Tax Collected ($)</label>
+              <input
+                id="pvSalesTax"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+            </div>
+            <div>
+              <label class="av-label">Registration Fees ($)</label>
+              <input
+                id="pvRegFees"
+                class="rc-input"
+                type="number"
+                placeholder="0"
+                oninput="pvRecalc()"
+              />
+            </div>
+          </div>
+
+          <div class="pv-sec" id="pvRepSec">Sales Rep &amp; Commission</div>
+          <div class="av-grid2" id="pvRepRow">
+            <div>
+              <label class="av-label">Sales Rep</label>
+              <select id="pvRep" class="rc-input" onchange="pvRecalc()"></select>
+            </div>
+            <div>
+              <label class="av-label">Commission ($)</label>
+              <input
+                id="pvCommission"
+                class="rc-input"
+                type="number"
+                placeholder="auto"
+                oninput="pvRecalc()"
+              />
+              <div class="pv-hint">Blank = auto-calculate</div>
+            </div>
+          </div>
+
+          <div class="av-flooring" style="margin-top: 14px">
+            <div>
+              <div class="av-fl-title">Title Present</div>
+              <div class="av-fl-sub">Turn on if the title was in hand.</div>
+            </div>
+            <label class="av-switch"
+              ><input type="checkbox" id="pvTitle" checked /><span
+                class="av-switch-slider"
+              ></span
+            ></label>
+          </div>
+
+          <div class="pv-summary" id="pvSummary"></div>
+
+          <button class="btn-primary av-submit" id="pvSaveBtn" onclick="prevSoldSave()">
+            Save to Sold Vehicles
+          </button>
+          <div id="pvMsg" style="margin-top: 12px"></div>
         </div>
       </div>
     </div>
@@ -24205,27 +24680,184 @@
         else maybeShowWelcome();
       }
       /* ===================== WELCOME / INTRODUCTION TOUR ===================== */
-      const SETUP_TOUR = [
-        {
-          sel: "#qaAddVehicle",
-          title: "Step 1 \u2014 Add your vehicles",
-          text: "Start here. Click \"+ Add Vehicle\" to log every unit on your lot. Scan or type the VIN and AutoVault decodes the year, make and model for you.",
-          page: "dashboard",
-        },
-        {
-          sel: '[data-page="reps"]',
-          title: "Step 2 \u2014 Add sales reps & commission",
-          text: "Open Sales Reps and set each rep\u2019s commission. This is what lets AutoVault auto-calculate commission into every deal you close.",
-          page: "dashboard",
-        },
-        {
-          sel: '[data-page="expenses"]',
-          title: "Step 3 \u2014 Add your expenses",
-          text: "Log rent, payroll, flooring, marketing and the rest. Once these are in, your profit and P&L reflect the real cost of doing business.",
-          page: "dashboard",
-        },
-      ];
+      function getOnboardingForPlan(plan) {
+        if (plan === "wholesaler") {
+          return {
+            sub: "Wholesalers — only the setup steps that matter for your wholesale platform.",
+            note: "<b>Start with inventory and flooring.</b> Once those are in, dealer-to-dealer sales and costs stay accurate from day one.",
+            steps: [
+              {
+                title: "Add wholesale inventory",
+                text: "Log every unit with a VIN so auction and dealer deals stay tied to the right car.",
+                crit: true,
+              },
+              {
+                title: "Set up flooring costs",
+                text: "Enter your flooring rate so holding costs calculate correctly on every unit.",
+                crit: true,
+              },
+              {
+                title: "Dealer-to-dealer sales",
+                text: "Use Wholesale CRM to track dealer sales and keep your wholesale numbers clean.",
+                crit: false,
+              },
+            ],
+            tour: [
+              {
+                sel: "#qaAddVehicle",
+                title: "Step 1 — Add wholesale inventory",
+                text: "Click “+ Add Vehicle” to log units. Scan or type the VIN and AutoVault decodes year, make and model.",
+                page: "dashboard",
+              },
+              {
+                sel: '[data-page="vehicles"]',
+                title: "Step 2 — Set up flooring costs",
+                text: "Open Vehicles and configure flooring so each unit’s holding cost is tracked automatically.",
+                page: "vehicles",
+              },
+              {
+                sel: "#adminWholesaleCrmNav",
+                title: "Step 3 — Dealer-to-dealer sales",
+                text: "Open Wholesale CRM to manage dealer-to-dealer inventory and sales for your wholesale plan.",
+                page: "dashboard",
+              },
+            ],
+          };
+        }
+        if (plan === "independent_dealer") {
+          return {
+            sub: "Independent Dealers — vehicles, past sales, and flooring. No sales-rep or payroll setup needed on this plan.",
+            note: "<b>Three steps get you running.</b> Add inventory, import past sold units for historical P&amp;L, then set flooring so costs stay accurate.",
+            steps: [
+              {
+                title: "Add all vehicles",
+                text: "Every unit on your lot, tied to its VIN.",
+                crit: true,
+              },
+              {
+                title: "Add previous sold vehicles",
+                text: "Import cars you sold before AutoVault so history and reports start correctly.",
+                crit: true,
+              },
+              {
+                title: "Add flooring costs",
+                text: "Set your flooring account so holding costs land on each vehicle.",
+                crit: false,
+              },
+            ],
+            tour: [
+              {
+                sel: "#qaAddVehicle",
+                title: "Step 1 — Add your vehicles",
+                text: "Start here. Click “+ Add Vehicle” to log every unit. Scan or type the VIN and AutoVault fills year, make and model.",
+                page: "dashboard",
+              },
+              {
+                sel: "#qaPrevSold",
+                title: "Step 2 — Add previous sold vehicles",
+                text: "Click “+ Add Previous Sold Vehicle” to import past sales so your historical data and P&amp;L are ready immediately.",
+                page: "dashboard",
+              },
+              {
+                sel: '[data-page="vehicles"]',
+                title: "Step 3 — Add flooring costs",
+                text: "Open Vehicles and set flooring so each car’s holding cost is calculated automatically.",
+                page: "vehicles",
+              },
+            ],
+          };
+        }
+        // growing_dealership (default)
+        return {
+          sub: "Growing Dealerships — full setup including payroll and sales rep commissions.",
+          note: "<b>Vehicles and commissions are critical.</b> Once inventory, past sales, flooring, payroll, and rep commissions are in, deals calculate correctly end to end.",
+          steps: [
+            {
+              title: "Add all vehicles",
+              text: "Every unit on your lot, tied to its VIN.",
+              crit: true,
+            },
+            {
+              title: "Add previous sold vehicles",
+              text: "Import cars sold before AutoVault for accurate history.",
+              crit: true,
+            },
+            {
+              title: "Add flooring costs",
+              text: "Set flooring so holding costs attach to each vehicle.",
+              crit: false,
+            },
+            {
+              title: "Set up payroll",
+              text: "Add payroll so wages land in your expenses and P&amp;L.",
+              crit: false,
+            },
+            {
+              title: "Set up sales rep commissions",
+              text: "Add reps and commission rates so deals calculate correctly.",
+              crit: true,
+            },
+          ],
+          tour: [
+            {
+              sel: "#qaAddVehicle",
+              title: "Step 1 — Add your vehicles",
+              text: "Click “+ Add Vehicle” to log every unit. Scan or type the VIN and AutoVault decodes year, make and model.",
+              page: "dashboard",
+            },
+            {
+              sel: "#qaPrevSold",
+              title: "Step 2 — Add previous sold vehicles",
+              text: "Import vehicles sold before you joined so historical P&amp;L and reports are accurate from day one.",
+              page: "dashboard",
+            },
+            {
+              sel: '[data-page="vehicles"]',
+              title: "Step 3 — Add flooring costs",
+              text: "Open Vehicles and configure flooring so holding costs calculate on each unit.",
+              page: "vehicles",
+            },
+            {
+              sel: '[data-page="payroll"]',
+              title: "Step 4 — Set up payroll",
+              text: "Open Payroll to log wages so your expenses and P&amp;L reflect the real cost of your team.",
+              page: "payroll",
+            },
+            {
+              sel: '[data-page="reps"]',
+              title: "Step 5 — Set up sales rep commissions",
+              text: "Open Sales Reps and set each rep’s commission so AutoVault calculates commission into every deal.",
+              page: "reps",
+            },
+          ],
+        };
+      }
+      function renderWelcomeForPlan() {
+        const plan = currentDealershipPlan() || "growing_dealership";
+        const cfg = getOnboardingForPlan(plan);
+        const sub = document.getElementById("wcSub");
+        if (sub) sub.textContent = cfg.sub;
+        const note = document.getElementById("wcNote");
+        if (note) note.innerHTML = cfg.note;
+        const host = document.getElementById("wcSteps");
+        if (host) {
+          host.innerHTML = cfg.steps
+            .map(
+              (s, i) => `
+          <div class="wc-step">
+            <div class="wc-num">${i + 1}</div>
+            <div class="wc-step-body">
+              <div class="wc-step-title">${s.title}${s.crit ? ' <span class="wc-crit">Critical</span>' : ""}</div>
+              <div class="wc-step-text">${s.text}</div>
+            </div>
+          </div>`,
+            )
+            .join("");
+        }
+        return cfg;
+      }
       function openWelcome() {
+        renderWelcomeForPlan();
         var m = document.getElementById("welcomeModal");
         if (m) m.classList.add("open");
       }
@@ -24282,7 +24914,9 @@
       }, 5000);
       function startSetupTour() {
         closeWelcome();
-        activeTour = SETUP_TOUR;
+        const plan = currentDealershipPlan() || "growing_dealership";
+        const cfg = getOnboardingForPlan(plan);
+        activeTour = cfg.tour;
         tourIdx = 0;
         showPage("dashboard", document.querySelector("[data-page=dashboard]"));
         var ov = document.getElementById("tourOverlay");
@@ -24344,6 +24978,14 @@
       function renderTourStep() {
         const step = activeTour[tourIdx];
         if (!step) return;
+        if (step.page && typeof showPage === "function") {
+          try {
+            const navEl = document.querySelector(
+              '[data-page="' + step.page + '"]',
+            );
+            showPage(step.page, navEl);
+          } catch (e) {}
+        }
         document.getElementById("tourBadge").textContent =
           `${tourIdx + 1} / ${activeTour.length}`;
         document.getElementById("tourTitle").textContent = step.title;
@@ -26809,6 +27451,372 @@
           if (v) v.focus();
         }, 60);
       }
+
+      /* ===================== PREVIOUS SOLD VEHICLE ===================== */
+      function currentDealershipPlan() {
+        try {
+          var routePortal =
+            window.AVPortal && AVPortal.getRoutePortal
+              ? AVPortal.getRoutePortal()
+              : "crm";
+          var token =
+            window.AVPortal && AVPortal.getToken
+              ? AVPortal.getToken(routePortal)
+              : null;
+          if (!token) return null;
+          var claims = JSON.parse(
+            atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")),
+          );
+          return claims.plan || null;
+        } catch (e) {
+          return null;
+        }
+      }
+      function pvNum(id) {
+        const el = document.getElementById(id);
+        const n = parseFloat(el ? el.value : "");
+        return isFinite(n) && n >= 0 ? n : 0;
+      }
+      function pvRaw(id) {
+        const el = document.getElementById(id);
+        return el ? (el.value || "").trim() : "";
+      }
+      function pvMoney(n) {
+        if (typeof fmt === "function") return fmt(n);
+        return "$" + Math.round(n).toLocaleString();
+      }
+      function pvMoneySigned(n) {
+        if (typeof fmtSigned === "function") return fmtSigned(n);
+        return (n >= 0 ? "+" : "-") + "$" + Math.round(Math.abs(n)).toLocaleString();
+      }
+      function openPrevSold() {
+        const m = document.getElementById("prevSoldModal");
+        if (!m) return;
+        const plan = currentDealershipPlan();
+        const showRep = plan === "growing_dealership";
+        const repSec = document.getElementById("pvRepSec");
+        const repRow = document.getElementById("pvRepRow");
+        if (repSec) repSec.style.display = showRep ? "" : "none";
+        if (repRow) repRow.style.display = showRep ? "" : "none";
+        const rs = document.getElementById("pvRep");
+        if (rs && showRep) {
+          const keep = rs.value;
+          const reps = typeof salesReps !== "undefined" ? salesReps : [];
+          rs.innerHTML =
+            '<option value="">— unassigned —</option>' +
+            reps
+              .map(
+                (r) =>
+                  `<option value="${r.id || r.userId || ""}">${r.name || r.fullName || "Rep"}</option>`,
+              )
+              .join("");
+          if (keep) rs.value = keep;
+        }
+        const msg = document.getElementById("pvMsg");
+        if (msg) msg.innerHTML = "";
+        m.classList.add("open");
+        pvRecalc();
+        setTimeout(() => {
+          const v = document.getElementById("pvVin");
+          if (v) v.focus();
+        }, 60);
+      }
+      function closePrevSold() {
+        const m = document.getElementById("prevSoldModal");
+        if (m) m.classList.remove("open");
+      }
+      function pvTotals() {
+        const price = pvNum("pvPrice"),
+          fees = pvNum("pvFees"),
+          repairs = pvNum("pvRepairs"),
+          other = pvNum("pvExpenses"),
+          flooring = pvNum("pvFlooring"),
+          addOns = pvNum("pvAddOns"),
+          sale = pvNum("pvSalePrice");
+        const buy = pvRaw("pvBuyDate"),
+          sell = pvRaw("pvSellDate");
+        let days = null;
+        if (buy && sell) {
+          const d = Math.round(
+            (new Date(sell + "T00:00:00") - new Date(buy + "T00:00:00")) /
+              86400000,
+          );
+          days = isFinite(d) ? d : null;
+        }
+        const totalInvestment = price + fees + repairs + other + addOns;
+        const totalVehicleCost = totalInvestment + flooring;
+        const commRaw = pvRaw("pvCommission");
+        const plan = currentDealershipPlan();
+        const commission =
+          plan !== "growing_dealership"
+            ? 0
+            : commRaw === ""
+              ? Math.round(price * 0.04)
+              : pvNum("pvCommission");
+        const netProfit = sale - totalVehicleCost - commission;
+        const roi =
+          totalVehicleCost > 0 ? (netProfit / totalVehicleCost) * 100 : 0;
+        return {
+          price,
+          fees,
+          repairs,
+          other,
+          flooring,
+          addOns,
+          sale,
+          days,
+          totalInvestment,
+          totalVehicleCost,
+          commission,
+          netProfit,
+          roi,
+          autoComm: plan === "growing_dealership" && commRaw === "",
+        };
+      }
+      function pvRecalc() {
+        const t = pvTotals();
+        const host = document.getElementById("pvSummary");
+        if (!host) return;
+        const dayTxt =
+          t.days === null
+            ? "—"
+            : t.days < 0
+              ? "check dates"
+              : t.days + " days";
+        const showComm = currentDealershipPlan() === "growing_dealership";
+        host.innerHTML = `
+    <div class="pvs-title">Calculated Totals</div>
+    <div class="pvs-row"><span>Days in Inventory</span><span${t.days !== null && t.days < 0 ? ' style="color:var(--red)"' : ""}>${dayTxt}</span></div>
+    <div class="pvs-row"><span>Total Investment</span><span>${pvMoney(t.totalInvestment)}</span></div>
+    <div class="pvs-row"><span>Total Vehicle Cost</span><span>${pvMoney(t.totalVehicleCost)}</span></div>
+    ${showComm ? `<div class="pvs-row"><span>Commission${t.autoComm ? " <em>(auto)</em>" : ""}</span><span>${pvMoney(t.commission)}</span></div>` : ""}
+    <div class="pvs-row grand"><span>Net Profit</span><span style="color:${t.netProfit >= 0 ? "var(--green)" : "var(--red)"}">${pvMoneySigned(t.netProfit)}</span></div>
+    <div class="pvs-row"><span>ROI</span><span style="color:${t.roi >= 0 ? "var(--green)" : "var(--red)"}">${t.roi.toFixed(1)}%</span></div>`;
+      }
+      function pvMsg(msg, good) {
+        const el = document.getElementById("pvMsg");
+        if (el)
+          el.innerHTML = `<div class="rc-ok ${good ? "good" : "bad"}">${msg}</div>`;
+      }
+      function pvOpenJacket(vin) {
+        closePrevSold();
+        const el = document.getElementById("pvMsg");
+        if (el) el.innerHTML = "";
+        if (typeof openDealJacket === "function") openDealJacket(vin, "sold");
+        else if (typeof showVehicleDetail === "function") showVehicleDetail(vin);
+      }
+      let _pvVinLast = "";
+      let _pvVinReq = 0;
+      function pvVinInput() {
+        const raw = (document.getElementById("pvVin") || {}).value || "";
+        const vin = raw
+          .toUpperCase()
+          .replace(/[^A-HJ-NPR-Z0-9]/g, "")
+          .slice(0, 17);
+        const inp = document.getElementById("pvVin");
+        if (inp && inp.value !== vin) inp.value = vin;
+        const dec = document.getElementById("pvDecoded");
+        if (!dec) return;
+        if (vin.length === 17) {
+          if (vin !== _pvVinLast) {
+            _pvVinLast = vin;
+            pvDecodeVinApi(vin);
+          }
+        } else {
+          dec.innerHTML = "";
+          _pvVinLast = "";
+        }
+      }
+      function pvDecodeVinApi(vin) {
+        const dec = document.getElementById("pvDecoded");
+        if (!dec) return;
+        const reqId = ++_pvVinReq;
+        dec.innerHTML = `<span class="av-dec-load">Decoding VIN…</span>`;
+        fetch(
+          `https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVinValues/${encodeURIComponent(vin)}?format=json`,
+        )
+          .then((r) =>
+            r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)),
+          )
+          .then((data) => {
+            if (reqId !== _pvVinReq) return;
+            const r = (data && data.Results && data.Results[0]) || {};
+            const year = (r.ModelYear || "").trim();
+            const make =
+              typeof avTitleCase === "function"
+                ? avTitleCase(r.Make || "")
+                : r.Make || "";
+            const model = (r.Model || "").trim();
+            if (year) document.getElementById("pvYear").value = year;
+            if (make) document.getElementById("pvMake").value = make;
+            if (model) document.getElementById("pvModel").value = model;
+            const label = [year, make, model].filter(Boolean).join(" ");
+            dec.innerHTML = label
+              ? `<span class="av-dec-ok">✓ Decoded: ${label}</span>`
+              : `<span class="av-dec-warn">VIN captured — add the details below</span>`;
+          })
+          .catch(() => {
+            if (reqId !== _pvVinReq) return;
+            dec.innerHTML = `<span class="av-dec-warn">VIN captured — add the details below</span>`;
+          });
+      }
+      async function prevSoldSave() {
+        const vin = pvRaw("pvVin").toUpperCase();
+        const buy = pvRaw("pvBuyDate"),
+          sell = pvRaw("pvSellDate");
+        const t = pvTotals();
+        const errs = [];
+        if (!vin)
+          errs.push("A VIN is required to save this vehicle.");
+        else if (
+          typeof vehicles !== "undefined" &&
+          vehicles.some((v) => (v.vin || "").toUpperCase() === vin)
+        )
+          errs.push("That VIN is already in the system.");
+        if (!buy) errs.push("A purchase date is required.");
+        if (!sell) errs.push("A sale date is required for a sold vehicle.");
+        if (buy && sell && new Date(sell) < new Date(buy))
+          errs.push("The sale date can't be before the purchase date.");
+        if (!(t.price > 0)) errs.push("Enter what you paid for this vehicle.");
+        if (!(t.sale > 0)) errs.push("Enter what this vehicle sold for.");
+        if (errs.length) {
+          pvMsg(errs[0], false);
+          return;
+        }
+
+        const btn = document.getElementById("pvSaveBtn");
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "Saving…";
+        }
+        try {
+          if (!window.AVVehicles || !AVVehicles.importPreviousSold) {
+            throw new Error("Vehicle service not ready");
+          }
+          const plan = currentDealershipPlan();
+          const fields = {
+            vin,
+            year: parseInt(pvRaw("pvYear"), 10) || undefined,
+            make: pvRaw("pvMake") || undefined,
+            model: pvRaw("pvModel") || undefined,
+            buyDate: buy,
+            sellDate: sell,
+            price: t.price,
+            fees: t.fees,
+            repairs: t.repairs,
+            otherExpenses: t.other,
+            flooring: t.flooring,
+            addOns: t.addOns,
+            salePrice: t.sale,
+            salesTax: pvNum("pvSalesTax"),
+            regFees: pvNum("pvRegFees"),
+            customer: pvRaw("pvCustomer") || "Previous customer",
+            titlePresent: !!(document.getElementById("pvTitle") || {}).checked,
+          };
+          if (plan === "growing_dealership") {
+            const repId = pvRaw("pvRep");
+            if (repId) fields.salesRepId = repId;
+            if (pvRaw("pvCommission") !== "")
+              fields.commissionAmount = pvNum("pvCommission");
+            else fields.commissionAmount = t.commission;
+          }
+          const resp = await AVVehicles.importPreviousSold(fields);
+          if (typeof loadExpensesFromApi === "function") {
+            try {
+              await loadExpensesFromApi();
+            } catch (e) {}
+          }
+          [
+            "render",
+            "renderProfitPage",
+            "renderDashboard",
+            "renderDealJacketsList",
+            "renderCustomersPage",
+            "renderRepsPage",
+            "renderExpenses",
+          ].forEach((fn) => {
+            try {
+              if (typeof window[fn] === "function") window[fn]();
+            } catch (e) {}
+          });
+
+          const year = fields.year || "—";
+          const make = fields.make || "Vehicle";
+          const model = fields.model || "";
+          const label = [year, make, model].filter(Boolean).join(" ");
+          const sellFmt =
+            typeof fmtDate === "function" ? fmtDate(sell) : sell;
+          pvMsg(
+            `Saved ${label} — sold ${sellFmt} for ${pvMoney(t.sale)}, net ${pvMoneySigned(t.netProfit)}. Deal jacket not created yet.`,
+            true,
+          );
+          const el = document.getElementById("pvMsg");
+          if (el) {
+            el.innerHTML += `<div class="pv-next">
+        <div class="pvn-title">Saved under Sold Vehicles. Deal jacket status: No.</div>
+        <div class="pvn-text">Closing this window leaves the deal jacket uncreated. When you are ready, open Create Deal Jacket — fields autofill from this sale so you can finish paperwork and set deal jacket to Yes.</div>
+        <div class="pvn-choice">What would you like to do next?</div>
+        <button class="pvn-btn" type="button" onclick="pvOpenJacket('${vin}')">Create deal jacket for ${label} →</button>
+        <button class="pvn-btn alt" type="button" onclick="pvAddAnother()">Add another vehicle</button>
+      </div>`;
+          }
+          [
+            "pvVin",
+            "pvYear",
+            "pvMake",
+            "pvModel",
+            "pvPrice",
+            "pvFees",
+            "pvRepairs",
+            "pvExpenses",
+            "pvFlooring",
+            "pvAddOns",
+            "pvSalePrice",
+            "pvCustomer",
+            "pvSalesTax",
+            "pvRegFees",
+            "pvCommission",
+          ].forEach((id) => {
+            const field = document.getElementById(id);
+            if (field) field.value = "";
+          });
+          const d = document.getElementById("pvDecoded");
+          if (d) d.innerHTML = "";
+          _pvVinLast = "";
+          pvRecalc();
+          try {
+            const box = document.querySelector("#prevSoldModal .modal");
+            if (box)
+              setTimeout(() => {
+                box.scrollTo({ top: box.scrollHeight, behavior: "smooth" });
+              }, 60);
+          } catch (e) {}
+          return resp;
+        } catch (err) {
+          pvMsg(
+            (err && (err.message || err.error)) ||
+              "Failed to save previous sold vehicle.",
+            false,
+          );
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "Save to Sold Vehicles";
+          }
+        }
+      }
+      function pvAddAnother() {
+        const el = document.getElementById("pvMsg");
+        if (el) el.innerHTML = "";
+        try {
+          const box = document.querySelector("#prevSoldModal .modal");
+          if (box) box.scrollTo({ top: 0, behavior: "smooth" });
+        } catch (e) {}
+        setTimeout(() => {
+          const v = document.getElementById("pvVin");
+          if (v) v.focus();
+        }, 260);
+      }
       function openEditVehicleModal(vin) {
         const v = vehicles.find((x) => x.vin === vin);
         if (!v) return;
@@ -28181,7 +29189,7 @@
         if (routePortal !== "wholesale" && claimsPlan !== "wholesaler") {
           if (typeof AVToast !== "undefined")
             AVToast.warning(
-              "Wholesale CRM is only available on the Wholesaler plan.",
+              "Wholesale CRM is only available on the Wholesalers plan.",
             );
           return;
         }
@@ -29647,9 +30655,9 @@
       let ownerUsersLoaded = false;
       let ownerUsersLoading = false;
       function ownerPlanLabel(plan) {
-        if (plan === "wholesaler") return "Wholesaler";
-        if (plan === "independent_dealer") return "Independent Dealer";
-        if (plan === "growing_dealership") return "Growing Dealership";
+        if (plan === "wholesaler") return "Wholesalers";
+        if (plan === "independent_dealer") return "Independent Dealers";
+        if (plan === "growing_dealership") return "Growing Dealerships";
         return plan || "—";
       }
       function mapRegistrationToOwnerUser(reg) {
@@ -30546,12 +31554,22 @@
           if (promises.length) return Promise.all(promises);
         },
         "deal-jackets": function () {
+          var promises = [];
           var veh = ensureVehiclesForPage();
-          if (veh) return veh;
+          if (veh) promises.push(veh);
+          if (typeof loadExpensesFromApi === "function" && !_expensesLoaded) {
+            promises.push(loadExpensesFromApi());
+          }
+          if (promises.length) return Promise.all(promises);
         },
         "deal-jacket": function () {
+          var promises = [];
           var veh = ensureVehiclesForPage();
-          if (veh) return veh;
+          if (veh) promises.push(veh);
+          if (typeof loadExpensesFromApi === "function" && !_expensesLoaded) {
+            promises.push(loadExpensesFromApi());
+          }
+          if (promises.length) return Promise.all(promises);
         },
         tax: function () {
           var veh = ensureVehiclesForPage();
@@ -30559,11 +31577,16 @@
         },
 
         "vehicle-detail": function () {
+          var promises = [];
           var veh = ensureVehiclesForPage();
-          if (veh) return veh;
+          if (veh) promises.push(veh);
+          if (typeof loadExpensesFromApi === "function" && !_expensesLoaded) {
+            promises.push(loadExpensesFromApi());
+          }
+          if (promises.length) return Promise.all(promises);
         },
         expenses: function () {
-          if (typeof loadExpensesFromApi === "function" && !_expensesLoaded) {
+          if (typeof loadExpensesFromApi === "function") {
             return loadExpensesFromApi();
           }
         },
@@ -31088,7 +32111,8 @@
       }
 
       var salesReps = [];
-      var crmOwner = { name: "", role: "Dealer Admin", birthday: "" };
+      var crmOwner = { name: "", role: "", birthday: "", dealershipName: "" };
+      window.crmOwner = crmOwner;
       function allPeople() {
         const arr = (salesReps || []).map((r) => ({
           name: r.name,
@@ -31107,6 +32131,164 @@
       // ---------- USERS & ACCESS (admin dropdown) ----------
       var adminEditors = []; // sales-rep names appointed as editor-admins
       var extraAdmins = []; // [{name,email}] newly added admin users (always editors)
+      var PROFILE_ROLE_LABELS = {
+        owner: "Dealer Admin",
+        manager: "Manager",
+        sales_rep: "Sales Rep",
+        cpa: "CPA",
+        wholesale_dealer: "Wholesale Dealer",
+        platform_owner: "Platform Admin",
+      };
+      function applyCrmOwnerData(data) {
+        if (!data) return;
+        var next = {
+          id: data.id || crmOwner.id || null,
+          name:
+            data.name ||
+            data.fullName ||
+            data.email ||
+            crmOwner.name ||
+            "",
+          role: data.role || crmOwner.role || "",
+          imageUrl:
+            data.imageUrl !== undefined
+              ? data.imageUrl
+              : crmOwner.imageUrl || null,
+          birthday: data.birthday || data.birthDate || crmOwner.birthday || "",
+          email: data.email || crmOwner.email || "",
+          introCompleted:
+            data.introCompleted != null
+              ? !!data.introCompleted
+              : !!crmOwner.introCompleted,
+          termsAccepted:
+            data.termsAccepted != null
+              ? !!data.termsAccepted
+              : !!crmOwner.termsAccepted,
+          termsVersion:
+            data.termsVersion != null
+              ? data.termsVersion
+              : crmOwner.termsVersion || null,
+          termsPrintedName:
+            data.termsPrintedName != null
+              ? data.termsPrintedName
+              : crmOwner.termsPrintedName || null,
+          termsDealership:
+            data.termsDealership != null
+              ? data.termsDealership
+              : crmOwner.termsDealership || null,
+          termsSignature:
+            data.termsSignature != null
+              ? data.termsSignature
+              : crmOwner.termsSignature || null,
+          termsAcceptedAt:
+            data.termsAcceptedAt != null
+              ? data.termsAcceptedAt
+              : crmOwner.termsAcceptedAt || null,
+          dealershipName:
+            data.dealershipName ||
+            (typeof data.dealership === "string" ? data.dealership : null) ||
+            (data.dealership && data.dealership.name) ||
+            crmOwner.dealershipName ||
+            null,
+        };
+        crmOwner = next;
+        window.crmOwner = next;
+        updateProfileChip();
+      }
+      function hydrateProfileFromSession() {
+        try {
+          if (!window.AVPortal) return;
+          var sess = AVPortal.readSession(AVPortal.getRoutePortal());
+          if (!sess) return;
+          applyCrmOwnerData({
+            id: sess.sub || null,
+            name: sess.name || sess.email || "",
+            email: sess.email || "",
+            role: sess.role || "",
+          });
+        } catch (e) {}
+      }
+      function applyMeUserToProfile(u) {
+        if (!u) return;
+        applyCrmOwnerData({
+          id: u.id,
+          name: u.fullName || u.name || u.email || "Account",
+          fullName: u.fullName || u.name,
+          role: u.role || "",
+          birthday: u.birthDate || u.birthday || "",
+          email: u.email || "",
+          imageUrl: u.imageUrl || null,
+          introCompleted: u.introCompleted || false,
+          termsAccepted: u.termsAccepted || false,
+          termsVersion: u.termsVersion || null,
+          termsPrintedName: u.termsPrintedName || null,
+          termsDealership: u.termsDealership || null,
+          termsSignature: u.termsSignature || null,
+          termsAcceptedAt: u.termsAcceptedAt || null,
+          dealershipName:
+            (typeof u.dealership === "string" ? u.dealership : null) ||
+            (u.dealership && u.dealership.name) ||
+            null,
+        });
+        if (typeof updateDashWelcome === "function") updateDashWelcome();
+      }
+      function hydrateProfileFromApi() {
+        if (!window.AVApi || typeof AVApi.me !== "function") {
+          return Promise.resolve(null);
+        }
+        var portal =
+          (window.AVPortal && AVPortal.getRoutePortal()) || undefined;
+        return AVApi.me(portal)
+          .then(function (meResp) {
+            var u = (meResp && meResp.user) || meResp;
+            if (u && (u.fullName || u.name || u.email)) applyMeUserToProfile(u);
+            return u || null;
+          })
+          .catch(function () {
+            return null;
+          });
+      }
+      function updateProfileChip() {
+        var owner = window.crmOwner || crmOwner;
+        if (!owner) return;
+        var chip = document.getElementById("profileChip");
+        if (!chip) return;
+        var name = owner.name || owner.fullName || owner.email || "";
+        var roleKey = owner.role || "";
+        var roleLabel =
+          PROFILE_ROLE_LABELS[roleKey] || roleKey || "User";
+        if (owner.dealershipName) {
+          roleLabel = roleLabel + " · " + owner.dealershipName;
+        }
+        var av = chip.querySelector(".avatar");
+        if (av) {
+          if (owner.imageUrl) {
+            av.innerHTML =
+              '<img src="' +
+              String(owner.imageUrl).replace(/"/g, "&quot;") +
+              '" alt="">';
+          } else {
+            av.textContent = amInitials(name || "?");
+          }
+        }
+        var nameEl = chip.querySelector(".profile-name");
+        if (nameEl) nameEl.textContent = name || "Account";
+        var roleEl = chip.querySelector(".profile-role");
+        if (roleEl) roleEl.textContent = roleLabel;
+        chip.title = name
+          ? name + (owner.email ? " · " + owner.email : "")
+          : "Users & access";
+      }
+      window.updateProfileChip = updateProfileChip;
+      window.applyCrmOwnerData = applyCrmOwnerData;
+      window.applyMeUserToProfile = applyMeUserToProfile;
+      window.hydrateProfileFromApi = hydrateProfileFromApi;
+      // Paint JWT session name/role immediately; API /me will refine shortly
+      hydrateProfileFromSession();
+      window.addEventListener("av:crm-live", function () {
+        if (typeof updateProfileChip === "function") updateProfileChip();
+        if (typeof updateDashWelcome === "function") updateDashWelcome();
+      });
       function amInitials(name) {
         const p = (name || "")
           .trim()
@@ -31128,8 +32310,11 @@
       function renderAdminMenu() {
         const list = document.getElementById("adminMenuList");
         if (!list) return;
+        const owner = window.crmOwner || crmOwner || {};
+        const roleLabel =
+          PROFILE_ROLE_LABELS[owner.role] || owner.role || "Dealer Admin";
         let html = "";
-        html += `<div class="am-row"><div class="am-av owner">${amInitials(crmOwner.name)}</div><div class="am-info"><div class="am-name">${msgEsc(crmOwner.name)}</div><div class="am-role owner">Owner \u00b7 ${msgEsc(crmOwner.role || "Dealer Admin")}</div></div><span class="am-tag-owner">You</span></div>`;
+        html += `<div class="am-row"><div class="am-av owner">${amInitials(owner.name)}</div><div class="am-info"><div class="am-name">${msgEsc(owner.name || "You")}</div><div class="am-role owner">${msgEsc(roleLabel)}${owner.dealershipName ? " · " + msgEsc(owner.dealershipName) : ""}${owner.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(owner.email) + "</span>" : ""}</div></div><span class="am-tag-owner">You</span></div>`;
         extraAdmins.forEach((u, i) => {
           html += `<div class="am-row"><div class="am-av editor">${amInitials(u.name)}</div><div class="am-info"><div class="am-name">${msgEsc(u.name)}</div><div class="am-role editor">Admin \u00b7 Editor</div></div><button class="am-act revoke" onclick="removeExtraAdmin(${i})">Remove</button></div>`;
         });
@@ -33106,10 +34291,7 @@
         const v = __findVeh(currentRepairsVin);
         if (!v) return;
         const list = v.repairsList || [];
-        const attached =
-          typeof _expenses !== "undefined" && Array.isArray(_expenses)
-            ? _expenses.filter((e) => e.vehicleVin === v.vin)
-            : [];
+        const attached = attachedExpensesForVehicle(v);
         const combined = repairsTotal(v) + attachedExpensesTotal(v);
         document.getElementById("repairsModalTotal").textContent =
           fmt(combined);
@@ -34715,21 +35897,73 @@
 
       // ================= EXPENSES =================
       const EXP_CATEGORIES = [
-        { name: "Rent", group: "overhead" },
-        { name: "Payroll", group: "payroll" },
-        { name: "Commissions", group: "payroll" },
-        { name: "Auction fees", group: "vehicle" },
-        { name: "Flooring fees", group: "vehicle" },
-        { name: "Vehicle repairs", group: "vehicle" },
-        { name: "Transportation fees", group: "vehicle" },
-        { name: "DMV / registration fees", group: "vehicle" },
-        { name: "Office expenses", group: "overhead" },
-        { name: "Marketing / advertising", group: "overhead" },
-        { name: "Utilities", group: "overhead" },
-        { name: "Insurance", group: "overhead" },
-        { name: "Software / subscriptions", group: "overhead" },
-        { name: "Miscellaneous", group: "other" },
+        { name: "Vehicle Expense", group: "vehicle" },
+        { name: "Recurring Expense", group: "overhead" },
+        { name: "Dealership Expense", group: "other" },
       ];
+      const EXP_TYPES = {
+        "Vehicle Expense": [
+          "Repairs",
+          "Tires",
+          "Oil change",
+          "Detailing",
+          "Transportation",
+          "Auction fees",
+          "DMV / registration",
+          "Other",
+        ],
+        "Recurring Expense": [
+          "Rent",
+          "Payroll",
+          "Utilities",
+          "Flooring fees",
+          "Insurance",
+          "Subscriptions",
+          "Commissions",
+          "Other",
+        ],
+        "Dealership Expense": [
+          "Office furniture",
+          "Computers / equipment",
+          "Renovations",
+          "Concrete / building",
+          "Marketing",
+          "Supplies",
+          "Other",
+        ],
+      };
+      const EXP_LEGACY_MAP = {
+        Rent: "Recurring Expense",
+        Payroll: "Recurring Expense",
+        Commissions: "Recurring Expense",
+        Utilities: "Recurring Expense",
+        Insurance: "Recurring Expense",
+        "Software / subscriptions": "Recurring Expense",
+        "Flooring fees": "Recurring Expense",
+        "Auction fees": "Vehicle Expense",
+        "Vehicle repairs": "Vehicle Expense",
+        "Transportation fees": "Vehicle Expense",
+        "DMV / registration fees": "Vehicle Expense",
+        "Office expenses": "Dealership Expense",
+        "Marketing / advertising": "Dealership Expense",
+        Miscellaneous: "Dealership Expense",
+      };
+      const EXP_LEGACY_TYPE = {
+        Rent: "Rent",
+        Payroll: "Payroll",
+        Commissions: "Commissions",
+        Utilities: "Utilities",
+        Insurance: "Insurance",
+        "Software / subscriptions": "Subscriptions",
+        "Flooring fees": "Flooring fees",
+        "Auction fees": "Auction fees",
+        "Vehicle repairs": "Repairs",
+        "Transportation fees": "Transportation",
+        "DMV / registration fees": "DMV / registration",
+        "Office expenses": "Office furniture",
+        "Marketing / advertising": "Marketing",
+        Miscellaneous: "Other",
+      };
       const GROUP_COLOR = {
         vehicle: "var(--orange)",
         payroll: "var(--green)",
@@ -34742,13 +35976,7 @@
         overhead: "rgba(58,160,255,.14)",
         other: "rgba(160,123,255,.14)",
       };
-      const VEHICLE_LINKABLE = new Set([
-        "Auction fees",
-        "Flooring fees",
-        "Vehicle repairs",
-        "Transportation fees",
-        "DMV / registration fees",
-      ]);
+      const VEHICLE_LINKABLE = new Set(["Vehicle Expense"]);
       const RECUR_OPTIONS = [
         "One-Time",
         "Weekly",
@@ -34759,35 +35987,19 @@
 
       // Donut spend buckets (fixed order + colors so the chart reads consistently)
       const SPEND_BUCKETS = [
-        { key: "Rent", color: "#3aa0ff" },
-        { key: "Payroll", color: "#23d18b" },
-        { key: "Auction Fees", color: "#ff9f43" },
-        { key: "Flooring Fees", color: "#a07bff" },
-        { key: "Repairs", color: "#ff5470" },
-        { key: "Marketing", color: "#ff6fb5" },
-        { key: "Insurance", color: "#33c2c2" },
-        { key: "Utilities", color: "#f4c65a" },
+        { key: "Vehicle", color: "#ff9f43" },
+        { key: "Recurring", color: "#3aa0ff" },
+        { key: "Dealership", color: "#a07bff" },
         { key: "Other", color: "#7c8aa0" },
       ];
       function spendBucket(category) {
         switch (category) {
-          case "Rent":
-            return "Rent";
-          case "Payroll":
-          case "Commissions":
-            return "Payroll";
-          case "Auction fees":
-            return "Auction Fees";
-          case "Flooring fees":
-            return "Flooring Fees";
-          case "Vehicle repairs":
-            return "Repairs";
-          case "Marketing / advertising":
-            return "Marketing";
-          case "Insurance":
-            return "Insurance";
-          case "Utilities":
-            return "Utilities";
+          case "Vehicle Expense":
+            return "Vehicle";
+          case "Recurring Expense":
+            return "Recurring";
+          case "Dealership Expense":
+            return "Dealership";
           default:
             return "Other";
         }
@@ -34825,12 +36037,27 @@
       }
 
       // Attached expenses feed straight into each vehicle's cost & P&L (used by computeRow)
+      function isVehicleCostMirrorExpense(e) {
+        if (!e) return false;
+        if (e.fromRepair) return true;
+        const notes = e.notes || "";
+        return notes.indexOf("[vehicle-cost]") === 0;
+      }
+      function attachedExpensesForVehicle(v, opts) {
+        opts = opts || {};
+        if (typeof _expenses === "undefined" || !Array.isArray(_expenses) || !v)
+          return [];
+        const includeMirrors = !!opts.includeMirrors;
+        return _expenses.filter(function (e) {
+          if (e.vehicleVin !== v.vin) return false;
+          if (!includeMirrors && isVehicleCostMirrorExpense(e)) return false;
+          return true;
+        });
+      }
       function attachedExpensesTotal(v) {
-        if (typeof _expenses === "undefined" || !Array.isArray(_expenses))
-          return 0;
-        return _expenses
-          .filter((e) => e.vehicleVin === v.vin)
-          .reduce((s, e) => s + (Number(e.amount) || 0), 0);
+        return attachedExpensesForVehicle(v).reduce(function (s, e) {
+          return s + (Number(e.amount) || 0);
+        }, 0);
       }
       function vehicleLabel(vin) {
         const v = vehicles.find((x) => x.vin === vin);
@@ -34841,13 +36068,29 @@
       let _expensesLoaded = false;
       let expGridOn = false;
 
+      function normalizeExpenseCategory(e) {
+        let category = e.category || "Dealership Expense";
+        let expType = e.subcategory || e.expType || null;
+        if (!EXP_CATEGORIES.some((c) => c.name === category)) {
+          expType = expType || EXP_LEGACY_TYPE[category] || "Other";
+          category = e.vehicleVin
+            ? "Vehicle Expense"
+            : EXP_LEGACY_MAP[category] || "Dealership Expense";
+        }
+        return { category, expType: expType || "Other" };
+      }
+
       function mapExpenseFromApi(e) {
         const receiptRaw = e.receiptStoragePath || null;
         const isDataUrl = receiptRaw && receiptRaw.startsWith("data:");
+        const norm = normalizeExpenseCategory(e);
+        const notes = e.notes || "";
         return {
           id: e.id,
           name: e.name || e.vendor || "",
-          category: e.category,
+          category: norm.category,
+          expType: norm.expType,
+          expOther: norm.expType === "Other" ? e.description || e.name : null,
           amount: Number(e.amount) || 0,
           dueDate: e.expenseDate ? e.expenseDate.slice(0, 10) : "",
           recurring:
@@ -34859,7 +36102,8 @@
           receiptImg: isDataUrl ? receiptRaw : null,
           paymentMethod: e.paymentMethod || null,
           paymentRef: e.referenceNumber || null,
-          notes: e.notes || "",
+          notes,
+          fromRepair: notes.indexOf("[from-repair]") === 0,
         };
       }
 
@@ -34867,8 +36111,12 @@
         return {
           name: data.name,
           vendor: data.name,
-          description: data.name,
+          description:
+            data.expType === "Other" && data.expOther
+              ? data.expOther
+              : data.name,
           category: data.category,
+          subcategory: data.expType || "Other",
           amount: data.amount,
           expenseDate: data.dueDate,
           isRecurring: data.recurring !== "One-Time",
@@ -34885,20 +36133,34 @@
 
       async function loadExpensesFromApi() {
         try {
-          const data = await AVApi.listExpenses();
-          const rows = (data.expenses || data || []).map(mapExpenseFromApi);
-          _expenses = rows;
-          _expensesLoaded = true;
+          const data = await AVApi.listExpenses("?limit=500");
+          applyExpensesList(data.expenses || data || []);
         } catch (e) {
           console.error("Failed to load expenses", e);
-          _expenses = [];
-          _expensesLoaded = true;
+          applyExpensesList([]);
         }
+      }
+      function applyExpensesList(apiRows) {
+        const rows = (apiRows || []).map(mapExpenseFromApi);
+        _expenses = rows;
+        _expensesLoaded = true;
         if (typeof renderExpenses === "function") renderExpenses();
         refreshEdpIfOpen();
         if (typeof render === "function") render();
         refreshAllPnl();
+        try {
+          if (
+            currentDealVin &&
+            typeof renderDealJacket === "function" &&
+            document.getElementById("page-deal-jacket") &&
+            document.getElementById("page-deal-jacket").style.display !== "none"
+          ) {
+            renderDealJacket(currentDealVin);
+          }
+        } catch (_) {}
       }
+      window.loadExpensesFromApi = loadExpensesFromApi;
+      window.applyExpensesList = applyExpensesList;
 
       function toggleExpGrid() {
         expGridOn = !expGridOn;
@@ -35043,7 +36305,9 @@
         ).size;
         const payrollTotal = _expenses
           .filter(
-            (e) => e.category === "Payroll" || e.category === "Commissions",
+            (e) =>
+              e.category === "Recurring Expense" &&
+              (e.expType === "Payroll" || e.expType === "Commissions"),
           )
           .reduce((s, e) => s + (Number(e.amount) || 0), 0);
         const upcoming = _expenses.filter(
@@ -35270,8 +36534,19 @@
         refreshExpenseVehicleSelect();
 
         const e = isEdit ? _expenses.find((x) => x.id === id) : null;
+        const defaultCat = "Dealership Expense";
         document.getElementById("expName").value = e ? e.name : "";
-        document.getElementById("expCategory").value = e ? e.category : "Rent";
+        document.getElementById("expCategory").value = e
+          ? e.category
+          : defaultCat;
+        fillExpTypes(
+          document.getElementById("expCategory").value,
+          e ? e.expType : null,
+        );
+        {
+          const other = document.getElementById("expOther");
+          if (other) other.value = e && e.expOther ? e.expOther : "";
+        }
         document.getElementById("expAmount").value = e ? e.amount : "";
         document.getElementById("expDueDate").value = e
           ? e.dueDate
@@ -35318,11 +36593,82 @@
         document.getElementById("expenseModal").classList.remove("open");
       }
 
+      function fillExpTypes(cat, selected) {
+        const sel = document.getElementById("expType");
+        if (!sel) return;
+        const list = EXP_TYPES[cat] || ["Other"];
+        sel.innerHTML = list
+          .map((t) => `<option value="${t}">${t}</option>`)
+          .join("");
+        sel.value =
+          selected && list.includes(selected) ? selected : list[0];
+        onExpTypeChange();
+      }
       function onExpCategoryChange() {
         const cat = document.getElementById("expCategory").value;
-        document
-          .getElementById("expAttachHint")
-          .classList.toggle("show", VEHICLE_LINKABLE.has(cat));
+        const hint = document.getElementById("expAttachHint");
+        if (hint) hint.classList.toggle("show", VEHICLE_LINKABLE.has(cat));
+        const vehRow = document.getElementById("expVehicleRow");
+        if (vehRow)
+          vehRow.style.display = VEHICLE_LINKABLE.has(cat) ? "" : "none";
+        const recWrap = document.getElementById("expRecurWrap");
+        if (recWrap)
+          recWrap.style.display =
+            cat === "Recurring Expense" ? "" : "none";
+        const rec = document.getElementById("expRecurring");
+        if (rec && cat !== "Recurring Expense") rec.value = "One-Time";
+        if (cat === "Recurring Expense" && rec && rec.value === "One-Time")
+          rec.value = "Monthly";
+        fillExpTypes(
+          cat,
+          document.getElementById("expType")
+            ? document.getElementById("expType").value
+            : null,
+        );
+        renderExpAttachedList();
+      }
+      function onExpTypeChange() {
+        const t = (document.getElementById("expType") || {}).value;
+        const wrap = document.getElementById("expOtherWrap");
+        if (wrap) wrap.style.display = t === "Other" ? "" : "none";
+      }
+      function renderExpAttachedList() {
+        const host = document.getElementById("expAttachedList");
+        if (!host) return;
+        const cat = (document.getElementById("expCategory") || {}).value;
+        const vin = (document.getElementById("expVehicle") || {}).value;
+        if (!VEHICLE_LINKABLE.has(cat) || !vin) {
+          host.innerHTML = "";
+          return;
+        }
+        const editingId = (document.getElementById("expEditId") || {}).value;
+        const rows = (_expenses || []).filter(
+          (e) => e.vehicleVin === vin && e.id !== editingId,
+        );
+        const v = (vehicles || []).find((x) => x.vin === vin);
+        const label = v ? `${v.year} ${v.make} ${v.model}` : vin;
+        if (!rows.length) {
+          host.innerHTML = `<div class="exp-att-box"><div class="exp-att-head"><span>Already on ${label}</span></div>
+      <div class="exp-att-empty">No expenses attached to this vehicle yet &mdash; this will be the first.</div></div>`;
+          return;
+        }
+        const total = rows.reduce((s, e) => s + (Number(e.amount) || 0), 0);
+        host.innerHTML = `<div class="exp-att-box">
+    <div class="exp-att-head"><span>Already on ${label}</span><b>${rows.length} expense${rows.length === 1 ? "" : "s"} &middot; ${fmt(total)}</b></div>
+    <div class="exp-att-rows">${rows
+      .map(
+        (e) => `
+      <div class="exp-att-row">
+        <div class="exp-att-main">
+          <div class="exp-att-name">${e.name || "Expense"}</div>
+          <div class="exp-att-meta">${e.expType === "Other" ? e.expOther || "Other" : e.expType || ""}${e.dueDate ? " &middot; " + fmtDate(e.dueDate) : ""}</div>
+        </div>
+        <div class="exp-att-amt">${fmt(e.amount)}</div>
+      </div>`,
+      )
+      .join("")}</div>
+    <div class="exp-att-foot">Fill in the fields above to add another expense to this vehicle.</div>
+  </div>`;
       }
 
       let _expSaving = false;
@@ -35374,6 +36720,12 @@
         const id = document.getElementById("expEditId").value;
         const name = document.getElementById("expName").value.trim();
         const amount = parseFloat(document.getElementById("expAmount").value);
+        const dateVal = document.getElementById("expDueDate").value;
+        const expType =
+          (document.getElementById("expType") || {}).value || "Other";
+        const expOther = (
+          (document.getElementById("expOther") || {}).value || ""
+        ).trim();
         if (!name) {
           document.getElementById("expName").focus();
           return;
@@ -35381,6 +36733,27 @@
         if (isNaN(amount) || amount < 0) {
           document.getElementById("expAmount").focus();
           return;
+        }
+        if (!dateVal) {
+          document.getElementById("expDueDate").focus();
+          return;
+        }
+        if (expType === "Other" && !expOther) {
+          const o = document.getElementById("expOther");
+          if (o) o.focus();
+          return;
+        }
+
+        const cat = document.getElementById("expCategory").value;
+        if (VEHICLE_LINKABLE.has(cat)) {
+          const vin =
+            document.getElementById("expVin").value.trim().toUpperCase() ||
+            document.getElementById("expVehicle").value ||
+            "";
+          if (!vin) {
+            AVToast.error("Attach a vehicle for Vehicle Expense");
+            return;
+          }
         }
 
         const saveBtn = document.querySelector(
@@ -35398,15 +36771,18 @@
 
         const data = {
           name,
-          category: document.getElementById("expCategory").value,
+          category: cat,
+          expType,
+          expOther: expType === "Other" ? expOther : null,
           amount,
-          dueDate: document.getElementById("expDueDate").value,
+          dueDate: dateVal,
           recurring: document.getElementById("expRecurring").value,
           paid: document.getElementById("expPaid").value === "true",
-          vehicleVin:
-            document.getElementById("expVin").value.trim().toUpperCase() ||
-            document.getElementById("expVehicle").value ||
-            null,
+          vehicleVin: VEHICLE_LINKABLE.has(cat)
+            ? document.getElementById("expVin").value.trim().toUpperCase() ||
+              document.getElementById("expVehicle").value ||
+              null
+            : null,
           paymentMethod: document.getElementById("expPayMethod").value || null,
           paymentRef: document.getElementById("expPayRef").value.trim() || null,
           notes: document.getElementById("expNotes").value.trim(),
@@ -36023,11 +37399,18 @@
             .filter(isRecurring)
             .reduce((s, e) => s + monthlyEquivalent(e), 0),
           commissionUnpaid: _expenses
-            .filter((e) => e.category === "Commissions" && !e.paid)
+            .filter(
+              (e) =>
+                e.category === "Recurring Expense" &&
+                (e.expType === "Payroll" || e.expType === "Commissions") &&
+                !e.paid,
+            )
             .reduce((s, e) => s + (+e.amount || 0), 0),
           payrollExp: _expenses
             .filter(
-              (e) => e.category === "Payroll" || e.category === "Commissions",
+              (e) =>
+                e.category === "Recurring Expense" &&
+                (e.expType === "Payroll" || e.expType === "Commissions"),
             )
             .reduce((s, e) => s + (+e.amount || 0), 0),
           vehExp: _expenses
@@ -36260,8 +37643,9 @@
           marketing: "Marketing / advertising",
           insurance: "Insurance",
           utilit: "Utilities",
-          software: "Software / subscriptions",
-          subscription: "Software / subscriptions",
+          software: "Dealership Expense",
+          subscription: "Dealership Expense",
+          subscriptions: "Dealership Expense",
           auction: "Auction fees",
           flooring: "Flooring fees",
           transport: "Transportation fees",
@@ -37172,6 +38556,148 @@
 
       // ================= MARK SOLD + DEAL JACKET =================
       let currentDealVin = null;
+      let _djRosCheckTimer = null;
+      let _djRosCheckReq = 0;
+
+      function setDjRosStatus(text, kind) {
+        const el = document.getElementById("djRosStatus");
+        if (!el) return;
+        el.textContent = text || "";
+        if (!text) {
+          el.style.color = "var(--muted)";
+          return;
+        }
+        if (kind === "ok") el.style.color = "var(--green)";
+        else if (kind === "bad") el.style.color = "var(--red)";
+        else if (kind === "busy") el.style.color = "var(--blue)";
+        else el.style.color = "var(--muted)";
+      }
+
+      function djRosExcludeOpts() {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        const opts = {};
+        if (v && v.id) opts.excludeVehicleId = v.id;
+        const jacket =
+          v &&
+          v._raw &&
+          v._raw.dealJackets &&
+          v._raw.dealJackets[0]
+            ? v._raw.dealJackets[0]
+            : null;
+        if (jacket && jacket.id) opts.excludeJacketId = jacket.id;
+        return opts;
+      }
+
+      function onDjRosInput() {
+        const raw = (document.getElementById("djRos") || {}).value || "";
+        const val = raw.trim();
+        clearTimeout(_djRosCheckTimer);
+        if (!val) {
+          setDjRosStatus("", "");
+          return;
+        }
+        setDjRosStatus("Checking…", "busy");
+        _djRosCheckTimer = setTimeout(function () {
+          checkDjRosAvailability(val);
+        }, 350);
+      }
+
+      async function checkDjRosAvailability(rosNumber) {
+        const val = String(rosNumber || "").trim();
+        if (!val) {
+          setDjRosStatus("", "");
+          return;
+        }
+        if (!window.AVApi || typeof AVApi.checkDealNumber !== "function") {
+          // Offline / API not ready — still allow local uniqueness among loaded vehicles
+          const taken = (vehicles || []).some(
+            (x) =>
+              x.vin !== currentDealVin &&
+              (x.ros || "").toLowerCase() === val.toLowerCase(),
+          );
+          setDjRosStatus(
+            taken ? "Not applicable — already used" : "Applicable",
+            taken ? "bad" : "ok",
+          );
+          return taken ? false : true;
+        }
+        const reqId = ++_djRosCheckReq;
+        try {
+          const res = await AVApi.checkDealNumber(val, djRosExcludeOpts());
+          if (reqId !== _djRosCheckReq) return null;
+          const cur = (
+            (document.getElementById("djRos") || {}).value || ""
+          ).trim();
+          if (cur.toLowerCase() !== val.toLowerCase()) return null;
+          if (res && res.available) {
+            setDjRosStatus("Applicable", "ok");
+            return true;
+          }
+          setDjRosStatus("Not applicable — already used", "bad");
+          return false;
+        } catch (e) {
+          if (reqId !== _djRosCheckReq) return null;
+          setDjRosStatus("Could not verify — try again", "bad");
+          return null;
+        }
+      }
+
+      async function autoGenerateDealNumber() {
+        const btn = document.getElementById("djRosAutoBtn");
+        const inp = document.getElementById("djRos");
+        if (!inp) return;
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "Generating…";
+        }
+        setDjRosStatus("Finding unique DL-#####…", "busy");
+        try {
+          if (window.AVApi && typeof AVApi.generateDealNumber === "function") {
+            const res = await AVApi.generateDealNumber(djRosExcludeOpts());
+            if (res && res.rosNumber) {
+              inp.value = res.rosNumber;
+              setDjRosStatus("Applicable — auto generated", "ok");
+              return;
+            }
+            throw new Error("No deal number returned");
+          }
+          // Local fallback: rotate until unused in loaded inventory
+          let found = null;
+          for (let i = 0; i < 40; i++) {
+            const digits = i < 20 ? 5 : i < 30 ? 4 : 6;
+            const min =
+              digits === 4 ? 1000 : digits === 5 ? 10000 : 100000;
+            const max =
+              digits === 4 ? 9999 : digits === 5 ? 99999 : 999999;
+            const n = min + Math.floor(Math.random() * (max - min + 1));
+            const candidate = "DL-" + n;
+            const taken = (vehicles || []).some(
+              (x) =>
+                x.vin !== currentDealVin &&
+                (x.ros || "").toLowerCase() === candidate.toLowerCase(),
+            );
+            if (!taken) {
+              found = candidate;
+              break;
+            }
+          }
+          if (!found) throw new Error("Could not allocate a unique number");
+          inp.value = found;
+          setDjRosStatus("Applicable — auto generated", "ok");
+        } catch (e) {
+          setDjRosStatus(
+            (e && e.message) || "Auto generate failed",
+            "bad",
+          );
+          if (typeof AVToast !== "undefined")
+            AVToast.error(e.message || "Auto generate failed");
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "Auto generate";
+          }
+        }
+      }
 
       function openMarkSold() {
         document.getElementById("msSearch").value = "";
@@ -37185,23 +38711,32 @@
         const q = (
           document.getElementById("msSearch").value || ""
         ).toLowerCase();
+        // In-stock units to sell, OR sold units that still need a deal jacket
         const rows = vehicles
-          .filter((v) => !v.sold && v.status !== "Sold" && v.status !== "Sold Loss")
+          .filter((v) => {
+            if (v.status === "Sold Loss" || v.status === "loss") return false;
+            const hasJacket = !!(v.dealSaved || v.hasDealJacket || v.dealJacket);
+            if (v.sold || v.status === "Sold") return !hasJacket;
+            return true;
+          })
           .filter((v) =>
             `${v.year} ${v.make} ${v.model} ${v.vin}`.toLowerCase().includes(q),
           );
         const host = document.getElementById("msList");
         host.innerHTML = rows.length
           ? rows
-              .map(
-                (v) => `
-    <div class="ms-row" onclick="openDealJacket('${v.vin}')">
-      <div><div class="ms-veh">${v.year} ${v.make} ${v.model}</div><div class="ms-vin">${v.vin}</div></div>
-      <div class="ms-go">Mark sold &rarr;</div>
-    </div>`,
-              )
+              .map((v) => {
+                const needsJacket =
+                  (v.sold || v.status === "Sold") &&
+                  !(v.dealSaved || v.hasDealJacket || v.dealJacket);
+                return `
+    <div class="ms-row" onclick="openDealJacket('${v.vin}', '${needsJacket ? "sold" : "inventory"}')">
+      <div><div class="ms-veh">${v.year} ${v.make} ${v.model}${needsJacket ? ' <span style="color:var(--orange);font-size:11px;font-weight:700;">· needs jacket</span>' : ""}</div><div class="ms-vin">${v.vin}</div></div>
+      <div class="ms-go">${needsJacket ? "Create deal jacket →" : "Mark sold →"}</div>
+    </div>`;
+              })
               .join("")
-          : `<div class="ms-empty">No matching vehicles. Everything may already be sold.</div>`;
+          : `<div class="ms-empty">No matching vehicles. Everything may already be sold with a deal jacket.</div>`;
       }
 
       let djContext = "inventory";
@@ -37331,7 +38866,29 @@
         badge.style.cssText = `padding:6px 16px;border-radius:8px;font-size:12px;font-weight:800;border:1px solid;color:${getStatusColor(eff)};border-color:${getStatusColor(eff)};background:${getStatusColor(eff)}18;`;
 
         const r = computeRow(v);
+        const attachedRows = attachedExpensesForVehicle(v);
+        const attachedItemsHtml = attachedRows.length
+          ? attachedRows
+              .map(function (e) {
+                const typeLabel = e.expType
+                  ? " · " + String(e.expType)
+                  : "";
+                return (
+                  '<div class="vdp-row" style="padding-left:12px;">' +
+                  '<span class="vdp-row-label" style="font-weight:500;color:var(--muted);">' +
+                  (e.name || "Expense") +
+                  typeLabel +
+                  "</span>" +
+                  '<span class="vdp-row-value" style="font-weight:600;">' +
+                  fmt(e.amount) +
+                  "</span></div>"
+                );
+              })
+              .join("")
+          : "";
         document.getElementById("djRos").value = v.ros || "";
+        setDjRosStatus("", "");
+        if (v.ros) checkDjRosAvailability(v.ros);
         document.getElementById("djSaleDate").value =
           v.soldDate || today.toISOString().slice(0, 10);
         document.getElementById("djSoldPrice").value = v.soldPrice || "";
@@ -37345,6 +38902,26 @@
         document.getElementById("djCustAddress").value =
           v.customerAddress || "";
         document.getElementById("djNotes").value = v.notes || "";
+        const saveBtn = document.getElementById("djSaveBtn");
+        const hasJacket = !!(v.dealSaved || v.hasDealJacket || v.dealJacket);
+        if (saveBtn) {
+          if (hasJacket) {
+            saveBtn.innerHTML =
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Deal Jacket Saved';
+            saveBtn.disabled = true;
+            saveBtn.style.opacity = "0.7";
+          } else if (v.sold) {
+            saveBtn.innerHTML =
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Save Deal Jacket';
+            saveBtn.disabled = false;
+            saveBtn.style.opacity = "1";
+          } else {
+            saveBtn.innerHTML =
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Save Deal &amp; Mark Sold';
+            saveBtn.disabled = false;
+            saveBtn.style.opacity = "1";
+          }
+        }
         const repSel = document.getElementById("djRep");
         repSel.innerHTML =
           '<option value="">Select rep\u2026</option>' +
@@ -37384,7 +38961,8 @@
     <div class="vdp-row"><span class="vdp-row-label">Fees</span><span class="vdp-row-value">${fmt(v.fees)}</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Repairs</span><span class="vdp-row-value">${fmt(r.repairs)}</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Flooring</span><span class="vdp-row-value">${r.flooringCost > 0 ? fmt(r.flooringCost) : "\u2014"}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Expenses</span><span class="vdp-row-value">${r.attachedExp > 0 ? fmt(r.attachedExp) : "\u2014"}</span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Expenses${attachedRows.length ? " <span style='color:var(--muted);font-weight:400;text-transform:none;'>(" + attachedRows.length + ")</span>" : ""}</span><span class="vdp-row-value">${r.attachedExp > 0 ? fmt(r.attachedExp) : "\u2014"}</span></div>
+    ${attachedItemsHtml}
     <div class="vdp-row"><span class="vdp-row-label" id="djBrkCommLbl">Commission</span><span class="vdp-row-value" id="djBrkComm" style="color:var(--purple);">\u2014</span></div>
     <div class="vdp-row" style="border-top:2px solid var(--border);"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Total Cost</span><span class="vdp-row-value" id="djBrkTotalCost" style="color:var(--blue);font-weight:800;">\u2014</span></div>
 
@@ -37823,7 +39401,20 @@
         }
         avValidateField(document.getElementById("djCustEmail"), true);
         const notes = document.getElementById("djNotes").value;
-        const dealNumber = document.getElementById("djRos").value;
+        const dealNumber = (
+          document.getElementById("djRos").value || ""
+        ).trim();
+        if (dealNumber) {
+          const ok = await checkDjRosAvailability(dealNumber);
+          if (ok === false) {
+            document.getElementById("djRos").focus();
+            if (typeof AVToast !== "undefined")
+              AVToast.error(
+                "Deal number is not applicable — already used. Auto generate or enter another.",
+              );
+            return;
+          }
+        }
         const saleRep = document.getElementById("djRep").value || v.rep;
         const sd =
           document.getElementById("djSaleDate").value ||
@@ -37943,17 +39534,25 @@
             updated.commissionPct = Math.round(pct * 10) / 10;
             updated.commMode = djCommMode;
             updated.dealSaved = true;
+            updated.hasDealJacket = true;
+            updated.dealJacket = true;
+            updated.sold = true;
             updated.ros = dealNumber;
           }
           render();
           refreshAllPnl();
           renderDealJacket(currentDealVin);
           const net = updated ? computeRow(updated).netProfit : 0;
-          document.getElementById("djSavedText").textContent =
-            `Deal saved \u2014 ${v.year} ${v.make} ${v.model} marked sold for ${fmt(soldPrice)} (net ${fmtSigned(net)}).`;
+          const wasAlreadySold = !!v.sold;
+          document.getElementById("djSavedText").textContent = wasAlreadySold
+            ? `Deal jacket created — ${v.year} ${v.make} ${v.model} (deal jacket: Yes). Sold for ${fmt(soldPrice)} (net ${fmtSigned(net)}).`
+            : `Deal saved — ${v.year} ${v.make} ${v.model} marked sold for ${fmt(soldPrice)} (net ${fmtSigned(net)}). Deal jacket: Yes.`;
           document.getElementById("djSavedBanner").classList.add("show");
           window.scrollTo({ top: 0, behavior: "smooth" });
-          if (typeof AVToast !== "undefined") AVToast.success("Deal saved");
+          if (typeof AVToast !== "undefined")
+            AVToast.success(
+              wasAlreadySold ? "Deal jacket created" : "Deal saved",
+            );
           if (window.AVCustomers) {
             AVCustomers.loadPaidCustomers().catch(function () {});
           }
@@ -38014,8 +39613,16 @@
               r.sold &&
               (typeof inPnlPeriod !== "function" || inPnlPeriod(r.soldDate)),
           );
+        const withJacket = rows.filter((r) => {
+          const src = vehicles.find((v) => v.vin === r.vin);
+          return !!(src && (src.dealSaved || src.hasDealJacket || src.dealJacket));
+        });
+        const needsJacket = rows.filter((r) => {
+          const src = vehicles.find((v) => v.vin === r.vin);
+          return !(src && (src.dealSaved || src.hasDealJacket || src.dealJacket));
+        });
         document.getElementById("djlSub").textContent =
-          `\u2014 ${rows.length} closed deals`;
+          `\u2014 ${withJacket.length} jackets · ${needsJacket.length} pending`;
         const soldValue = rows.reduce(
           (s, r) => s + (r.soldPrice || r.estimatedSale || 0),
           0,
@@ -38035,7 +39642,14 @@
         const _djRf = (r) => {
           const src = vehicles.find((v) => v.vin === r.vin);
           const docs = src && src.documents ? src.documents.length : 0;
-          return `<tr style="cursor:pointer;" onclick="openDealJacket('${r.vin}')">
+          const hasJacket = !!(
+            src &&
+            (src.dealSaved || src.hasDealJacket || src.dealJacket)
+          );
+          const jacketCell = hasJacket
+            ? `<span style="color:var(--green);font-weight:800;">Yes</span>`
+            : `<span style="color:var(--orange);font-weight:800;">No</span> <button class="print-btn" style="padding:3px 8px;font-size:11px;margin-left:6px;" onclick="event.stopPropagation();openDealJacket('${r.vin}','sold')">Create</button>`;
+          return `<tr style="cursor:pointer;" onclick="openDealJacket('${r.vin}','sold')">
       <td><div class="exp-name">${r.year} ${r.make} ${r.model}</div><div class="exp-sub" style="opacity:.6;">${r.vin}</div></td>
       <td>${r.customer || "\u2014"}</td>
       <td>${r.ros || "\u2014"}</td>
@@ -38044,6 +39658,7 @@
       <td>${Math.round(r.roi)}%</td>
       <td>${r.rep || "\u2014"}</td>
       <td>${r.soldDate ? fmtDate(r.soldDate) : "\u2014"}</td>
+      <td>${jacketCell}</td>
       <td>${docs ? docs + " \uD83D\uDCCE" : "\u2014"}</td>
     </tr>`;
         };
@@ -38053,7 +39668,7 @@
                 _djS,
                 "soldDate",
                 _djRf,
-                9,
+                10,
                 (g) =>
                   g.length +
                   " deal" +
@@ -38062,7 +39677,7 @@
                   fmtSigned(g.reduce((s, r) => s + r.netProfit, 0)),
               )
             : _djS.map(_djRf).join("")
-          : `<tr><td colspan="9"><div class="doc-empty">No deals closed yet. Click "New Deal / Mark Sold" to create one.</div></td></tr>`;
+          : `<tr><td colspan="10"><div class="doc-empty">No deals closed yet. Click "New Deal / Mark Sold" to create one.</div></td></tr>`;
       }
 
       function currentDailyRate(daysOnLot, cfg) {
@@ -42738,11 +44353,27 @@
           enterWholesale();
         } else if (routePortal === "sales_rep") {
           repUser = session.name || repUser;
+          if (typeof applyCrmOwnerData === "function") {
+            applyCrmOwnerData({
+              name: session.name || "",
+              email: session.email || "",
+              role: session.role || "sales_rep",
+              id: session.sub || null,
+            });
+          }
           enterRepMode();
         } else if (routePortal === "owner") {
           enterOwner();
         } else if (routePortal === "cpa") {
           enterCpaMode({ name: session.name, email: session.email });
+          if (typeof applyCrmOwnerData === "function") {
+            applyCrmOwnerData({
+              name: session.name || session.email || "",
+              email: session.email || "",
+              role: session.role || "cpa",
+              id: session.sub || null,
+            });
+          }
         } else {
           var hashPage = getCurrentPage();
           var hashParam = getPageParam();
@@ -42931,8 +44562,15 @@
         }
         if (routePortal === "cpa") {
           /* CPA portal uses dedicated overview/notes APIs — skip heavy CRM bootstrap. */
-          startVehiclesIfNeeded();
+          if (typeof hydrateProfileFromApi === "function") {
+            hydrateProfileFromApi().finally(startVehiclesIfNeeded);
+          } else {
+            startVehiclesIfNeeded();
+          }
         } else {
+          if (typeof hydrateProfileFromApi === "function") {
+            hydrateProfileFromApi();
+          }
           if (window.AVCrmBootstrap) {
             AVCrmBootstrap.bootstrapCrmFromApi()
               .then(startVehiclesIfNeeded)

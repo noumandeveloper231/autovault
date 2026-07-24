@@ -431,7 +431,7 @@
         b && b.autoExpense
           ? "<b>On</b> — payments are added to Expenses as “" +
             esc(planLabel) +
-            ' plan subscription” under Software / subscriptions.'
+            ' plan subscription” under Dealership Expense → Subscriptions.'
           : "Off — payments are not written to your Expenses section.";
     }
     var nt = document.getElementById("psNotifyBefore");
