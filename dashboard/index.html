@@ -2262,6 +2262,269 @@
         margin-bottom: 22px;
       }
 
+      /* Deal jacket: Cost Breakdown column on the left */
+      .vdp-body.dj-swap > div:nth-child(1) {
+        order: 2;
+      }
+      .vdp-body.dj-swap > div:nth-child(2) {
+        order: 1;
+      }
+      .dj-save-wrap {
+        margin-top: 6px;
+      }
+      .dj-title-pop {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition:
+          max-height 0.28s ease,
+          opacity 0.2s ease,
+          margin 0.28s ease;
+        border-radius: 12px;
+      }
+      .dj-title-pop.show {
+        max-height: 260px;
+        opacity: 1;
+        margin-top: 12px;
+        padding: 16px 18px;
+        background: var(--panel-2);
+        border: 1px solid var(--blue);
+      }
+      .dj-tp-q {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .dj-tp-sub {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin-top: 5px;
+      }
+      .dj-tp-btns {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+      }
+      .dj-tp-yes {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 18px;
+        border-radius: 9px;
+        border: none;
+        background: var(--green);
+        color: #03121c;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .dj-tp-yes:hover {
+        filter: brightness(1.08);
+      }
+      .dj-tp-no {
+        padding: 10px 18px;
+        border-radius: 9px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .dj-tp-no:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+      .dj-title-boxes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 22px;
+      }
+      @media (max-width: 800px) {
+        .dj-title-boxes {
+          grid-template-columns: 1fr;
+        }
+      }
+      .dj-title-box {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        background: var(--panel);
+        overflow: hidden;
+      }
+      .dj-title-box.out {
+        border-color: rgba(255, 159, 67, 0.4);
+      }
+      .dj-title-box.in {
+        border-color: rgba(35, 209, 139, 0.35);
+      }
+      .dj-tb-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 13px 16px;
+        border-bottom: 1px solid var(--border);
+        font-size: 12.5px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .dj-tb-head span {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .dj-tb-head b {
+        font-family: var(--mono);
+        font-size: 15px;
+      }
+      .dj-title-box.out .dj-tb-head b {
+        color: var(--orange);
+      }
+      .dj-title-box.in .dj-tb-head b {
+        color: var(--green);
+      }
+      .dj-tb-dot {
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+      }
+      .dj-title-box.out .dj-tb-dot {
+        background: var(--orange);
+      }
+      .dj-title-box.in .dj-tb-dot {
+        background: var(--green);
+      }
+      .dj-tb-list {
+        max-height: 260px;
+        overflow-y: auto;
+      }
+      .dj-tb-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+      }
+      .dj-tb-row:last-child {
+        border-bottom: none;
+      }
+      .dj-tb-row:hover {
+        background: var(--panel-2);
+      }
+      .dj-tb-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text);
+      }
+      .dj-tb-meta {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .dj-tb-mark {
+        flex-shrink: 0;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--green);
+        background: none;
+        color: var(--green);
+        font-size: 11px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .dj-tb-mark:hover {
+        background: rgba(35, 209, 139, 0.12);
+      }
+      .dj-tb-check {
+        flex-shrink: 0;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(35, 209, 139, 0.16);
+        color: var(--green);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 13px;
+      }
+      .dj-tb-empty {
+        padding: 20px 16px;
+        text-align: center;
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .dj-tb-row.confirming {
+        background: var(--panel-2);
+        align-items: stretch;
+      }
+      .dj-tb-confirm {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 9px;
+        padding-top: 9px;
+        border-top: 1px dashed var(--border);
+      }
+      .dj-tb-confirm span {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--text);
+        margin-right: 2px;
+      }
+      .dj-tb-yes {
+        padding: 6px 13px;
+        border-radius: 8px;
+        border: none;
+        background: var(--green);
+        color: #03121c;
+        font-size: 11.5px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .dj-tb-yes:hover {
+        filter: brightness(1.08);
+      }
+      .dj-tb-cancel {
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--muted);
+        font-size: 11.5px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .dj-tb-cancel:hover {
+        color: var(--text);
+        border-color: var(--muted);
+      }
+      .djl-titles {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition:
+          max-height 0.3s ease,
+          opacity 0.2s ease,
+          margin 0.3s ease;
+      }
+      .djl-titles.show {
+        max-height: 900px;
+        opacity: 1;
+        margin: 16px 0 4px;
+      }
+
       .vdp-section {
         background: var(--panel);
         border: 1px solid var(--border);
@@ -4642,8 +4905,120 @@
         flex-wrap: wrap;
       }
 
+      .veh-cal-wrap {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        margin-bottom: 16px;
+        overflow: hidden;
+        background: var(--panel);
+      }
+      .veh-cal-wrap.filtering {
+        border-color: var(--blue);
+      }
+      .veh-cal-toggle {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 11px 14px;
+        background: none;
+        border: none;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        text-align: left;
+      }
+      .veh-cal-toggle:hover {
+        background: var(--panel-2);
+      }
+      .vct-ic {
+        color: var(--muted);
+        flex-shrink: 0;
+      }
+      .vct-label {
+        letter-spacing: 0.2px;
+      }
+      .vct-state {
+        margin-left: auto;
+        font-size: 11.5px;
+        font-weight: 700;
+        color: var(--muted);
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        padding: 3px 11px;
+      }
+      .vct-state.on {
+        color: #fff;
+        background: var(--blue);
+        border-color: var(--blue);
+      }
+      .vct-chev {
+        color: var(--muted);
+        flex-shrink: 0;
+        transition: transform 0.22s ease;
+      }
+      .veh-cal-wrap.open .vct-chev {
+        transform: rotate(180deg);
+      }
+      .veh-cal-wrap .veh-calendar {
+        display: none;
+        margin: 0;
+        border: none;
+        border-top: 1px solid var(--border);
+        border-radius: 0;
+      }
+      .veh-cal-wrap.open .veh-calendar {
+        display: flex;
+      }
+      .veh-calendar {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 8px 12px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .veh-months {
+        display: flex;
+        gap: 3px;
+        flex-wrap: wrap;
+      }
+      .veh-calendar .pnl-cal-modes {
+        margin-left: auto;
+      }
+      .veh-mode {
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 11.5px;
+        font-weight: 700;
+        padding: 5px 11px;
+        border-radius: 7px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .veh-mode:hover {
+        color: var(--text);
+        border-color: var(--blue);
+      }
+      .veh-mode.active {
+        background: var(--blue);
+        border-color: var(--blue);
+        color: #fff;
+      }
+
       @media print {
         .fin-calendar {
+          display: none !important;
+        }
+        .veh-calendar,
+        .veh-cal-wrap {
           display: none !important;
         }
       }
@@ -17196,7 +17571,7 @@
           </div>
           <div class="sv-tabs">
             <button
-              class="sv-tab active"
+              class="sv-tab"
               data-tab="profit"
               onclick="svSetTab('profit')"
             >
@@ -17205,7 +17580,11 @@
             <button class="sv-tab" data-tab="loss" onclick="svSetTab('loss')">
               Vehicles by Loss
             </button>
-            <button class="sv-tab" data-tab="all" onclick="svSetTab('all')">
+            <button
+              class="sv-tab active"
+              data-tab="all"
+              onclick="svSetTab('all')"
+            >
               All Vehicles
             </button>
           </div>
@@ -19028,6 +19407,78 @@
             </div>
           </div>
 
+          <!-- BROWSE BY PERIOD (collapsible) -->
+          <div class="veh-cal-wrap" id="vehCalWrap">
+            <button
+              class="veh-cal-toggle"
+              onclick="toggleVehCal()"
+              aria-expanded="false"
+              type="button"
+            >
+              <svg
+                class="vct-ic"
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="4" width="18" height="18" rx="2" />
+                <path d="M16 2v4M8 2v4M3 10h18" />
+              </svg>
+              <span class="vct-label">Browse sold history</span>
+              <span class="vct-state" id="vehCalState">All vehicles</span>
+              <svg
+                class="vct-chev"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div class="veh-calendar" id="vehCalBody">
+              <div class="pnl-cal-year">
+                <button type="button" onclick="vehChangeYear(-1)" title="Previous year">
+                  ‹
+                </button>
+                <span class="veh-cal-year-val">2026</span>
+                <button type="button" onclick="vehChangeYear(1)" title="Next year">›</button>
+              </div>
+              <div class="veh-months"></div>
+              <div class="pnl-cal-modes">
+                <button
+                  type="button"
+                  class="veh-mode"
+                  data-mode="all"
+                  onclick="vehSetMode('all')"
+                >
+                  All
+                </button>
+                <button
+                  type="button"
+                  class="veh-mode"
+                  data-mode="year"
+                  onclick="vehSetMode('year')"
+                >
+                  Yearly
+                </button>
+                <button
+                  type="button"
+                  class="veh-mode"
+                  data-mode="month"
+                  onclick="vehSetMode('month')"
+                >
+                  Monthly
+                </button>
+              </div>
+            </div>
+          </div>
+
           <!-- FLOORING BANNER -->
           <div class="flooring-banner">
             <div class="fb-label">
@@ -19118,7 +19569,7 @@
                   >
                     <div class="kpi-label">Titles Present</div>
                     <div class="kpi-value" id="kpiTitles">0 of 0</div>
-                    <div class="kpi-foot">click to view present titles</div>
+                    <div class="kpi-foot">in-stock vehicles only</div>
                   </div>
                   <div
                     class="kpi clickable"
@@ -19137,17 +19588,17 @@
               </div>
 
               <div class="veh-kpi-group month">
-                <div class="veh-kpi-group-label">This Month</div>
+                <div class="veh-kpi-group-label" id="vehKpiMonthLabel">This Month</div>
                 <div class="kpi-grid">
                   <div class="kpi" style="--accent: var(--green)">
-                    <div class="kpi-label">Sold This Month</div>
+                    <div class="kpi-label" id="kpiSoldMonthLabel">Sold This Month</div>
                     <div class="kpi-value" id="kpiSoldMonth">0</div>
                     <div class="kpi-foot">units moved</div>
                   </div>
                   <div class="kpi" style="--accent: var(--green)">
-                    <div class="kpi-label">Profit This Month</div>
+                    <div class="kpi-label" id="kpiProfitMonthLabel">Profit This Month</div>
                     <div class="kpi-value" id="kpiProfitMonth">$0</div>
-                    <div class="kpi-foot">net, sold this month</div>
+                    <div class="kpi-foot" id="kpiProfitMonthFoot">net, sold this month</div>
                   </div>
                 </div>
               </div>
@@ -19977,8 +20428,10 @@
             </div>
           </div>
 
-          <div class="vdp-body">
-            <!-- LEFT: sale info + combined customer / documents / notes -->
+          <div class="vdp-body dj-swap">
+            <!-- LEFT (visually via dj-swap): Cost Breakdown + Rep + Add-Ons -->
+            <!-- DOM order kept; CSS swap puts Cost Breakdown on the left -->
+            <!-- LEFT in DOM / RIGHT visually: sale info + customer / documents / notes -->
             <div>
               <div class="vdp-section" id="djSaleSection" style="margin-bottom: 18px">
                 <div class="dj-form-title">Sale Information</div>
@@ -20322,55 +20775,105 @@
           </div>
 
           <!-- SAVE BAR -->
-          <div
-            class="dj-save-bar"
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              gap: 18px;
-              flex-wrap: wrap;
-              margin-top: 6px;
-            "
-          >
+          <div class="dj-save-wrap">
             <div
+              class="dj-save-bar"
               style="
-                font-size: 11.5px;
-                color: var(--muted);
-                line-height: 1.5;
-                flex: 1;
-                min-width: 220px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 18px;
+                flex-wrap: wrap;
+                margin-top: 6px;
               "
             >
-              Saving logs this deal in Deal Jackets, marks the vehicle sold, and
-              rolls the numbers into your sold count, profit, and ROI.
-            </div>
-            <button
-              class="btn-primary"
-              id="djSaveBtn"
-              style="
-                box-shadow: none;
-                font-size: 13.5px;
-                padding: 11px 22px;
-                white-space: nowrap;
-              "
-              onclick="saveDeal()"
-            >
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2.2"
+              <div
+                style="
+                  font-size: 11.5px;
+                  color: var(--muted);
+                  line-height: 1.5;
+                  flex: 1;
+                  min-width: 220px;
+                "
               >
-                <path d="M5 13l4 4L19 7" />
-              </svg>
-              Save Deal &amp; Mark Sold
-            </button>
+                Saving logs this deal in Deal Jackets, marks the vehicle sold, and
+                rolls the numbers into your sold count, profit, and ROI.
+              </div>
+              <button
+                class="btn-primary"
+                id="djSaveBtn"
+                style="
+                  box-shadow: none;
+                  font-size: 13.5px;
+                  padding: 11px 22px;
+                  white-space: nowrap;
+                "
+                onclick="saveDeal()"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                >
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+                Save Deal &amp; Mark Sold
+              </button>
+            </div>
+            <div class="dj-title-pop" id="djTitlePop">
+              <div class="dj-tp-q">Is this vehicle&rsquo;s title in?</div>
+              <div class="dj-tp-sub">
+                Marking it in removes it from your in-stock title count and files
+                it under sold-vehicle titles. Not yet? It&rsquo;ll be tracked below
+                until the title arrives.
+              </div>
+              <div class="dj-tp-btns">
+                <button class="dj-tp-yes" type="button" onclick="finalizeDeal(true)">
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.4"
+                  >
+                    <path d="M20 6L9 17l-5-5" />
+                  </svg>
+                  Yes &mdash; title is in
+                </button>
+                <button class="dj-tp-no" type="button" onclick="finalizeDeal(false)">
+                  Not yet
+                </button>
+              </div>
+            </div>
           </div>
           <div class="dj-save-sk">
             <div class="sk-bar" style="width: 100%; height: 48px; border-radius: 10px"></div>
+          </div>
+
+          <!-- SOLD-VEHICLE TITLE TRACKING -->
+          <div class="dj-title-boxes">
+            <div class="dj-title-box out">
+              <div class="dj-tb-head">
+                <span
+                  ><span class="dj-tb-dot"></span>Sold Vehicles &mdash; Titles Not
+                  In</span
+                ><b id="djTitlesOutCount">0</b>
+              </div>
+              <div id="djTitlesOutList" class="dj-tb-list"></div>
+            </div>
+            <div class="dj-title-box in">
+              <div class="dj-tb-head">
+                <span
+                  ><span class="dj-tb-dot"></span>Sold Vehicles &mdash; Titles
+                  In</span
+                ><b id="djTitlesInCount">0</b>
+              </div>
+              <div id="djTitlesInList" class="dj-tb-list"></div>
+            </div>
           </div>
 
           <!-- REST OF INVENTORY -->
@@ -20413,24 +20916,46 @@
                 <span class="dash-inline-spin">Loading deals…</span>
               </div>
             </div>
-            <button
-              class="grid-toggle-btn"
-              id="djMonthBtn"
-              onclick="toggleDjMonth()"
-            >
-              <svg
-                width="13"
-                height="13"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
+            <div style="display: flex; gap: 8px; flex-wrap: wrap">
+              <button
+                class="grid-toggle-btn"
+                id="djTitlesBtn"
+                onclick="toggleDjlTitles()"
               >
-                <rect x="3" y="4" width="18" height="18" rx="2" />
-                <path d="M16 2v4M8 2v4M3 10h18" />
-              </svg>
-              Deals by Month
-            </button>
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                  />
+                  <path d="M14 2v6h6M9 15l2 2 4-4" />
+                </svg>
+                <span id="djTitlesBtnLabel">Titles In / Not In</span>
+              </button>
+              <button
+                class="grid-toggle-btn"
+                id="djMonthBtn"
+                onclick="toggleDjMonth()"
+              >
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                </svg>
+                Deals by Month
+              </button>
+            </div>
           </div>
           <div class="fin-calendar pnl-actions">
             <div class="pnl-cal-year">
@@ -20456,6 +20981,29 @@
               >
                 Yearly
               </button>
+            </div>
+          </div>
+          <!-- TITLE TRACKING (toggled) -->
+          <div class="djl-titles" id="djlTitlesPanel">
+            <div class="dj-title-boxes" style="margin-top: 0">
+              <div class="dj-title-box out">
+                <div class="dj-tb-head">
+                  <span
+                    ><span class="dj-tb-dot"></span>Sold Vehicles &mdash; Titles
+                    Not In</span
+                  ><b id="djlTitlesOutCount">0</b>
+                </div>
+                <div id="djlTitlesOutList" class="dj-tb-list"></div>
+              </div>
+              <div class="dj-title-box in">
+                <div class="dj-tb-head">
+                  <span
+                    ><span class="dj-tb-dot"></span>Sold Vehicles &mdash; Titles
+                    In</span
+                  ><b id="djlTitlesInCount">0</b>
+                </div>
+                <div id="djlTitlesInList" class="dj-tb-list"></div>
+              </div>
             </div>
           </div>
           <div class="kpi-grid">
@@ -23645,14 +24193,16 @@
                   />
                   <circle cx="12" cy="13" r="3.5" />
                 </svg>
-                <div class="sc-title">Scan with phone</div>
-                <div class="sc-sub">Open your camera and snap the document</div>
+                <div class="sc-title">Take a photo</div>
+                <div class="sc-sub">
+                  Open your camera and capture the document in color
+                </div>
                 <input
                   type="file"
                   accept="image/*"
                   capture="environment"
                   style="display: none"
-                  onchange="handleScanFile(this)"
+                  onchange="handleScanFile(this, true)"
                 />
               </label>
               <label class="scan-choice">
@@ -23674,7 +24224,7 @@
                   type="file"
                   accept="image/*,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   style="display: none"
-                  onchange="handleScanFile(this)"
+                  onchange="handleScanFile(this, true)"
                 />
               </label>
             </div>
@@ -23687,8 +24237,8 @@
                 line-height: 1.5;
               "
             >
-              Jenna auto-enhances your photo to look like a clean printer scan,
-              then files it for you.
+              Photos are saved in full color and filed under the vehicle or
+              expense you choose.
             </div>
           </div>
 
@@ -23696,14 +24246,14 @@
           <div id="scanStep2" style="display: none">
             <div class="scan-processing">
               <div class="scan-spinner"></div>
-              <div class="sp-txt">Jenna is enhancing your scan&hellip;</div>
+              <div class="sp-txt">Preparing your document&hellip;</div>
             </div>
           </div>
 
           <!-- STEP 3: preview + save -->
           <div id="scanStep3" style="display: none">
             <div class="scan-preview-wrap">
-              <span class="scan-scanned-badge">SCANNED</span>
+              <span class="scan-scanned-badge">DOCUMENT</span>
               <img id="scanPreviewImg" src="" alt="Scanned document" />
             </div>
             <div class="form-group" style="margin: 14px 0 12px">
@@ -24910,8 +25460,11 @@
       /* Wait for crm-bootstrap to load the real user before gating.
          Early call used to skip the agreement via stale localStorage. */
       setTimeout(function () {
-        if (!_bootGateDone) avBootGateOnce();
+        if (!_bootGateDone && window._crmApiLoaded) avBootGateOnce();
       }, 5000);
+      setTimeout(function () {
+        if (!_bootGateDone) avBootGateOnce();
+      }, 15000);
       function startSetupTour() {
         closeWelcome();
         const plan = currentDealershipPlan() || "growing_dealership";
@@ -25708,7 +26261,7 @@
           } catch (_) {}
         }
       }
-      let svTab = "profit",
+      let svTab = "all",
         svMonth = 5,
         svYear = 2026,
         svSynced = false;
@@ -25742,6 +26295,39 @@
       ];
       const SV_THEAD =
         "<thead><tr><th>Vehicle</th><th>VIN</th><th>Sold Date</th><th>Purchase Price</th><th>Sold Price</th><th>Gross Profit</th><th>Net Profit</th></tr></thead>";
+      function vehicleIsSold(v) {
+        if (!v) return false;
+        if (v.sold) return true;
+        const st = v.status || "";
+        return (
+          st === "Sold" ||
+          st === "Sold Loss" ||
+          st === "Wholesale" ||
+          st === "Out of State Sale" ||
+          st === "loss" ||
+          st === "wholesale" ||
+          st === "out_of_state_sale" ||
+          st === "sold"
+        );
+      }
+      function vehicleSoldDateKey(v) {
+        if (!v) return "";
+        const raw =
+          v.soldDate ||
+          v.soldAt ||
+          (v._raw && v._raw.soldAt) ||
+          "";
+        if (!raw) return "";
+        const s = String(raw);
+        const m = s.match(/^(\d{4}-\d{2}-\d{2})/);
+        if (m) return m[1];
+        const d = new Date(s);
+        if (Number.isNaN(d.getTime())) return "";
+        const y = d.getFullYear();
+        const mo = String(d.getMonth() + 1).padStart(2, "0");
+        const day = String(d.getDate()).padStart(2, "0");
+        return `${y}-${mo}-${day}`;
+      }
       function svSetTab(t) {
         svTab = t;
         renderSoldVehicles();
@@ -25757,8 +26343,26 @@
       function svRows(year, month) {
         const pfx = `${year}-${String(month + 1).padStart(2, "0")}`;
         return (vehicles || [])
-          .filter((v) => v.sold && (v.soldDate || "").startsWith(pfx))
-          .map(computeRow);
+          .filter((v) => {
+            if (!vehicleIsSold(v)) return false;
+            const key = vehicleSoldDateKey(v);
+            return key.startsWith(pfx);
+          })
+          .map((v) => {
+            const r = computeRow(v);
+            // Ensure soldDate is populated for display even if source used soldAt only.
+            if (!r.soldDate) r.soldDate = vehicleSoldDateKey(v) || null;
+            return r;
+          });
+      }
+      function svAllSoldRows() {
+        return (vehicles || [])
+          .filter((v) => vehicleIsSold(v))
+          .map((v) => {
+            const r = computeRow(v);
+            if (!r.soldDate) r.soldDate = vehicleSoldDateKey(v) || null;
+            return r;
+          });
       }
       function svRowHtml(r) {
         return `<tr>
@@ -25771,15 +26375,20 @@
   <td style="font-weight:800;color:${r.netProfit >= 0 ? "var(--green)" : "var(--red)"};">${dashMoney(r.netProfit)}</td>
 </tr>`;
       }
-      function renderSvCal() {
+      function renderSvCal(opts) {
+        const showMonths = !(opts && opts.hideMonths);
         const yv = document.getElementById("svYearVal");
         if (yv) yv.textContent = svYear;
         const mh = document.getElementById("svMonths");
-        if (mh)
-          mh.innerHTML = SV_MONTHS.map(
-            (m, i) =>
-              `<button class="pnl-month ${i === svMonth ? "active" : ""}" onclick="svPickMonth(${i})">${m}</button>`,
-          ).join("");
+        if (mh) {
+          mh.style.display = showMonths ? "" : "none";
+          if (showMonths) {
+            mh.innerHTML = SV_MONTHS.map(
+              (m, i) =>
+                `<button class="pnl-month ${i === svMonth ? "active" : ""}" onclick="svPickMonth(${i})">${m}</button>`,
+            ).join("");
+          }
+        }
       }
       function renderSoldVehicles() {
         const page = document.getElementById("page-sold-vehicles");
@@ -25814,24 +26423,38 @@
         const body = document.getElementById("svBody");
         if (!body) return;
         if (svTab === "all") {
+          // All Vehicles = every sold unit across all years (matches Vehicles inventory sold set).
           if (calWrap) calWrap.style.display = "none";
+          const all = svAllSoldRows().sort((a, b) =>
+            (b.soldDate || "").localeCompare(a.soldDate || ""),
+          );
+          const byMonth = {};
+          all.forEach((r) => {
+            const key = (r.soldDate || "").slice(0, 7) || "0000-00";
+            (byMonth[key] = byMonth[key] || []).push(r);
+          });
+          const keys = Object.keys(byMonth).sort().reverse();
           let rh = "",
             totNet = 0,
             totCars = 0;
-          for (let mo = 11; mo >= 0; mo--) {
-            const rows = svRows(svYear, mo).sort((a, b) =>
+          keys.forEach((k) => {
+            const rows = byMonth[k].sort((a, b) =>
               (a.soldDate || "").localeCompare(b.soldDate || ""),
             );
-            if (!rows.length) continue;
             const net = rows.reduce((s, r) => s + r.netProfit, 0);
             totNet += net;
             totCars += rows.length;
-            rh += `<tr class="sv-month-row"><td colspan="7"><span class="sv-mr-name">${SV_MFULL[mo]} ${svYear}</span><span class="sv-mr-meta">${rows.length} car${rows.length === 1 ? "" : "s"} \u00b7 <b style="color:${net >= 0 ? "var(--green)" : "var(--red)"}">${dashMoney(net)}</b> net</span></td></tr>`;
+            let label = "No sold date";
+            if (k !== "0000-00") {
+              const p = k.split("-");
+              label = `${SV_MFULL[+p[1] - 1]} ${p[0]}`;
+            }
+            rh += `<tr class="sv-month-row"><td colspan="7"><span class="sv-mr-name">${label}</span><span class="sv-mr-meta">${rows.length} car${rows.length === 1 ? "" : "s"} \u00b7 <b style="color:${net >= 0 ? "var(--green)" : "var(--red)"}">${dashMoney(net)}</b> net</span></td></tr>`;
             rh += rows.map(svRowHtml).join("");
-          }
+          });
           body.innerHTML = rh
-            ? `<div class="sv-year-lbl">All sold vehicles \u00b7 ${svYear} \u00b7 <span style="color:var(--text);">${totCars} sold</span> \u00b7 <b style="color:${totNet >= 0 ? "var(--green)" : "var(--red)"};">${dashMoney(totNet)}</b> net</div><div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${SV_THEAD}<tbody>${rh}</tbody></table></div></div>`
-            : `<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No sold vehicles in ${svYear}.</div>`;
+            ? `<div class="sv-year-lbl">All sold vehicles \u00b7 <span style="color:var(--text);">${totCars} sold</span> \u00b7 <b style="color:${totNet >= 0 ? "var(--green)" : "var(--red)"};">${dashMoney(totNet)}</b> net</div><div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${SV_THEAD}<tbody>${rh}</tbody></table></div></div>`
+            : `<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No sold vehicles yet.</div>`;
         } else {
           if (calWrap) calWrap.style.display = "";
           renderSvCal();
@@ -25962,10 +26585,10 @@
         let rows = [],
           name;
         if (svTab === "all") {
-          for (let mo = 0; mo < 12; mo++) {
-            rows = rows.concat(svRows(svYear, mo));
-          }
-          name = "sold-vehicles-" + svYear + ".csv";
+          rows = svAllSoldRows().sort((a, b) =>
+            (b.soldDate || "").localeCompare(a.soldDate || ""),
+          );
+          name = "sold-vehicles-all.csv";
         } else {
           rows = svRows(svYear, svMonth).filter((r) =>
             svTab === "profit" ? r.netProfit >= 0 : r.netProfit < 0,
@@ -27747,16 +28370,16 @@
           const sellFmt =
             typeof fmtDate === "function" ? fmtDate(sell) : sell;
           pvMsg(
-            `Saved ${label} — sold ${sellFmt} for ${pvMoney(t.sale)}, net ${pvMoneySigned(t.netProfit)}. Deal jacket not created yet.`,
+            `Saved ${label} — sold ${sellFmt} for ${pvMoney(t.sale)}, net ${pvMoneySigned(t.netProfit)}. Deal jacket created.`,
             true,
           );
           const el = document.getElementById("pvMsg");
           if (el) {
             el.innerHTML += `<div class="pv-next">
-        <div class="pvn-title">Saved under Sold Vehicles. Deal jacket status: No.</div>
-        <div class="pvn-text">Closing this window leaves the deal jacket uncreated. When you are ready, open Create Deal Jacket — fields autofill from this sale so you can finish paperwork and set deal jacket to Yes.</div>
+        <div class="pvn-title">Saved under Sold Vehicles with deal jacket.</div>
+        <div class="pvn-text">The deal jacket has been auto-created and marked as completed. You can review it anytime from Deal Jackets.</div>
         <div class="pvn-choice">What would you like to do next?</div>
-        <button class="pvn-btn" type="button" onclick="pvOpenJacket('${vin}')">Create deal jacket for ${label} →</button>
+        <button class="pvn-btn" type="button" onclick="pvOpenJacket('${vin}')">View deal jacket for ${label} →</button>
         <button class="pvn-btn alt" type="button" onclick="pvAddAnother()">Add another vehicle</button>
       </div>`;
           }
@@ -31787,6 +32410,13 @@
         year: new Date(today).getFullYear(),
         month: new Date(today).getMonth(),
       };
+      // Vehicles page has its own period so browsing history there doesn't disturb the financial pages.
+      let vehPeriod = {
+        active: false,
+        mode: "year",
+        year: new Date(today).getFullYear(),
+        month: new Date(today).getMonth(),
+      };
 
       function daysBetween(d1, d2) {
         return Math.max(0, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
@@ -31927,7 +32557,14 @@
 
       function computeRow(v) {
         const purchaseDate = new Date(v.date);
-        const endDate = v.sold
+        const isSoldRow = !!(
+          v.sold ||
+          v.status === "Sold" ||
+          v.status === "Sold Loss" ||
+          v.status === "Wholesale" ||
+          v.status === "Out of State Sale"
+        );
+        const endDate = isSoldRow
           ? new Date(v.soldDate || v.soldAt || Date.now())
           : today;
         const daysOnLot = Math.max(0, daysBetween(purchaseDate, endDate) || 0);
@@ -31965,10 +32602,15 @@
           0,
         );
         // use actual sold price when available, otherwise an estimated ask for unsold stock
-        const baseSale =
-          v.sold && v.soldPrice
-            ? v.soldPrice
-            : Math.round((Number(v.price) || 0) * 1.27);
+        const hasSoldPrice =
+          v.soldPrice != null && Number(v.soldPrice) > 0;
+        const baseSale = isSoldRow
+          ? hasSoldPrice
+            ? Number(v.soldPrice)
+            : v.status === "Sold Loss" || v.status === "loss"
+              ? 0
+              : Math.round((Number(v.price) || 0) * 1.27)
+          : Math.round((Number(v.price) || 0) * 1.27);
         const estimatedSale = baseSale + addOnRevenue;
         const netProfit = estimatedSale - totalVehicleCost - commission;
         const grossProfit = baseSale - (Number(v.price) || 0);
@@ -32163,7 +32805,7 @@
           termsAccepted:
             data.termsAccepted != null
               ? !!data.termsAccepted
-              : !!crmOwner.termsAccepted,
+              : (crmOwner.termsAccepted != null ? crmOwner.termsAccepted : undefined),
           termsVersion:
             data.termsVersion != null
               ? data.termsVersion
@@ -33010,11 +33652,17 @@
             `${r.year} ${r.make} ${r.model} ${r.vin} ${r.rep}`.toLowerCase();
           const matchUpcoming =
             !onlyUpcomingFloored || (!r.sold && r.floored && r.daysOnLot > 30);
+          // When browsing a past period, show sold vehicles from that period (and hide active stock).
+          let matchPeriod = true;
+          if (vehPeriod.active) {
+            matchPeriod = vehicleIsSold(r) ? vehInPeriod(r.soldDate || vehicleSoldDateKey(r)) : false;
+          }
           return (
+            matchPeriod &&
             text.includes(searchVal) &&
             (repVal === "" || r.rep === repVal) &&
             matchUpcoming &&
-            (!onlyTitlesPresent || r.titlePresent)
+            (!onlyTitlesPresent || (r.titlePresent && !r.sold))
           );
         });
 
@@ -33028,11 +33676,16 @@
 
         (document.getElementById("filterTag") || {}).textContent =
           `Showing ${filtered.length} of ${vehicles.length} vehicles`;
+        try {
+          renderVehCalendars();
+        } catch (e) {}
 
         window.lastVehRows = filtered;
         {
-          const _tp = vehicles.filter((v) => v && v.titlePresent).length,
-            _tt = vehicles.filter((v) => v).length;
+          const _tp = vehicles.filter(
+              (v) => v && v.titlePresent && !vehicleIsSold(v),
+            ).length,
+            _tt = vehicles.filter((v) => v && !vehicleIsSold(v)).length;
           const tc = document.getElementById("titlesCount");
           if (tc) tc.textContent = _tp + " of " + _tt;
         }
@@ -33045,7 +33698,10 @@
         const tableBody = document.getElementById("tableBody");
         if (tableBody) {
           if (filtered.length === 0) {
-            tableBody.innerHTML = `<tr class="veh-load-row"><td colspan="19"><div class="veh-load-inner" style="font-weight:500;">No vehicles in inventory yet. Use + Add Vehicle to get started.</div></td></tr>`;
+            const emptyMsg = vehPeriod.active
+              ? "No sold vehicles in this period."
+              : "No vehicles in inventory yet. Use + Add Vehicle to get started.";
+            tableBody.innerHTML = `<tr class="veh-load-row"><td colspan="19"><div class="veh-load-inner" style="font-weight:500;">${emptyMsg}</div></td></tr>`;
           } else {
             tableBody.innerHTML = vehRender(
               filtered,
@@ -33124,45 +33780,87 @@
           }
         }
 
-        renderKPIs(rows);
+        renderKPIs(rows, filtered);
         populateRepFilter(rows);
-        renderColumnTotals(rows);
+        renderColumnTotals(vehPeriod.active ? filtered : rows);
       }
 
-      function renderKPIs(rows) {
+      function renderKPIs(rows, filteredRows) {
         const set = (id, val) => {
           const el = document.getElementById(id);
           if (el) el.textContent = val;
         };
+        const periodActive = !!(vehPeriod && vehPeriod.active);
+        const periodRows = periodActive ? filteredRows || rows : rows;
         const active = rows.filter((r) => !r.sold);
         const totalInv = active.length;
-        const purchaseCost = rows.reduce((s, r) => s + r.price, 0);
-        const fees = rows.reduce((s, r) => s + r.fees, 0);
-        const repairs = rows.reduce((s, r) => s + r.repairs, 0);
-        const totalCost = rows.reduce((s, r) => s + r.totalVehicleCost, 0);
-        const salesTax = rows.reduce((s, r) => s + r.salesTaxCollected, 0);
-        const commission = rows.reduce((s, r) => s + r.commission, 0);
-        const flooringTotal = rows
-          .filter((r) => !r.sold)
-          .reduce((s, r) => s + r.flooringCost, 0);
-        const titlesInHand = rows.filter((r) => r && r.titlePresent).length;
-        const soldThisMonthRows = rows.filter(
-          (r) =>
-            r.sold &&
-            r.soldDate &&
-            new Date(r.soldDate).getMonth() === today.getMonth() &&
-            new Date(r.soldDate).getFullYear() === today.getFullYear(),
-        );
+        const purchaseCost = periodRows.reduce((s, r) => s + r.price, 0);
+        const fees = periodRows.reduce((s, r) => s + r.fees, 0);
+        const repairs = periodRows.reduce((s, r) => s + r.repairs, 0);
+        const totalCost = periodRows.reduce((s, r) => s + r.totalVehicleCost, 0);
+        const salesTax = periodRows.reduce((s, r) => s + r.salesTaxCollected, 0);
+        const commission = periodRows.reduce((s, r) => s + r.commission, 0);
+        const flooringTotal = periodActive
+          ? periodRows.reduce((s, r) => s + r.flooringCost, 0)
+          : active.reduce((s, r) => s + r.flooringCost, 0);
+        const titlesInHand = active.filter((r) => r && r.titlePresent).length;
+        let soldThisMonthRows;
+        if (periodActive) {
+          soldThisMonthRows = periodRows.filter((r) => r.sold);
+        } else {
+          soldThisMonthRows = rows.filter(
+            (r) =>
+              r.sold &&
+              r.soldDate &&
+              new Date(r.soldDate).getMonth() === today.getMonth() &&
+              new Date(r.soldDate).getFullYear() === today.getFullYear(),
+          );
+        }
         const soldThisMonth = soldThisMonthRows.length;
         const profitThisMonth = soldThisMonthRows.reduce(
           (s, r) => s + (Number(r.netProfit) || 0),
           0,
         );
 
-        set(
-          "vehicleCountLabel",
-          `${totalInv} vehicles in active inventory · ${rows.length} total tracked`,
-        );
+        const periodLbl = periodActive
+          ? vehPeriod.mode === "month"
+            ? `${PNL_MFULL[vehPeriod.month]} ${vehPeriod.year}`
+            : `${vehPeriod.year}`
+          : null;
+
+        if (periodActive && periodLbl) {
+          set(
+            "vehicleCountLabel",
+            `${soldThisMonth} vehicle${soldThisMonth === 1 ? "" : "s"} sold in ${periodLbl}`,
+          );
+        } else {
+          set(
+            "vehicleCountLabel",
+            `${totalInv} vehicles in active inventory · ${rows.length} total tracked`,
+          );
+        }
+
+        const monthGroupLbl = document.getElementById("vehKpiMonthLabel");
+        if (monthGroupLbl) {
+          monthGroupLbl.textContent = periodLbl || "This Month";
+        }
+        const soldLbl = document.getElementById("kpiSoldMonthLabel");
+        if (soldLbl) {
+          soldLbl.textContent = periodActive ? `Sold in ${periodLbl}` : "Sold This Month";
+        }
+        const profitLbl = document.getElementById("kpiProfitMonthLabel");
+        if (profitLbl) {
+          profitLbl.textContent = periodActive
+            ? `Profit in ${periodLbl}`
+            : "Profit This Month";
+        }
+        const profitFoot = document.getElementById("kpiProfitMonthFoot");
+        if (profitFoot) {
+          profitFoot.textContent = periodActive
+            ? `net, sold in ${periodLbl}`
+            : "net, sold this month";
+        }
+
         set("kpiTotalInventory", totalInv);
         set("kpiPurchaseCost", fmt(purchaseCost));
         set("kpiFees", fmt(fees));
@@ -33170,7 +33868,7 @@
         set("kpiTotalCost", fmt(totalCost));
         set("kpiSalesTax", fmt(salesTax));
         set("kpiCommission", fmt(commission));
-        set("kpiTitles", `${titlesInHand} of ${rows.length}`);
+        set("kpiTitles", `${titlesInHand} of ${active.length}`);
         set("kpiSoldMonth", soldThisMonth);
         set("kpiProfitMonth", fmtSigned(profitThisMonth));
         const profitEl = document.getElementById("kpiProfitMonth");
@@ -38156,7 +38854,7 @@
         if (wrap) wrap.classList.remove("is-file");
         scanCleaned = null;
       }
-      function handleScanFile(input) {
+      function handleScanFile(input, keepColor) {
         const f = input.files && input.files[0];
         if (!f) return;
         scanRawName = f.name || "Scanned document";
@@ -38171,21 +38869,29 @@
           if (isPdf || isDoc) {
             scanCleaned = ev.target.result;
             setTimeout(() => scanShowPreview(ev.target.result, isPdf ? "pdf" : "doc"), 500);
-          } else
+          } else if (keepColor !== false) {
+            // Default: keep full color (Deal Jackets / document photos).
+            colorScan(ev.target.result, (out) => {
+              scanCleaned = out;
+              setTimeout(() => scanShowPreview(out, false), 500);
+            });
+          } else {
             cleanupScan(ev.target.result, (cleaned) => {
               scanCleaned = cleaned;
               setTimeout(() => scanShowPreview(cleaned, false), 700);
             });
+          }
         };
         reader.readAsDataURL(f);
         input.value = "";
       }
-      function cleanupScan(dataUrl, cb) {
+      // Camera / upload photo — keep full color, just downscale so it saves at a sensible size.
+      function colorScan(dataUrl, cb) {
         const img = new Image();
         img.onload = function () {
           let w = img.width,
             h = img.height;
-          const max = 1500;
+          const max = 1800;
           if (Math.max(w, h) > max) {
             const s = max / Math.max(w, h);
             w = Math.round(w * s);
@@ -38194,24 +38900,10 @@
           const c = document.createElement("canvas");
           c.width = w;
           c.height = h;
-          const ctx = c.getContext("2d");
-          ctx.drawImage(img, 0, 0, w, h);
+          c.getContext("2d").drawImage(img, 0, 0, w, h);
           try {
-            const id = ctx.getImageData(0, 0, w, h),
-              p = id.data,
-              contrast = 1.55,
-              bright = 16;
-            for (let i = 0; i < p.length; i += 4) {
-              let g = 0.299 * p[i] + 0.587 * p[i + 1] + 0.114 * p[i + 2];
-              g = (g - 128) * contrast + 128 + bright;
-              if (g > 205) g = 255;
-              else if (g < 55) g = Math.max(0, g - 15);
-              g = g < 0 ? 0 : g > 255 ? 255 : g;
-              p[i] = p[i + 1] = p[i + 2] = g;
-            }
-            ctx.putImageData(id, 0, 0);
-            cb(c.toDataURL("image/jpeg", 0.85));
-          } catch (err) {
+            cb(c.toDataURL("image/jpeg", 0.9));
+          } catch (e) {
             cb(dataUrl);
           }
         };
@@ -38219,6 +38911,10 @@
           cb(dataUrl);
         };
         img.src = dataUrl;
+      }
+      function cleanupScan(dataUrl, cb) {
+        // Legacy B&W cleanup path — prefer colorScan for Deal Jacket documents.
+        colorScan(dataUrl, cb);
       }
       function scanShowPreview(src, fileKind) {
         document.getElementById("scanStep2").style.display = "none";
@@ -38856,10 +39552,15 @@
         }
         hideDjSkeleton();
         document.getElementById("djSavedBanner").classList.remove("show");
+        const titlePop = document.getElementById("djTitlePop");
+        if (titlePop) titlePop.classList.remove("show");
+        try {
+          renderDjTitleBoxes();
+        } catch (e) {}
         document.getElementById("djTitle").textContent =
           `${v.year} ${v.make} ${v.model}`;
-        document.getElementById("djVin").textContent =
-          `VIN ${v.vin} · ${v.category || ""} · purchased ${fmtDate(v.date)}`;
+        document.getElementById("djVin").innerHTML =
+          `VIN ${v.vin} · ${v.category || ""} · Purchased <span class="vdp-sub-ed" id="djEd_date" onclick="djEditDate()" title="Click to change the purchase date">${fmtDate(v.date)}</span>`;
         const eff = v.sold ? "Sold" : "Active";
         const badge = document.getElementById("djStatusBadge");
         badge.textContent = eff;
@@ -38982,6 +39683,62 @@
         renderDealAddOns(vin);
         renderDealBottomList();
         dealRecalc();
+      }
+
+      function djEditDate() {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v) return;
+        const host = document.getElementById("djEd_date");
+        if (!host || host.querySelector("input")) return;
+        const cur = (v.date || "").slice(0, 10);
+        host.outerHTML = `<input class="vdp-edit-input date" id="djEd_date" type="date" value="${cur}"
+    onblur="djCommitDate(this.value)"
+    onkeydown="if(event.key==='Enter'){this.blur();}else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
+        const inp = document.getElementById("djEd_date");
+        if (inp) inp.focus();
+      }
+      async function djCommitDate(val) {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v) return;
+        const inp = document.getElementById("djEd_date");
+        if (inp && inp.dataset && inp.dataset.cancel === "1") {
+          renderDealJacket(currentDealVin);
+          return;
+        }
+        if (val && /^\d{4}-\d{2}-\d{2}$/.test(val) && val !== v.date) {
+          v.date = val;
+          if (inp) {
+            inp.disabled = true;
+            inp.style.opacity = "0.55";
+          }
+          try {
+            if (window.AVVehicles && v.id) {
+              await vehEditSave(
+                AVVehicles.persistMoneyField(currentDealVin, "date", val),
+                {
+                  loading: "Saving purchase date…",
+                  loadingMsg: "Recalculating days & flooring",
+                  success: "Purchase date updated",
+                  error: "Failed to save purchase date",
+                },
+              );
+            }
+          } catch (err) {
+            try {
+              if (window.AVVehicles) await AVVehicles.loadAllVehicles();
+            } catch (_) {}
+          }
+        }
+        renderDealJacket(currentDealVin);
+        try {
+          if (typeof render === "function") render();
+        } catch (e) {}
+        try {
+          if (typeof renderProfitPage === "function") renderProfitPage();
+        } catch (e) {}
+        try {
+          if (typeof refreshAllPnl === "function") refreshAllPnl();
+        } catch (e) {}
       }
 
       let djCommMode = "pct";
@@ -39362,26 +40119,6 @@
           return;
         }
         avValidateField(document.getElementById("djCustName"), true);
-        const addOnRev = (v.addOnItems || []).reduce(
-          (s, a) => s + (Number(a.price) || 0),
-          0,
-        );
-        const gross = soldPrice - v.price;
-        let commission, pct;
-        if (djCommMode === "amt") {
-          commission = Math.max(
-            0,
-            parseFloat(document.getElementById("djCommAmt").value) || 0,
-          );
-          pct = gross > 0 ? (commission / gross) * 100 : 0;
-        } else {
-          pct = djGetPct();
-          commission = Math.max(0, Math.round((gross * pct) / 100));
-        }
-        const customerSalesTax =
-          parseFloat(document.getElementById("djStateTax").value) || 0;
-        const customerRegFees =
-          parseFloat(document.getElementById("djRegFee").value) || 0;
         const phone = document.getElementById("djCustCell").value;
         if (phone && !isValidPhone(phone)) {
           avValidateField(document.getElementById("djCustCell"), false);
@@ -39400,7 +40137,6 @@
           return;
         }
         avValidateField(document.getElementById("djCustEmail"), true);
-        const notes = document.getElementById("djNotes").value;
         const dealNumber = (
           document.getElementById("djRos").value || ""
         ).trim();
@@ -39415,10 +40151,65 @@
             return;
           }
         }
+        // Pop the title question; the deal saves once they answer.
+        const pop = document.getElementById("djTitlePop");
+        if (pop) {
+          pop.classList.add("show");
+          setTimeout(() => {
+            try {
+              pop.scrollIntoView({ behavior: "smooth", block: "center" });
+            } catch (e) {}
+          }, 40);
+        } else {
+          await finalizeDeal(v.titleIn === true);
+        }
+      }
+
+      async function finalizeDeal(titleIn) {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v) return;
+        const soldPrice =
+          parseFloat(document.getElementById("djSoldPrice").value) || 0;
+        if (soldPrice <= 0) {
+          avValidateField(document.getElementById("djSoldPrice"), false);
+          document.getElementById("djSoldPrice").focus();
+          return;
+        }
+        const customerName = (
+          document.getElementById("djCustName").value || ""
+        ).trim();
+        if (!customerName) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error("Customer name is required");
+          return;
+        }
+        const gross = soldPrice - v.price;
+        let commission, pct;
+        if (djCommMode === "amt") {
+          commission = Math.max(
+            0,
+            parseFloat(document.getElementById("djCommAmt").value) || 0,
+          );
+          pct = gross > 0 ? (commission / gross) * 100 : 0;
+        } else {
+          pct = djGetPct();
+          commission = Math.max(0, Math.round((gross * pct) / 100));
+        }
+        const customerSalesTax =
+          parseFloat(document.getElementById("djStateTax").value) || 0;
+        const customerRegFees =
+          parseFloat(document.getElementById("djRegFee").value) || 0;
+        const phone = document.getElementById("djCustCell").value;
+        const email = document.getElementById("djCustEmail").value;
+        const notes = document.getElementById("djNotes").value;
+        const dealNumber = (
+          document.getElementById("djRos").value || ""
+        ).trim();
         const saleRep = document.getElementById("djRep").value || v.rep;
         const sd =
           document.getElementById("djSaleDate").value ||
           today.toISOString().slice(0, 10);
+        const titleInFlag = !!titleIn;
 
         if (!window.AVVehicles || !v.id) {
           if (typeof AVToast !== "undefined")
@@ -39427,6 +40218,7 @@
         }
         if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
         const saveBtn = document.getElementById("djSaveBtn");
+        const wasAlreadySold = !!v.sold;
         try {
           if (typeof AVBusy !== "undefined") {
             AVBusy.inc();
@@ -39460,11 +40252,10 @@
             customerAddress:
               document.getElementById("djCustAddress").value || undefined,
             fees: { addOnItems: addOnItems },
+            titleReceived: titleInFlag,
+            titlePresent: titleInFlag,
           });
-          if (
-            markResp &&
-            markResp.dealJacket
-          ) {
+          if (markResp && markResp.dealJacket) {
             const jacketId = markResp.dealJacket.id;
             const removed = Array.isArray(v.djDocsRemoved)
               ? v.djDocsRemoved.slice()
@@ -39491,7 +40282,6 @@
                     : isWordDoc(doc.name)
                       ? "application/msword"
                       : "image/jpeg");
-                // Upload binary files to R2 once on deal save
                 if (
                   String(doc.img).startsWith("data:") &&
                   window.AVApi &&
@@ -39504,9 +40294,7 @@
                     sourceEntityId: jacketId,
                   });
                   fileUrl =
-                    uploaded.publicUrl ||
-                    uploaded.downloadUrl ||
-                    doc.img;
+                    uploaded.publicUrl || uploaded.downloadUrl || doc.img;
                   fileType = blob.type || fileType;
                 }
                 await AVApi.addJacketDocument(jacketId, {
@@ -39521,6 +40309,17 @@
             await AVVehicles.loadAllVehicles();
             const refreshed = vehicles.find((x) => x.vin === currentDealVin);
             if (refreshed) bootstrapDjDocs(refreshed);
+          }
+          try {
+            const cur = vehicles.find((x) => x.vin === currentDealVin);
+            if (cur && cur.id && window.AVApi) {
+              await AVApi.updateVehicle(cur.id, {
+                titleReceived: titleInFlag,
+                titlePresent: titleInFlag,
+              });
+            }
+          } catch (titleErr) {
+            console.warn("Title status update failed:", titleErr);
           }
           const updated = vehicles.find((x) => x.vin === currentDealVin);
           if (updated) {
@@ -39538,15 +40337,24 @@
             updated.dealJacket = true;
             updated.sold = true;
             updated.ros = dealNumber;
+            updated.titleIn = titleInFlag;
+            updated.titlePresent = titleInFlag;
           }
+          const pop = document.getElementById("djTitlePop");
+          if (pop) pop.classList.remove("show");
           render();
           refreshAllPnl();
           renderDealJacket(currentDealVin);
+          try {
+            renderDjTitleBoxes();
+          } catch (e) {}
           const net = updated ? computeRow(updated).netProfit : 0;
-          const wasAlreadySold = !!v.sold;
+          const tmsg = titleInFlag
+            ? "Title marked in."
+            : "Title still out — tracked below until it arrives.";
           document.getElementById("djSavedText").textContent = wasAlreadySold
-            ? `Deal jacket created — ${v.year} ${v.make} ${v.model} (deal jacket: Yes). Sold for ${fmt(soldPrice)} (net ${fmtSigned(net)}).`
-            : `Deal saved — ${v.year} ${v.make} ${v.model} marked sold for ${fmt(soldPrice)} (net ${fmtSigned(net)}). Deal jacket: Yes.`;
+            ? `Deal jacket created — ${v.year} ${v.make} ${v.model} (deal jacket: Yes). Sold for ${fmt(soldPrice)} (net ${fmtSigned(net)}). ${tmsg}`
+            : `Deal saved — ${v.year} ${v.make} ${v.model} marked sold for ${fmt(soldPrice)} (net ${fmtSigned(net)}). ${tmsg}`;
           document.getElementById("djSavedBanner").classList.add("show");
           window.scrollTo({ top: 0, behavior: "smooth" });
           if (typeof AVToast !== "undefined")
@@ -39570,6 +40378,109 @@
             AVBusy.dec();
           }
         }
+      }
+
+      // Effective title status for a sold vehicle (infers historical deals from titlePresent).
+      function soldTitleIn(v) {
+        return v.titleIn !== undefined && v.titleIn !== null
+          ? !!v.titleIn
+          : !!v.titlePresent;
+      }
+      let djTitleConfirmVin = null;
+      function renderDjTitleBoxes() {
+        const sold = (vehicles || []).filter(
+          (v) =>
+            v &&
+            (v.sold ||
+              (typeof vehicleIsSold === "function" && vehicleIsSold(v))),
+        );
+        const out = sold.filter((v) => !soldTitleIn(v));
+        const inn = sold.filter((v) => soldTitleIn(v));
+        const esc =
+          typeof msgEsc === "function"
+            ? msgEsc
+            : (s) =>
+                String(s || "")
+                  .replace(/&/g, "&amp;")
+                  .replace(/</g, "&lt;")
+                  .replace(/>/g, "&gt;");
+        const rowHtml = (v, isOut) => {
+          const confirming = isOut && djTitleConfirmVin === v.vin;
+          return `<div class="dj-tb-row${confirming ? " confirming" : ""}" onclick="openDealJacket('${v.vin}','sold')">
+      <div class="dj-tb-main"><div class="dj-tb-name">${v.year} ${v.make} ${v.model}</div>
+      <div class="dj-tb-meta">${v.customer ? esc(v.customer) + " · " : ""}${v.soldDate ? fmtDate(v.soldDate) : ""} · VIN …${(v.vin || "").slice(-6)}</div>
+      ${confirming ? `<div class="dj-tb-confirm"><span>Mark this title as in?</span><button class="dj-tb-yes" onclick="event.stopPropagation(); confirmTitleIn('${v.vin}')">Yes, it&rsquo;s in</button><button class="dj-tb-cancel" onclick="event.stopPropagation(); cancelTitleIn()">Cancel</button></div>` : ""}
+      </div>
+      ${isOut ? (confirming ? "" : `<button class="dj-tb-mark" onclick="event.stopPropagation(); askTitleIn('${v.vin}')">Mark title in</button>`) : '<span class="dj-tb-check">✓</span>'}
+    </div>`;
+        };
+        const fill = (cntId, listId, arr, isOut) => {
+          const c = document.getElementById(cntId),
+            l = document.getElementById(listId);
+          if (c) c.textContent = arr.length;
+          if (l)
+            l.innerHTML = arr.length
+              ? arr.map((v) => rowHtml(v, isOut)).join("")
+              : `<div class="dj-tb-empty">${isOut ? "All sold vehicles have their titles in. 🎉" : "No sold vehicles marked title-in yet."}</div>`;
+        };
+        fill("djTitlesOutCount", "djTitlesOutList", out, true);
+        fill("djTitlesInCount", "djTitlesInList", inn, false);
+        fill("djlTitlesOutCount", "djlTitlesOutList", out, true);
+        fill("djlTitlesInCount", "djlTitlesInList", inn, false);
+        const lbl = document.getElementById("djTitlesBtnLabel");
+        if (lbl) {
+          const inPer =
+            typeof inPnlPeriod === "function"
+              ? sold.filter((v) => inPnlPeriod(v.soldDate))
+              : sold;
+          const inPerIn = inPer.filter((v) => soldTitleIn(v)).length;
+          let per = "";
+          if (typeof pnlPeriod !== "undefined") {
+            per =
+              pnlPeriod.mode === "month"
+                ? `${PNL_MSHORT[pnlPeriod.month]} ${pnlPeriod.year}`
+                : `${pnlPeriod.year}`;
+          }
+          lbl.textContent = inPer.length
+            ? `${inPerIn} of ${inPer.length} titles in${per ? " · " + per : ""}`
+            : "Titles In / Not In";
+        }
+      }
+      function toggleDjlTitles() {
+        const p = document.getElementById("djlTitlesPanel");
+        const b = document.getElementById("djTitlesBtn");
+        if (!p) return;
+        const on = p.classList.toggle("show");
+        if (b) b.classList.toggle("active", on);
+        if (on) renderDjTitleBoxes();
+      }
+      function askTitleIn(vin) {
+        djTitleConfirmVin = vin;
+        renderDjTitleBoxes();
+      }
+      function cancelTitleIn() {
+        djTitleConfirmVin = null;
+        renderDjTitleBoxes();
+      }
+      async function confirmTitleIn(vin) {
+        const v = vehicles.find((x) => x.vin === vin);
+        if (!v) return;
+        v.titleIn = true;
+        v.titlePresent = true;
+        djTitleConfirmVin = null;
+        try {
+          if (v.id && window.AVApi) {
+            await AVApi.updateVehicle(v.id, {
+              titleReceived: true,
+              titlePresent: true,
+            });
+          }
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to update title status");
+        }
+        renderDjTitleBoxes();
+        if (typeof render === "function") render();
       }
 
       function renderDealJacketsList() {
@@ -39606,6 +40517,9 @@
             el.classList.remove("is-loading");
           });
         if (typeof renderFinCalendars === "function") renderFinCalendars();
+        try {
+          renderDjTitleBoxes();
+        } catch (e) {}
         const rows = vehicles
           .map(computeRow)
           .filter(
@@ -39926,6 +40840,89 @@
       function pnlChangeYear(d) {
         pnlPeriod.year += d;
         applyFinPeriod();
+      }
+
+      function toggleVehCal() {
+        const w = document.getElementById("vehCalWrap");
+        if (!w) return;
+        const open = w.classList.toggle("open");
+        const btn = w.querySelector(".veh-cal-toggle");
+        if (btn) btn.setAttribute("aria-expanded", open ? "true" : "false");
+      }
+      // ----- Vehicles-page calendar (browse sold history by year / month) -----
+      function renderVehCalendars() {
+        document
+          .querySelectorAll(".veh-cal-year-val")
+          .forEach((el) => (el.textContent = vehPeriod.year));
+        document
+          .querySelectorAll(".veh-mode")
+          .forEach((b) =>
+            b.classList.toggle(
+              "active",
+              b.dataset.mode === (vehPeriod.active ? vehPeriod.mode : "all"),
+            ),
+          );
+        document.querySelectorAll(".veh-months").forEach((wrap) => {
+          wrap.innerHTML = PNL_MSHORT.map(
+            (m, i) =>
+              `<div class="pnl-month ${vehPeriod.active && vehPeriod.mode === "month" && vehPeriod.month === i ? "active" : ""}" onclick="vehPickMonth(${i})">${m}</div>`,
+          ).join("");
+        });
+        const yc = document.querySelector(".veh-calendar .pnl-cal-year");
+        if (yc) yc.style.opacity = vehPeriod.active ? "1" : ".5";
+        const st = document.getElementById("vehCalState");
+        if (st) {
+          if (vehPeriod.active) {
+            st.textContent =
+              vehPeriod.mode === "month"
+                ? `${PNL_MSHORT[vehPeriod.month]} ${vehPeriod.year}`
+                : `${vehPeriod.year}`;
+            st.classList.add("on");
+          } else {
+            st.textContent = "All vehicles";
+            st.classList.remove("on");
+          }
+        }
+        const w = document.getElementById("vehCalWrap");
+        if (w) w.classList.toggle("filtering", !!vehPeriod.active);
+      }
+      function vehInPeriod(dateStr) {
+        if (!vehPeriod.active) return true;
+        const d = pnlDateParts(dateStr);
+        if (!d) return false;
+        if (d.y !== vehPeriod.year) return false;
+        if (vehPeriod.mode === "month") return d.m === vehPeriod.month;
+        return true;
+      }
+      function vehSetMode(mode) {
+        if (mode === "all") {
+          vehPeriod.active = false;
+        } else {
+          vehPeriod.active = true;
+          vehPeriod.mode = mode;
+          if (mode === "month" && vehPeriod.month == null)
+            vehPeriod.month = new Date(today).getMonth();
+        }
+        const w = document.getElementById("vehCalWrap");
+        if (w && vehPeriod.active) w.classList.add("open");
+        render();
+      }
+      function vehPickMonth(i) {
+        vehPeriod.active = true;
+        vehPeriod.mode = "month";
+        vehPeriod.month = i;
+        const w = document.getElementById("vehCalWrap");
+        if (w) w.classList.add("open");
+        render();
+      }
+      function vehChangeYear(d) {
+        vehPeriod.year += d;
+        if (!vehPeriod.active) {
+          vehPeriod.active = true;
+          const w = document.getElementById("vehCalWrap");
+          if (w) w.classList.add("open");
+        }
+        render();
       }
 
       function renderPnlPage() {

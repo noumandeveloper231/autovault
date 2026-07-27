@@ -7,6 +7,7 @@
   if (!window.AVApi || !window.AVPortal) return;
 
   var _booted = false;
+  window._crmApiLoaded = false;
 
   async function bootstrapCrmFromApi() {
     if (_booted) return { live: true, summary: window.AV_LIVE_SUMMARY || null };
@@ -71,6 +72,14 @@
             localStorage.removeItem("av_terms_accepted_db");
           } catch (e) {}
           if (typeof avBootGateOnce === "function") avBootGateOnce();
+          if (u.termsAccepted) {
+            var _tOv = document.getElementById("termsOverlay");
+            if (_tOv && _tOv.classList.contains("open")) {
+              _tOv.classList.remove("open");
+              document.body.style.overflow = "";
+              if (typeof maybeShowWelcome === "function") maybeShowWelcome();
+            }
+          }
         }
         const summary = await AVApi.dashboardSummary().catch(() => null);
         window.AV_LIVE_SUMMARY = summary;
@@ -78,9 +87,10 @@
         window.dispatchEvent(
           new CustomEvent("av:crm-live", { detail: { live: true, portal: "wholesale" } }),
         );
-      } catch (e) {
+        } catch (e) {
         console.warn("[crm-bootstrap] wholesale boot failed", e);
       }
+      window._crmApiLoaded = true;
       return { live: true, summary: window.AV_LIVE_SUMMARY || null };
     }
 
@@ -155,6 +165,14 @@
           localStorage.removeItem("av_terms_accepted_db");
         } catch (e) {}
         if (typeof avBootGateOnce === "function") avBootGateOnce();
+        if (u.termsAccepted) {
+          var _tOv2 = document.getElementById("termsOverlay");
+          if (_tOv2 && _tOv2.classList.contains("open")) {
+            _tOv2.classList.remove("open");
+            document.body.style.overflow = "";
+            if (typeof maybeShowWelcome === "function") maybeShowWelcome();
+          }
+        }
       }
 
       if (taxSettingsResp) {
@@ -287,9 +305,11 @@
         }),
       );
 
+      window._crmApiLoaded = true;
       return { live: true, summary };
     } catch (err) {
       console.warn("[crm-bootstrap] falling back to mock data", err);
+      window._crmApiLoaded = true;
       window.AV_LIVE_MODE = false;
       return { live: false, error: err };
     }

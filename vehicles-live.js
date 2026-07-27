@@ -79,9 +79,28 @@
 
   function isoDate(value) {
     if (!value) return null;
+    // Prefer YYYY-MM-DD prefix when present to avoid UTC day-shift.
+    if (typeof value === "string") {
+      const m = value.match(/^(\d{4}-\d{2}-\d{2})/);
+      if (m) return m[1];
+    }
     const d = value instanceof Date ? value : new Date(value);
     if (Number.isNaN(d.getTime())) return null;
-    return d.toISOString().slice(0, 10);
+    const y = d.getFullYear();
+    const mo = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${mo}-${day}`;
+  }
+
+  const EXIT_STATUSES = new Set([
+    "sold",
+    "loss",
+    "wholesale",
+    "out_of_state_sale",
+  ]);
+
+  function isExitStatus(status) {
+    return EXIT_STATUSES.has(status);
   }
 
   function toast(msg, ok) {
@@ -114,7 +133,8 @@
   /** API vehicle (+ optional expenses) ? UI row used by computeRow/render */
   function mapApiToUi(api, expenses) {
     const statusUi = STATUS_API_TO_UI[api.status] || "";
-    const sold = api.status === "sold";
+    // Any inventory-exit status counts as sold for Vehicles / Sold Vehicles pages.
+    const sold = isExitStatus(api.status) || !!api.soldAt;
     const expenseSrc =
       Array.isArray(expenses) && expenses.length
         ? expenses
@@ -154,6 +174,14 @@
     const customerAddress = cust
       ? [cust.address, cust.city, cust.state, cust.zip].filter(Boolean).join(", ")
       : null;
+    // Always resolve a sold date for exited inventory so Sold Vehicles month filters work.
+    const soldDate = sold
+      ? isoDate(api.soldAt) ||
+        (deal && isoDate(deal.dateSold)) ||
+        (jacket && isoDate(jacket.dateSold)) ||
+        isoDate(api.updatedAt) ||
+        isoDate(new Date())
+      : null;
 
     return {
       id: api.id,
@@ -186,7 +214,7 @@
       askingPrice: asking,
       rep: (deal && deal.salesRep) ? deal.salesRep.fullName : (api._uiRep || ""),
       sold,
-      soldDate: sold ? isoDate(api.soldAt) : null,
+      soldDate,
       soldPrice: api.soldPrice != null ? num(api.soldPrice, null) : null,
       ros: deal ? (deal.rosNumber || jacket?.rosNumber || "") : "",
       notes: deal ? (deal.notes || jacket?.notes || api.notes || "") : (api.notes || ""),
@@ -198,7 +226,13 @@
       commissionPct: deal && deal.commissionRate ? Math.round(deal.commissionRate * 1000) / 10 : null,
       commMode: deal && deal.commissionType ? (deal.commissionType === 'manual' ? 'amt' : 'pct') : null,
       floored: !!(api.flooringPlanId || api.flooringStartDate || (flooringFees != null && flooringFees > 0)),
-      titlePresent: api.titleReceived !== false,
+      titlePresent: api.titlePresent !== false && api.titleReceived !== false,
+      titleIn:
+        api.titlePresent !== false && api.titleReceived !== false
+          ? true
+          : api.titlePresent === false || api.titleReceived === false
+            ? false
+            : undefined,
       status: statusUi,
       statusDate: null,
       repairsList: effectiveRepairs,
@@ -551,6 +585,8 @@
     if (sale.commissionRate != null) body.commissionRate = sale.commissionRate;
     if (sale.commissionType) body.commissionType = sale.commissionType;
     if (sale.fees) body.fees = sale.fees;
+    if (sale.titleReceived != null) body.titleReceived = !!sale.titleReceived;
+    if (sale.titlePresent != null) body.titlePresent = !!sale.titlePresent;
     const resp = await AVApi.markSold(v.id, body);
     // Clear vehicle-level fees after they've been moved to the deal jacket
     if (v.addOnItems && v.addOnItems.length > 0) {
