@@ -597,6 +597,17 @@
         height: 15px;
       }
 
+      .admin-cpa-btn {
+        margin-top: 6px;
+        color: #2dd47f;
+        border-color: rgba(28, 122, 70, 0.5);
+      }
+      .admin-cpa-btn:hover {
+        border-color: #1c7a46;
+        color: #2dd47f;
+        background: rgba(28, 122, 70, 0.1);
+      }
+
       .am-role-note {
         font-size: 11.5px;
         color: var(--muted);
@@ -606,6 +617,7 @@
 
       #editorConfirmModal,
       #addAdminModal,
+      #addCpaModal,
       #deleteVehicleModal,
       #removeDocModal,
       #markAllReadModal,
@@ -2461,6 +2473,18 @@
         text-align: center;
         font-size: 12px;
         color: var(--muted);
+      }
+      .dj-status-word {
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.3px;
+        line-height: 1;
+      }
+      .dj-status-date {
+        font-size: 10.5px;
+        font-weight: 700;
+        opacity: 0.85;
+        line-height: 1;
       }
       .dj-tb-row.confirming {
         background: var(--panel-2);
@@ -11148,6 +11172,116 @@
         }
       }
 
+      .calc-panel {
+        position: fixed;
+        top: 70px;
+        right: 22px;
+        width: 250px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        z-index: 6000;
+        display: none;
+        overflow: hidden;
+        user-select: none;
+      }
+      .calc-panel.open {
+        display: block;
+      }
+      .calc-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 11px 14px;
+        border-bottom: 1px solid var(--border);
+        cursor: move;
+        background: var(--panel-2);
+      }
+      .calc-title {
+        font-size: 12.5px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: 0.3px;
+      }
+      .calc-close {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0 2px;
+      }
+      .calc-close:hover {
+        color: var(--text);
+      }
+      .calc-display {
+        padding: 14px 16px 10px;
+        text-align: right;
+      }
+      .calc-expr {
+        font-size: 12px;
+        color: var(--muted);
+        font-family: var(--mono);
+        min-height: 16px;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .calc-out {
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--text);
+        font-family: var(--mono);
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 1.2;
+      }
+      .calc-keys {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+        padding: 0 12px 14px;
+      }
+      .calc-key {
+        padding: 13px 0;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background: var(--panel-2);
+        color: var(--text);
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        transition: filter 0.1s;
+      }
+      .calc-key:hover {
+        filter: brightness(1.15);
+      }
+      .calc-key:active {
+        transform: scale(0.95);
+      }
+      .calc-key.op {
+        background: rgba(58, 160, 255, 0.14);
+        color: var(--blue);
+        border-color: transparent;
+      }
+      .calc-key.fn {
+        background: var(--panel);
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .calc-key.eq {
+        background: var(--green);
+        color: #03121c;
+        border-color: transparent;
+      }
+      @media print {
+        .calc-panel {
+          display: none !important;
+        }
+      }
+
       .notif-wrap {
         position: relative;
       }
@@ -12366,6 +12500,153 @@
         color: var(--text);
       }
 
+      .av-title-pop {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition:
+          max-height 0.28s ease,
+          opacity 0.2s ease,
+          margin 0.28s ease;
+        border-radius: 12px;
+      }
+      .fastdate {
+        display: inline-flex;
+        align-items: center;
+        gap: 1px;
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0 4px 0 7px;
+        position: relative;
+        max-width: 100%;
+      }
+      .fastdate:focus-within {
+        border-color: var(--blue);
+      }
+      .fastdate.invalid {
+        border-color: var(--red);
+        box-shadow: 0 0 0 1px rgba(255, 90, 90, 0.25);
+      }
+      input[type="date"].invalid,
+      .vdp-edit-input.date.invalid,
+      .rc-input.invalid {
+        border-color: var(--red) !important;
+      }
+      .fastdate input:not([type="hidden"]):not(.fd-picker) {
+        border: none;
+        background: none;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        text-align: center;
+        padding: 8px 0;
+        outline: none;
+      }
+      .fastdate input::placeholder {
+        color: var(--muted);
+        font-weight: 400;
+        font-size: 11.5px;
+      }
+      .fastdate .fd-mm,
+      .fastdate .fd-dd {
+        width: 22px;
+      }
+      .fastdate .fd-yy {
+        width: 38px;
+      }
+      .fastdate .fd-sep {
+        color: var(--muted);
+        font-size: 12px;
+      }
+      .fastdate .fd-cal-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 30px;
+        height: 30px;
+        margin-left: 4px;
+        border: none;
+        border-radius: 7px;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        flex-shrink: 0;
+        padding: 0;
+      }
+      .fastdate .fd-cal-btn:hover {
+        color: var(--blue);
+        background: rgba(58, 160, 255, 0.12);
+      }
+      .fastdate .fd-picker {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        pointer-events: none;
+      }
+      .av-title-pop.show {
+        max-height: 240px;
+        opacity: 1;
+        margin-top: 12px;
+        padding: 16px 18px;
+        background: var(--panel-2);
+        border: 1px solid var(--blue);
+      }
+      .atp-q {
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .atp-sub {
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin-top: 5px;
+      }
+      .atp-btns {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+      }
+      .atp-yes {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 11px 18px;
+        border-radius: 9px;
+        border: none;
+        background: var(--green);
+        color: #03121c;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .atp-yes:hover {
+        filter: brightness(1.08);
+      }
+      .atp-no {
+        padding: 11px 18px;
+        border-radius: 9px;
+        border: 1px solid var(--border);
+        background: none;
+        color: var(--text);
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .atp-no:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+
       .av-fl-sub {
         font-size: 11px;
         color: var(--muted);
@@ -13454,35 +13735,12 @@
       </button>
       <div class="sidebar-logo">
         <div class="logo-lockup">
-          <svg
+          <img
             class="logo-svg"
-            viewBox="0 0 92 60"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-label="VA"
-          >
-            <path
-              d="M9 6 L33 54"
-              stroke="#ffffff"
-              stroke-width="11"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M33 54 L57 6"
-              stroke="#1c7a46"
-              stroke-width="11"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M57 6 L83 54"
-              stroke="#ffffff"
-              stroke-width="11"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+            src="/img/logo-va.png"
+            alt="AutoVault"
+            aria-label="AutoVault VA"
+          />
         </div>
       </div>
 
@@ -14410,6 +14668,26 @@
             >
               + Add Lead
             </button>
+            <button
+              class="qa-btn notif-btn"
+              onclick="toggleCalc()"
+              title="Calculator"
+              style="margin-right: 8px"
+            >
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="4" y="2" width="16" height="20" rx="2" />
+                <path
+                  d="M8 6h8M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"
+                />
+              </svg>
+            </button>
             <div class="notif-wrap" id="notifWrap">
               <button
                 class="qa-btn notif-btn"
@@ -14539,6 +14817,21 @@
                     <path d="M12 5v14M5 12h14" />
                   </svg>
                   Add admin user
+                </button>
+                <button
+                  class="admin-add-btn admin-cpa-btn"
+                  onclick="openAddCpa()"
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="11" width="18" height="11" rx="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                  </svg>
+                  Add CPA login
                 </button>
               </div>
             </div>
@@ -15671,7 +15964,7 @@
             <div class="kpi" style="--accent: var(--orange)">
               <div class="kpi-label">Total Expenses</div>
               <div class="kpi-value" id="pnlExpenses">$0</div>
-              <div class="kpi-foot">COGS + commissions + overhead</div>
+              <div class="kpi-foot">operating expenses (excludes COGS)</div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Net Profit</div>
@@ -22812,6 +23105,48 @@
       </div>
     </div>
 
+    <!-- FLOATING CALCULATOR (available on every page) -->
+    <div class="calc-panel" id="calcPanel">
+      <div class="calc-head" id="calcHead">
+        <span class="calc-title">Calculator</span>
+        <button class="calc-close" onclick="toggleCalc()" aria-label="Close">
+          &times;
+        </button>
+      </div>
+      <div class="calc-display">
+        <div class="calc-expr" id="calcExpr">&nbsp;</div>
+        <div class="calc-out" id="calcOut">0</div>
+      </div>
+      <div class="calc-keys">
+        <button class="calc-key fn" onclick="calcClear()">C</button>
+        <button class="calc-key fn" onclick="calcDel()">⌫</button>
+        <button class="calc-key fn" onclick="calcPct()">%</button>
+        <button class="calc-key op" onclick="calcOp('/')">÷</button>
+        <button class="calc-key" onclick="calcNum('7')">7</button>
+        <button class="calc-key" onclick="calcNum('8')">8</button>
+        <button class="calc-key" onclick="calcNum('9')">9</button>
+        <button class="calc-key op" onclick="calcOp('*')">×</button>
+        <button class="calc-key" onclick="calcNum('4')">4</button>
+        <button class="calc-key" onclick="calcNum('5')">5</button>
+        <button class="calc-key" onclick="calcNum('6')">6</button>
+        <button class="calc-key op" onclick="calcOp('-')">−</button>
+        <button class="calc-key" onclick="calcNum('1')">1</button>
+        <button class="calc-key" onclick="calcNum('2')">2</button>
+        <button class="calc-key" onclick="calcNum('3')">3</button>
+        <button class="calc-key op" onclick="calcOp('+')">+</button>
+        <button class="calc-key" onclick="calcNum('0')">0</button>
+        <button class="calc-key" onclick="calcNum('.')">.</button>
+        <button
+          class="calc-key eq"
+          onclick="calcEquals()"
+          style="grid-column: span 2"
+        >
+          =
+        </button>
+      </div>
+    </div>
+    <!-- FLOATING CALCULATOR END -->
+
     <!-- ===================== JENNA AI ASSISTANT ===================== -->
     <div class="jenna-fab" id="jennaFab" title="Ask Jenna — drag to move">
       <span class="jenna-badge">Jenna</span>
@@ -23651,6 +23986,69 @@
 
     <div
       class="modal-overlay"
+      id="addCpaModal"
+      onclick="if (event.target === this) closeAddCpa();"
+    >
+      <div class="modal" style="max-width: 400px">
+        <div class="modal-head">
+          <h3>Add CPA / Accountant Login</h3>
+          <button class="modal-close" onclick="closeAddCpa()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Name</label>
+            <input
+              id="cpaInviteName"
+              class="rc-input"
+              placeholder="Accountant full name"
+              onkeydown="
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  document.getElementById('cpaInviteEmail').focus();
+                }
+              "
+            />
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input
+              id="cpaInviteEmail"
+              class="rc-input"
+              type="email"
+              placeholder="accountant@firm.com"
+              onkeydown="
+                if (event.key === 'Enter') {
+                  event.preventDefault();
+                  saveCpaInvite();
+                }
+              "
+            />
+          </div>
+          <div class="am-role-note">
+            Your CPA gets a
+            <b style="color: #2dd47f">read-only portal login</b> to review
+            P&amp;L, expenses, and tax numbers, and leave review notes —
+            without editing inventory or deals.
+          </div>
+          <button
+            class="btn-primary"
+            id="cpaInviteSaveBtn"
+            style="
+              width: 100%;
+              box-shadow: none;
+              margin-top: 14px;
+              background: #1c7a46;
+            "
+            onclick="saveCpaInvite()"
+          >
+            Send CPA invite
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay"
       id="vinScanModal"
       onclick="if (event.target === this) closeVinScan();"
     >
@@ -23790,21 +24188,113 @@
           <div class="av-grid2">
             <div>
               <label class="av-label">Purchase Date</label>
-              <input
-                id="pvBuyDate"
-                class="rc-input"
-                type="date"
-                onchange="pvRecalc()"
-              />
+              <div class="fastdate" data-cb="pvRecalc">
+                <input
+                  class="fd-mm"
+                  maxlength="2"
+                  inputmode="numeric"
+                  placeholder="MM"
+                  aria-label="Month"
+                />
+                <span class="fd-sep">/</span>
+                <input
+                  class="fd-dd"
+                  maxlength="2"
+                  inputmode="numeric"
+                  placeholder="DD"
+                  aria-label="Day"
+                />
+                <span class="fd-sep">/</span>
+                <input
+                  class="fd-yy"
+                  maxlength="4"
+                  inputmode="numeric"
+                  placeholder="YYYY"
+                  aria-label="Year"
+                />
+                <input type="hidden" id="pvBuyDate" />
+                <button
+                  type="button"
+                  class="fd-cal-btn"
+                  onclick="fdOpenPicker(this)"
+                  title="Pick date"
+                  aria-label="Open calendar"
+                >
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                </button>
+                <input
+                  type="date"
+                  class="fd-picker"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  onchange="fdFromPicker(this)"
+                />
+              </div>
             </div>
             <div>
               <label class="av-label">Sale Date</label>
-              <input
-                id="pvSellDate"
-                class="rc-input"
-                type="date"
-                onchange="pvRecalc()"
-              />
+              <div class="fastdate" data-cb="pvRecalc">
+                <input
+                  class="fd-mm"
+                  maxlength="2"
+                  inputmode="numeric"
+                  placeholder="MM"
+                  aria-label="Month"
+                />
+                <span class="fd-sep">/</span>
+                <input
+                  class="fd-dd"
+                  maxlength="2"
+                  inputmode="numeric"
+                  placeholder="DD"
+                  aria-label="Day"
+                />
+                <span class="fd-sep">/</span>
+                <input
+                  class="fd-yy"
+                  maxlength="4"
+                  inputmode="numeric"
+                  placeholder="YYYY"
+                  aria-label="Year"
+                />
+                <input type="hidden" id="pvSellDate" />
+                <button
+                  type="button"
+                  class="fd-cal-btn"
+                  onclick="fdOpenPicker(this)"
+                  title="Pick date"
+                  aria-label="Open calendar"
+                >
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                </button>
+                <input
+                  type="date"
+                  class="fd-picker"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  onchange="fdFromPicker(this)"
+                />
+              </div>
             </div>
           </div>
 
@@ -23941,23 +24431,39 @@
             </div>
           </div>
 
-          <div class="av-flooring" style="margin-top: 14px">
-            <div>
-              <div class="av-fl-title">Title Present</div>
-              <div class="av-fl-sub">Turn on if the title was in hand.</div>
-            </div>
-            <label class="av-switch"
-              ><input type="checkbox" id="pvTitle" checked /><span
-                class="av-switch-slider"
-              ></span
-            ></label>
-          </div>
-
           <div class="pv-summary" id="pvSummary"></div>
 
-          <button class="btn-primary av-submit" id="pvSaveBtn" onclick="prevSoldSave()">
+          <button
+            class="btn-primary av-submit"
+            id="pvSaveBtn"
+            onclick="prevSoldSave()"
+          >
             Save to Sold Vehicles
           </button>
+          <div class="av-title-pop" id="pvTitlePop">
+            <div class="atp-q">Is the title present for this vehicle?</div>
+            <div class="atp-sub">
+              This keeps track of which sold-vehicle titles you have in hand.
+            </div>
+            <div class="atp-btns">
+              <button class="atp-yes" onclick="finalizePrevSold(true)">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                >
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+                Yes, title is in
+              </button>
+              <button class="atp-no" onclick="finalizePrevSold(false)">
+                No, not yet
+              </button>
+            </div>
+          </div>
           <div id="pvMsg" style="margin-top: 12px"></div>
         </div>
       </div>
@@ -24038,7 +24544,58 @@
           </div>
           <div>
             <label class="av-label">Purchase Date</label>
-            <input id="avDate" class="rc-input" type="date" />
+            <div class="fastdate">
+              <input
+                class="fd-mm"
+                maxlength="2"
+                inputmode="numeric"
+                placeholder="MM"
+                aria-label="Month"
+              />
+              <span class="fd-sep">/</span>
+              <input
+                class="fd-dd"
+                maxlength="2"
+                inputmode="numeric"
+                placeholder="DD"
+                aria-label="Day"
+              />
+              <span class="fd-sep">/</span>
+              <input
+                class="fd-yy"
+                maxlength="4"
+                inputmode="numeric"
+                placeholder="YYYY"
+                aria-label="Year"
+              />
+              <input type="hidden" id="avDate" />
+              <button
+                type="button"
+                class="fd-cal-btn"
+                onclick="fdOpenPicker(this)"
+                title="Pick date"
+                aria-label="Open calendar"
+              >
+                <svg
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                </svg>
+              </button>
+              <input
+                type="date"
+                class="fd-picker"
+                tabindex="-1"
+                aria-hidden="true"
+                onchange="fdFromPicker(this)"
+              />
+            </div>
             <div
               style="
                 font-size: 10.5px;
@@ -24090,19 +24647,6 @@
               ></span
             ></label>
           </div>
-          <div class="av-flooring">
-            <div>
-              <div class="av-fl-title">Title Present</div>
-              <div class="av-fl-sub">
-                Turn on if the title is in hand for this vehicle.
-              </div>
-            </div>
-            <label class="av-switch"
-              ><input type="checkbox" id="avTitle" /><span
-                class="av-switch-slider"
-              ></span
-            ></label>
-          </div>
           <button
             class="btn-primary av-submit"
             id="avSaveBtn"
@@ -24110,6 +24654,30 @@
           >
             Add Vehicle to Inventory
           </button>
+          <div class="av-title-pop" id="avTitlePop">
+            <div class="atp-q">Is the title present for this vehicle?</div>
+            <div class="atp-sub">
+              This keeps track of which titles you have in hand.
+            </div>
+            <div class="atp-btns">
+              <button class="atp-yes" onclick="finalizeAddVehicle(true)">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.4"
+                >
+                  <path d="M20 6L9 17l-5-5" />
+                </svg>
+                Yes, title is in
+              </button>
+              <button class="atp-no" onclick="finalizeAddVehicle(false)">
+                No, not yet
+              </button>
+            </div>
+          </div>
           <div id="avMsg" style="margin-top: 12px"></div>
         </div>
       </div>
@@ -28040,14 +28608,16 @@
           const el = document.getElementById(id);
           if (el) el.value = "";
         });
-        {
+        try {
+          setFastDate("avDate", avDefaultPurchaseDate());
+        } catch (e) {
           const d = document.getElementById("avDate");
           if (d) d.value = avDefaultPurchaseDate();
         }
-        {
-          const t = document.getElementById("avTitle");
-          if (t) t.checked = false;
-        }
+        try {
+          const tp = document.getElementById("avTitlePop");
+          if (tp) tp.classList.remove("show");
+        } catch (e) {}
         {
           const fl = document.getElementById("avFlooring");
           if (fl) fl.checked = true;
@@ -28137,6 +28707,10 @@
         }
         const msg = document.getElementById("pvMsg");
         if (msg) msg.innerHTML = "";
+        try {
+          const tp = document.getElementById("pvTitlePop");
+          if (tp) tp.classList.remove("show");
+        } catch (e) {}
         m.classList.add("open");
         pvRecalc();
         setTimeout(() => {
@@ -28283,30 +28857,58 @@
             dec.innerHTML = `<span class="av-dec-warn">VIN captured — add the details below</span>`;
           });
       }
-      async function prevSoldSave() {
+      function prevSoldSave() {
         const vin = pvRaw("pvVin").toUpperCase();
-        const buy = pvRaw("pvBuyDate"),
-          sell = pvRaw("pvSellDate");
+        const buyCheck = fdValidateHidden("pvBuyDate", "purchase date");
+        const sellCheck = fdValidateHidden("pvSellDate", "sale date");
+        const buy = buyCheck.ok ? buyCheck.ymd : "";
+        const sell = sellCheck.ok ? sellCheck.ymd : "";
         const t = pvTotals();
         const errs = [];
-        if (!vin)
-          errs.push("A VIN is required to save this vehicle.");
+        if (!vin) errs.push("A VIN is required to save this vehicle.");
         else if (
           typeof vehicles !== "undefined" &&
           vehicles.some((v) => (v.vin || "").toUpperCase() === vin)
         )
           errs.push("That VIN is already in the system.");
-        if (!buy) errs.push("A purchase date is required.");
-        if (!sell) errs.push("A sale date is required for a sold vehicle.");
+        if (!buyCheck.ok) errs.push(buyCheck.msg);
+        if (!sellCheck.ok) errs.push(sellCheck.msg);
         if (buy && sell && new Date(sell) < new Date(buy))
           errs.push("The sale date can't be before the purchase date.");
         if (!(t.price > 0)) errs.push("Enter what you paid for this vehicle.");
         if (!(t.sale > 0)) errs.push("Enter what this vehicle sold for.");
         if (errs.length) {
           pvMsg(errs[0], false);
+          if (typeof AVToast !== "undefined") AVToast.warning(errs[0]);
           return;
         }
-
+        const pop = document.getElementById("pvTitlePop");
+        if (pop) {
+          pop.classList.add("show");
+          setTimeout(() => {
+            try {
+              pop.scrollIntoView({ behavior: "smooth", block: "center" });
+            } catch (e) {}
+          }, 40);
+          return;
+        }
+        finalizePrevSold(false);
+      }
+      async function finalizePrevSold(titlePresent) {
+        const pop = document.getElementById("pvTitlePop");
+        if (pop) pop.classList.remove("show");
+        const vin = pvRaw("pvVin").toUpperCase();
+        const buyCheck = fdValidateHidden("pvBuyDate", "purchase date");
+        const sellCheck = fdValidateHidden("pvSellDate", "sale date");
+        if (!buyCheck.ok || !sellCheck.ok) {
+          const msg = !buyCheck.ok ? buyCheck.msg : sellCheck.msg;
+          pvMsg(msg, false);
+          if (typeof AVToast !== "undefined") AVToast.warning(msg);
+          return;
+        }
+        const buy = buyCheck.ymd,
+          sell = sellCheck.ymd;
+        const t = pvTotals();
         const btn = document.getElementById("pvSaveBtn");
         if (btn) {
           btn.disabled = true;
@@ -28334,7 +28936,7 @@
             salesTax: pvNum("pvSalesTax"),
             regFees: pvNum("pvRegFees"),
             customer: pvRaw("pvCustomer") || "Previous customer",
-            titlePresent: !!(document.getElementById("pvTitle") || {}).checked,
+            titlePresent: !!titlePresent,
           };
           if (plan === "growing_dealership") {
             const repId = pvRaw("pvRep");
@@ -28369,6 +28971,8 @@
           const label = [year, make, model].filter(Boolean).join(" ");
           const sellFmt =
             typeof fmtDate === "function" ? fmtDate(sell) : sell;
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Previous sold vehicle saved");
           pvMsg(
             `Saved ${label} — sold ${sellFmt} for ${pvMoney(t.sale)}, net ${pvMoneySigned(t.netProfit)}. Deal jacket created.`,
             true,
@@ -28403,6 +29007,10 @@
             const field = document.getElementById(id);
             if (field) field.value = "";
           });
+          try {
+            setFastDate("pvBuyDate", "");
+            setFastDate("pvSellDate", "");
+          } catch (e) {}
           const d = document.getElementById("pvDecoded");
           if (d) d.innerHTML = "";
           _pvVinLast = "";
@@ -28416,11 +29024,11 @@
           } catch (e) {}
           return resp;
         } catch (err) {
-          pvMsg(
+          const msg =
             (err && (err.message || err.error)) ||
-              "Failed to save previous sold vehicle.",
-            false,
-          );
+            "Failed to save previous sold vehicle.";
+          pvMsg(msg, false);
+          if (typeof AVToast !== "undefined") AVToast.error(msg);
         } finally {
           if (btn) {
             btn.disabled = false;
@@ -28454,18 +29062,24 @@
         document.getElementById("avModel").value = v.model || "";
         document.getElementById("avPrice").value = v.price || "";
         document.getElementById("avFees").value = v.fees || "";
-        {
+        try {
+          setFastDate(
+            "avDate",
+            (v.date || "").slice(0, 10) || avDefaultPurchaseDate(),
+          );
+        } catch (e) {
           const d = document.getElementById("avDate");
-          if (d) d.value = (v.date || "").slice(0, 10) || avDefaultPurchaseDate();
+          if (d)
+            d.value = (v.date || "").slice(0, 10) || avDefaultPurchaseDate();
         }
         {
           const fl = document.getElementById("avFlooring");
           if (fl) fl.checked = !!v.floored;
         }
-        {
-          const t = document.getElementById("avTitle");
-          if (t) t.checked = !!v.titlePresent;
-        }
+        try {
+          const tp = document.getElementById("avTitlePop");
+          if (tp) tp.classList.remove("show");
+        } catch (e) {}
         document.getElementById("avDecoded").innerHTML = "";
         document.getElementById("avMsg").innerHTML = "";
         m.classList.add("open");
@@ -28861,7 +29475,624 @@
         if (el)
           el.innerHTML = `<div class="rc-ok ${good ? "good" : "bad"}">${msg}</div>`;
       }
-      async function addVehicleSave() {
+
+      /* ---------- FLOATING CALCULATOR ---------- */
+      let calcCur = "0",
+        calcPrev = null,
+        calcOpv = null,
+        calcJustEq = false;
+      function toggleCalc() {
+        const p = document.getElementById("calcPanel");
+        if (p) p.classList.toggle("open");
+      }
+      function calcRender() {
+        const out = document.getElementById("calcOut");
+        if (out) out.textContent = calcFmt(calcCur);
+        const ex = document.getElementById("calcExpr");
+        if (ex) {
+          ex.innerHTML =
+            calcPrev !== null && calcOpv
+              ? `${calcFmt(calcPrev)} ${calcOpSym(calcOpv)}`
+              : "&nbsp;";
+        }
+      }
+      function calcFmt(v) {
+        if (v === "" || v === "-") return "0";
+        const neg = v.toString().startsWith("-");
+        let [i, d] = v.toString().replace("-", "").split(".");
+        i = (i || "0").replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return (neg ? "-" : "") + (d !== undefined ? i + "." + d : i);
+      }
+      function calcOpSym(o) {
+        return o === "*" ? "×" : o === "/" ? "÷" : o === "-" ? "−" : "+";
+      }
+      function calcNum(n) {
+        if (calcJustEq) {
+          calcCur = "0";
+          calcJustEq = false;
+        }
+        if (n === ".") {
+          if (!calcCur.includes(".")) calcCur += ".";
+        } else {
+          calcCur = calcCur === "0" ? n : calcCur + n;
+        }
+        calcRender();
+      }
+      function calcOp(op) {
+        if (calcOpv && calcPrev !== null && !calcJustEq) {
+          calcEquals(true);
+        }
+        calcPrev = calcCur;
+        calcOpv = op;
+        calcCur = "0";
+        calcJustEq = false;
+        calcRender();
+      }
+      function calcEquals(chain) {
+        if (calcOpv === null || calcPrev === null) {
+          calcJustEq = true;
+          return;
+        }
+        const a = parseFloat(calcPrev) || 0,
+          b = parseFloat(calcCur) || 0;
+        let r = 0;
+        if (calcOpv === "+") r = a + b;
+        else if (calcOpv === "-") r = a - b;
+        else if (calcOpv === "*") r = a * b;
+        else if (calcOpv === "/") r = b === 0 ? 0 : a / b;
+        r = Math.round(r * 1e8) / 1e8;
+        calcCur = String(r);
+        calcPrev = null;
+        calcOpv = null;
+        calcJustEq = true;
+        if (!chain) document.getElementById("calcExpr").innerHTML = "&nbsp;";
+        else {
+          calcPrev = calcCur;
+        }
+        calcRender();
+      }
+      function calcClear() {
+        calcCur = "0";
+        calcPrev = null;
+        calcOpv = null;
+        calcJustEq = false;
+        calcRender();
+      }
+      function calcDel() {
+        if (calcJustEq) {
+          return;
+        }
+        calcCur = calcCur.length > 1 ? calcCur.slice(0, -1) : "0";
+        calcRender();
+      }
+      function calcPct() {
+        calcCur = String((parseFloat(calcCur) || 0) / 100);
+        calcJustEq = true;
+        calcRender();
+      }
+      document.addEventListener("keydown", function (e) {
+        const p = document.getElementById("calcPanel");
+        if (!p || !p.classList.contains("open")) return;
+        const tag =
+          (document.activeElement && document.activeElement.tagName) || "";
+        if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+        const k = e.key;
+        if (/[0-9]/.test(k)) {
+          calcNum(k);
+          e.preventDefault();
+        } else if (k === ".") {
+          calcNum(".");
+          e.preventDefault();
+        } else if (k === "+" || k === "-" || k === "*" || k === "/") {
+          calcOp(k);
+          e.preventDefault();
+        } else if (k === "Enter" || k === "=") {
+          calcEquals();
+          e.preventDefault();
+        } else if (k === "Backspace") {
+          calcDel();
+          e.preventDefault();
+        } else if (k === "Escape") {
+          toggleCalc();
+        } else if (k === "%") {
+          calcPct();
+          e.preventDefault();
+        } else if (k.toLowerCase() === "c") {
+          calcClear();
+        }
+      });
+      (function () {
+        const head = document.getElementById("calcHead"),
+          panel = document.getElementById("calcPanel");
+        if (!head || !panel) return;
+        let dx = 0,
+          dy = 0,
+          drag = false;
+        const down = (e) => {
+          drag = true;
+          const t = e.touches ? e.touches[0] : e;
+          const r = panel.getBoundingClientRect();
+          dx = t.clientX - r.left;
+          dy = t.clientY - r.top;
+          e.preventDefault();
+        };
+        const move = (e) => {
+          if (!drag) return;
+          const t = e.touches ? e.touches[0] : e;
+          let x = t.clientX - dx,
+            y = t.clientY - dy;
+          x = Math.max(4, Math.min(window.innerWidth - panel.offsetWidth - 4, x));
+          y = Math.max(
+            4,
+            Math.min(window.innerHeight - panel.offsetHeight - 4, y),
+          );
+          panel.style.left = x + "px";
+          panel.style.top = y + "px";
+          panel.style.right = "auto";
+        };
+        const up = () => {
+          drag = false;
+        };
+        head.addEventListener("mousedown", down);
+        document.addEventListener("mousemove", move);
+        document.addEventListener("mouseup", up);
+        head.addEventListener("touchstart", down, { passive: false });
+        document.addEventListener("touchmove", move, { passive: false });
+        document.addEventListener("touchend", up);
+      })();
+
+      /* ---------- FASTDATE (MM/DD/YYYY) + SHARED DATE VALIDATION ---------- */
+      function fdDefaultYearBounds() {
+        const now = typeof today !== "undefined" ? today : new Date();
+        return { min: 1990, max: now.getFullYear() + 1 };
+      }
+      function fdYearBounds(wOrOpts) {
+        const base = fdDefaultYearBounds();
+        let min = base.min,
+          max = base.max;
+        if (wOrOpts && wOrOpts.nodeType === 1) {
+          const dmin = parseInt(
+            wOrOpts.getAttribute("data-min-year") || "",
+            10,
+          );
+          const dmax = parseInt(
+            wOrOpts.getAttribute("data-max-year") || "",
+            10,
+          );
+          if (Number.isFinite(dmin)) min = dmin;
+          if (Number.isFinite(dmax)) max = dmax;
+        } else if (wOrOpts && typeof wOrOpts === "object") {
+          if (Number.isFinite(wOrOpts.min)) min = wOrOpts.min;
+          if (Number.isFinite(wOrOpts.max)) max = wOrOpts.max;
+          if (Number.isFinite(wOrOpts.minYear)) min = wOrOpts.minYear;
+          if (Number.isFinite(wOrOpts.maxYear)) max = wOrOpts.maxYear;
+        }
+        return { min, max };
+      }
+      function fdIsRealDate(y, m, d, boundsOrW) {
+        if (!Number.isFinite(y) || !Number.isFinite(m) || !Number.isFinite(d))
+          return false;
+        const { min, max } = fdYearBounds(boundsOrW);
+        if (y < min || y > max) return false;
+        if (m < 1 || m > 12) return false;
+        if (d < 1 || d > 31) return false;
+        const dt = new Date(y, m - 1, d);
+        return (
+          dt.getFullYear() === y &&
+          dt.getMonth() === m - 1 &&
+          dt.getDate() === d
+        );
+      }
+      function fdCheckParts(mmStr, ddStr, yyStr, w) {
+        const incomplete =
+          !mmStr ||
+          !ddStr ||
+          !yyStr ||
+          mmStr.length < 1 ||
+          ddStr.length < 1 ||
+          yyStr.length !== 4;
+        if (incomplete) {
+          return {
+            ok: false,
+            incomplete: true,
+            ymd: "",
+            msg: "Enter a complete date as MM/DD/YYYY.",
+          };
+        }
+        const M = parseInt(mmStr, 10);
+        const D = parseInt(ddStr, 10);
+        const Y = parseInt(yyStr, 10);
+        if (!fdIsRealDate(Y, M, D, w)) {
+          const { min, max } = fdYearBounds(w);
+          let msg = "Enter a valid calendar date (MM/DD/YYYY).";
+          if (M < 1 || M > 12) msg = "Month must be between 01 and 12.";
+          else if (D < 1 || D > 31) msg = "Day must be between 01 and 31.";
+          else if (Y < min || Y > max)
+            msg = `Year must be between ${min} and ${max}.`;
+          else msg = "That day does not exist on the calendar.";
+          return { ok: false, incomplete: false, ymd: "", msg };
+        }
+        return {
+          ok: true,
+          incomplete: false,
+          ymd: `${Y}-${String(M).padStart(2, "0")}-${String(D).padStart(2, "0")}`,
+          msg: "",
+        };
+      }
+      function fdSync(w) {
+        if (!w) return;
+        const mmEl = w.querySelector(".fd-mm");
+        const ddEl = w.querySelector(".fd-dd");
+        const yyEl = w.querySelector(".fd-yy");
+        const hid = w.querySelector("input[type=hidden]");
+        if (!mmEl || !ddEl || !yyEl || !hid) return;
+        const check = fdCheckParts(mmEl.value, ddEl.value, yyEl.value, w);
+        hid.value = check.ok ? check.ymd : "";
+        const picker = w.querySelector(".fd-picker");
+        if (picker) picker.value = check.ok ? check.ymd : "";
+        const filled =
+          mmEl.value.length >= 2 &&
+          ddEl.value.length >= 2 &&
+          yyEl.value.length === 4;
+        w.classList.toggle("invalid", filled && !check.ok);
+        const cb = w.dataset.cb;
+        if (cb && typeof window[cb] === "function") {
+          try {
+            window[cb]();
+          } catch (e) {}
+        }
+      }
+      function fdValidateHidden(hiddenId, label, opts) {
+        const hid = document.getElementById(hiddenId);
+        if (!hid) {
+          return {
+            ok: false,
+            msg: `Enter a valid ${label || "date"} (MM/DD/YYYY).`,
+          };
+        }
+        const w = hid.closest(".fastdate");
+        if (w) {
+          if (opts && Number.isFinite(opts.minYear))
+            w.setAttribute("data-min-year", String(opts.minYear));
+          if (opts && Number.isFinite(opts.maxYear))
+            w.setAttribute("data-max-year", String(opts.maxYear));
+          const mm = (w.querySelector(".fd-mm") || {}).value || "";
+          const dd = (w.querySelector(".fd-dd") || {}).value || "";
+          const yy = (w.querySelector(".fd-yy") || {}).value || "";
+          const empty = !mm && !dd && !yy;
+          if (opts && opts.required === false && empty) {
+            w.classList.remove("invalid");
+            hid.value = "";
+            return { ok: true, ymd: "", msg: "" };
+          }
+          const check = fdCheckParts(mm, dd, yy, w);
+          w.classList.toggle("invalid", !check.ok);
+          if (!check.ok) {
+            return {
+              ok: false,
+              msg:
+                check.msg ||
+                `Enter a valid ${label || "date"} (MM/DD/YYYY).`,
+            };
+          }
+          hid.value = check.ymd;
+          return { ok: true, ymd: check.ymd, msg: "" };
+        }
+        return avValidateNativeDate(hid, label, opts);
+      }
+      function avValidateNativeDate(el, label, opts) {
+        opts = opts || {};
+        const required = opts.required !== false;
+        const val = ((el && el.value) || "").trim();
+        if (!val) {
+          if (!required) {
+            if (el) el.classList.remove("invalid");
+            return { ok: true, ymd: "", msg: "" };
+          }
+          if (el) el.classList.add("invalid");
+          return {
+            ok: false,
+            ymd: "",
+            msg: `Enter a valid ${label || "date"}.`,
+          };
+        }
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(val)) {
+          if (el) el.classList.add("invalid");
+          return {
+            ok: false,
+            ymd: "",
+            msg: `Enter a valid ${label || "date"}.`,
+          };
+        }
+        const [Y, M, D] = val.split("-").map(Number);
+        const bounds = fdYearBounds(opts);
+        if (!fdIsRealDate(Y, M, D, bounds)) {
+          if (el) el.classList.add("invalid");
+          return {
+            ok: false,
+            ymd: "",
+            msg: `Enter a valid calendar ${label || "date"}.`,
+          };
+        }
+        if (el) el.classList.remove("invalid");
+        return { ok: true, ymd: val, msg: "" };
+      }
+      function avValidateDateField(id, opts) {
+        opts = opts || {};
+        const label = opts.label || "date";
+        const el = document.getElementById(id);
+        if (!el) {
+          return {
+            ok: opts.required === false,
+            ymd: "",
+            msg:
+              opts.required === false
+                ? ""
+                : `Enter a valid ${label}.`,
+          };
+        }
+        if (el.closest && el.closest(".fastdate"))
+          return fdValidateHidden(id, label, opts);
+        return avValidateNativeDate(el, label, opts);
+      }
+      function avSetDate(id, ymd) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (el.closest && el.closest(".fastdate")) {
+          setFastDate(id, ymd || "");
+          return;
+        }
+        el.value = ymd || "";
+        el.classList.remove("invalid");
+      }
+      function avGetDate(id) {
+        const el = document.getElementById(id);
+        if (!el) return "";
+        return (el.value || "").trim();
+      }
+      function fdOpenPicker(btn) {
+        const w = btn && btn.closest ? btn.closest(".fastdate") : null;
+        if (!w) return;
+        const picker = w.querySelector(".fd-picker");
+        if (!picker) return;
+        const { min, max } = fdYearBounds(w);
+        picker.min = `${min}-01-01`;
+        picker.max = `${max}-12-31`;
+        const hid = w.querySelector("input[type=hidden]");
+        if (hid && hid.value) picker.value = hid.value;
+        try {
+          if (typeof picker.showPicker === "function") {
+            picker.showPicker();
+            return;
+          }
+        } catch (e) {}
+        try {
+          picker.style.pointerEvents = "auto";
+          picker.style.position = "fixed";
+          picker.style.left = "50%";
+          picker.style.top = "40%";
+          picker.style.width = "auto";
+          picker.style.height = "auto";
+          picker.style.opacity = "1";
+          picker.focus();
+          picker.click();
+          const hide = () => {
+            picker.style.pointerEvents = "none";
+            picker.style.position = "absolute";
+            picker.style.opacity = "0";
+            picker.style.width = "0";
+            picker.style.height = "0";
+            picker.removeEventListener("change", hide);
+            picker.removeEventListener("blur", hide);
+          };
+          picker.addEventListener("change", hide, { once: true });
+          picker.addEventListener("blur", hide, { once: true });
+        } catch (err) {}
+      }
+      function fdFromPicker(picker) {
+        const w = picker && picker.closest ? picker.closest(".fastdate") : null;
+        if (!w || !picker.value) return;
+        const hid = w.querySelector("input[type=hidden]");
+        if (hid) setFastDate(hid.id, picker.value);
+        else {
+          const [Y, M, D] = picker.value.split("-");
+          w.querySelector(".fd-mm").value = M;
+          w.querySelector(".fd-dd").value = D;
+          w.querySelector(".fd-yy").value = Y;
+          fdSync(w);
+        }
+      }
+      function fdOnInput(e) {
+        const el = e.target;
+        if (
+          !el ||
+          !el.classList ||
+          !(
+            el.classList.contains("fd-mm") ||
+            el.classList.contains("fd-dd") ||
+            el.classList.contains("fd-yy")
+          )
+        )
+          return;
+        const w = el.closest(".fastdate");
+        if (!w) return;
+        el.value = el.value.replace(/[^0-9]/g, "");
+        const isYear = el.classList.contains("fd-yy");
+        const maxLen = isYear ? 4 : 2;
+        if (el.value.length > maxLen) el.value = el.value.slice(0, maxLen);
+        let canAdvance = el.value.length >= maxLen;
+        if (canAdvance && el.classList.contains("fd-mm")) {
+          const M = parseInt(el.value, 10);
+          if (!(M >= 1 && M <= 12)) canAdvance = false;
+        }
+        if (canAdvance && el.classList.contains("fd-dd")) {
+          const D = parseInt(el.value, 10);
+          if (!(D >= 1 && D <= 31)) canAdvance = false;
+        }
+        if (canAdvance) {
+          const next = el.classList.contains("fd-mm")
+            ? w.querySelector(".fd-dd")
+            : el.classList.contains("fd-dd")
+              ? w.querySelector(".fd-yy")
+              : null;
+          if (next) {
+            next.focus();
+            try {
+              next.select();
+            } catch (err) {}
+          }
+        }
+        fdSync(w);
+      }
+      function fdOnKey(e) {
+        const el = e.target;
+        if (
+          !el ||
+          !el.classList ||
+          !(
+            el.classList.contains("fd-mm") ||
+            el.classList.contains("fd-dd") ||
+            el.classList.contains("fd-yy")
+          )
+        )
+          return;
+        if (e.key === "Backspace" && el.value === "") {
+          const w = el.closest(".fastdate");
+          if (!w) return;
+          const prev = el.classList.contains("fd-yy")
+            ? w.querySelector(".fd-dd")
+            : el.classList.contains("fd-dd")
+              ? w.querySelector(".fd-mm")
+              : null;
+          if (prev) {
+            prev.focus();
+          }
+        }
+      }
+      document.addEventListener("input", fdOnInput, true);
+      document.addEventListener("keydown", fdOnKey, true);
+      function setFastDate(hiddenId, ymd) {
+        const hid = document.getElementById(hiddenId);
+        if (!hid) return;
+        const w = hid.closest(".fastdate");
+        if (!w) {
+          hid.value = ymd || "";
+          return;
+        }
+        if (ymd && /^\d{4}-\d{2}-\d{2}$/.test(ymd)) {
+          const [Y, M, D] = ymd.split("-").map(Number);
+          if (!fdIsRealDate(Y, M, D, w)) {
+            w.querySelector(".fd-mm").value = "";
+            w.querySelector(".fd-dd").value = "";
+            w.querySelector(".fd-yy").value = "";
+            hid.value = "";
+            w.classList.add("invalid");
+            return;
+          }
+          w.querySelector(".fd-mm").value = String(M).padStart(2, "0");
+          w.querySelector(".fd-dd").value = String(D).padStart(2, "0");
+          w.querySelector(".fd-yy").value = String(Y);
+          hid.value = `${Y}-${String(M).padStart(2, "0")}-${String(D).padStart(2, "0")}`;
+          const picker = w.querySelector(".fd-picker");
+          if (picker) picker.value = hid.value;
+          w.classList.remove("invalid");
+        } else {
+          w.querySelector(".fd-mm").value = "";
+          w.querySelector(".fd-dd").value = "";
+          w.querySelector(".fd-yy").value = "";
+          hid.value = "";
+          const picker = w.querySelector(".fd-picker");
+          if (picker) picker.value = "";
+          w.classList.remove("invalid");
+        }
+        const cb = w.dataset.cb;
+        if (cb && typeof window[cb] === "function") {
+          try {
+            window[cb]();
+          } catch (e) {}
+        }
+      }
+      function avEnsureFastDate(id, opts) {
+        opts = opts || {};
+        const el = document.getElementById(id);
+        if (!el) return false;
+        if (el.closest && el.closest(".fastdate")) {
+          const w = el.closest(".fastdate");
+          if (opts.cb) w.dataset.cb = opts.cb;
+          if (Number.isFinite(opts.minYear))
+            w.setAttribute("data-min-year", String(opts.minYear));
+          if (Number.isFinite(opts.maxYear))
+            w.setAttribute("data-max-year", String(opts.maxYear));
+          return true;
+        }
+        if (el.type !== "date" && el.type !== "text") return false;
+        const cur = (el.value || "").slice(0, 10);
+        const wrap = document.createElement("div");
+        wrap.className = "fastdate";
+        if (opts.cb) wrap.dataset.cb = opts.cb;
+        if (Number.isFinite(opts.minYear))
+          wrap.setAttribute("data-min-year", String(opts.minYear));
+        if (Number.isFinite(opts.maxYear))
+          wrap.setAttribute("data-max-year", String(opts.maxYear));
+        wrap.innerHTML =
+          '<input class="fd-mm" maxlength="2" inputmode="numeric" placeholder="MM" aria-label="Month" />' +
+          '<span class="fd-sep">/</span>' +
+          '<input class="fd-dd" maxlength="2" inputmode="numeric" placeholder="DD" aria-label="Day" />' +
+          '<span class="fd-sep">/</span>' +
+          '<input class="fd-yy" maxlength="4" inputmode="numeric" placeholder="YYYY" aria-label="Year" />' +
+          '<input type="hidden" id="' +
+          id +
+          '" />' +
+          '<button type="button" class="fd-cal-btn" onclick="fdOpenPicker(this)" title="Pick date" aria-label="Open calendar">' +
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>' +
+          "</button>" +
+          '<input type="date" class="fd-picker" tabindex="-1" aria-hidden="true" onchange="fdFromPicker(this)" />';
+        el.parentNode.replaceChild(wrap, el);
+        if (cur && /^\d{4}-\d{2}-\d{2}$/.test(cur)) setFastDate(id, cur);
+        return true;
+      }
+      function avInitFormDates() {
+        const now = typeof today !== "undefined" ? today : new Date();
+        const y = now.getFullYear();
+        const specs = [
+          { id: "avDate" },
+          { id: "pvBuyDate", cb: "pvRecalc" },
+          { id: "pvSellDate", cb: "pvRecalc" },
+          { id: "djSaleDate" },
+          { id: "expDueDate" },
+          { id: "wsSaleDate" },
+          { id: "fdPurchaseDate", cb: "recalcFlooringDetail" },
+          { id: "fdStartDate", cb: "recalcFlooringDetail" },
+          { id: "fdRangeStart", cb: "recalcFlooringDetail" },
+          { id: "fdRangeEnd", cb: "recalcFlooringDetail" },
+          { id: "effectiveDate" },
+          { id: "empHireDate" },
+          { id: "taxCfgDue" },
+          { id: "repModalBirthday", minYear: 1920, maxYear: y },
+        ];
+        specs.forEach(function (s) {
+          try {
+            avEnsureFastDate(s.id, s);
+          } catch (e) {}
+        });
+        document.querySelectorAll('input[type="date"]').forEach(function (inp) {
+          if (inp.classList.contains("fd-picker")) return;
+          if (inp.closest && inp.closest(".fastdate")) return;
+          const bounds = fdDefaultYearBounds();
+          if (!inp.min) inp.min = bounds.min + "-01-01";
+          if (!inp.max) inp.max = bounds.max + "-12-31";
+          inp.addEventListener("change", function () {
+            avValidateNativeDate(inp, "date", { required: false });
+          });
+        });
+      }
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", avInitFormDates);
+      } else {
+        setTimeout(avInitFormDates, 0);
+      }
+
+      function addVehicleSave() {
         const vin = (document.getElementById("avVin").value || "")
           .trim()
           .toUpperCase();
@@ -28887,16 +30118,20 @@
           avMsg("That VIN is already in inventory.", false);
           return;
         }
-        const year = parseInt(document.getElementById("avYear").value) || "";
-        const make = document.getElementById("avMake").value.trim();
-        const model = document.getElementById("avModel").value.trim();
-        const price = parseFloat(document.getElementById("avPrice").value) || 0;
-        const fees = parseFloat(document.getElementById("avFees").value) || 0;
-        const dEl = document.getElementById("avDate");
-        const purchaseDate =
-          dEl && dEl.value && /^\d{4}-\d{2}-\d{2}$/.test(dEl.value)
-            ? dEl.value
-            : avDefaultPurchaseDate();
+        const dCheck = fdValidateHidden("avDate", "purchase date");
+        const price =
+          parseFloat(
+            (document.getElementById("avPrice").value || "").replace(/,/g, ""),
+          ) || 0;
+        if (!dCheck.ok) {
+          avMsg(dCheck.msg, false);
+          if (typeof AVToast !== "undefined") AVToast.warning(dCheck.msg);
+          return;
+        }
+        if (!(price > 0)) {
+          avMsg("Enter what you paid for this vehicle.", false);
+          return;
+        }
         if (isWs && !window.AVWholesale) {
           avMsg("Wholesale API not loaded.", false);
           return;
@@ -28905,6 +30140,48 @@
           avMsg("Vehicles API not loaded.", false);
           return;
         }
+        const pop = document.getElementById("avTitlePop");
+        if (pop) {
+          pop.classList.add("show");
+          setTimeout(() => {
+            try {
+              pop.scrollIntoView({ behavior: "smooth", block: "center" });
+            } catch (e) {}
+          }, 40);
+          return;
+        }
+        finalizeAddVehicle(false);
+      }
+      async function finalizeAddVehicle(titlePresent) {
+        const pop = document.getElementById("avTitlePop");
+        if (pop) pop.classList.remove("show");
+        const vin = (document.getElementById("avVin").value || "")
+          .trim()
+          .toUpperCase();
+        const isEditing = !!editingVehicleVin;
+        const isWs =
+          document.body.classList.contains("ws-mode") ||
+          (window.AVPortal && AVPortal.getRoutePortal()) === "wholesale";
+        const year = parseInt(document.getElementById("avYear").value) || "";
+        const make = document.getElementById("avMake").value.trim();
+        const model = document.getElementById("avModel").value.trim();
+        const price =
+          parseFloat(
+            (document.getElementById("avPrice").value || "").replace(/,/g, ""),
+          ) || 0;
+        const fees =
+          parseFloat(
+            (document.getElementById("avFees").value || "").replace(/,/g, ""),
+          ) || 0;
+        const dCheck = fdValidateHidden("avDate", "purchase date");
+        if (!dCheck.ok) {
+          avMsg(dCheck.msg, false);
+          if (typeof AVToast !== "undefined") AVToast.warning(dCheck.msg);
+          return;
+        }
+        const purchaseDate = dCheck.ymd;
+        const floored = !!(document.getElementById("avFlooring") || {}).checked;
+        const titlePresentFlag = !!titlePresent;
         if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
         const saveBtn = document.getElementById("avSaveBtn");
         try {
@@ -28914,10 +30191,6 @@
             AVBusy.setBtnLoading(saveBtn, true, "Saving…");
           }
           if (isWs) {
-            const floored = !!(document.getElementById("avFlooring") || {})
-              .checked;
-            const titlePresent = !!(document.getElementById("avTitle") || {})
-              .checked;
             if (isEditing) {
               const v = (wsVehicles || []).find(
                 (x) => x.vin === editingVehicleVin,
@@ -28932,7 +30205,7 @@
                 auctionFees: fees,
                 acquisitionDate: purchaseDate,
                 floored: floored,
-                titlePresent: titlePresent,
+                titlePresent: titlePresentFlag,
               });
               await AVWholesale.loadVehicles(true);
               if (typeof renderWsVehicles === "function") renderWsVehicles();
@@ -28941,6 +30214,8 @@
                 getCurrentPage() === "ws-dashboard"
               )
                 renderWsDashboard();
+              if (typeof AVToast !== "undefined")
+                AVToast.success("Vehicle updated");
               avMsg(
                 `Updated ${[year, make, model].filter(Boolean).join(" ") || "vehicle"}.`,
                 true,
@@ -28957,7 +30232,7 @@
                 auctionFees: fees,
                 acquisitionDate: purchaseDate,
                 floored: floored,
-                titlePresent: titlePresent,
+                titlePresent: titlePresentFlag,
                 isWholesale: true,
               });
               await AVWholesale.loadVehicles(true);
@@ -28984,14 +30259,9 @@
                 const el = document.getElementById(id);
                 if (el) el.value = "";
               });
-              {
-                const d = document.getElementById("avDate");
-                if (d) d.value = avDefaultPurchaseDate();
-              }
-              {
-                const t = document.getElementById("avTitle");
-                if (t) t.checked = false;
-              }
+              try {
+                setFastDate("avDate", avDefaultPurchaseDate());
+              } catch (e) {}
               document.getElementById("avDecoded").innerHTML = "";
               document.getElementById("avVin").focus();
             }
@@ -28999,10 +30269,6 @@
             const v = vehicles.find((x) => x.vin === editingVehicleVin);
             if (!v || !v.id)
               throw new Error("Vehicle not found — reload inventory");
-            const floored = !!(document.getElementById("avFlooring") || {})
-              .checked;
-            const titlePresent = !!(document.getElementById("avTitle") || {})
-              .checked;
             const patch = {
               vin,
               year,
@@ -29011,7 +30277,8 @@
               acquisitionCost: price,
               auctionFees: fees,
               acquisitionDate: purchaseDate,
-              titleReceived: titlePresent,
+              titleReceived: titlePresentFlag,
+              titlePresent: titlePresentFlag,
               flooringStartDate: floored
                 ? new Date(purchaseDate + "T12:00:00").toISOString()
                 : null,
@@ -29020,6 +30287,7 @@
             try {
               if (typeof updateNotifBadge === "function") updateNotifBadge();
             } catch (e) {}
+            if (typeof AVToast !== "undefined") AVToast.success("Vehicle updated");
             avMsg(
               `Updated ${[year, make, model].filter(Boolean).join(" ") || "vehicle"}.`,
               true,
@@ -29027,10 +30295,6 @@
             editingVehicleVin = null;
             setTimeout(() => closeAddVeh(), 600);
           } else {
-            const floored = !!(document.getElementById("avFlooring") || {})
-              .checked;
-            const titlePresent = !!(document.getElementById("avTitle") || {})
-              .checked;
             await AVVehicles.createFromForm({
               vin,
               year,
@@ -29040,7 +30304,7 @@
               fees,
               date: purchaseDate,
               floored,
-              titlePresent,
+              titlePresent: titlePresentFlag,
             });
             try {
               if (typeof populateRepFilter === "function")
@@ -29049,6 +30313,8 @@
             try {
               if (typeof updateNotifBadge === "function") updateNotifBadge();
             } catch (e) {}
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Vehicle added to inventory");
             avMsg(
               `Added ${[year, make, model].filter(Boolean).join(" ") || "vehicle"} — purchased ${typeof fmtDate === "function" ? fmtDate(purchaseDate) : purchaseDate}. Add another or close.`,
               true,
@@ -29064,14 +30330,9 @@
               const el = document.getElementById(id);
               if (el) el.value = "";
             });
-            {
-              const d = document.getElementById("avDate");
-              if (d) d.value = avDefaultPurchaseDate();
-            }
-            {
-              const t = document.getElementById("avTitle");
-              if (t) t.checked = false;
-            }
+            try {
+              setFastDate("avDate", avDefaultPurchaseDate());
+            } catch (e) {}
             document.getElementById("avDecoded").innerHTML = "";
             try {
               const sb = document.getElementById("sortBy");
@@ -29087,6 +30348,8 @@
           }
         } catch (err) {
           avMsg(err.message || "Failed to save vehicle.", false);
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to save vehicle.");
         } finally {
           if (typeof AVBusy !== "undefined") {
             AVBusy.setBtnLoading(
@@ -31082,6 +32345,10 @@
         if (!show) return;
         const info = v.saleInfo || {};
         const g = (id, val) => {
+          if (id === "wsSaleDate") {
+            avSetDate(id, val == null ? "" : val);
+            return;
+          }
           const el = document.getElementById(id);
           if (el) el.value = val == null ? "" : val;
         };
@@ -31113,21 +32380,23 @@
         };
         const type = g("wsSaleType");
         const price = parseFloat(g("wsSalePrice"));
-        const date = g("wsSaleDate");
+        const dateCheck = avValidateDateField("wsSaleDate", {
+          label: "sale date",
+          required: true,
+        });
+        const date = dateCheck.ok ? dateCheck.ymd : "";
         const priceEl = document.getElementById("wsSalePrice");
         const dateEl = document.getElementById("wsSaleDate");
         if (priceEl) priceEl.classList.remove("av-field-error");
-        if (dateEl) dateEl.classList.remove("av-field-error");
         if (!(price > 0) || !isFinite(price)) {
           if (priceEl) priceEl.classList.add("av-field-error");
           if (typeof AVToast !== "undefined")
             AVToast.warning("Enter a valid sale price");
           return;
         }
-        if (!date) {
-          if (dateEl) dateEl.classList.add("av-field-error");
+        if (!dateCheck.ok) {
           if (typeof AVToast !== "undefined")
-            AVToast.warning("Sale date is required");
+            AVToast.warning(dateCheck.msg || "Sale date is required");
           return;
         }
         if (type === "auction" && !String(g("wsAuctionName") || "").trim()) {
@@ -32773,6 +34042,7 @@
       // ---------- USERS & ACCESS (admin dropdown) ----------
       var adminEditors = []; // sales-rep names appointed as editor-admins
       var extraAdmins = []; // [{name,email}] newly added admin users (always editors)
+      var cpaLogins = []; // [{id,name,email,pending}] CPA / accountant logins
       var PROFILE_ROLE_LABELS = {
         owner: "Dealer Admin",
         manager: "Manager",
@@ -32943,7 +34213,10 @@
         const w = document.getElementById("profileWrap");
         if (!w) return;
         const open = w.classList.toggle("open");
-        if (open) renderAdminMenu();
+        if (open) {
+          renderAdminMenu();
+          loadCpaLogins();
+        }
       }
       function closeAdminMenu() {
         const w = document.getElementById("profileWrap");
@@ -32964,10 +34237,141 @@
           const isEd = adminEditors.indexOf(r.name) >= 0;
           html += `<div class="am-row"><div class="am-av ${isEd ? "editor" : ""}">${amInitials(r.name)}</div><div class="am-info"><div class="am-name">${msgEsc(r.name)}</div><div class="am-role ${isEd ? "editor" : ""}">${isEd ? "Admin \u00b7 Editor" : "Sales Rep"}</div></div><button class="am-act ${isEd ? "revoke" : ""}" onclick="toggleRepEditor(${idx})">${isEd ? "Remove editor" : "Make editor"}</button></div>`;
         });
+        if (cpaLogins.length) {
+          html += `<div class="am-divider" style="border-top:1px solid var(--border);margin:8px 0;"></div>`;
+          cpaLogins.forEach((u) => {
+            const pending = !!u.pending;
+            html += `<div class="am-row"><div class="am-av" style="background:rgba(28,122,70,.22);color:#2dd47f;">${amInitials(u.name || u.email)}</div><div class="am-info"><div class="am-name">${msgEsc(u.name || "CPA")}</div><div class="am-role" style="color:#2dd47f;">CPA / Accountant${pending ? " · Invite pending" : ""}${u.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(u.email) + "</span>" : ""}</div></div></div>`;
+          });
+        }
         html += `<div class="am-divider" style="border-top:1px solid var(--border);margin:8px 0;"></div>`;
         html += `<div class="am-row" style="cursor:pointer;" onclick="openChangePassword()"><div class="am-av" style="background:var(--border);font-size:13px;">&#9881;</div><div class="am-info"><div class="am-name">Change Password</div><div class="am-role">Update your login password</div></div></div>`;
         html += `<div class="am-row" style="cursor:pointer;" onclick="openAuditLog()"><div class="am-av" style="background:var(--border);font-size:13px;">&#128196;</div><div class="am-info"><div class="am-name">Audit Log</div><div class="am-role">View recent activity</div></div></div>`;
         list.innerHTML = html;
+      }
+      async function loadCpaLogins() {
+        if (!window.AVApi) return;
+        try {
+          const usersRes = await AVApi.listUsers("?role=cpa&limit=50");
+          const users = (usersRes && (usersRes.users || usersRes.data)) || [];
+          const active = (Array.isArray(users) ? users : []).map((u) => ({
+            id: u.id,
+            name: u.fullName || u.name || "CPA",
+            email: u.email || "",
+            pending: false,
+          }));
+          let pending = [];
+          try {
+            const invRes = await AVApi.listInvitations(
+              "?status=pending&limit=50",
+            );
+            const invs =
+              (invRes && (invRes.invitations || invRes.data)) || [];
+            pending = (Array.isArray(invs) ? invs : [])
+              .filter((i) => i.role === "cpa")
+              .map((i) => ({
+                id: i.id,
+                name: i.fullName || "CPA invite",
+                email: i.email || "",
+                pending: true,
+              }));
+          } catch (_) {}
+          const seen = new Set(active.map((u) => (u.email || "").toLowerCase()));
+          cpaLogins = active.concat(
+            pending.filter((p) => !seen.has((p.email || "").toLowerCase())),
+          );
+          if (
+            document.getElementById("profileWrap") &&
+            document
+              .getElementById("profileWrap")
+              .classList.contains("open")
+          ) {
+            renderAdminMenu();
+          }
+        } catch (err) {
+          console.warn("[cpa-logins]", err);
+        }
+      }
+      function openAddCpa() {
+        const plan = currentDealershipPlan();
+        if (plan === "wholesaler") {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning(
+              "CPA login is available on Independent Dealers and Growing Dealerships plans.",
+            );
+          return;
+        }
+        closeAdminMenu();
+        const nameEl = document.getElementById("cpaInviteName");
+        const emailEl = document.getElementById("cpaInviteEmail");
+        if (nameEl) nameEl.value = "";
+        if (emailEl) emailEl.value = "";
+        const m = document.getElementById("addCpaModal");
+        if (m) m.classList.add("open");
+        setTimeout(() => {
+          if (nameEl) nameEl.focus();
+        }, 60);
+      }
+      function closeAddCpa() {
+        const m = document.getElementById("addCpaModal");
+        if (m) m.classList.remove("open");
+      }
+      function openCpaLoginFromAdmin() {
+        openAddCpa();
+      }
+      async function saveCpaInvite() {
+        const name = (
+          document.getElementById("cpaInviteName").value || ""
+        ).trim();
+        const email = (
+          document.getElementById("cpaInviteEmail").value || ""
+        )
+          .trim()
+          .toLowerCase();
+        if (!name) {
+          document.getElementById("cpaInviteName").focus();
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Enter the accountant's name");
+          return;
+        }
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById("cpaInviteEmail").focus();
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Enter a valid email address");
+          return;
+        }
+        if (!window.AVApi || typeof AVApi.inviteUser !== "function") {
+          if (typeof AVToast !== "undefined")
+            AVToast.error("Invite API not loaded");
+          return;
+        }
+        const btn = document.getElementById("cpaInviteSaveBtn");
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "Sending…";
+        }
+        try {
+          await AVApi.inviteUser({
+            email,
+            role: "cpa",
+            fullName: name,
+          });
+          if (typeof AVToast !== "undefined")
+            AVToast.success("CPA invite sent to " + email);
+          closeAddCpa();
+          await loadCpaLogins();
+          reopenAdminMenuDeferred();
+        } catch (err) {
+          const msg =
+            (err && (err.message || err.error)) ||
+            "Failed to send CPA invite";
+          if (typeof AVToast !== "undefined") AVToast.error(msg);
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "Send CPA invite";
+          }
+        }
       }
       let pendingEditorIdx = null;
       function reopenAdminMenuDeferred() {
@@ -34129,8 +35533,7 @@
           nameEl.disabled = true;
           pctEl.value = rep.commissionPct;
           {
-            const bd = document.getElementById("repModalBirthday");
-            if (bd) bd.value = rep.birthday || "";
+            avSetDate("repModalBirthday", rep.birthday || "");
           }
           {
             const u = document.getElementById("repInviteUser");
@@ -34150,8 +35553,7 @@
           nameEl.disabled = false;
           pctEl.value = "";
           {
-            const bd = document.getElementById("repModalBirthday");
-            if (bd) bd.value = "";
+            avSetDate("repModalBirthday", "");
           }
           ["repInviteUser", "repInviteEmail", "repInvitePhone"].forEach(
             function (elId) {
@@ -34306,8 +35708,17 @@
         );
         const anchor =
           freq === "biweekly" ? nextWeekdayOnOrAfter(today, payDay) : null;
-        const bday =
-          (document.getElementById("repModalBirthday") || {}).value || "";
+        const bdayCheck = avValidateDateField("repModalBirthday", {
+          label: "birthday",
+          required: false,
+          minYear: 1920,
+          maxYear: (typeof today !== "undefined" ? today : new Date()).getFullYear(),
+        });
+        if (!bdayCheck.ok) {
+          if (typeof AVToast !== "undefined") AVToast.warning(bdayCheck.msg);
+          return;
+        }
+        const bday = bdayCheck.ymd || "";
         const uname =
           (document.getElementById("repInviteUser") || {}).value || "";
         const uemail =
@@ -34565,9 +35976,7 @@
 
       const flooringModal = document.getElementById("flooringModal");
       document.getElementById("openFlooringModal").onclick = () => {
-        document.getElementById("effectiveDate").value = today
-          .toISOString()
-          .split("T")[0];
+        avSetDate("effectiveDate", today.toISOString().split("T")[0]);
         document.getElementById("payoffDays").value =
           flooringConfig.payoffDays || 90;
         document.getElementById("flooringAutoAll").checked = true;
@@ -34613,6 +36022,15 @@
       };
 
       document.getElementById("applyFlooringRate").onclick = async () => {
+        const effCheck = avValidateDateField("effectiveDate", {
+          label: "effective date",
+          required: true,
+        });
+        if (!effCheck.ok) {
+          if (typeof AVToast !== "undefined") AVToast.warning(effCheck.msg);
+          return;
+        }
+
         const cfg = getPreviewConfig();
         if (cfg.buyFee < 0 || cfg.tiers.some((t) => t.rate < 0)) {
           if (typeof AVToast !== "undefined")
@@ -35538,6 +36956,19 @@
           renderVehicleDetailPage(currentVdpVin);
           return;
         }
+        if (val) {
+          const parts = val.split("-").map(Number);
+          if (
+            !/^\d{4}-\d{2}-\d{2}$/.test(val) ||
+            !fdIsRealDate(parts[0], parts[1], parts[2])
+          ) {
+            if (typeof AVToast !== "undefined")
+              AVToast.warning("Enter a valid purchase date");
+            if (inp) inp.classList.add("invalid");
+            renderVehicleDetailPage(currentVdpVin);
+            return;
+          }
+        }
         if (val && /^\d{4}-\d{2}-\d{2}$/.test(val) && val !== v.date) {
           vdpRememberPrev(v, "date", v.date);
           v.date = val;
@@ -36317,8 +37748,8 @@
         setFlooringMode(fd.mode || "quick");
         document.getElementById("fdPayoffAmount").value = fd.payoffAmount || "";
         document.getElementById("fdQuickNotes").value = fd.quickNotes || "";
-        document.getElementById("fdPurchaseDate").value = v.date;
-        document.getElementById("fdStartDate").value = fd.startDate || v.date;
+        avSetDate("fdPurchaseDate", v.date || "");
+        avSetDate("fdStartDate", fd.startDate || v.date || "");
         document.getElementById("fdRate").value = fd.rate || "";
         document.getElementById("fdExtraFees").value = fd.extraFees || "";
         document.getElementById("fdNotes").value = fd.notes || "";
@@ -36331,8 +37762,8 @@
           savedDaily > 0 ? savedDaily.toFixed(2) : "";
         updateRateEquiv(savedRate, savedDaily);
         const todayStr = today.toISOString().split("T")[0];
-        document.getElementById("fdRangeStart").value = fd.rangeStart || v.date;
-        document.getElementById("fdRangeEnd").value = fd.rangeEnd || todayStr;
+        avSetDate("fdRangeStart", fd.rangeStart || v.date || "");
+        avSetDate("fdRangeEnd", fd.rangeEnd || todayStr);
         setFlooringEndMode(fd.endMode || "today");
         document.getElementById("flooringDetailModal").classList.add("open");
         buildFlooringExplanation(v, fd);
@@ -36521,6 +37952,41 @@
       document.getElementById("saveFlooringDetail").onclick = async () => {
         const v = __findVeh(flooringDetailVin);
         if (!v) return;
+        if (flooringMode !== "quick") {
+          const purchaseCheck = avValidateDateField("fdPurchaseDate", {
+            label: "purchase date",
+            required: true,
+          });
+          const startCheck = avValidateDateField("fdStartDate", {
+            label: "flooring start date",
+            required: true,
+          });
+          if (!purchaseCheck.ok || !startCheck.ok) {
+            const msg = !purchaseCheck.ok ? purchaseCheck.msg : startCheck.msg;
+            if (typeof AVToast !== "undefined") AVToast.warning(msg);
+            return;
+          }
+          if (flooringEndMode === "custom") {
+            const rs = avValidateDateField("fdRangeStart", {
+              label: "range start date",
+              required: true,
+            });
+            const re = avValidateDateField("fdRangeEnd", {
+              label: "range end date",
+              required: true,
+            });
+            if (!rs.ok || !re.ok) {
+              const msg = !rs.ok ? rs.msg : re.msg;
+              if (typeof AVToast !== "undefined") AVToast.warning(msg);
+              return;
+            }
+            if (rs.ymd && re.ymd && re.ymd < rs.ymd) {
+              if (typeof AVToast !== "undefined")
+                AVToast.warning("Range end cannot be before range start");
+              return;
+            }
+          }
+        }
         const lenderSel = document.getElementById("fdLender").value;
         const lender =
           lenderSel === "Other"
@@ -37246,9 +38712,10 @@
           if (other) other.value = e && e.expOther ? e.expOther : "";
         }
         document.getElementById("expAmount").value = e ? e.amount : "";
-        document.getElementById("expDueDate").value = e
-          ? e.dueDate
-          : new Date(today).toISOString().slice(0, 10);
+        avSetDate(
+          "expDueDate",
+          e ? e.dueDate : new Date(today).toISOString().slice(0, 10),
+        );
         document.getElementById("expRecurring").value = e
           ? e.recurring
           : "One-Time";
@@ -37418,7 +38885,11 @@
         const id = document.getElementById("expEditId").value;
         const name = document.getElementById("expName").value.trim();
         const amount = parseFloat(document.getElementById("expAmount").value);
-        const dateVal = document.getElementById("expDueDate").value;
+        const dateCheck = avValidateDateField("expDueDate", {
+          label: "due date",
+          required: true,
+        });
+        const dateVal = dateCheck.ok ? dateCheck.ymd : "";
         const expType =
           (document.getElementById("expType") || {}).value || "Other";
         const expOther = (
@@ -37432,8 +38903,9 @@
           document.getElementById("expAmount").focus();
           return;
         }
-        if (!dateVal) {
-          document.getElementById("expDueDate").focus();
+        if (!dateCheck.ok) {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning(dateCheck.msg || "Due date is required");
           return;
         }
         if (expType === "Other" && !expOther) {
@@ -39563,8 +41035,13 @@
           `VIN ${v.vin} · ${v.category || ""} · Purchased <span class="vdp-sub-ed" id="djEd_date" onclick="djEditDate()" title="Click to change the purchase date">${fmtDate(v.date)}</span>`;
         const eff = v.sold ? "Sold" : "Active";
         const badge = document.getElementById("djStatusBadge");
-        badge.textContent = eff;
-        badge.style.cssText = `padding:6px 16px;border-radius:8px;font-size:12px;font-weight:800;border:1px solid;color:${getStatusColor(eff)};border-color:${getStatusColor(eff)};background:${getStatusColor(eff)}18;`;
+        const scol = getStatusColor(eff);
+        badge.innerHTML = `<div class="dj-status-word">${eff}</div>${
+          v.sold && v.soldDate
+            ? `<div class="dj-status-date">${fmtDate(v.soldDate)}</div>`
+            : ""
+        }`;
+        badge.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 18px;border-radius:10px;border:1px solid;color:${scol};border-color:${scol};background:${scol}18;`;
 
         const r = computeRow(v);
         const attachedRows = attachedExpensesForVehicle(v);
@@ -39590,8 +41067,10 @@
         document.getElementById("djRos").value = v.ros || "";
         setDjRosStatus("", "");
         if (v.ros) checkDjRosAvailability(v.ros);
-        document.getElementById("djSaleDate").value =
-          v.soldDate || today.toISOString().slice(0, 10);
+        avSetDate(
+          "djSaleDate",
+          v.soldDate || today.toISOString().slice(0, 10),
+        );
         document.getElementById("djSoldPrice").value = v.soldPrice || "";
         document.getElementById("djStateTax").value =
           v.customerSalesTax != null ? v.customerSalesTax : "";
@@ -39704,6 +41183,19 @@
         if (inp && inp.dataset && inp.dataset.cancel === "1") {
           renderDealJacket(currentDealVin);
           return;
+        }
+        if (val) {
+          const parts = val.split("-").map(Number);
+          if (
+            !/^\d{4}-\d{2}-\d{2}$/.test(val) ||
+            !fdIsRealDate(parts[0], parts[1], parts[2])
+          ) {
+            if (typeof AVToast !== "undefined")
+              AVToast.warning("Enter a valid purchase date");
+            if (inp) inp.classList.add("invalid");
+            renderDealJacket(currentDealVin);
+            return;
+          }
         }
         if (val && /^\d{4}-\d{2}-\d{2}$/.test(val) && val !== v.date) {
           v.date = val;
@@ -40100,6 +41592,15 @@
       async function saveDeal() {
         const v = vehicles.find((x) => x.vin === currentDealVin);
         if (!v) return;
+        const saleDateCheck = avValidateDateField("djSaleDate", {
+          label: "sale date",
+          required: true,
+        });
+        if (!saleDateCheck.ok) {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning(saleDateCheck.msg || "Enter a valid sale date");
+          return;
+        }
         const soldPrice =
           parseFloat(document.getElementById("djSoldPrice").value) || 0;
         if (soldPrice <= 0) {
@@ -40206,9 +41707,16 @@
           document.getElementById("djRos").value || ""
         ).trim();
         const saleRep = document.getElementById("djRep").value || v.rep;
-        const sd =
-          document.getElementById("djSaleDate").value ||
-          today.toISOString().slice(0, 10);
+        const saleDateFinal = avValidateDateField("djSaleDate", {
+          label: "sale date",
+          required: true,
+        });
+        if (!saleDateFinal.ok) {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning(saleDateFinal.msg || "Enter a valid sale date");
+          return;
+        }
+        const sd = saleDateFinal.ymd;
         const titleInFlag = !!titleIn;
 
         if (!window.AVVehicles || !v.id) {
@@ -40479,6 +41987,8 @@
           if (typeof AVToast !== "undefined")
             AVToast.error(err.message || "Failed to update title status");
         }
+        if (typeof AVToast !== "undefined")
+          AVToast.success("Title marked as in");
         renderDjTitleBoxes();
         if (typeof render === "function") render();
       }
@@ -40986,7 +42496,6 @@
         const netProfit = grossProfit - totalOpEx;
         const netMargin =
           totalRevenue > 0 ? (netProfit / totalRevenue) * 100 : 0;
-        const totalExpenses = totalCOGS + totalOpEx;
 
         const recurringMonthly = (
           typeof _expenses !== "undefined" ? _expenses : []
@@ -41009,7 +42518,7 @@
         document.getElementById("pnlGross").textContent = fmt(grossProfit);
         document.getElementById("pnlGrossFoot").textContent =
           `${grossMargin.toFixed(1)}% gross margin`;
-        document.getElementById("pnlExpenses").textContent = fmt(totalExpenses);
+        document.getElementById("pnlExpenses").textContent = fmt(totalOpEx);
         const netEl = document.getElementById("pnlNet");
         netEl.textContent = fmtSigned(netProfit);
         netEl.style.color = netProfit >= 0 ? "var(--green)" : "var(--red)";
@@ -41880,7 +43389,13 @@
           else if (!isValidPhone(val))
             msg = "Enter a valid 10-digit phone number";
         }
-        if (id === "empHireDate" && !val) msg = "Hire date is required";
+        if (id === "empHireDate") {
+          const hireCheck = avValidateDateField("empHireDate", {
+            label: "hire date",
+            required: true,
+          });
+          if (!hireCheck.ok) msg = hireCheck.msg || "Hire date is required";
+        }
         if (id === "empRole" && !val) msg = "Role is required";
         if (err) {
           err.textContent = msg;
@@ -41951,7 +43466,7 @@
             ptEl.value = "Commission";
             emailEl.value = r.email || "";
             phoneEl.value = r.phone || "";
-            hireEl.value = r.hireDate || "";
+            avSetDate("empHireDate", r.hireDate || "");
             document.getElementById("empComm").value = r.commissionPct;
           }
         } else if (kind === "staff") {
@@ -41963,7 +43478,7 @@
             ptEl.value = w.payType;
             emailEl.value = w.email || "";
             phoneEl.value = w.phone || "";
-            hireEl.value = w.hireDate || "";
+            avSetDate("empHireDate", w.hireDate || "");
             document.getElementById("empSalary").value = w.monthly || "";
             document.getElementById("empRate").value = w.rate || "";
             if (w.payType === "Hourly") {
@@ -41983,7 +43498,7 @@
           nameEl.disabled = false;
           emailEl.value = "";
           phoneEl.value = "";
-          hireEl.value = "";
+          avSetDate("empHireDate", "");
           roleEl.value = "";
           ptEl.value = "Commission";
         }
@@ -42001,7 +43516,15 @@
         const name = document.getElementById("empName").value.trim();
         const email = document.getElementById("empEmail").value.trim();
         const phone = document.getElementById("empPhone").value.trim();
-        const hireDate = document.getElementById("empHireDate").value;
+        const hireCheck = avValidateDateField("empHireDate", {
+          label: "hire date",
+          required: true,
+        });
+        const hireDate = hireCheck.ok ? hireCheck.ymd : "";
+        if (!hireCheck.ok) {
+          if (typeof AVToast !== "undefined") AVToast.warning(hireCheck.msg);
+          return;
+        }
         const role = document.getElementById("empRole").value;
         const payType = document
           .getElementById("empPayType")
@@ -43262,7 +44785,7 @@
       }
       function openTaxConfig() {
         document.getElementById("taxCfgFreq").value = taxConfig.frequency;
-        document.getElementById("taxCfgDue").value = taxConfig.nextDue || "";
+        avSetDate("taxCfgDue", taxConfig.nextDue || "");
         document.getElementById("taxCfgNotes").value = taxConfig.notes || "";
         document.getElementById("taxConfigModal").style.display = "flex";
       }
@@ -43271,7 +44794,15 @@
       }
       function saveTaxConfig() {
         taxConfig.frequency = document.getElementById("taxCfgFreq").value;
-        taxConfig.nextDue = document.getElementById("taxCfgDue").value;
+        const taxDueCheck = avValidateDateField("taxCfgDue", {
+          label: "filing due date",
+          required: false,
+        });
+        if (!taxDueCheck.ok) {
+          if (typeof AVToast !== "undefined") AVToast.warning(taxDueCheck.msg);
+          return;
+        }
+        taxConfig.nextDue = taxDueCheck.ymd;
         taxConfig.notes = document.getElementById("taxCfgNotes").value.trim();
         renderTaxPage();
         if (typeof renderCalendarPage === "function") renderCalendarPage();
@@ -43629,7 +45160,7 @@
         document.getElementById("empName").value = w.name;
         document.getElementById("empEmail").value = w.email || "";
         document.getElementById("empPhone").value = w.phone || "";
-        document.getElementById("empHireDate").value = w.hireDate || "";
+        avSetDate("empHireDate", w.hireDate || "");
         document.getElementById("empRole").value = w.role || "";
         const ptMap = {
           Salary: "Salary",
@@ -45323,6 +46854,8 @@
           }
           var wsNav = document.getElementById("adminWholesaleCrmNav");
           if (wsNav) wsNav.style.display = plan === "wholesaler" ? "" : "none";
+          var cpaBtn = document.querySelector(".admin-cpa-btn");
+          if (cpaBtn) cpaBtn.style.display = plan === "wholesaler" ? "none" : "";
           if (
             routePortal === "wholesale" &&
             plan &&

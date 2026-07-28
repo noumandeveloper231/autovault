@@ -433,6 +433,7 @@
       auctionFees: Number(fields.fees) || 0,
       acquisitionDate: acqIso,
       titleReceived: !!fields.titlePresent,
+      titlePresent: !!fields.titlePresent,
       status: "in_stock",
       flooringStartDate: fields.floored ? acqIso : null,
       notes: fields.notes || null,
@@ -623,6 +624,7 @@
       salesTaxAmount: Number(fields.salesTax) || 0,
       licenseFees: Number(fields.regFees) || 0,
       titleReceived: fields.titlePresent !== false,
+      titlePresent: fields.titlePresent !== false,
       customerName: fields.customer || "Previous customer",
       notes: "Imported as a previously sold vehicle.",
     };

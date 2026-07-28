@@ -459,6 +459,13 @@
         body: JSON.stringify(body),
       }),
     getTermsStatus: () => request("/api/v1/users/me/terms"),
+    listUsers: (qs = "") => request(`/api/v1/users${qs}`),
+    inviteUser: (body) =>
+      request("/api/v1/invitations", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    listInvitations: (qs = "") => request(`/api/v1/invitations${qs}`),
     profitLoss: (qs = "") => request(`/api/v1/reports/profit-loss${qs}`),
     listNotifications: () => request("/api/v1/notifications"),
     listSalesReps: (qs = "") => request(`/api/v1/sales-reps${qs}`),
