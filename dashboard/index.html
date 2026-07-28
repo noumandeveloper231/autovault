@@ -24028,7 +24028,9 @@
             Your CPA gets a
             <b style="color: #2dd47f">read-only portal login</b> to review
             P&amp;L, expenses, and tax numbers, and leave review notes —
-            without editing inventory or deals.
+            without editing inventory or deals. Pending invites can be resent
+            up to <b>3 times</b>, with a <b>10 minute</b> cooldown between
+            sends.
           </div>
           <button
             class="btn-primary"
@@ -34241,7 +34243,17 @@
           html += `<div class="am-divider" style="border-top:1px solid var(--border);margin:8px 0;"></div>`;
           cpaLogins.forEach((u) => {
             const pending = !!u.pending;
-            html += `<div class="am-row"><div class="am-av" style="background:rgba(28,122,70,.22);color:#2dd47f;">${amInitials(u.name || u.email)}</div><div class="am-info"><div class="am-name">${msgEsc(u.name || "CPA")}</div><div class="am-role" style="color:#2dd47f;">CPA / Accountant${pending ? " · Invite pending" : ""}${u.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(u.email) + "</span>" : ""}</div></div></div>`;
+            const sendHint =
+              pending && u.sendCount
+                ? " · " +
+                  u.sendCount +
+                  "/" +
+                  (u.maxSends || 3) +
+                  " sent"
+                : pending
+                  ? " · Invite pending"
+                  : "";
+            html += `<div class="am-row"><div class="am-av" style="background:rgba(28,122,70,.22);color:#2dd47f;">${amInitials(u.name || u.email)}</div><div class="am-info"><div class="am-name">${msgEsc(u.name || "CPA")}</div><div class="am-role" style="color:#2dd47f;">CPA / Accountant${sendHint}${u.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(u.email) + "</span>" : ""}</div></div></div>`;
           });
         }
         html += `<div class="am-divider" style="border-top:1px solid var(--border);margin:8px 0;"></div>`;
@@ -34274,6 +34286,12 @@
                 name: i.fullName || "CPA invite",
                 email: i.email || "",
                 pending: true,
+                sendCount: i.sendCount || 1,
+                maxSends: i.maxSends || 3,
+                remainingSends:
+                  i.remainingSends != null
+                    ? i.remainingSends
+                    : Math.max(0, (i.maxSends || 3) - (i.sendCount || 1)),
               }));
           } catch (_) {}
           const seen = new Set(active.map((u) => (u.email || "").toLowerCase()));
@@ -34351,13 +34369,31 @@
           btn.textContent = "Sending…";
         }
         try {
-          await AVApi.inviteUser({
+          const res = await AVApi.inviteUser({
             email,
             role: "cpa",
             fullName: name,
           });
-          if (typeof AVToast !== "undefined")
-            AVToast.success("CPA invite sent to " + email);
+          const inv = (res && (res.invitation || res)) || {};
+          if (typeof AVToast !== "undefined") {
+            if (inv.resent) {
+              AVToast.success(
+                "CPA invite resent to " +
+                  email +
+                  " (" +
+                  (inv.sendCount || "?") +
+                  " of " +
+                  (inv.maxSends || 3) +
+                  " sends used)",
+              );
+            } else {
+              AVToast.success(
+                "CPA invite sent to " +
+                  email +
+                  " — you can resend up to 3 times (10 min cooldown)",
+              );
+            }
+          }
           closeAddCpa();
           await loadCpaLogins();
           reopenAdminMenuDeferred();

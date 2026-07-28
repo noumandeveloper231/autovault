@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accept Invite — AutoVault</title>
+  <script>
+    // Alias of /invite so emailed /accept-invitation?token=… links work on static hosts.
+    location.replace("/invite" + (location.search || "") + (location.hash || ""));
+  </script>
+</head>
+<body>
+  <p style="font-family:system-ui,sans-serif;text-align:center;margin-top:40vh;color:#8b95a1;">
+    Redirecting to accept invitation…
+  </p>
+</body>
+</html>
