@@ -44277,16 +44277,17 @@
           __djAutoT = null;
         }
         if (__djAutoPending && typeof __djAutoPending.run === "function") {
-          return __djAutoPending.run();
+          return Promise.resolve(__djAutoPending.run());
         }
-        return null;
+        return Promise.resolve();
       }
 
       function djAutoSaveCustomer() {
         djAutoSave();
       }
       function djFlushCustomerSave() {
-        return djFlushAutoSave();
+        // Called from inline handlers — errors already surface via toast.
+        return djFlushAutoSave().catch(function () {});
       }
 
       function djBindAutoSave() {
@@ -44331,7 +44332,9 @@
         const _showPageOrig = showPage;
         showPage = function (pageId, el) {
           if (currentDealVin && pageId !== "deal-jacket") {
-            djFlushAutoSave().catch(function () {});
+            try {
+              Promise.resolve(djFlushAutoSave()).catch(function () {});
+            } catch (_) {}
           }
           if (pageId === "deal-jacket") djBindAutoSave();
           return _showPageOrig(pageId, el);
