@@ -4063,6 +4063,163 @@
         flex-shrink: 0;
       }
 
+      .dj-cust-save-status {
+        margin-left: auto;
+        margin-right: 10px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        color: var(--muted);
+        min-height: 1em;
+      }
+      .dj-cust-save-status.is-saving { color: var(--accent, #2c9257); }
+      .dj-cust-save-status.is-saved { color: var(--green, #23d18b); }
+      .dj-cust-save-status.is-error { color: var(--red, #f87171); }
+
+      .dj-autosave-msg {
+        font-size: 12px;
+        color: var(--green);
+        font-weight: 700;
+        opacity: 0;
+        transition: opacity 0.3s;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+      }
+      .dj-autosave-msg.show { opacity: 1; }
+      .dj-edit-hint {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        color: var(--muted);
+        margin-left: 8px;
+      }
+
+      .pnl-clickable {
+        cursor: pointer;
+        border-radius: 8px;
+        transition: background 0.15s;
+        padding-left: 6px;
+        padding-right: 6px;
+        margin-left: -6px;
+        margin-right: -6px;
+      }
+      .pnl-clickable:hover { background: rgba(255, 165, 60, 0.1); }
+      .pnl-exp-row span:first-child {
+        display: inline-flex;
+        align-items: center;
+        gap: 2px;
+      }
+      .pnl-exp-view {
+        font-size: 10.5px;
+        font-weight: 600;
+        letter-spacing: 0.2px;
+        color: var(--muted);
+        background: transparent;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        padding: 3px 12px;
+        margin-left: 11px;
+        cursor: pointer;
+        font-family: inherit;
+        white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: color 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+      }
+      .pnl-exp-view:hover {
+        color: var(--orange);
+        border-color: rgba(255, 138, 76, 0.42);
+        background: rgba(255, 138, 76, 0.06);
+      }
+      .pev-arw { font-size: 11px; opacity: 0.7; transition: transform 0.22s ease, opacity 0.22s ease; }
+      .pnl-exp-view:hover .pev-arw { transform: translateX(2px); opacity: 1; }
+      .pnl-kpi-click { cursor: pointer; transition: transform 0.12s, box-shadow 0.15s; }
+      .pnl-kpi-click:hover { transform: translateY(-2px); box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28); }
+      .pne-cat { margin-bottom: 14px; }
+      .pne-cat-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 12px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--muted);
+        padding: 4px 2px 7px;
+        border-bottom: 1px solid var(--border);
+      }
+      .pne-cat-tot { font-family: var(--mono); color: var(--text); }
+      .pne-item {
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        align-items: center;
+        gap: 12px;
+        padding: 9px 8px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.13s;
+      }
+      .pne-item:hover { background: var(--panel-2); }
+      .pne-item.static { cursor: default; }
+      .pne-item.static:hover { background: transparent; }
+      .pne-item-main { display: flex; align-items: center; gap: 9px; min-width: 0; }
+      .pne-item-name {
+        font-size: 13.5px;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .pne-item-meta {
+        font-size: 12px;
+        color: var(--muted);
+        font-family: var(--mono);
+        white-space: nowrap;
+      }
+      .pne-item-amt {
+        font-size: 13.5px;
+        font-weight: 700;
+        font-family: var(--mono);
+        color: var(--text);
+        white-space: nowrap;
+      }
+      .pne-badge {
+        font-size: 10px;
+        font-weight: 800;
+        padding: 2px 7px;
+        border-radius: 20px;
+        white-space: nowrap;
+        background: rgba(124, 138, 160, 0.16);
+        color: var(--muted);
+      }
+      .pne-badge.recur { background: rgba(28, 122, 70, 0.16); color: #2dd47f; }
+      .pne-badge.once { background: rgba(124, 138, 160, 0.16); color: var(--muted); }
+      .pne-grand {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 6px;
+        padding: 14px 8px 4px;
+        border-top: 2px solid var(--border);
+        font-size: 15px;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .pne-grand span:last-child { font-family: var(--mono); color: var(--orange); }
+      .pne-hint {
+        font-size: 11.5px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin-top: 12px;
+        padding: 0 2px;
+      }
+      #pnlExpModal .modal { max-width: 640px; }
+      #pnlExpModal .modal-body { max-height: min(70vh, 560px); overflow: auto; }
+
       .dj-comm-out {
         display: flex;
         justify-content: space-between;
@@ -15961,10 +16118,20 @@
               <div class="kpi-value" id="pnlGross">$0</div>
               <div class="kpi-foot" id="pnlGrossFoot">&mdash; gross margin</div>
             </div>
-            <div class="kpi" style="--accent: var(--orange)">
+            <div
+              class="kpi pnl-kpi-click"
+              style="--accent: var(--orange)"
+              onclick="openPnlExpenses()"
+              title="View every operating expense in this period, including recurring"
+            >
               <div class="kpi-label">Total Expenses</div>
               <div class="kpi-value" id="pnlExpenses">$0</div>
-              <div class="kpi-foot">operating expenses (excludes COGS)</div>
+              <div class="kpi-foot">
+                operating expenses (excludes COGS) &middot;
+                <span style="color: var(--orange); font-weight: 700"
+                  >view all &rarr;</span
+                >
+              </div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Net Profit</div>
@@ -20821,6 +20988,7 @@
                 <!-- Customer Information -->
                 <div class="dj-form-title">
                   Customer Information
+                  <span id="djCustSaveStatus" class="dj-cust-save-status" aria-live="polite"></span>
                   <button
                     class="btn-scan dj-scan-inline"
                     onclick="scanForDeal('Customer ID')"
@@ -20861,6 +21029,8 @@
                     type="text"
                     id="djCustName"
                     placeholder="Customer full name"
+                    oninput="djAutoSaveCustomer()"
+                    onblur="djFlushCustomerSave()"
                   />
                 </div>
                 <div class="form-row">
@@ -20870,7 +21040,8 @@
                       type="text"
                       id="djCustCell"
                       placeholder="(555) 000-0000"
-                      oninput="formatPhoneInput(this)"
+                      oninput="formatPhoneInput(this); djAutoSaveCustomer()"
+                      onblur="djFlushCustomerSave()"
                     />
                   </div>
                   <div class="form-group">
@@ -20879,6 +21050,8 @@
                       type="email"
                       id="djCustEmail"
                       placeholder="email@address.com"
+                      oninput="djAutoSaveCustomer()"
+                      onblur="djFlushCustomerSave()"
                     />
                   </div>
                 </div>
@@ -20888,6 +21061,8 @@
                     type="text"
                     id="djCustAddress"
                     placeholder="Street, City, State ZIP"
+                    oninput="djAutoSaveCustomer()"
+                    onblur="djFlushCustomerSave()"
                   />
                 </div>
                 <div id="djIdDoc" style="margin-top: 12px"></div>
@@ -20970,7 +21145,10 @@
             <!-- RIGHT: breakdown + rep + add-ons -->
             <div>
               <div class="vdp-section" id="djBreakdownSection" style="margin-bottom: 18px">
-                <div class="dj-form-title">Cost Breakdown</div>
+                <div class="dj-form-title">
+                  Cost Breakdown
+                  <span class="dj-edit-hint" id="djCostEditHint">click any figure to edit</span>
+                </div>
                 <div class="vdp-sk">
                   <div class="sk-row"><div class="sk-bar" style="width: 42%"></div><div class="sk-bar" style="width: 28%"></div></div>
                   <div class="sk-row"><div class="sk-bar" style="width: 36%"></div><div class="sk-bar" style="width: 22%"></div></div>
@@ -21089,8 +21267,10 @@
                   min-width: 220px;
                 "
               >
-                Saving logs this deal in Deal Jackets, marks the vehicle sold, and
-                rolls the numbers into your sold count, profit, and ROI.
+                Customer details auto-save as you type.
+                Use <b style="color: var(--text)">Save Deal &amp; Mark Sold</b>
+                when the deal is ready.
+                <span id="djAutoSaved" class="dj-autosave-msg"></span>
               </div>
               <button
                 class="btn-primary"
@@ -21546,6 +21726,43 @@
           </div>
           <div class="ms-list" id="msList"></div>
         </div>
+      </div>
+    </div>
+
+    <!-- P&L OPERATING EXPENSES DRILL-DOWN -->
+    <div
+      class="modal-overlay"
+      id="pnlExpModal"
+      onclick="if(event.target===this) closePnlExpenses()"
+    >
+      <div class="modal">
+        <div class="modal-head">
+          <h3>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+              />
+            </svg>
+            <span>
+              <span id="pnlExpTitle">Operating Expenses</span> &middot;
+              <span
+                id="pnlExpPeriodLbl"
+                style="color: var(--muted); font-weight: 600"
+              ></span>
+            </span>
+          </h3>
+          <button class="modal-close" onclick="closePnlExpenses()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body" id="pnlExpBody"></div>
       </div>
     </div>
 
@@ -33677,7 +33894,7 @@
         "December",
       ];
       let pnlPeriod = {
-        mode: "year",
+        mode: "month",
         year: new Date(today).getFullYear(),
         month: new Date(today).getMonth(),
       };
@@ -36673,21 +36890,37 @@
             : "";
         });
       document.getElementById("addRepairBtn").onclick = addRepairEntry;
+      function refreshDealJacketIfOpen() {
+        try {
+          if (
+            !currentDealVin ||
+            typeof renderDealJacket !== "function"
+          )
+            return;
+          const page = document.getElementById("page-deal-jacket");
+          if (page && page.style.display !== "none") {
+            renderDealJacket(currentDealVin);
+          }
+        } catch (_) {}
+      }
       document.getElementById("saveRepairsBtn").onclick = () => {
         document.getElementById("repairsModal").classList.remove("open");
         render();
         refreshAllPnl();
+        refreshDealJacketIfOpen();
       };
       document.getElementById("closeRepairsModal").onclick = () => {
         document.getElementById("repairsModal").classList.remove("open");
         render();
         refreshAllPnl();
+        refreshDealJacketIfOpen();
       };
       document.getElementById("repairsModal").addEventListener("click", (e) => {
         if (e.target.id === "repairsModal") {
           document.getElementById("repairsModal").classList.remove("open");
           render();
           refreshAllPnl();
+          refreshDealJacketIfOpen();
         }
       });
 
@@ -38338,6 +38571,293 @@
         return out;
       }
 
+      /**
+       * For P&L / expense detail UI: in year mode, collapse recurring
+       * occurrences into one row with a period total so Rent doesn't appear
+       * 8–12 times. Month mode stays one row per occurrence.
+       */
+      function collapseExpensesForDisplay(opExpenses) {
+        const list = Array.isArray(opExpenses) ? opExpenses : [];
+        if (
+          typeof pnlPeriod === "undefined" ||
+          pnlPeriod.mode === "month"
+        ) {
+          return list.slice();
+        }
+        const map = new Map();
+        list.forEach((e) => {
+          const key = isRecurring(e)
+            ? `r:${e.id}`
+            : `o:${e.id || e._occurrenceKey || e.dueDate + e.name}`;
+          if (!map.has(key)) {
+            map.set(key, {
+              ...e,
+              amount: Number(e.amount) || 0,
+              _months: 1,
+              _firstDate: e.dueDate,
+              _lastDate: e.dueDate,
+            });
+            return;
+          }
+          const row = map.get(key);
+          row.amount += Number(e.amount) || 0;
+          row._months += 1;
+          if (e.dueDate && (!row._firstDate || e.dueDate < row._firstDate)) {
+            row._firstDate = e.dueDate;
+          }
+          if (e.dueDate && (!row._lastDate || e.dueDate > row._lastDate)) {
+            row._lastDate = e.dueDate;
+          }
+          // Keep unpaid if any occurrence is unpaid
+          if (!e.paid) row.paid = false;
+        });
+        return Array.from(map.values());
+      }
+
+      function pnlExpenseDetailHtml(opExpenses) {
+        // Kept as a thin fallback; primary drill-down is openPnlExpenses / openExpGroup.
+        const displayRows = collapseExpensesForDisplay(opExpenses);
+        if (!displayRows.length) return "";
+        return `
+      <div style="margin-top:8px;">
+        <button class="btn-ghost" type="button" onclick="openPnlExpenses()" style="font-size:11px;padding:4px 10px;">
+          View ${displayRows.length} expense${displayRows.length === 1 ? "" : "s"} detail
+        </button>
+      </div>`;
+      }
+
+      function pnlPeriodLabel() {
+        return typeof pnlPeriod !== "undefined" && pnlPeriod.mode === "month"
+          ? `${PNL_MFULL[pnlPeriod.month]} ${pnlPeriod.year}`
+          : `Full Year ${typeof pnlPeriod !== "undefined" ? pnlPeriod.year : ""}`;
+      }
+
+      function buildPnlOpInstances(opExpenses) {
+        return (opExpenses || []).map((e) => {
+          const d = pnlDateParts(e.dueDate) || {
+            y: pnlPeriod.year,
+            m: pnlPeriod.month || 0,
+          };
+          return {
+            e,
+            y: d.y,
+            m: d.m,
+            amount: Number(e.amount) || 0,
+            date: e.dueDate,
+            occurrence: isRecurring(e) ? e.recurring || "Monthly" : "One-time",
+          };
+        });
+      }
+
+      function pnlOpExGroupRows(commissions, recurringTotal, dealershipTotal) {
+        const opRow = (label, val, grp) =>
+          `<div class="pnl-row pnl-exp-row"><span>${label} <button type="button" class="pnl-exp-view" onclick="openExpGroup('${grp}')">view<span class="pev-arw">&rarr;</span></button></span><span class="v">${fmt(val)}</span></div>`;
+        return (
+          opRow("Sales Commissions &amp; Payroll", commissions, "commissions") +
+          opRow("Recurring Expenses", recurringTotal, "recurring") +
+          opRow("Dealership Expenses", dealershipTotal, "dealership")
+        );
+      }
+
+      function closePnlExpenses() {
+        const m = document.getElementById("pnlExpModal");
+        if (m) m.classList.remove("open");
+      }
+
+      function openExpGroup(group) {
+        const body = document.getElementById("pnlExpBody");
+        if (!body) return;
+        let items = [];
+        let heading = "";
+        if (group === "commissions") {
+          heading = "Sales Commissions & Payroll";
+          (window.__pnlSold || [])
+            .filter((r) => (Number(r.commission) || 0) > 0)
+            .sort((a, b) => (b.soldDate || "").localeCompare(a.soldDate || ""))
+            .forEach((r) => {
+              items.push({
+                name: `${r.year} ${r.make} ${r.model}`,
+                meta:
+                  (r.soldDate ? fmtDate(r.soldDate) : "") +
+                  (r.rep ? ` · ${r.rep}` : ""),
+                amount: Number(r.commission) || 0,
+                badge: "Commission",
+                badgeCls: "recur",
+                click: `openDealJacket('${r.vin}','sold')`,
+              });
+            });
+        } else if (group === "recurring") {
+          heading = "Recurring Expenses";
+          const raw = (window.__pnlOpInstances || []).filter(
+            (x) => x.occurrence && x.occurrence !== "One-time",
+          );
+          // Year view: collapse duplicate monthly rows of the same expense.
+          if (pnlPeriod.mode === "year") {
+            const map = new Map();
+            raw.forEach((x) => {
+              const id = x.e.id || x.e.name;
+              if (!map.has(id)) {
+                map.set(id, {
+                  name: x.e.name || "(unnamed)",
+                  meta: `${x.e.category || ""} · ${x.occurrence}`,
+                  amount: Number(x.amount) || 0,
+                  months: 1,
+                  badge: "↻ " + x.occurrence,
+                  badgeCls: "recur",
+                  click: `openExpenseModal('${x.e.id}')`,
+                });
+              } else {
+                const row = map.get(id);
+                row.amount += Number(x.amount) || 0;
+                row.months += 1;
+              }
+            });
+            items = Array.from(map.values()).map((it) => ({
+              ...it,
+              meta:
+                it.months > 1
+                  ? `${it.meta} · ${it.months} mo`
+                  : it.meta,
+            }));
+          } else {
+            raw.forEach((x) => {
+              items.push({
+                name: x.e.name || "(unnamed)",
+                meta: `${PNL_MSHORT[x.m]} ${x.y} · ${x.e.category || ""}`,
+                amount: Number(x.amount) || 0,
+                badge: "↻ " + x.occurrence,
+                badgeCls: "recur",
+                click: `openExpenseModal('${x.e.id}')`,
+              });
+            });
+          }
+        } else if (group === "dealership") {
+          heading = "Dealership Expenses";
+          (window.__pnlOpInstances || [])
+            .filter((x) => !x.occurrence || x.occurrence === "One-time")
+            .forEach((x) => {
+              items.push({
+                name: x.e.name || "(unnamed)",
+                meta: `${PNL_MSHORT[x.m]} ${x.y} · ${x.e.category || ""}`,
+                amount: Number(x.amount) || 0,
+                badge: "One-time",
+                badgeCls: "once",
+                click: `openExpenseModal('${x.e.id}')`,
+              });
+            });
+        } else if (group === "vehicle") {
+          heading = "Vehicle Expenses";
+          (window.__pnlVehExp || []).forEach((x) => {
+            items.push({
+              name: x.e.name || "(unnamed)",
+              meta: `${x.veh} · ${x.e.category || ""}`,
+              amount: Number(x.amount) || 0,
+              badge: "Vehicle",
+              badgeCls: "once",
+              click: `openExpenseModal('${x.e.id}')`,
+            });
+          });
+        }
+        const total = items.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+        const t = document.getElementById("pnlExpTitle");
+        if (t) t.textContent = heading;
+        const lbl = document.getElementById("pnlExpPeriodLbl");
+        if (lbl) lbl.textContent = pnlPeriodLabel();
+        let html = "";
+        if (!items.length) {
+          html = `<div style="padding:40px;text-align:center;color:var(--muted);font-size:13px;">No ${heading.toLowerCase()} recorded for ${pnlPeriodLabel()}.</div>`;
+        } else {
+          html =
+            '<div class="pne-cat">' +
+            items
+              .map(
+                (it) =>
+                  `<div class="pne-item" onclick="closePnlExpenses(); ${it.click}"><div class="pne-item-main"><span class="pne-item-name">${it.name}</span><span class="pne-badge ${it.badgeCls}">${it.badge}</span></div><div class="pne-item-meta">${it.meta || ""}</div><div class="pne-item-amt">${fmt(it.amount)}</div></div>`,
+              )
+              .join("") +
+            "</div>";
+        }
+        html += `<div class="pne-grand"><span>Total — ${heading}</span><span>${fmt(total)}</span></div>`;
+        html += `<div class="pne-hint">Tap any row to open the source record.</div>`;
+        body.innerHTML = html;
+        document.getElementById("pnlExpModal").classList.add("open");
+      }
+
+      function openPnlExpenses() {
+        const body = document.getElementById("pnlExpBody");
+        if (!body) return;
+        const inst = Array.isArray(window.__pnlOpInstances)
+          ? window.__pnlOpInstances
+          : [];
+        const commissions = Number(window.__pnlCommissions || 0);
+        const t = document.getElementById("pnlExpTitle");
+        if (t) t.textContent = "Operating Expenses";
+        const lbl = document.getElementById("pnlExpPeriodLbl");
+        if (lbl) lbl.textContent = pnlPeriodLabel();
+        const opTotal = inst.reduce((s, x) => s + (Number(x.amount) || 0), 0);
+        const grand = opTotal + commissions;
+        let html = "";
+        if (commissions > 0) {
+          html += `<div class="pne-cat"><div class="pne-cat-head"><span>Sales Commissions (Payroll)</span><span class="pne-cat-tot">${fmt(commissions)}</span></div>`;
+          html += `<div class="pne-item static"><div class="pne-item-main"><span class="pne-item-name">Commissions paid on sold vehicles</span><span class="pne-badge">${pnlPeriodLabel()}</span></div><div class="pne-item-meta"></div><div class="pne-item-amt">${fmt(commissions)}</div></div></div>`;
+        }
+        if (!inst.length && commissions <= 0) {
+          html = `<div style="padding:40px;text-align:center;color:var(--muted);font-size:13px;">No operating expenses recorded for ${pnlPeriodLabel()}.</div>`;
+        } else {
+          const display = collapseExpensesForDisplay(
+            inst.map((x) => ({
+              ...x.e,
+              amount: x.amount,
+              dueDate: x.date,
+              recurring:
+                x.occurrence !== "One-time" ? x.occurrence : "One-Time",
+            })),
+          );
+          const groups = {};
+          display.forEach((e) => {
+            const c = e.category || "Other";
+            (groups[c] = groups[c] || []).push(e);
+          });
+          Object.keys(groups)
+            .sort(
+              (a, b) =>
+                groups[b].reduce((s, x) => s + (Number(x.amount) || 0), 0) -
+                groups[a].reduce((s, x) => s + (Number(x.amount) || 0), 0),
+            )
+            .forEach((cat) => {
+              const rows = groups[cat];
+              const catTot = rows.reduce(
+                (s, x) => s + (Number(x.amount) || 0),
+                0,
+              );
+              html += `<div class="pne-cat"><div class="pne-cat-head"><span>${cat}</span><span class="pne-cat-tot">${fmt(catTot)}</span></div>`;
+              html += rows
+                .map((e) => {
+                  const recurring = isRecurring(e);
+                  const monLbl =
+                    e._months > 1
+                      ? `${e._months} mo`
+                      : e.dueDate
+                        ? fmtDate(e.dueDate)
+                        : "";
+                  const badge = recurring
+                    ? `<span class="pne-badge recur">↻ ${e.recurring || "Monthly"}</span>`
+                    : `<span class="pne-badge once">One-time</span>`;
+                  return `<div class="pne-item" onclick="closePnlExpenses(); openExpenseModal('${e.id}')" title="Open this expense"><div class="pne-item-main"><span class="pne-item-name">${e.name || "(unnamed)"}</span>${badge}</div><div class="pne-item-meta">${monLbl}</div><div class="pne-item-amt">${fmt(e.amount)}</div></div>`;
+                })
+                .join("");
+              html += `</div>`;
+            });
+        }
+        html += `<div class="pne-grand"><span>Total Operating Expenses</span><span>${fmt(grand)}</span></div>`;
+        html += `<div class="pne-hint">Recurring expenses are counted for every month they are active in this period.</div>`;
+        body.innerHTML = html;
+        document.getElementById("pnlExpModal").classList.add("open");
+      }
+      window.openPnlExpenses = openPnlExpenses;
+      window.openExpGroup = openExpGroup;
+      window.closePnlExpenses = closePnlExpenses;
+
       // Attached expenses feed straight into each vehicle's cost & P&L (used by computeRow)
       function isVehicleCostMirrorExpense(e) {
         if (!e) return false;
@@ -38654,12 +39174,16 @@
             if (fType === "recurring" && !isRecurring(e)) return false;
             if (fType === "once" && isRecurring(e)) return false;
             return true;
-          })
-          .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
+          });
+        // Year view: don't list the same recurring expense 8–12 times.
+        if (typeof pnlPeriod !== "undefined" && pnlPeriod.mode === "year") {
+          rows = collapseExpensesForDisplay(rows);
+        }
+        rows = rows.sort((a, b) => new Date(a.dueDate || a._firstDate || 0) - new Date(b.dueDate || b._firstDate || 0));
 
         document.getElementById("expFilterTag").textContent =
           `Showing ${rows.length} of ${_expenses.length} expenses` +
-          (rows.some((e) => e._carriedForward)
+          (rows.some((e) => e._carriedForward || (e._months && e._months > 1))
             ? " (includes recurring carry-forward)"
             : "");
         document.getElementById("expCountLabel").textContent =
@@ -38682,10 +39206,17 @@
             const dueCls = overdue ? "exp-overdue" : "";
             const recurCls = isRecurring(e) ? "rp-recur" : "rp-once";
             const recurLabel = isRecurring(e)
-              ? e._carriedForward
-                ? `${e.recurring} · carried`
-                : e.recurring
+              ? e._months > 1
+                ? `${e.recurring} · ${e._months} mo`
+                : e._carriedForward
+                  ? `${e.recurring} · carried`
+                  : e.recurring
               : "One-time";
+
+            const dateLabel =
+              e._months > 1 && e._firstDate && e._lastDate
+                ? `${fmtDate(e._firstDate)} – ${fmtDate(e._lastDate)}`
+                : `${fmtDate(e.dueDate)}${overdue ? " · overdue" : e._carriedForward ? " · auto" : ""}`;
 
             // status hover-select (matches vehicles table)
             const statusColor = e.paid ? "var(--green)" : "var(--red)";
@@ -38720,7 +39251,7 @@
       <td class="veh-cell exp-name-cell" style="cursor:pointer;" onclick="showExpenseDetail('${e.id}')"><div class="exp-name">${e.name}${e._carriedForward ? ' <span style="font-size:10px;color:var(--muted);font-weight:500;">(carried)</span>' : ""}</div><div class="exp-sub">View details &rarr;</div></td>
       <td><span class="cat-chip" style="background:${m.bg};color:${m.color};"><span class="cat-dot" style="background:${m.color};"></span>${e.category}</span></td>
       <td style="color:var(--text);font-weight:700;">${fmt(e.amount)}</td>
-      <td class="${dueCls}">${fmtDate(e.dueDate)}${overdue ? " · overdue" : e._carriedForward ? " · auto" : ""}</td>
+      <td class="${dueCls}">${dateLabel}</td>
       <td><span class="recur-pill ${recurCls}">${recurLabel}</span></td>
       <td>${statusCell}</td>
       <td>${attachCell}</td>
@@ -41184,26 +41715,12 @@
         badge.style.cssText = `display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 18px;border-radius:10px;border:1px solid;color:${scol};border-color:${scol};background:${scol}18;`;
 
         const r = computeRow(v);
-        const attachedRows = attachedExpensesForVehicle(v);
-        const attachedItemsHtml = attachedRows.length
-          ? attachedRows
-              .map(function (e) {
-                const typeLabel = e.expType
-                  ? " · " + String(e.expType)
-                  : "";
-                return (
-                  '<div class="vdp-row" style="padding-left:12px;">' +
-                  '<span class="vdp-row-label" style="font-weight:500;color:var(--muted);">' +
-                  (e.name || "Expense") +
-                  typeLabel +
-                  "</span>" +
-                  '<span class="vdp-row-value" style="font-weight:600;">' +
-                  fmt(e.amount) +
-                  "</span></div>"
-                );
-              })
-              .join("")
-          : "";
+        const hint = document.getElementById("djCostEditHint");
+        if (hint) {
+          hint.textContent = vehicleMoneyLocked(v)
+            ? "costs locked after sale"
+            : "click any figure to edit";
+        }
         document.getElementById("djRos").value = v.ros || "";
         setDjRosStatus("", "");
         if (v.ros) checkDjRosAvailability(v.ros);
@@ -41276,11 +41793,60 @@
             ? v.commissionOverride
             : "";
 
-        document.getElementById("djBreakdown").innerHTML = `
-    <div class="vdp-row"><span class="vdp-row-label">Vehicle Purchase Price</span><span class="vdp-row-value">${fmt(v.price)}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Fees</span><span class="vdp-row-value">${fmt(v.fees)}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Repairs</span><span class="vdp-row-value">${fmt(r.repairs)}</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Flooring</span><span class="vdp-row-value">${r.flooringCost > 0 ? fmt(r.flooringCost) : "\u2014"}</span></div>
+        djRenderBreakdown(v, r);
+
+        renderDealDocs(vin);
+        renderDealAddOns(vin);
+        renderDealBottomList();
+        dealRecalc();
+      }
+
+      function djUndoBtn(v, field) {
+        if (!v || !v._undo || v._undo[field] === undefined || v._undo[field] === null)
+          return "";
+        return `<button class="vdp-undo" type="button" onclick="event.stopPropagation(); djUndoCost('${field}')" title="Revert to previous value">\u21BA ${fmt(v._undo[field])}</button>`;
+      }
+      function djCurrentCostValue(v, field) {
+        const r = computeRow(v);
+        if (field === "flooringOverride") return Math.round(r.flooringCost);
+        return Math.round(Number(v[field]) || 0);
+      }
+      function djRenderBreakdown(v, r) {
+        const host = document.getElementById("djBreakdown");
+        if (!host) return;
+        const locked = vehicleMoneyLocked(v);
+        const attachedRows = attachedExpensesForVehicle(v);
+        const attachedItemsHtml = attachedRows.length
+          ? attachedRows
+              .map(function (e) {
+                const typeLabel = e.expType ? " · " + String(e.expType) : "";
+                return (
+                  '<div class="vdp-row" style="padding-left:12px;">' +
+                  '<span class="vdp-row-label" style="font-weight:500;color:var(--muted);">' +
+                  (e.name || "Expense") +
+                  typeLabel +
+                  "</span>" +
+                  '<span class="vdp-row-value" style="font-weight:600;">' +
+                  fmt(e.amount) +
+                  "</span></div>"
+                );
+              })
+              .join("")
+          : "";
+        const ed = (field, val, extra) => {
+          if (locked) {
+            return `<span class="vdp-row-value" id="djEd_${field}"${extra || ""}>${val}</span>`;
+          }
+          return `<span class="vdp-row-value" id="djEd_${field}"${extra || ""}>${djUndoBtn(v, field)}<span class="vdp-ed" onclick="djEditCost('${field}')" title="Click to edit">${val}</span></span>`;
+        };
+        const repairsClick = locked
+          ? fmt(r.repairs)
+          : `<span class="vdp-ed" onclick="openRepairsModal('${v.vin}')" title="Click to edit repair items">${fmt(r.repairs)}</span>`;
+        host.innerHTML = `
+    <div class="vdp-row"><span class="vdp-row-label">Vehicle Purchase Price</span>${ed("price", fmt(v.price))}</div>
+    <div class="vdp-row"><span class="vdp-row-label">Fees</span>${ed("fees", fmt(v.fees))}</div>
+    <div class="vdp-row"><span class="vdp-row-label">Repairs (${(v.repairsList || []).length})</span><span class="vdp-row-value">${repairsClick}</span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Flooring</span>${ed("flooringOverride", r.flooringCost > 0 ? fmt(r.flooringCost) : "\u2014", ' style="color:var(--red);"')}</div>
     <div class="vdp-row"><span class="vdp-row-label">Expenses${attachedRows.length ? " <span style='color:var(--muted);font-weight:400;text-transform:none;'>(" + attachedRows.length + ")</span>" : ""}</span><span class="vdp-row-value">${r.attachedExp > 0 ? fmt(r.attachedExp) : "\u2014"}</span></div>
     ${attachedItemsHtml}
     <div class="vdp-row"><span class="vdp-row-label" id="djBrkCommLbl">Commission</span><span class="vdp-row-value" id="djBrkComm" style="color:var(--purple);">\u2014</span></div>
@@ -41297,12 +41863,88 @@
     <div class="vdp-row"><span class="vdp-row-label">Sales Tax</span><span class="vdp-row-value" id="djBrkTax" style="color:var(--muted);">\u2014</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Registration Fees</span><span class="vdp-row-value" id="djBrkReg" style="color:var(--muted);">\u2014</span></div>
     <div class="vdp-row" style="border-top:2px solid var(--border);"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Total Amount Collected</span><span class="vdp-row-value" id="djBrkCollected" style="font-weight:800;color:var(--blue);">\u2014</span></div>`;
-
-        renderDealDocs(vin);
-        renderDealAddOns(vin);
-        renderDealBottomList();
-        dealRecalc();
       }
+      function djEditCost(field) {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v || vehicleMoneyLocked(v)) return;
+        const host = document.getElementById("djEd_" + field);
+        if (!host || host.querySelector("input")) return;
+        const cur = djCurrentCostValue(v, field);
+        host.innerHTML = `<input class="vdp-edit-input" type="number" step="1" min="0" value="${cur}"
+    onblur="djCommitCost('${field}', this.value)"
+    onkeydown="if(event.key==='Enter'){this.blur();}else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
+        const inp = host.querySelector("input");
+        if (inp) {
+          inp.focus();
+          inp.select();
+        }
+      }
+      async function djCommitCost(field, raw) {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v) return;
+        const host = document.getElementById("djEd_" + field);
+        const inp = host ? host.querySelector("input") : null;
+        if (inp && inp.dataset.cancel === "1") {
+          djRenderBreakdown(v, computeRow(v));
+          dealRecalc();
+          return;
+        }
+        let n = parseFloat(raw);
+        if (!isFinite(n) || n < 0) n = 0;
+        n = Math.round(n * 100) / 100;
+        const oldEffective = djCurrentCostValue(v, field);
+        const oldVal = v[field];
+        if (n === oldEffective) {
+          djRenderBreakdown(v, computeRow(v));
+          dealRecalc();
+          return;
+        }
+        if (!v._undo) v._undo = {};
+        v._undo[field] =
+          oldVal === undefined || oldVal === null ? oldEffective : oldVal;
+        v[field] = n;
+        if (host) {
+          host.classList.add("vdp-saving");
+          host.style.opacity = "0.55";
+        }
+        try {
+          if (window.AVVehicles && v.id) {
+            await AVVehicles.persistMoneyField(currentDealVin, field, n);
+          }
+          djShowAutoSaved();
+        } catch (err) {
+          v[field] = oldVal;
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to save cost");
+        } finally {
+          const vv = vehicles.find((x) => x.vin === currentDealVin) || v;
+          djRenderBreakdown(vv, computeRow(vv));
+          dealRecalc();
+          try {
+            if (typeof render === "function") render();
+          } catch (_) {}
+        }
+      }
+      function djUndoCost(field) {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v || !v._undo || vehicleMoneyLocked(v)) return;
+        const prev = v._undo[field];
+        if (prev === undefined) return;
+        djCommitCost(field, prev);
+      }
+      function djShowAutoSaved() {
+        const el = document.getElementById("djAutoSaved");
+        if (!el) return;
+        el.textContent = "Saved ✓";
+        el.classList.add("show");
+        clearTimeout(djShowAutoSaved._t);
+        djShowAutoSaved._t = setTimeout(function () {
+          el.classList.remove("show");
+        }, 1600);
+      }
+      window.djEditCost = djEditCost;
+      window.djCommitCost = djCommitCost;
+      window.djUndoCost = djUndoCost;
 
       function djEditDate() {
         const v = vehicles.find((x) => x.vin === currentDealVin);
@@ -41354,6 +41996,7 @@
                   error: "Failed to save purchase date",
                 },
               );
+              djShowAutoSaved();
             }
           } catch (err) {
             try {
@@ -42028,6 +42671,149 @@
         }
       }
 
+      let djCustSaveTimer = null;
+      let djCustSaveSeq = 0;
+      let djCustSavePending = null;
+
+      function djSetCustSaveStatus(state, message) {
+        const el = document.getElementById("djCustSaveStatus");
+        if (!el) return;
+        el.classList.remove("is-saving", "is-saved", "is-error");
+        if (state) el.classList.add("is-" + state);
+        el.textContent = message || "";
+      }
+
+      function djReadCustomerForm() {
+        return {
+          customerName: (document.getElementById("djCustName")?.value || "").trim() || null,
+          customerPhone: (document.getElementById("djCustCell")?.value || "").trim() || null,
+          customerEmail: (document.getElementById("djCustEmail")?.value || "").trim() || null,
+          customerAddress: (document.getElementById("djCustAddress")?.value || "").trim() || null,
+        };
+      }
+
+      function djApplyCustomerLocal(vin, patch) {
+        const v = vehicles.find((x) => x.vin === vin);
+        if (!v) return null;
+        v.customer = patch.customerName;
+        v.customerPhone = patch.customerPhone;
+        v.customerEmail = patch.customerEmail;
+        v.customerAddress = patch.customerAddress;
+        if (v._raw && v._raw.deal && v._raw.deal.customer) {
+          const c = v._raw.deal.customer;
+          if (patch.customerName) c.name = patch.customerName;
+          c.phone = patch.customerPhone;
+          c.email = patch.customerEmail;
+          c.address = patch.customerAddress;
+        }
+        return v;
+      }
+
+      async function djFlushCustomerSave() {
+        if (djCustSaveTimer) {
+          clearTimeout(djCustSaveTimer);
+          djCustSaveTimer = null;
+        }
+        if (djCustSavePending && typeof djCustSavePending.run === "function") {
+          return djCustSavePending.run();
+        }
+        return null;
+      }
+
+      function djAutoSaveCustomer() {
+        if (!currentDealVin) return;
+        const vin = currentDealVin;
+        const patch = djReadCustomerForm();
+        if (
+          !patch.customerName &&
+          !patch.customerPhone &&
+          !patch.customerEmail &&
+          !patch.customerAddress
+        ) {
+          return;
+        }
+
+        djApplyCustomerLocal(vin, patch);
+        djSetCustSaveStatus("saving", "Saving…");
+
+        clearTimeout(djCustSaveTimer);
+        const seq = ++djCustSaveSeq;
+        const job = {
+          vin,
+          patch,
+          run: null,
+        };
+        job.run = async function () {
+          if (djCustSavePending !== job) return null;
+          djCustSavePending = null;
+          if (!window.AVVehicles) return null;
+          if (typeof AVBusy !== "undefined") AVBusy.inc();
+          try {
+            await AVVehicles.persistPatch(vin, patch);
+            // Keep local + linked customer mirror in sync after server round-trip.
+            djApplyCustomerLocal(vin, patch);
+            if (seq === djCustSaveSeq) {
+              djSetCustSaveStatus("saved", "Saved");
+              djShowAutoSaved();
+              setTimeout(function () {
+                if (seq === djCustSaveSeq) djSetCustSaveStatus("", "");
+              }, 1800);
+            }
+          } catch (err) {
+            if (seq === djCustSaveSeq) {
+              djSetCustSaveStatus("error", "Not saved");
+              if (typeof AVToast !== "undefined") {
+                AVToast.error(err.message || "Failed to save customer");
+              }
+            }
+            throw err;
+          } finally {
+            if (typeof AVBusy !== "undefined") AVBusy.dec();
+          }
+        };
+        djCustSavePending = job;
+        djCustSaveTimer = setTimeout(function () {
+          djCustSaveTimer = null;
+          job.run().catch(function () {});
+        }, 450);
+      }
+
+      // Flush pending customer autosave before leaving the jacket / switching VIN.
+      const _openDealJacketOrig = openDealJacket;
+      openDealJacket = async function (vin, context) {
+        try {
+          await djFlushCustomerSave();
+        } catch (_) {}
+        return _openDealJacketOrig(vin, context);
+      };
+      if (typeof showPage === "function") {
+        const _showPageOrig = showPage;
+        showPage = function (pageId, el) {
+          if (currentDealVin && pageId !== "deal-jacket") {
+            djFlushCustomerSave().catch(function () {});
+          }
+          return _showPageOrig(pageId, el);
+        };
+      }
+      window.addEventListener("beforeunload", function () {
+        if (djCustSavePending || djCustSaveTimer) {
+          try {
+            // Best-effort sync flush via keepalive is not available for JSON PATCH here;
+            // AVBusy already warns when mutations are in flight after save starts.
+            if (djCustSaveTimer) {
+              clearTimeout(djCustSaveTimer);
+              djCustSaveTimer = null;
+              if (djCustSavePending && djCustSavePending.run) {
+                djCustSavePending.run().catch(function () {});
+              }
+            }
+          } catch (_) {}
+        }
+      });
+
+      window.djAutoSaveCustomer = djAutoSaveCustomer;
+      window.djFlushCustomerSave = djFlushCustomerSave;
+
       // Effective title status for a sold vehicle (infers historical deals from titlePresent).
       function soldTitleIn(v) {
         return v.titleIn !== undefined && v.titleIn !== null
@@ -42624,16 +43410,38 @@
           typeof _expenses !== "undefined" ? _expenses : [],
           { excludeVehicle: true },
         );
-        const byCat = {};
-        opExpenses.forEach((e) => {
-          byCat[e.category] =
-            (byCat[e.category] || 0) + (Number(e.amount) || 0);
-        });
+        const recurringOpEx = opExpenses.filter(
+          (e) =>
+            isRecurring(e) || e.category === "Recurring Expense",
+        );
+        const dealershipOpEx = opExpenses.filter(
+          (e) =>
+            !(isRecurring(e) || e.category === "Recurring Expense"),
+        );
+        const recurringTotal = recurringOpEx.reduce(
+          (s, e) => s + (Number(e.amount) || 0),
+          0,
+        );
+        const dealershipTotal = dealershipOpEx.reduce(
+          (s, e) => s + (Number(e.amount) || 0),
+          0,
+        );
         const opTotal = opExpenses.reduce(
           (s, e) => s + (Number(e.amount) || 0),
           0,
         );
         const totalOpEx = commissions + opTotal;
+
+        const vehExpRows = expensesForPeriod(
+          typeof _expenses !== "undefined" ? _expenses : [],
+        ).filter((e) => e.vehicleVin);
+        window.__pnlOpInstances = buildPnlOpInstances(opExpenses);
+        window.__pnlCommissions = commissions;
+        window.__pnlSold = sold;
+        window.__pnlVehExp = vehExpRows.map((e) => ({
+          e,
+          veh: typeof vehicleLabel === "function" ? vehicleLabel(e.vehicleVin) : e.vehicleVin,
+        }));
 
         const netProfit = grossProfit - totalOpEx;
         const netMargin =
@@ -42680,10 +43488,12 @@
           `<div class="pnl-subtotal"><span>${l}</span><span class="v">${fmt(v)}</span></div>`;
         const total = (l, v, m, color) =>
           `<div class="pnl-total" style="color:${color};"><span class="lbl">${l}</span><span><span class="v">${fmtSigned(v)}</span><span class="mrg">${m.toFixed(1)}% margin</span></span></div>`;
-        const catRows = Object.keys(byCat)
-          .sort((a, b) => byCat[b] - byCat[a])
-          .map((c) => row(c, byCat[c]))
-          .join("");
+        const opGroupHtml = pnlOpExGroupRows(
+          commissions,
+          recurringTotal,
+          dealershipTotal,
+        );
+        const opSubtotal = `<div class="pnl-subtotal pnl-clickable" onclick="openPnlExpenses()" title="View every operating expense in this period, including recurring"><span>Total Operating Expenses <span style="font-size:11px;font-weight:700;color:var(--orange);margin-left:8px;">view all →</span></span><span class="v">${fmt(totalOpEx)}</span></div>`;
 
         if (isEmpty) {
           document.getElementById("pnlStatement").innerHTML = `
@@ -42705,9 +43515,8 @@
     ${total("Gross Profit", 0, 0, "var(--muted)")}
     <div class="pnl-block">
       <div class="pnl-section-label">Operating Expenses</div>
-      ${row("Sales Commissions (Payroll)", 0)}
-      ${catRows}
-      ${sub("Total Operating Expenses", totalOpEx)}
+      ${opGroupHtml}
+      ${opSubtotal}
     </div>
     ${total("Net Profit", -totalOpEx, 0, netProfit >= 0 ? "var(--green)" : "var(--red)")}
     <div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--border);border-radius:8px;margin:16px 0;">
@@ -42732,54 +43541,15 @@
       ${row("Auction &amp; Title Fees", cogsFees)}
       ${row("Reconditioning &amp; Repairs", cogsRepairs)}
       ${row("Floor-Plan (Flooring)", cogsFlooring)}
-      ${row("Vehicle-Attached Expenses", cogsAttached)}
+      <div class="pnl-row pnl-exp-row"><span>Vehicle-Attached Expenses <button type="button" class="pnl-exp-view" onclick="openExpGroup('vehicle')">view<span class="pev-arw">&rarr;</span></button></span><span class="v">${fmt(cogsAttached)}</span></div>
       ${cogsAddOns > 0 ? row("Add-On Cost", cogsAddOns) : ""}
       ${sub("Total COGS", totalCOGS)}
     </div>
     ${total("Gross Profit", grossProfit, grossMargin, "var(--green)")}
     <div class="pnl-block">
       <div class="pnl-section-label">Operating Expenses</div>
-      ${row("Sales Commissions (Payroll)", commissions)}
-      ${catRows}
-      ${sub("Total Operating Expenses", totalOpEx)}
-      ${
-        opExpenses.length > 0
-          ? `
-      <div style="margin-top:8px;">
-        <button class="btn-ghost" id="pnlExpToggle" onclick="pnlToggleExpDetail()" style="font-size:11px;padding:4px 10px;">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-          View ${opExpenses.length} expense${opExpenses.length === 1 ? "" : "s"} detail
-        </button>
-        <div id="pnlExpDetail" style="display:none;margin-top:8px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
-          <table style="width:100%;font-size:12px;border-collapse:collapse;">
-            <thead><tr style="background:var(--panel-2);color:var(--muted);text-transform:uppercase;font-size:10px;letter-spacing:.5px;">
-              <th style="padding:8px 12px;text-align:left;">Name</th>
-              <th style="padding:8px 12px;text-align:left;">Category</th>
-              <th style="padding:8px 12px;text-align:right;">Amount</th>
-              <th style="padding:8px 12px;text-align:center;">Status</th>
-              <th style="padding:8px 12px;text-align:left;">Date</th>
-            </tr></thead>
-            <tbody>${opExpenses
-              .sort((a, b) => (Number(b.amount) || 0) - (Number(a.amount) || 0))
-              .map(
-                (e) => `
-              <tr style="border-top:1px solid var(--border);">
-                <td style="padding:8px 12px;">${e.name || e.category}${e._carriedForward ? ' <span style="font-size:10px;color:var(--muted);">(recurring)</span>' : isRecurring(e) ? ' <span style="font-size:10px;color:var(--muted);">(recurring)</span>' : ""}</td>
-                <td style="padding:8px 12px;color:var(--muted);">${e.category}</td>
-                <td style="padding:8px 12px;text-align:right;font-family:var(--mono);">${fmt(e.amount)}</td>
-                <td style="padding:8px 12px;text-align:center;">
-                  <span style="font-size:10px;padding:2px 8px;border-radius:4px;${e.paid ? "background:var(--green-bg,#0d2818);color:var(--green);" : "background:var(--red-bg,#2d1215);color:var(--red);"}">${e.paid ? "Paid" : "Unpaid"}</span>
-                </td>
-                <td style="padding:8px 12px;color:var(--muted);">${fmtDate(e.dueDate)}</td>
-              </tr>`,
-              )
-              .join("")}
-            </tbody>
-          </table>
-        </div>
-      </div>`
-          : ""
-      }
+      ${opGroupHtml}
+      ${opSubtotal}
     </div>
     ${total(netProfit >= 0 ? "Net Profit" : "Net Loss", netProfit, netMargin, netProfit >= 0 ? "var(--green)" : "var(--red)")}
     <div class="pnl-memo">
