@@ -34174,6 +34174,10 @@
         if (owner.dealershipName) {
           roleLabel = roleLabel + " · " + owner.dealershipName;
         }
+        var ownerLoginNav = document.querySelector('.nav-item.sub[onclick="enterOwner()"]');
+        if (ownerLoginNav) {
+          ownerLoginNav.style.display = roleKey === "platform_owner" ? "" : "none";
+        }
         var av = chip.querySelector(".avatar");
         if (av) {
           if (owner.imageUrl) {
