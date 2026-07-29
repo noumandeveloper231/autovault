@@ -1461,10 +1461,8 @@
                 </select>
               </div>
               <div class="field">
-                <label for="city">City</label>
-                <select id="city" name="city" required disabled>
-                  <option value="">Select city</option>
-                </select>
+                <label for="zipCode">ZIP Code</label>
+                <input id="zipCode" name="zipCode" type="text" placeholder="e.g. 90210" required />
               </div>
             </div>
             <button type="submit" class="btn btn-primary">Get Started
@@ -1749,7 +1747,6 @@
   let activeRegistrationId = null;
 
   const stateSelect=document.getElementById('state');
-  const citySelect=document.getElementById('city');
   if(stateSelect && window.US_LOCATIONS){
     Object.keys(window.US_LOCATIONS).sort((a,b)=>(window.US_STATE_NAMES[a]||a).localeCompare(window.US_STATE_NAMES[b]||b)).forEach(code=>{
       const opt=document.createElement('option');
@@ -1757,29 +1754,16 @@
       opt.textContent=(window.US_STATE_NAMES[code]||code)+' ('+code+')';
       stateSelect.appendChild(opt);
     });
-    stateSelect.addEventListener('change',()=>{
-      const st=stateSelect.value;
-      citySelect.innerHTML='<option value="">Select city</option>';
-      if(!st){ citySelect.disabled=true; return; }
-      (window.US_LOCATIONS[st]||[]).forEach(city=>{
-        const opt=document.createElement('option');
-        opt.value=city;
-        opt.textContent=city;
-        citySelect.appendChild(opt);
-      });
-      citySelect.disabled=false;
-      if(citySelect.options.length===2) citySelect.selectedIndex=1;
-    });
   }
 
   const form=document.getElementById('waitForm'), gsStep1=document.getElementById('gsStep1'), gsStep2=document.getElementById('gsStep2');
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const name=form.name.value.trim(), email=form.email.value.trim(), dealer=form.dealership.value.trim();
-    const city=form.city.value.trim(), state=form.state.value.trim();
-    if(!name||!email||!dealer||!city||!state||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
+    const zipCode=form.zipCode.value.trim(), state=form.state.value.trim();
+    if(!name||!email||!dealer||!zipCode||!state||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
       form.querySelectorAll('input[required],select[required]').forEach(i=>{ i.style.borderColor=(i.value.trim()==='')?'var(--down)':'var(--line)'; });
-      if(!city||!state) AVToast.warning('Please select your state and city.');
+      if(!zipCode||!state) AVToast.warning('Please enter your state and ZIP code.');
       return;
     }
     try{
@@ -1788,7 +1772,7 @@
       const resp=await fetch(`${API_URL}/api/registrations`,{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name,email,phone:form.phone.value.trim(),dealership:dealer,city,state})
+        body:JSON.stringify({name,email,phone:form.phone.value.trim(),dealership:dealer,zipCode,state})
       });
       const data=await resp.json();
       if(!resp.ok) throw new Error(data.error?.message||data.message||'Unable to save registration.');
