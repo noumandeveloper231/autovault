@@ -43846,6 +43846,65 @@
               AVBusy.setBtnLoading(btn, true, "Saving\u2026");
             }
             await djFlushAutoSave();
+            const jacket =
+              v && v._raw && v._raw.dealJackets && v._raw.dealJackets[0]
+                ? v._raw.dealJackets[0]
+                : null;
+            if (jacket && jacket.id && window.AVApi) {
+              const removed = Array.isArray(v.djDocsRemoved)
+                ? v.djDocsRemoved.slice()
+                : [];
+              for (const docId of removed) {
+                if (!docId || String(docId).startsWith("pending-")) continue;
+                try {
+                  await AVApi.removeJacketDocument(jacket.id, docId);
+                } catch (delErr) {
+                  console.warn("Doc remove failed:", docId, delErr);
+                }
+              }
+              const pending = (v.djDocs || []).filter(
+                (d) => d && d.pending && d.img,
+              );
+              for (const doc of pending) {
+                try {
+                  let fileUrl = doc.img;
+                  let fileType =
+                    doc.mimeType ||
+                    (isPdfDoc(doc.name)
+                      ? "application/pdf"
+                      : isWordDoc(doc.name)
+                        ? "application/msword"
+                        : "image/jpeg");
+                  if (
+                    String(doc.img).startsWith("data:") &&
+                    typeof AVApi.uploadFile === "function"
+                  ) {
+                    const blob = dataUrlToBlob(doc.img);
+                    const uploaded = await AVApi.uploadFile(blob, {
+                      fileName: doc.name,
+                      sourceEntity: "deal_jacket",
+                      sourceEntityId: jacket.id,
+                    });
+                    fileUrl =
+                      uploaded.publicUrl || uploaded.downloadUrl || doc.img;
+                    fileType = blob.type || fileType;
+                  }
+                  await AVApi.addJacketDocument(jacket.id, {
+                    fileUrl,
+                    documentName: doc.name,
+                    fileType,
+                  });
+                } catch (docErr) {
+                  console.warn("Doc upload failed:", doc.name, docErr);
+                }
+              }
+              await AVVehicles.loadAllVehicles();
+              const refreshed = vehicles.find(
+                (x) => x.vin === currentDealVin,
+              );
+              if (refreshed) bootstrapDjDocs(refreshed);
+            }
+            renderDealJacket(currentDealVin);
             if (typeof AVToast !== "undefined")
               AVToast.success("Changes saved");
           } catch (err) {
