@@ -35247,9 +35247,8 @@
       }
 
       function moneyCellHtml(r, field, display) {
-        if (vehicleMoneyLocked(r)) {
-          return `<span title="Locked — vehicle is sold">${display}</span>`;
-        }
+        // Sold / loss vehicles stay editable so cost corrections can be made
+        // after the fact — the Deal, Deal Jacket and P&L all resync on save.
         return `<span class="editable-cell" data-vin="${r.vin}" data-field="${field}" onclick="startEditCell(this)" title="Click to edit">${display}</span>`;
       }
 
