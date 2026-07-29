@@ -34819,45 +34819,39 @@
       async function confirmDeleteExpense() {
         if (!_pendingDeleteExpId) return;
         const id = _pendingDeleteExpId;
-        const btn = document.getElementById("deleteExpConfirmBtn");
-        const cancelBtn = document.getElementById("deleteExpCancelBtn");
+        const context = _pendingDeleteExpContext;
+        const snapshot = _expenses.find((x) => x.id === id)
+          ? { ..._expenses.find((x) => x.id === id) }
+          : null;
+        const snapIdx = _expenses.findIndex((x) => x.id === id);
+
+        closeDeleteExpenseModal();
+        closeExpenseModal();
+        if (snapIdx >= 0) {
+          _expenses.splice(snapIdx, 1);
+          refreshExpensesUi();
+        }
+        if (context === "detail") {
+          currentEdpId = null;
+          navigateToPage("expenses");
+        }
+
         try {
-          if (typeof AVBusy !== "undefined") {
-            AVBusy.inc();
-            AVBusy.setBtnLoading(btn, true, "Deleting…");
-          }
-          if (cancelBtn) cancelBtn.disabled = true;
-          await AVApi.deleteExpense(id);
-          closeDeleteExpenseModal();
-          if (_pendingDeleteExpContext === "detail") {
-            closeExpenseModal();
-          } else {
-            closeExpenseModal();
-          }
-          if (typeof AVToast !== "undefined")
-            AVToast.success("Expense deleted");
-          await loadExpensesFromApi();
-          if (typeof render === "function") render();
-          refreshAllPnl();
-          if (
-            _pendingDeleteExpContext === "detail" &&
-            typeof currentEdpId !== "undefined"
-          ) {
-            currentEdpId = null;
-            navigateToPage("expenses");
-          }
+          await expEditSave(AVApi.deleteExpense(id), {
+            loading: "Deleting expense…",
+            loadingMsg: "Removing from your books",
+            success: "Expense deleted",
+            successTitle: "Deleted",
+            error: "Failed to delete expense",
+          });
+          softReloadExpenses();
         } catch (e) {
           console.error("Failed to delete expense", e);
-          if (typeof AVToast !== "undefined")
-            AVToast.error(
-              "Failed to delete: " + (e.message || "Unknown error"),
-            );
-        } finally {
-          if (typeof AVBusy !== "undefined") {
-            AVBusy.setBtnLoading(btn, false, "Delete Expense");
-            AVBusy.dec();
+          if (snapshot) {
+            if (snapIdx >= 0) _expenses.splice(snapIdx, 0, snapshot);
+            else _expenses.unshift(snapshot);
+            refreshExpensesUi();
           }
-          if (cancelBtn) cancelBtn.disabled = false;
         }
       }
 
@@ -38763,7 +38757,7 @@
             items.push({
               name: x.e.name || "(unnamed)",
               meta: `${x.veh} · ${x.e.category || ""}`,
-              amount: Number(x.amount) || 0,
+              amount: Number(x.amount != null ? x.amount : x.e.amount) || 0,
               badge: "Vehicle",
               badgeCls: "once",
               click: `openExpenseModal('${x.e.id}')`,
@@ -39281,19 +39275,84 @@
           .join("");
       }
 
+      // ---- expense save helper (loading toast + busy guard) ----
+      async function expEditSave(promise, opts) {
+        const o = opts || {};
+        if (typeof AVBusy !== "undefined" && !AVBusy.guard()) {
+          if (typeof AVToast !== "undefined")
+            AVToast.info("Please wait — a save is already in progress.");
+          throw new Error("A save is already in progress.");
+        }
+        if (typeof AVBusy !== "undefined") AVBusy.inc();
+        try {
+          if (typeof AVToast !== "undefined" && AVToast.promise) {
+            return await AVToast.promise(promise, {
+              loading: o.loading || "Saving…",
+              loadingMsg: o.loadingMsg || "Updating expense",
+              success: o.success || "Saved",
+              successTitle: o.successTitle || "Updated",
+              error: o.error || "Failed to save",
+              errorTitle: o.errorTitle || "Something went wrong",
+            });
+          }
+          return await promise;
+        } finally {
+          if (typeof AVBusy !== "undefined") AVBusy.dec();
+        }
+      }
+
+      function refreshExpensesUi() {
+        if (typeof renderExpenses === "function") renderExpenses();
+        refreshEdpIfOpen();
+        if (typeof render === "function") render();
+        refreshAllPnl();
+        try {
+          if (
+            currentDealVin &&
+            typeof renderDealJacket === "function" &&
+            document.getElementById("page-deal-jacket") &&
+            document.getElementById("page-deal-jacket").style.display !== "none"
+          ) {
+            renderDealJacket(currentDealVin);
+          }
+        } catch (_) {}
+      }
+
+      function patchExpenseLocal(id, patch) {
+        const idx = _expenses.findIndex((x) => x.id === id);
+        if (idx < 0) return null;
+        const prev = { ..._expenses[idx] };
+        _expenses[idx] = { ..._expenses[idx], ...patch };
+        refreshExpensesUi();
+        return prev;
+      }
+
+      function softReloadExpenses() {
+        // Background reconcile — don't block the UI.
+        loadExpensesFromApi().catch(function () {});
+      }
+
       // ---- quick paid/unpaid toggle from the table ----
       async function setExpPaid(id, val) {
+        const paid = val === "true";
+        const e = _expenses.find((x) => x.id === id);
+        if (!e || e.paid === paid) return;
+        const prev = patchExpenseLocal(id, { paid });
         try {
-          await AVApi.updateExpense(id, {
-            status: val === "true" ? "paid" : "unpaid",
-          });
-          AVToast.success(
-            val === "true" ? "Marked as paid" : "Marked as unpaid",
+          await expEditSave(
+            AVApi.updateExpense(id, { status: paid ? "paid" : "unpaid" }),
+            {
+              loading: paid ? "Marking paid…" : "Marking unpaid…",
+              loadingMsg: "Updating expense status",
+              success: paid ? "Marked as paid" : "Marked as unpaid",
+              successTitle: "Status updated",
+              error: "Failed to update status",
+            },
           );
-          await loadExpensesFromApi();
-        } catch (e) {
-          console.error("Failed to update expense status", e);
-          AVToast.error("Failed to update status");
+          softReloadExpenses();
+        } catch (err) {
+          console.error("Failed to update expense status", err);
+          if (prev) patchExpenseLocal(id, { paid: prev.paid });
         }
       }
 
@@ -39622,6 +39681,12 @@
         }
         if (cancelBtn) cancelBtn.disabled = true;
 
+        const vehicleVin = VEHICLE_LINKABLE.has(cat)
+          ? document.getElementById("expVin").value.trim().toUpperCase() ||
+            document.getElementById("expVehicle").value ||
+            null
+          : null;
+
         const data = {
           name,
           category: cat,
@@ -39631,42 +39696,117 @@
           dueDate: dateVal,
           recurring: document.getElementById("expRecurring").value,
           paid: document.getElementById("expPaid").value === "true",
-          vehicleVin: VEHICLE_LINKABLE.has(cat)
-            ? document.getElementById("expVin").value.trim().toUpperCase() ||
-              document.getElementById("expVehicle").value ||
-              null
-            : null,
+          vehicleVin,
           paymentMethod: document.getElementById("expPayMethod").value || null,
           paymentRef: document.getElementById("expPayRef").value.trim() || null,
           notes: document.getElementById("expNotes").value.trim(),
           receipt: expPendingReceipt ? expPendingReceipt.data : null,
         };
 
+        const apiPayload = mapExpenseToApi(data);
+        if (expPendingReceipt) {
+          apiPayload.receiptStoragePath = expPendingReceipt.data;
+        } else if (expPendingReceipt === null) {
+          apiPayload.receiptStoragePath = null;
+        }
+
+        // Optimistic: close modal + update local list immediately, persist in background.
+        const snapshot = id
+          ? _expenses.find((x) => x.id === id)
+            ? { ..._expenses.find((x) => x.id === id) }
+            : null
+          : null;
+        const tempId = id || "tmp_" + Date.now();
+        const localRow = {
+          ...(snapshot || {}),
+          id: tempId,
+          name: data.name,
+          category: data.category,
+          expType: data.expType,
+          expOther: data.expOther,
+          amount: data.amount,
+          dueDate: data.dueDate,
+          recurring: data.recurring,
+          paid: data.paid,
+          vehicleVin: data.vehicleVin,
+          paymentMethod: data.paymentMethod,
+          paymentRef: data.paymentRef,
+          notes: data.notes,
+          receipt:
+            data.receipt != null
+              ? data.receipt
+              : snapshot
+                ? snapshot.receipt
+                : null,
+          receiptName: expPendingReceipt
+            ? expPendingReceipt.name
+            : snapshot
+              ? snapshot.receiptName
+              : null,
+          receiptImg:
+            data.receipt &&
+            typeof data.receipt === "string" &&
+            data.receipt.startsWith("data:")
+              ? data.receipt
+              : snapshot
+                ? snapshot.receiptImg
+                : null,
+        };
+
+        if (id) {
+          const idx = _expenses.findIndex((x) => x.id === id);
+          if (idx >= 0) _expenses[idx] = { ..._expenses[idx], ...localRow, id };
+        } else {
+          _expenses.unshift(localRow);
+        }
+        closeExpenseModal();
+        refreshExpensesUi();
+        _expSaving = false;
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = "Save Expense";
+        }
+        if (cancelBtn) cancelBtn.disabled = false;
+
+        const isEdit = !!id;
         try {
-          const apiPayload = mapExpenseToApi(data);
-          if (expPendingReceipt) {
-            apiPayload.receiptStoragePath = expPendingReceipt.data;
+          const res = await expEditSave(
+            isEdit
+              ? AVApi.updateExpense(id, apiPayload)
+              : AVApi.createExpense(apiPayload),
+            {
+              loading: isEdit ? "Saving expense…" : "Adding expense…",
+              loadingMsg: isEdit
+                ? "Updating expense in the background"
+                : "Creating expense in the background",
+              success: isEdit ? "Expense updated" : "Expense added",
+              successTitle: isEdit ? "Updated" : "Created",
+              error: isEdit ? "Failed to update expense" : "Failed to add expense",
+            },
+          );
+          const saved = res && (res.expense || res);
+          if (saved && saved.id) {
+            const mapped = mapExpenseFromApi(saved);
+            if (isEdit) {
+              const idx = _expenses.findIndex((x) => x.id === id);
+              if (idx >= 0) _expenses[idx] = { ..._expenses[idx], ...mapped };
+            } else {
+              const idx = _expenses.findIndex((x) => x.id === tempId);
+              if (idx >= 0) _expenses[idx] = mapped;
+              else _expenses.unshift(mapped);
+            }
+            refreshExpensesUi();
           }
-          if (id) {
-            await AVApi.updateExpense(id, apiPayload);
-          } else {
-            await AVApi.createExpense(apiPayload);
-          }
-          closeExpenseModal();
-          AVToast.success(id ? "Expense updated" : "Expense added");
-          await loadExpensesFromApi();
-          if (typeof render === "function") render();
-          refreshAllPnl();
+          softReloadExpenses();
         } catch (e) {
           console.error("Failed to save expense", e);
-          AVToast.error("Failed to save: " + (e.message || "Unknown error"));
-        } finally {
-          _expSaving = false;
-          if (saveBtn) {
-            saveBtn.disabled = false;
-            saveBtn.textContent = "Save Expense";
+          if (isEdit && snapshot) {
+            const idx = _expenses.findIndex((x) => x.id === id);
+            if (idx >= 0) _expenses[idx] = snapshot;
+          } else if (!isEdit) {
+            _expenses = _expenses.filter((x) => x.id !== tempId);
           }
-          if (cancelBtn) cancelBtn.disabled = false;
+          refreshExpensesUi();
         }
       }
 
@@ -39806,16 +39946,28 @@
         const paidBtn = document.getElementById("edpPaidBtn");
         paidBtn.textContent = e.paid ? "Mark as Unpaid" : "Mark as Paid";
         paidBtn.onclick = async () => {
+          const nextPaid = !e.paid;
+          const prev = patchExpenseLocal(e.id, { paid: nextPaid });
+          paidBtn.disabled = true;
           try {
-            await AVApi.updateExpense(e.id, {
-              status: e.paid ? "unpaid" : "paid",
-            });
-            AVToast.success(e.paid ? "Marked as unpaid" : "Marked as paid");
-            await loadExpensesFromApi();
-            renderExpenseDetailPage(e.id);
+            await expEditSave(
+              AVApi.updateExpense(e.id, {
+                status: nextPaid ? "paid" : "unpaid",
+              }),
+              {
+                loading: nextPaid ? "Marking paid…" : "Marking unpaid…",
+                loadingMsg: "Updating expense status",
+                success: nextPaid ? "Marked as paid" : "Marked as unpaid",
+                successTitle: "Status updated",
+                error: "Failed to update status",
+              },
+            );
+            softReloadExpenses();
           } catch (err) {
             console.error("Failed to toggle status", err);
-            AVToast.error("Failed to update status");
+            if (prev) patchExpenseLocal(e.id, { paid: prev.paid });
+          } finally {
+            paidBtn.disabled = false;
           }
         };
         document.getElementById("edpDeleteBtn").onclick = () => {
@@ -44827,16 +44979,25 @@
         );
         const totalOpEx = commissions + opTotal;
 
-        const vehExpRows = expensesForPeriod(
-          typeof _expenses !== "undefined" ? _expenses : [],
-        ).filter((e) => e.vehicleVin);
         window.__pnlOpInstances = buildPnlOpInstances(opExpenses);
         window.__pnlCommissions = commissions;
         window.__pnlSold = sold;
-        window.__pnlVehExp = vehExpRows.map((e) => ({
-          e,
-          veh: typeof vehicleLabel === "function" ? vehicleLabel(e.vehicleVin) : e.vehicleVin,
-        }));
+        // Mirror the COGS "Vehicle-Attached Expenses" line exactly: the attached
+        // expenses of the vehicles sold in this period, mirrors excluded.
+        const vehExpRows = [];
+        sold.forEach((r) => {
+          const v = vehicles.find((x) => x.vin === r.vin);
+          if (!v) return;
+          attachedExpensesForVehicle(v).forEach((e) => {
+            vehExpRows.push({
+              e,
+              amount: Number(e.amount) || 0,
+              veh: `${r.year} ${r.make} ${r.model}`,
+              vin: r.vin,
+            });
+          });
+        });
+        window.__pnlVehExp = vehExpRows;
 
         const netProfit = grossProfit - totalOpEx;
         const netMargin =
@@ -44861,6 +45022,8 @@
         document.getElementById("pnlRevenueFoot").textContent =
           `${sold.length} unit${sold.length === 1 ? "" : "s"} sold + add-ons`;
         document.getElementById("pnlGross").textContent = fmt(grossProfit);
+        document.getElementById("pnlGross").style.color =
+          grossProfit >= 0 ? "var(--green)" : "var(--red)";
         document.getElementById("pnlGrossFoot").textContent =
           `${grossMargin.toFixed(1)}% gross margin`;
         document.getElementById("pnlExpenses").textContent = fmt(totalOpEx);
@@ -44940,7 +45103,7 @@
       ${cogsAddOns > 0 ? row("Add-On Cost", cogsAddOns) : ""}
       ${sub("Total COGS", totalCOGS)}
     </div>
-    ${total("Gross Profit", grossProfit, grossMargin, "var(--green)")}
+    ${total("Gross Profit", grossProfit, grossMargin, grossProfit >= 0 ? "var(--green)" : "var(--red)")}
     <div class="pnl-block">
       <div class="pnl-section-label">Operating Expenses</div>
       ${opGroupHtml}
