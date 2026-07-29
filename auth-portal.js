@@ -13,11 +13,12 @@
     admin: "/dashboard",
   };
 
+  // One shared login for all dealership portals; owner stays separate.
   const LOGIN_BY_PORTAL = {
-    wholesale: "/wholesale/login",
-    sales_rep: "/sales-rep/login",
+    wholesale: "/login",
+    sales_rep: "/login",
     owner: "/owner/login",
-    cpa: "/cpa/login",
+    cpa: "/login",
     admin: "/login",
   };
 
@@ -165,14 +166,13 @@
     const routePortal = getRoutePortal();
     const session = readSession(routePortal);
     if (!session) {
-      redirect(LOGIN_BY_PORTAL[routePortal]);
+      redirect(LOGIN_BY_PORTAL[routePortal] || "/login");
       return;
     }
     if (session.portal !== routePortal) {
-      // Explicit portal URL wins: drop the other portal's shared token and
-      // send the user to this portal's login instead of bouncing to admin.
+      // Wrong role for this dashboard — clear and send to the correct login.
       clearSession(routePortal);
-      redirect(LOGIN_BY_PORTAL[routePortal]);
+      redirect(LOGIN_BY_PORTAL[routePortal] || "/login");
       return;
     }
     document.documentElement.classList.remove("av-auth-pending");
@@ -180,14 +180,24 @@
 
   function guardLogin() {
     const routePortal = getRoutePortal();
-    const session = readSession(routePortal);
-    if (!session) return;
-    if (session.portal === routePortal) {
-      redirect(DASHBOARD_BY_PORTAL[session.portal]);
+
+    // Owner login stays isolated.
+    if (routePortal === "owner") {
+      const ownerSession = readSession("owner");
+      if (ownerSession && ownerSession.portal === "owner") {
+        redirect(DASHBOARD_BY_PORTAL.owner);
+      }
       return;
     }
-    // Stale session from another portal (shared avAuthToken) — clear so login works.
-    clearSession(routePortal);
+
+    // Unified /login — any valid non-owner session goes to its role dashboard.
+    const session = readSession("admin");
+    if (!session) return;
+    if (session.portal === "owner") {
+      clearSession("admin");
+      return;
+    }
+    redirect(DASHBOARD_BY_PORTAL[session.portal] || "/dashboard");
   }
 
   function verifySessionInBackground(onInvalid) {
@@ -205,14 +215,14 @@
         localStorage.setItem("avAuthPortal", portal);
         if (routePortal !== portal) {
           clearSession(routePortal);
-          redirect(LOGIN_BY_PORTAL[routePortal]);
+          redirect(LOGIN_BY_PORTAL[routePortal] || "/login");
         }
       })
       .catch(() => {
         clearSession(routePortal);
         if (typeof onInvalid === "function") onInvalid();
         else {
-          redirect(LOGIN_BY_PORTAL[routePortal]);
+          redirect(LOGIN_BY_PORTAL[routePortal] || "/login");
         }
       });
   }

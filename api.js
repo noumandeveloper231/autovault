@@ -257,7 +257,7 @@
         return request(path, { ...options, _retried: true });
       } catch {
         clearSession(portal);
-        const loginPaths = { owner: "/owner/login", wholesale: "/wholesale/login", sales_rep: "/sales-rep/login", cpa: "/cpa/login" };
+        const loginPaths = { owner: "/owner/login" };
         if (typeof window !== "undefined" && !window.location.pathname.toLowerCase().startsWith("/login")) {
           window.location.href = loginPaths[portal] || "/login";
         }

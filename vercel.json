@@ -1,4 +1,12 @@
 {
+  "redirects": [
+    { "source": "/wholesale/login", "destination": "/login", "permanent": true },
+    { "source": "/wholesale/login/:path*", "destination": "/login", "permanent": true },
+    { "source": "/sales-rep/login", "destination": "/login", "permanent": true },
+    { "source": "/sales-rep/login/:path*", "destination": "/login", "permanent": true },
+    { "source": "/cpa/login", "destination": "/login", "permanent": true },
+    { "source": "/cpa/login/:path*", "destination": "/login", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
     { "source": "/thank-you", "destination": "/thank-you/index.html" },
@@ -8,16 +16,10 @@
     { "source": "/accept-invitation", "destination": "/invite/index.html" },
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/login", "destination": "/login/index.html" },
-    { "source": "/wholesale/login", "destination": "/login/index.html" },
-    { "source": "/wholesale/login/:path*", "destination": "/login/index.html" },
-    { "source": "/sales-rep/login", "destination": "/login/index.html" },
-    { "source": "/sales-rep/login/:path*", "destination": "/login/index.html" },
     { "source": "/wholesale/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/wholesale/dashboard/:path*", "destination": "/dashboard/index.html" },
     { "source": "/sales-rep/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/sales-rep/dashboard/:path*", "destination": "/dashboard/index.html" },
-    { "source": "/cpa/login", "destination": "/login/index.html" },
-    { "source": "/cpa/login/:path*", "destination": "/login/index.html" },
     { "source": "/cpa/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/cpa/dashboard/:path*", "destination": "/dashboard/index.html" },
     { "source": "/owner/login", "destination": "/login/index.html" },

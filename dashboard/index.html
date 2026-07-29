@@ -26495,7 +26495,7 @@
           (window.AVPortal && AVPortal.getRoutePortal() === "cpa")
         ) {
           location.href =
-            (window.AVPortal && AVPortal.loginPath("cpa")) || "/cpa/login";
+            (window.AVPortal && AVPortal.loginPath("cpa")) || "/login";
           return;
         }
         var nav = document.querySelector('[data-page="dashboard"]');
@@ -27743,7 +27743,7 @@
         document.body.classList.remove("rep-mode", "impersonating");
         repUser = null;
         if (location.pathname.toLowerCase().startsWith("/sales-rep/")) {
-          location.href = "/sales-rep/login";
+          location.href = "/login";
           return;
         }
         showPage(
@@ -31349,7 +31349,7 @@
         localStorage.removeItem("avAuthPortal");
         document.body.classList.remove("ws-mode");
         if (location.pathname.toLowerCase().startsWith("/wholesale/")) {
-          location.href = "/wholesale/login";
+          location.href = "/login";
           return;
         }
         showPage("dashboard", document.querySelector("[data-nav=dashboard]"));
@@ -49437,7 +49437,7 @@
             claims.role !== "platform_owner"
           ) {
             AVPortal.clearSession("wholesale");
-            AVPortal.redirect("/wholesale/login");
+            AVPortal.redirect("/login");
           }
         } catch (e) {
           /* ignore */

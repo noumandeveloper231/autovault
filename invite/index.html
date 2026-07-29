@@ -62,9 +62,6 @@
     const btn = document.getElementById("submitBtn");
 
     function loginPathForRole(role) {
-      if (role === "cpa") return "/cpa/login";
-      if (role === "sales_rep") return "/sales-rep/login";
-      if (role === "wholesale_dealer") return "/wholesale/login";
       if (role === "platform_owner") return "/owner/login";
       return "/login";
     }

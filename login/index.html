@@ -1803,58 +1803,30 @@
   (function(){
     const API_URL = AVPortal.API_URL;
     const inferredPortal = AVPortal.getRoutePortal();
+    const isOwnerLogin = inferredPortal === 'owner';
     const portalLabel = document.getElementById('lgPortalLabel');
     const welcomeTitle = document.getElementById('lgWelcomeTitle');
     const welcomeSub = document.getElementById('lgWelcomeSub');
     const loginBtnLabel = document.getElementById('lgBtnLabel');
-    const portalConfig = inferredPortal === 'wholesale'
+    const portalConfig = isOwnerLogin
       ? {
-          bodyClass: 'portal-wholesale',
-          label: 'Wholesale Plan Login',
-          title: 'Welcome to Wholesale Portal',
-          sub: 'Sign in to manage wholesale deals, auctions, and fast flips.',
-          btn: 'Sign in to wholesale dashboard',
-          docTitle: 'Wholesale Login | AutoVault360',
-          docDesc: 'Sign in to the AutoVault wholesale portal.'
+          bodyClass: 'portal-admin',
+          label: 'Super Owner Login',
+          title: 'Welcome to Owner Overview',
+          sub: 'Sign in as super owner to access the owner overview dashboard.',
+          btn: 'Sign in to owner dashboard',
+          docTitle: 'Owner Login | AutoVault360',
+          docDesc: 'Sign in as AutoVault platform owner.'
         }
-      : (inferredPortal === 'sales_rep'
-        ? {
-            bodyClass: 'portal-sales-rep',
-            label: 'Sales Rep Login',
-            title: 'Welcome to Sales Rep Portal',
-            sub: 'Sign in to track your deals, commissions, and rep activity.',
-            btn: 'Sign in to sales-rep dashboard',
-            docTitle: 'Sales Rep Login | AutoVault360',
-            docDesc: 'Sign in to the AutoVault sales-rep portal.'
-          }
-        : (inferredPortal === 'cpa'
-          ? {
-              bodyClass: 'portal-cpa',
-              label: 'CPA Portal Login',
-              title: 'Welcome to CPA Portal',
-              sub: 'Sign in for read-only financial review and audit notes.',
-              btn: 'Sign in to CPA dashboard',
-              docTitle: 'CPA Portal Login | AutoVault360',
-              docDesc: 'Secure CPA portal login for AutoVault360 dealership financial review.'
-            }
-          : {
-              bodyClass: 'portal-admin',
-              label: 'Growing Dealership Admin',
-              title: 'Welcome to Admin Dashboard',
-              sub: 'Sign in to your full dealership command center.',
-              btn: 'Sign in to admin dashboard',
-              docTitle: 'Admin Login | AutoVault360',
-              docDesc: 'Sign in to your AutoVault dealership admin dashboard.'
-            }));
-    if(inferredPortal === 'owner'){
-      portalConfig.bodyClass = 'portal-admin';
-      portalConfig.label = 'Super Owner Login';
-      portalConfig.title = 'Welcome to Owner Overview';
-      portalConfig.sub = 'Sign in as super owner to access the owner overview dashboard.';
-      portalConfig.btn = 'Sign in to owner dashboard';
-      portalConfig.docTitle = 'Owner Login | AutoVault360';
-      portalConfig.docDesc = 'Sign in as AutoVault platform owner.';
-    }
+      : {
+          bodyClass: 'portal-admin',
+          label: 'Dealership Login',
+          title: 'Welcome back',
+          sub: 'Sign in to access your AutoVault dashboard.',
+          btn: 'Sign in',
+          docTitle: 'Login | AutoVault360',
+          docDesc: 'Sign in to AutoVault360. You will be taken to your dashboard based on your role.'
+        };
     document.body.classList.add(portalConfig.bodyClass);
     if(portalLabel) portalLabel.textContent = portalConfig.label;
     if(welcomeTitle) welcomeTitle.textContent = portalConfig.title;
@@ -1899,20 +1871,25 @@
       btn.classList.add('loading');
       btn.disabled=true;
       try{
-        const loginUrl = inferredPortal === 'owner'
+        const loginUrl = isOwnerLogin
           ? `${API_URL}/api/owner/auth/login`
           : `${API_URL}/api/auth/login`;
+        const body = {
+          email: userInput.value.trim(),
+          password: pw.value
+        };
         const resp = await fetch(loginUrl, {
           method:'POST',
           headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({
-            email: userInput.value.trim(),
-            password: pw.value,
-            portal: inferredPortal
-          })
+          body: JSON.stringify(body)
         });
         const data = await resp.json().catch(()=>({}));
         if(!resp.ok){
+          const details = data.error?.details || data;
+          const ownerRedirect = details.redirectLoginPath || data.redirectLoginPath;
+          if (resp.status === 403 && ownerRedirect === '/owner/login') {
+            throw new Error(data.error?.message || data.message || 'Use the owner login page.');
+          }
           throw new Error(
             data.error?.message ||
             data.message ||
@@ -1920,21 +1897,22 @@
             'Login failed.'
           );
         }
+        const userPortal = data.user?.portal || (isOwnerLogin ? 'owner' : 'admin');
         // Drop any leftover session from another portal (shared avAuthToken).
         if (window.AVPortal && typeof AVPortal.clearSession === 'function') {
-          AVPortal.clearSession(inferredPortal);
+          AVPortal.clearSession(userPortal);
         }
         if (window.AVApi) {
           AVApi.setSession({
-            token: data.token,
+            token: data.token || data.accessToken,
             refreshToken: data.refreshToken,
-            portal: data.user?.portal || inferredPortal,
+            portal: userPortal,
           });
         } else {
-          if(inferredPortal === 'owner') localStorage.setItem('avOwnerToken', data.token);
-          else localStorage.setItem('avAuthToken', data.token);
+          if(userPortal === 'owner') localStorage.setItem('avOwnerToken', data.token || data.accessToken);
+          else localStorage.setItem('avAuthToken', data.token || data.accessToken);
           if (data.refreshToken) localStorage.setItem('avRefreshToken', data.refreshToken);
-          localStorage.setItem('avAuthPortal', data.user?.portal || inferredPortal);
+          localStorage.setItem('avAuthPortal', userPortal);
         }
         if (data.user && data.user.introCompleted !== undefined) {
           sessionStorage.setItem('av_intro_completed', data.user.introCompleted ? '1' : '0');
@@ -1943,7 +1921,7 @@
           sessionStorage.setItem('av_terms_accepted', data.user.termsAccepted ? '1' : '0');
         }
         try { localStorage.removeItem('av_terms_accepted_db'); } catch (e) {}
-        window.location.href = data.redirectDashboardPath || AVPortal.dashboardPath(inferredPortal) || '/dashboard';
+        window.location.href = data.redirectDashboardPath || AVPortal.dashboardPath(userPortal) || '/dashboard';
       }catch(loginError){
         err.textContent = loginError.message || 'Invalid email or password.';
         err.classList.add('show');
