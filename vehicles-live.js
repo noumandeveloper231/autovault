@@ -407,6 +407,9 @@
     ui.commissionOverride = v.commissionOverride != null ? v.commissionOverride : ui.commissionOverride;
     ui.commissionPct = v.commissionPct != null ? v.commissionPct : ui.commissionPct;
     ui.ros = v.ros || ui.ros;
+    ui.soldPrice = v.soldPrice != null ? v.soldPrice : ui.soldPrice;
+    ui.soldDate = v.soldDate || ui.soldDate;
+    ui.notes = v.notes != null ? v.notes : ui.notes;
     ui.addOns = v.addOns != null ? v.addOns : ui.addOns;
     ui.addOnItems = v.addOnItems != null ? v.addOnItems : ui.addOnItems;
     ui.commMode = v.commMode || ui.commMode;

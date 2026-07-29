@@ -40320,6 +40320,1139 @@
         JENNA_CUSTOM.push({ test, respond });
       }
 
+      // ===== JENNA EXTENDED KNOWLEDGE (data-driven answers, from mock) =====
+      (function () {
+        if (typeof jennaRegister !== "function") return;
+        const R = jennaRegister;
+        const MFULL = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+        const money = (n) => fmt(Math.round(n || 0));
+        const pct = (n) => Math.round((n || 0) * 10) / 10 + "%";
+        const nm = (r) => `${r.year} ${r.make} ${r.model}`;
+        const dstr = () => {
+          try {
+            return today.toISOString().slice(0, 10);
+          } catch (e) {
+            return "";
+          }
+        };
+        const expList = () =>
+          typeof _expenses !== "undefined" && Array.isArray(_expenses)
+            ? _expenses
+            : [];
+
+        const help = {
+          "add.*vehicle|new vehicle|add.*car":
+            "Go to <b>Vehicles</b> → <b>Add Vehicle</b>, or scan the VIN and I'll decode the year/make/model — then add the price to finish.",
+          "edit.*vehicle":
+            "Open any vehicle from the <b>Vehicles</b> list and click its figures to edit cost, repairs, flooring, or commission inline.",
+          "mark.*sold|sell a (vehicle|car)":
+            "Open the vehicle and hit <b>Mark Sold</b>, or open its <b>Deal Jacket</b>, enter the sold price and rep, then <b>Save Deal & Mark Sold</b>.",
+          "scan.*vin|vin scan":
+            "Use the <b>Scan VIN</b> button (or the scanner in Add Vehicle) and point your camera at the VIN plate — I'll decode it automatically.",
+          "previous sold|past sold|add.*sold vehicle":
+            "Use <b>Add Previous Sold Vehicle</b> to backfill a closed deal — enter the numbers and it flows into your P&amp;L.",
+          "add.*repair":
+            "Open the vehicle's cost breakdown and click <b>Repairs</b> to add a line item with cost and receipt.",
+          "add.*(recurring )?expense":
+            "Go to <b>Expenses</b> → <b>Add Expense</b>, set the amount and category, and mark it <b>Monthly</b> to make it recurring.",
+          "add.*(salesperson|sales rep|rep)":
+            "Open the profile menu → <b>Users &amp; Access</b> to add a rep, or add them in the Sales Reps area.",
+          "remove.*(salesperson|rep)":
+            "In <b>Users &amp; Access</b>, click <b>Remove</b> next to the rep's name.",
+          "change.*commission":
+            "Open the Deal Jacket or the rep's settings to set a commission % or a flat commission $.",
+          "upload.*document|attach.*document":
+            "Use <b>Scan Document</b> on a vehicle or expense — snap or upload and it files automatically.",
+          "create.*deal jacket":
+            "From a vehicle, choose <b>Create Deal Jacket</b> to bundle contract, title, and funding docs in one folder.",
+          "invite.*(user|employee)":
+            "Profile menu → <b>Users &amp; Access</b> → <b>Add admin user</b> to invite a teammate by email.",
+          "change.*password":
+            "Head to account settings to update your password.",
+          "change.*subscription|switch.*package":
+            "Manage your plan in subscription settings — you can switch dealership packages there.",
+          "cancel.*subscription":
+            "You can cancel from subscription settings; your data stays until the period ends.",
+          "export.*report|export.*p&l|export.*(profit|accounting)":
+            "Use the <b>Export</b> button on the Profit &amp; Loss or Reports page to download a copy.",
+        };
+        R(
+          (q) =>
+            /(how do i|how to|how can i|where do i|how would i)/.test(q),
+          (q) => {
+            for (const k in help) {
+              if (new RegExp(k).test(q)) return { text: help[k] };
+            }
+            return null;
+          },
+        );
+
+        function JA() {
+          const rows = vehicles.map(computeRow);
+          const cm = today.getMonth(),
+            cy = today.getFullYear();
+          let lm = cm - 1,
+            ly = cy;
+          if (lm < 0) {
+            lm = 11;
+            ly--;
+          }
+          const active = rows.filter((r) => !r.sold);
+          const sold = rows.filter((r) => r.sold);
+          const soldIn = (mo, yr) =>
+            sold.filter(
+              (r) =>
+                r.soldDate &&
+                new Date(r.soldDate).getMonth() === mo &&
+                new Date(r.soldDate).getFullYear() === yr,
+            );
+          const boughtIn = (mo, yr) =>
+            rows.filter(
+              (r) =>
+                r.date &&
+                new Date(r.date).getMonth() === mo &&
+                new Date(r.date).getFullYear() === yr,
+            );
+          return { rows, active, sold, cm, cy, lm, ly, soldIn, boughtIn };
+        }
+        function period(q) {
+          const A = JA();
+          if (/today/.test(q)) {
+            const t = dstr();
+            return {
+              A,
+              label: "today",
+              sold: A.sold.filter(
+                (r) => String(r.soldDate || "").slice(0, 10) === t,
+              ),
+              bought: A.rows.filter(
+                (r) => String(r.date || "").slice(0, 10) === t,
+              ),
+            };
+          }
+          if (/this week|past week|last 7/.test(q)) {
+            const wk = new Date(today);
+            wk.setDate(wk.getDate() - 7);
+            return {
+              A,
+              label: "this week",
+              sold: A.sold.filter((r) => new Date(r.soldDate) >= wk),
+              bought: A.rows.filter((r) => new Date(r.date) >= wk),
+            };
+          }
+          if (/last month/.test(q))
+            return {
+              A,
+              label: "last month",
+              sold: A.soldIn(A.lm, A.ly),
+              bought: A.boughtIn(A.lm, A.ly),
+            };
+          if (/this year|ytd|year to date|the year|annual/.test(q))
+            return {
+              A,
+              label: "this year",
+              sold: A.sold.filter(
+                (r) => new Date(r.soldDate).getFullYear() === A.cy,
+              ),
+              bought: A.rows.filter(
+                (r) => new Date(r.date).getFullYear() === A.cy,
+              ),
+            };
+          return {
+            A,
+            label: "this month",
+            sold: A.soldIn(A.cm, A.cy),
+            bought: A.boughtIn(A.cm, A.cy),
+          };
+        }
+        const gp = (list) => list.reduce((s, r) => s + r.grossProfit, 0);
+        const np = (list) => list.reduce((s, r) => s + r.netProfit, 0);
+        const rev = (list) =>
+          list.reduce((s, r) => s + (r.soldPrice || 0), 0);
+        function expIn(mo, yr) {
+          return expList().filter((e) => {
+            const d = new Date(e.dueDate || e.expenseDate || e.date);
+            return (
+              !isNaN(d.getTime()) &&
+              d.getMonth() === mo &&
+              d.getFullYear() === yr
+            );
+          });
+        }
+        function tcfg() {
+          try {
+            return typeof taxConfig !== "undefined" ? taxConfig : null;
+          } catch (e) {
+            return null;
+          }
+        }
+        function tfil() {
+          try {
+            return typeof taxFilings !== "undefined" ? taxFilings : [];
+          } catch (e) {
+            return [];
+          }
+        }
+
+        // Inventory
+        R(
+          (q) =>
+            /available (for sale|to sell)|ready to sell|available to buyers/.test(
+              q,
+            ) || /how many.*available/.test(q),
+          () => {
+            const a = JA().active;
+            return {
+              text: `You have <b>${a.length}</b> vehicle${a.length === 1 ? "" : "s"} available for sale, worth <b>${money(a.reduce((s, r) => s + r.totalVehicleCost, 0))}</b> all-in.`,
+              action: () => jennaNav("vehicles"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(how many|number of|count of).*(vehicle|car|inventory|stock)|cars? (in|currently in) inventory|in my inventory|inventory count/.test(
+              q,
+            ) && !/sold|did i sell|buy|bought|available/.test(q),
+          () => {
+            const a = JA().active;
+            return {
+              text: `You currently have <b>${a.length}</b> vehicle${a.length === 1 ? "" : "s"} in inventory (unsold), <b>${money(a.reduce((s, r) => s + r.totalVehicleCost, 0))}</b> invested.`,
+              action: () => jennaNav("vehicles"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(inventory value|value of.*inventory|money.*(invested|tied up).*inventory|cash.*tied up|how much.*in inventory|invested in inventory)/.test(
+              q,
+            ),
+          () => {
+            const a = JA().active;
+            const v = a.reduce((s, r) => s + r.totalVehicleCost, 0);
+            return {
+              text: `You have <b>${money(v)}</b> tied up in <b>${a.length}</b> unsold vehicles right now.`,
+              action: () => jennaNav("vehicles"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(total|dealership).*(investment)|how much.*invested( in the business| total)?/.test(
+              q,
+            ) && !/inventory/.test(q),
+          () => {
+            const inv = JA().rows.reduce((s, r) => s + r.totalInvestment, 0);
+            return {
+              text: `Across every vehicle on record you've invested <b>${money(inv)}</b> in purchase, fees, repairs and add-ons.`,
+            };
+          },
+        );
+        R(
+          (q) => /(how many|did i).*(buy|bought|purchase|acquire)/.test(q),
+          (q) => {
+            const p = period(q);
+            return {
+              text: `You bought <b>${p.bought.length}</b> vehicle${p.bought.length === 1 ? "" : "s"} ${p.label}${p.bought.length ? ` for <b>${money(p.bought.reduce((s, r) => s + r.price, 0))}</b> in purchase cost` : ""}.`,
+            };
+          },
+        );
+
+        // Sales
+        R(
+          (q) =>
+            /(how many|number of).*(sold|sell)|cars? (i )?sold|did i sell|units? sold/.test(
+              q,
+            ),
+          (q) => {
+            const p = period(q);
+            return {
+              text: `You sold <b>${p.sold.length}</b> vehicle${p.sold.length === 1 ? "" : "s"} ${p.label}${p.sold.length ? `, bringing in <b>${money(rev(p.sold))}</b> in revenue` : ""}.`,
+              action: () => jennaNav("sold-vehicles"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(revenue|top line|gross sales|how much.*(brought in|came in|in sales))/.test(
+              q,
+            ),
+          (q) => {
+            const p = period(q);
+            return {
+              text: `Revenue ${p.label} was <b>${money(rev(p.sold))}</b> across <b>${p.sold.length}</b> sold vehicle${p.sold.length === 1 ? "" : "s"}.`,
+              action: () => jennaNav("pnl"),
+            };
+          },
+        );
+        R(
+          (q) => /(biggest|largest|best) deal/.test(q),
+          (q) => {
+            const p = period(q);
+            if (!p.sold.length)
+              return { text: `No sales recorded ${p.label} yet.` };
+            const b = p.sold
+              .slice()
+              .sort((a, c) => c.netProfit - a.netProfit)[0];
+            return {
+              text: `Your biggest deal ${p.label} was the <b>${nm(b)}</b> — sold for <b>${money(b.soldPrice)}</b> at <b>${fmtSigned(b.netProfit)}</b> net profit.`,
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(show|every|list).*(deal|sale)s? (this|from|for)|every deal/.test(
+              q,
+            ),
+          (q) => {
+            const p = period(q);
+            if (!p.sold.length)
+              return { text: `No deals recorded ${p.label}.` };
+            const lines = p.sold
+              .slice()
+              .sort((a, c) => new Date(c.soldDate) - new Date(a.soldDate))
+              .map(
+                (r) =>
+                  `• <b>${nm(r)}</b> — ${money(r.soldPrice)} (${fmtSigned(r.netProfit)} net)`,
+              )
+              .join("<br>");
+            return {
+              text: `<b>${p.sold.length}</b> deal${p.sold.length === 1 ? "" : "s"} ${p.label}:<br>${lines}`,
+              action: () => jennaNav("sold-vehicles"),
+            };
+          },
+        );
+
+        // Reps
+        R(
+          (q) =>
+            /(which|who).*(sold the most|most vehicles|sold most|most cars)/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const by = {};
+            A.sold.forEach((r) => {
+              if (r.rep) by[r.rep] = (by[r.rep] || 0) + 1;
+            });
+            const e = Object.entries(by).sort((a, b) => b[1] - a[1]);
+            return e.length
+              ? {
+                  text: `<b>${e[0][0]}</b> has sold the most — <b>${e[0][1]}</b> vehicle${e[0][1] === 1 ? "" : "s"}.<br>${e.map((x) => `• ${x[0]}: ${x[1]}`).join("<br>")}`,
+                  action: () => jennaNav("reps"),
+                }
+              : { text: `No sales recorded yet.` };
+          },
+        );
+        R(
+          (q) =>
+            /(who|which rep|which sales).*(most money|most profit|generated the most|highest.*profit|made.*most)/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const by = {};
+            A.sold.forEach((r) => {
+              if (r.rep) by[r.rep] = (by[r.rep] || 0) + r.netProfit;
+            });
+            const e = Object.entries(by).sort((a, b) => b[1] - a[1]);
+            return e.length
+              ? {
+                  text: `<b>${e[0][0]}</b> generated the most profit — <b>${fmtSigned(e[0][1])}</b>.<br>${e.map((x) => `• ${x[0]}: ${fmtSigned(x[1])}`).join("<br>")}`,
+                  action: () => jennaNav("reps"),
+                }
+              : { text: `No sales recorded yet.` };
+          },
+        );
+        R(
+          (q) =>
+            /(best|top).*(sales ?rep|salesperson|performer)|performing.*best|needs coaching|coaching/.test(
+              q,
+            ),
+          (q) => {
+            const A = JA();
+            const by = {};
+            A.sold.forEach((r) => {
+              if (!r.rep) return;
+              by[r.rep] = by[r.rep] || { n: 0, p: 0 };
+              by[r.rep].n++;
+              by[r.rep].p += r.netProfit;
+            });
+            const e = Object.entries(by);
+            if (!e.length) return { text: `No sales recorded yet.` };
+            const coach = /coaching|needs|worst/.test(q);
+            e.sort((a, b) => (coach ? a[1].p - b[1].p : b[1].p - a[1].p));
+            const [rep, s] = e[0];
+            return {
+              text: coach
+                ? `<b>${rep}</b> could use coaching — lowest at ${s.n} sold, ${fmtSigned(s.p)} profit.`
+                : `<b>${rep}</b> is your top performer — ${s.n} sold, ${fmtSigned(s.p)} profit.`,
+              action: () => jennaNav("reps"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(commission|payroll).*(owe|owed|do i owe)|owe.*(commission|rep|salesperson|payroll)|how much.*owe.*rep/.test(
+              q,
+            ),
+          () => {
+            const by = {};
+            JA().rows.forEach((r) => {
+              if (r.rep) by[r.rep] = (by[r.rep] || 0) + r.commission;
+            });
+            const tot = Object.values(by).reduce((s, v) => s + v, 0);
+            return {
+              text: `About <b>${money(tot)}</b> in commissions across inventory:<br>${Object.entries(by)
+                .map((x) => `• ${x[0]}: ${money(x[1])}`)
+                .join("<br>")}`,
+              action: () => jennaNav("payroll"),
+            };
+          },
+        );
+        R(
+          (q) => /vehicles sold by|show.*sold by|deals by/.test(q),
+          (q) => {
+            const rep = matchRep(q);
+            if (!rep)
+              return {
+                text: `Which rep? Try "show me all vehicles sold by D. Cole".`,
+              };
+            const list = JA().sold.filter((r) => r.rep === rep);
+            return list.length
+              ? {
+                  text: `<b>${rep}</b> sold <b>${list.length}</b> vehicle${list.length === 1 ? "" : "s"}:<br>${list.map((r) => `• ${nm(r)} — ${money(r.soldPrice)}`).join("<br>")}`,
+                }
+              : { text: `No sales on record for ${rep}.` };
+          },
+        );
+        R(
+          (q) =>
+            /(commission.*earned|earned.*commission|how much.*commission has)/.test(
+              q,
+            ),
+          (q) => {
+            const rep = matchRep(q);
+            const A = JA();
+            const list = (rep ? A.sold.filter((r) => r.rep === rep) : A.sold).filter(
+              (r) => new Date(r.soldDate).getFullYear() === A.cy,
+            );
+            const tot = list.reduce((s, r) => s + r.commission, 0);
+            return {
+              text: `${rep || "Your reps"} earned <b>${money(tot)}</b> in commissions this year across ${list.length} sales.`,
+            };
+          },
+        );
+
+        // P&L
+        R(
+          (q) => /(gross profit|gross margin)/.test(q),
+          (q) => {
+            const p = period(q);
+            return {
+              text: `Gross profit ${p.label} is <b>${fmtSigned(gp(p.sold))}</b> on ${p.sold.length} sold vehicle${p.sold.length === 1 ? "" : "s"}.`,
+              action: () => jennaNav("pnl"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(net profit|net income|bottom line|profit (this|last|so far|for)|how much.*(profit|made))|am i making|are we making|making money|make more/.test(
+              q,
+            ) && !/gross/.test(q),
+          (q) => {
+            const p = period(q);
+            const n = np(p.sold);
+            const e = expIn(p.A.cm, p.A.cy).reduce(
+              (s, x) => s + (+x.amount || 0),
+              0,
+            );
+            const bottom = n - (p.label === "this month" ? e : 0);
+            return {
+              text: `Net profit ${p.label} is <b>${fmtSigned(n)}</b> on vehicle sales${p.label === "this month" ? ` (minus ${money(e)} operating expenses → <b>${fmtSigned(bottom)}</b> bottom line)` : ""}.`,
+              action: () => jennaNav("pnl"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(show|open|generate).*(p&l|p and l|profit (and|&) loss|income statement)|^p&l|my p&l|profit and loss/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const n = np(A.soldIn(A.cm, A.cy));
+            const e = expIn(A.cm, A.cy).reduce((s, x) => s + (+x.amount || 0), 0);
+            return {
+              text: `Opening your <b>Profit &amp; Loss</b> statement. ${MFULL[A.cm]}: <b>${money(rev(A.soldIn(A.cm, A.cy)))}</b> revenue, <b>${fmtSigned(n)}</b> vehicle net, <b>${money(e)}</b> operating expenses.`,
+              action: () => jennaNav("pnl"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(compare|vs|versus).*(month)|this month.*last month|month over month/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const tS = A.soldIn(A.cm, A.cy),
+              lS = A.soldIn(A.lm, A.ly);
+            const tN = np(tS),
+              lN = np(lS);
+            const diff = tN - lN;
+            return {
+              text: `<b>${MFULL[A.cm]}</b>: ${tS.length} sold, ${money(rev(tS))} revenue, ${fmtSigned(tN)} net.<br><b>${MFULL[A.lm]}</b>: ${lS.length} sold, ${money(rev(lS))} revenue, ${fmtSigned(lN)} net.<br>You're <b>${diff >= 0 ? "up" : "down"} ${money(Math.abs(diff))}</b> month-over-month.`,
+              action: () => jennaNav("pnl"),
+            };
+          },
+        );
+        R(
+          (q) => /(best|worst|strongest|weakest) month/.test(q),
+          (q) => {
+            const A = JA();
+            const worst = /worst|weakest/.test(q);
+            const by = {};
+            A.sold
+              .filter((r) => new Date(r.soldDate).getFullYear() === A.cy)
+              .forEach((r) => {
+                const m = new Date(r.soldDate).getMonth();
+                by[m] = (by[m] || 0) + r.netProfit;
+              });
+            const ent = Object.entries(by);
+            if (!ent.length)
+              return { text: `No sales yet this year to rank.` };
+            ent.sort((a, b) => (worst ? a[1] - b[1] : b[1] - a[1]));
+            const [m, v] = ent[0];
+            return {
+              text: `Your ${worst ? "worst" : "best"} month this year is <b>${MFULL[+m]}</b> at <b>${fmtSigned(v)}</b> net profit.`,
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(made|make).*this year|profit this year|how much.*year/.test(q) &&
+            !/lost|lose/.test(q),
+          () => {
+            const A = JA();
+            const yl = A.sold.filter(
+              (r) => new Date(r.soldDate).getFullYear() === A.cy,
+            );
+            return {
+              text: `Year-to-date you've made <b>${fmtSigned(np(yl))}</b> net profit across <b>${yl.length}</b> sold vehicles.`,
+              action: () => jennaNav("pnl"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /how much.*(have i )?(lost|lose)|lost.*this year|losses this year/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const losers = A.sold.filter((r) => r.netProfit < 0);
+            const tot = losers.reduce((s, r) => s + r.netProfit, 0);
+            return losers.length
+              ? {
+                  text: `<b>${losers.length}</b> sold vehicle${losers.length === 1 ? "" : "s"} closed at a loss this year, totaling <b>${fmtSigned(tot)}</b>.`,
+                  action: () => jennaNav("sold-vehicles"),
+                }
+              : {
+                  text: `Good news — no sold vehicles are at a loss this year.`,
+                };
+          },
+        );
+
+        // Aging / ROI
+        R(
+          (q) =>
+            /(sitting|aging|oldest|longest|been on the lot|been in inventory)/.test(
+              q,
+            ) && !/over \d/.test(q),
+          () => {
+            const a = JA()
+              .active.slice()
+              .sort((x, y) => y.daysOnLot - x.daysOnLot)
+              .slice(0, 5);
+            if (!a.length) return { text: `No active inventory right now.` };
+            return {
+              text: `Longest-sitting vehicles:<br>${a.map((r) => `• <b>${nm(r)}</b> — ${r.daysOnLot} days`).join("<br>")}`,
+              action: () => jennaNav("vehicles"),
+            };
+          },
+        );
+        R(
+          (q) => /over (\d+)\s*days|(\d+)\+?\s*days|older than \d/.test(q),
+          (q) => {
+            const m = q.match(/(\d+)/);
+            const n = m ? +m[1] : 30;
+            const a = JA()
+              .active.filter((r) => r.daysOnLot > n)
+              .sort((x, y) => y.daysOnLot - x.daysOnLot);
+            return a.length
+              ? {
+                  text: `<b>${a.length}</b> vehicle${a.length === 1 ? "" : "s"} over ${n} days:<br>${a.map((r) => `• <b>${nm(r)}</b> — ${r.daysOnLot} days`).join("<br>")}`,
+                  action: () => jennaNav("vehicles"),
+                }
+              : {
+                  text: `No vehicles have been in inventory over ${n} days.`,
+                };
+          },
+        );
+        R(
+          (q) => /(highest|best|top).*roi/.test(q),
+          () => {
+            const a = JA()
+              .rows.slice()
+              .sort((x, y) => y.roi - x.roi)
+              .slice(0, 5);
+            return {
+              text: `Highest ROI:<br>${a.map((r) => `• <b>${nm(r)}</b> — ${pct(r.roi)}`).join("<br>")}`,
+              action: () => jennaNav("pnl"),
+            };
+          },
+        );
+        R(
+          (q) => /(lowest|worst).*roi/.test(q),
+          () => {
+            const a = JA()
+              .rows.slice()
+              .sort((x, y) => x.roi - y.roi)
+              .slice(0, 5);
+            return {
+              text: `Lowest ROI:<br>${a.map((r) => `• <b>${nm(r)}</b> — ${pct(r.roi)}`).join("<br>")}`,
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(losing money|underwater|in the red|which.*losing|losing the most)/.test(
+              q,
+            ),
+          () => {
+            const a = JA()
+              .rows.filter((r) => r.netProfit < 0)
+              .sort((x, y) => x.netProfit - y.netProfit);
+            return a.length
+              ? {
+                  text: `Vehicles in the red:<br>${a.map((r) => `• <b>${nm(r)}</b> — ${fmtSigned(r.netProfit)}`).join("<br>")}`,
+                  action: () => jennaNav("vehicles"),
+                }
+              : {
+                  text: `Nothing is underwater — every vehicle is at or above break-even.`,
+                };
+          },
+        );
+        R(
+          (q) =>
+            /(making the most|most money|most profit|highest profit|which (vehicle|car).*most)/.test(
+              q,
+            ),
+          () => {
+            const a = JA()
+              .rows.slice()
+              .sort((x, y) => y.netProfit - x.netProfit)
+              .slice(0, 5);
+            return {
+              text: `Top profit makers:<br>${a.map((r) => `• <b>${nm(r)}</b> — ${fmtSigned(r.netProfit)}`).join("<br>")}`,
+              action: () => jennaNav("sold-vehicles"),
+            };
+          },
+        );
+        R(
+          (q) => /(recover|cash.*if.*sold|if every vehicle sold|liquidate)/.test(q),
+          () => {
+            const a = JA().active;
+            const recov = a.reduce(
+              (s, r) => s + (r.estimatedSale || r.baseSale || 0),
+              0,
+            );
+            return {
+              text: `If every unsold vehicle sold at its asking estimate today, you'd recover about <b>${money(recov)}</b>.`,
+            };
+          },
+        );
+
+        // Titles / flooring / repairs
+        R(
+          (q) =>
+            /title/.test(q) &&
+            /(missing|no title|without|don'?t have|dont have|still.*have|need|out|which|any)/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const activeMiss = A.active.filter((r) => !r.titlePresent);
+            const soldMiss = A.sold.filter((r) =>
+              r.titleIn !== undefined ? !r.titleIn : !r.titlePresent,
+            );
+            return {
+              text: `<b>${activeMiss.length}</b> in-stock and <b>${soldMiss.length}</b> sold vehicle${soldMiss.length === 1 ? "" : "s"} are missing titles.${activeMiss.length ? `<br><u>In stock:</u><br>${activeMiss.slice(0, 6).map((r) => `• ${nm(r)}`).join("<br>")}` : ""}${soldMiss.length ? `<br><u>Sold:</u><br>${soldMiss.slice(0, 6).map((r) => `• ${nm(r)}`).join("<br>")}` : ""}`,
+              action: () => jennaNav("vehicles"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(floored|flooring|floor plan|floor-plan)/.test(q) &&
+            !/cost|owe|highest|interest|too much|costing/.test(q),
+          () => {
+            const a = JA().rows.filter((r) => r.floored && !r.sold);
+            return a.length
+              ? {
+                  text: `<b>${a.length}</b> vehicle${a.length === 1 ? "" : "s"} on the floor plan, <b>${money(a.reduce((s, r) => s + r.flooringCost, 0))}</b> in flooring cost accrued.<br>${a.slice(0, 6).map((r) => `• ${nm(r)} — ${money(r.flooringCost)}`).join("<br>")}`,
+                }
+              : { text: `No vehicles are currently floored.` };
+          },
+        );
+        R(
+          (q) => /(owe.*flooring|flooring.*owe|how much.*floor)/.test(q),
+          () => {
+            const a = JA().rows.filter((r) => r.floored && !r.sold);
+            return {
+              text: `You have about <b>${money(a.reduce((s, r) => s + r.flooringCost, 0))}</b> in flooring cost across <b>${a.length}</b> floored vehicles.`,
+            };
+          },
+        );
+        R(
+          (q) => /(highest|most).*flooring/.test(q),
+          () => {
+            const a = JA()
+              .rows.filter((r) => r.flooringCost > 0)
+              .sort((x, y) => y.flooringCost - x.flooringCost)
+              .slice(0, 5);
+            return a.length
+              ? {
+                  text: `Highest flooring costs:<br>${a.map((r) => `• <b>${nm(r)}</b> — ${money(r.flooringCost)}`).join("<br>")}`,
+                }
+              : { text: `No flooring costs recorded.` };
+          },
+        );
+        R(
+          (q) => /(need|needs) repair|which.*repair/.test(q),
+          () => {
+            const a = JA()
+              .active.filter((r) => r.repairs > 0)
+              .sort((x, y) => y.repairs - x.repairs);
+            return a.length
+              ? {
+                  text: `Vehicles with repair costs:<br>${a.slice(0, 6).map((r) => `• <b>${nm(r)}</b> — ${money(r.repairs)}`).join("<br>")}`,
+                }
+              : { text: `No active vehicles have repair costs logged.` };
+          },
+        );
+
+        // Totals
+        R(
+          (q) => /total repair( cost)?|how much.*repair/.test(q),
+          () => {
+            const t = JA().rows.reduce((s, r) => s + r.repairs, 0);
+            return {
+              text: `Total repair cost across all vehicles is <b>${money(t)}</b>.`,
+            };
+          },
+        );
+        R(
+          (q) => /average profit|avg profit|profit per (vehicle|car)/.test(q),
+          () => {
+            const s = JA().sold;
+            if (!s.length) return { text: `No sold vehicles yet.` };
+            return {
+              text: `Average net profit per sold vehicle is <b>${fmtSigned(np(s) / s.length)}</b> across ${s.length} sales.`,
+            };
+          },
+        );
+        R(
+          (q) => /average roi|avg roi/.test(q),
+          () => {
+            const r = JA().rows;
+            return {
+              text: `Average ROI across inventory is <b>${pct(r.reduce((s, x) => s + x.roi, 0) / (r.length || 1))}</b>.`,
+            };
+          },
+        );
+
+        // Expenses
+        R(
+          (q) =>
+            /(total.*expense|dealership expense|how much.*(spend|spent)( in total)?$)/.test(
+              q,
+            ) && !/repair|marketing|payroll|flooring|month/.test(q),
+          () => {
+            const t = expList().reduce((s, e) => s + (+e.amount || 0), 0);
+            return {
+              text: `Total logged expenses come to <b>${money(t)}</b>. Want the monthly view?`,
+              action: () => jennaNav("expenses"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /recurring expense|which.*recurring|recurring.*(cost|bill|due)/.test(
+              q,
+            ),
+          () => {
+            const rec = expList().filter(
+              (e) => typeof isRecurring === "function" && isRecurring(e),
+            );
+            const mo = rec.reduce(
+              (s, e) =>
+                s +
+                (typeof monthlyEquivalent === "function"
+                  ? monthlyEquivalent(e)
+                  : +e.amount || 0),
+              0,
+            );
+            return rec.length
+              ? {
+                  text: `You have <b>${rec.length}</b> recurring expenses, about <b>${money(mo)}/mo</b>:<br>${rec
+                    .slice(0, 8)
+                    .map(
+                      (e) =>
+                        `• ${e.name} — ${money(e.amount)} (${e.recurring || "Monthly"})`,
+                    )
+                    .join("<br>")}`,
+                  action: () => jennaNav("expenses"),
+                }
+              : { text: `No recurring expenses set up yet.` };
+          },
+        );
+        R(
+          (q) => /spend.*marketing|marketing.*(cost|spend)|advertis/.test(q),
+          () => {
+            const t = expList()
+              .filter((e) =>
+                /market|advertis/i.test((e.expType || "") + (e.name || "")),
+              )
+              .reduce((s, e) => s + (+e.amount || 0), 0);
+            return {
+              text: `You've spent <b>${money(t)}</b> on marketing / advertising.`,
+            };
+          },
+        );
+        R(
+          (q) =>
+            /expenses (this|last) month|(this|last) month.*expense/.test(q),
+          (q) => {
+            const A = JA();
+            const last = /last month/.test(q);
+            const list = expIn(last ? A.lm : A.cm, last ? A.ly : A.cy);
+            const t = list.reduce((s, e) => s + (+e.amount || 0), 0);
+            return {
+              text: `${last ? MFULL[A.lm] : MFULL[A.cm]} expenses total <b>${money(t)}</b> across ${list.length} items.`,
+              action: () => jennaNav("expenses"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(highest|biggest).*(expense|category)|which category.*highest|biggest expense/.test(
+              q,
+            ),
+          () => {
+            const by = {};
+            expList().forEach((e) => {
+              const k = e.expType || e.category || "Other";
+              by[k] = (by[k] || 0) + (+e.amount || 0);
+            });
+            const e = Object.entries(by).sort((a, b) => b[1] - a[1]);
+            return e.length
+              ? {
+                  text: `Your biggest expense category is <b>${e[0][0]}</b> at <b>${money(e[0][1])}</b>.<br>${e
+                    .slice(0, 5)
+                    .map((x) => `• ${x[0]}: ${money(x[1])}`)
+                    .join("<br>")}`,
+                  action: () => jennaNav("expenses"),
+                }
+              : { text: `No expenses logged yet.` };
+          },
+        );
+        R(
+          (q) =>
+            /(due soon|coming due|upcoming.*(bill|payment|expense)|which.*due|payments? due|bills? due)/.test(
+              q,
+            ),
+          () => {
+            const soon = new Date(today);
+            soon.setDate(soon.getDate() + 14);
+            const list = expList()
+              .filter((e) => {
+                if (e.paid) return false;
+                const d = new Date(e.dueDate || e.expenseDate || e.date);
+                return !isNaN(d.getTime()) && d >= today && d <= soon;
+              })
+              .sort(
+                (a, b) =>
+                  new Date(a.dueDate || a.expenseDate) -
+                  new Date(b.dueDate || b.expenseDate),
+              );
+            return list.length
+              ? {
+                  text: `<b>${list.length}</b> payment${list.length === 1 ? "" : "s"} due in the next 2 weeks:<br>${list
+                    .map(
+                      (e) =>
+                        `• ${e.name} — ${money(e.amount)} (${fmtDate(e.dueDate || e.expenseDate)})`,
+                    )
+                    .join("<br>")}`,
+                  action: () => jennaNav("expenses"),
+                }
+              : { text: `Nothing due in the next two weeks.` };
+          },
+        );
+
+        // Tax / customers / jackets
+        R(
+          (q) =>
+            /(sales tax|state tax).*(due|owe|when|file|filing)|when.*tax due|how much.*tax|quarterly tax/.test(
+              q,
+            ),
+          () => {
+            const owed = JA().sold.reduce(
+              (s, r) =>
+                s + (r.salesTaxCollected || r.customerSalesTax || r.salesTax || 0),
+              0,
+            );
+            const c = tcfg();
+            const due = c && c.nextDue ? fmtDate(c.nextDue) : "—";
+            const freq = c ? ("" + c.frequency).toLowerCase() : "";
+            return {
+              text: `You've collected about <b>${money(owed)}</b> in sales tax. Next ${freq} filing is due <b>${due}</b>.`,
+              action: () => jennaNav("tax"),
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(show|list|all).*customers?$|who are my customers|search.*customer/.test(
+              q,
+            ),
+          () => {
+            const c = JA().sold.filter((r) => r.customer);
+            return c.length
+              ? {
+                  text: `<b>${c.length}</b> customer${c.length === 1 ? "" : "s"} on record:<br>${c
+                    .slice(0, 10)
+                    .map((r) => `• ${r.customer} — ${nm(r)}`)
+                    .join("<br>")}`,
+                  action: () => jennaNav("customers"),
+                }
+              : { text: `No customer records yet.` };
+          },
+        );
+        R(
+          (q) =>
+            /(deal jacket).*(incomplete|need approval|approval|missing)|which deal/.test(
+              q,
+            ),
+          () => {
+            const need = JA().sold.filter(
+              (r) =>
+                !r.customer ||
+                (r.titleIn === undefined && !r.titlePresent) ||
+                !(r.dealSaved || r.hasDealJacket || r.dealJacket),
+            );
+            return {
+              text: `<b>${need.length}</b> sold deal${need.length === 1 ? "" : "s"} still need attention (missing customer, title, or jacket).`,
+              action: () => jennaNav("deal-jackets"),
+            };
+          },
+        );
+
+        // Smart insights + briefing
+        R(
+          (q) => /(which|what).*(wholesale|dump|offload)/.test(q),
+          () => {
+            const a = JA()
+              .active.filter((r) => r.daysOnLot > 45 || r.roi < 5)
+              .sort((x, y) => y.daysOnLot - x.daysOnLot)
+              .slice(0, 5);
+            return a.length
+              ? {
+                  text: `Wholesale candidates (aging or thin margin):<br>${a.map((r) => `• <b>${nm(r)}</b> — ${r.daysOnLot} days, ${pct(r.roi)} ROI`).join("<br>")}`,
+                }
+              : {
+                  text: `Nothing screams wholesale — your inventory is turning well.`,
+                };
+          },
+        );
+        R(
+          (q) =>
+            /(lower.*price|drop.*price|reduce.*price|price.*lower|advertise first|prioritize sell|sell first)/.test(
+              q,
+            ),
+          () => {
+            const a = JA()
+              .active.slice()
+              .sort((x, y) => y.daysOnLot - x.daysOnLot)
+              .slice(0, 5);
+            return {
+              text: `Focus on moving these first (longest sitting):<br>${a.map((r) => `• <b>${nm(r)}</b> — ${r.daysOnLot} days, ${pct(r.roi)} ROI`).join("<br>")}`,
+              action: () => jennaNav("vehicles"),
+            };
+          },
+        );
+        R(
+          (q) => /(costing.*flooring|too much.*flooring|flooring.*too)/.test(q),
+          () => {
+            const a = JA()
+              .rows.filter((r) => r.floored && !r.sold)
+              .sort((x, y) => y.flooringCost - x.flooringCost)
+              .slice(0, 5);
+            return a.length
+              ? {
+                  text: `Biggest flooring drains:<br>${a.map((r) => `• <b>${nm(r)}</b> — ${money(r.flooringCost)} (${r.daysOnLot}d)`).join("<br>")}`,
+                }
+              : { text: `Flooring costs are under control right now.` };
+          },
+        );
+        R(
+          (q) => /(close to break|breaking even|break-even)/.test(q),
+          () => {
+            const a = JA()
+              .active.filter((r) => Math.abs(r.netProfit) < 800)
+              .sort((x, y) => x.netProfit - y.netProfit);
+            return a.length
+              ? {
+                  text: `Near break-even:<br>${a.slice(0, 6).map((r) => `• <b>${nm(r)}</b> — ${fmtSigned(r.netProfit)}`).join("<br>")}`,
+                }
+              : { text: `No vehicles sitting right at break-even.` };
+          },
+        );
+        R(
+          (q) =>
+            /(hurting.*profit|where.*losing|biggest risk|unusually high|whats hurting|what.*wrong)/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const losers = A.rows.filter((r) => r.netProfit < 0);
+            const aged = A.active.filter((r) => r.daysOnLot > 60);
+            const fl = A.rows
+              .filter((r) => r.floored && !r.sold)
+              .reduce((s, r) => s + r.flooringCost, 0);
+            const pts = [];
+            if (losers.length)
+              pts.push(
+                `${losers.length} vehicle(s) underwater (${fmtSigned(losers.reduce((s, r) => s + r.netProfit, 0))})`,
+              );
+            if (aged.length)
+              pts.push(`${aged.length} unit(s) aging past 60 days`);
+            if (fl > 0) pts.push(`${money(fl)} bleeding into flooring`);
+            return {
+              text: pts.length
+                ? `What's pressuring profit:<br>${pts.map((p) => `• ${p}`).join("<br>")}`
+                : `Nothing major is dragging you down — margins look healthy.`,
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(increase profit|make more money|improve profit|how can i (make|increase))/.test(
+              q,
+            ),
+          () => {
+            const aged = JA()
+              .active.slice()
+              .sort((x, y) => y.daysOnLot - x.daysOnLot)[0];
+            const rec = expList()
+              .filter(
+                (e) => typeof isRecurring === "function" && isRecurring(e),
+              )
+              .sort((a, b) => b.amount - a.amount)[0];
+            const tips = [];
+            if (aged)
+              tips.push(
+                `Move the <b>${nm(aged)}</b> (${aged.daysOnLot} days) before flooring eats the margin`,
+              );
+            if (rec)
+              tips.push(
+                `Review your largest recurring cost — <b>${rec.name}</b> at ${money(rec.amount)}/mo`,
+              );
+            tips.push(`Prioritize high-ROI restocks over slow movers`);
+            return {
+              text: `A few ideas:<br>${tips.map((t) => `• ${t}`).join("<br>")}`,
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(how are we doing|how'?s business|how is business|summarize|summary|briefing|morning brief|30 seconds|snapshot|what should i (do|focus)|attention today|today.*focus|need my attention)/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const sm = A.soldIn(A.cm, A.cy);
+            const inv = A.active.reduce((s, r) => s + r.totalVehicleCost, 0);
+            const aged = A.active.filter((r) => r.daysOnLot > 60).length;
+            const dueEnd = new Date(
+              today.getFullYear(),
+              today.getMonth(),
+              today.getDate() + 14,
+            );
+            const due = expList().filter((e) => {
+              if (e.paid) return false;
+              const d = new Date(e.dueDate || e.expenseDate || e.date);
+              return !isNaN(d.getTime()) && d >= today && d <= dueEnd;
+            }).length;
+            return {
+              text: `<b>Snapshot — ${MFULL[A.cm]}</b><br>• ${A.active.length} in stock (${money(inv)} tied up)<br>• ${sm.length} sold this month, ${fmtSigned(np(sm))} net<br>• ${aged} unit(s) aging past 60 days<br>• ${due} bill(s) due in 2 weeks<br>Want me to dig into any of these?`,
+            };
+          },
+        );
+        R(
+          (q) => /(enough cash|afford.*(car|another)|buy another)/.test(q),
+          () => {
+            const A = JA();
+            const tied = A.active.reduce((s, r) => s + r.totalVehicleCost, 0);
+            return {
+              text: `You've got <b>${money(tied)}</b> tied up in ${A.active.length} unsold units. Freeing a couple of your longest-sitting cars would give you buying room — want me to list them?`,
+            };
+          },
+        );
+        R(
+          (q) =>
+            /(if you owned|what would you recommend|what should i do first)/.test(
+              q,
+            ),
+          () => {
+            const aged = JA()
+              .active.slice()
+              .sort((x, y) => y.daysOnLot - x.daysOnLot)[0];
+            return {
+              text: `If this were my lot today: I'd get the <b>${aged ? nm(aged) : "oldest unit"}</b>${aged ? ` (${aged.daysOnLot} days)` : ""} priced to move, chase any missing titles, and confirm nothing's due this week. Want the details on any of those?`,
+            };
+          },
+        );
+        R(
+          (q) =>
+            /are we making money|making money|profitable|are we profitable/.test(
+              q,
+            ),
+          () => {
+            const A = JA();
+            const sm = A.soldIn(A.cm, A.cy);
+            const n = np(sm);
+            return {
+              text: `${n >= 0 ? `Yes — you're <b>${fmtSigned(n)}</b> in vehicle net profit this month` : `Tight month — <b>${fmtSigned(n)}</b> in vehicle net so far`} across ${sm.length} sale${sm.length === 1 ? "" : "s"}.`,
+              action: () => jennaNav("pnl"),
+            };
+          },
+        );
+      })();
+
       const JENNA_SECTIONS = [
         {
           title: "Dashboard",
@@ -40339,10 +41472,38 @@
           stat: (d) =>
             `${d.active.length} active vehicles, ${fmt(d.purchaseCost)} in purchase cost, ${fmt(d.repairsTot)} in repairs.`,
         },
+        {
+          title: "Vehicles by Profit",
+          page: "sold-vehicles",
+          keys: [
+            "vehicles by profit",
+            "profit ranking",
+            "best",
+            "top performer",
+            "most profitable",
+          ],
+          desc: () =>
+            `Vehicles by Profit ranks your sold cars by net profit, with the top category winners.`,
+          stat: (d) =>
+            `Net profit on sold vehicles is ${fmtSigned(d.netProfit)} across ${d.sold.length} sold units.`,
+        },
+        {
+          title: "Vehicles by Loss",
+          page: "sold-vehicles",
+          keys: ["vehicles by loss", "loss", "worst", "losing", "underwater"],
+          desc: () =>
+            `Vehicles by Loss surfaces cars that sold below cost or are aging on the lot.`,
+          stat: (d) => {
+            const l = d.rows.filter((r) => r.sold && r.netProfit < 0);
+            return l.length
+              ? `${l.length} sold vehicle(s) closed at a loss.`
+              : `Good news — no sold vehicles are currently at a loss.`;
+          },
+        },
 
         {
           title: "Profit & Loss",
-          page: null,
+          page: "pnl",
           keys: [
             "profit & loss",
             "profit and loss",
@@ -40367,7 +41528,7 @@
         },
         {
           title: "Customers",
-          page: null,
+          page: "customers",
           keys: ["customer", "buyer", "client", "contacts"],
           desc: () =>
             `Customers holds buyer profiles, contact info, and purchase history.`,
@@ -40386,7 +41547,7 @@
         },
         {
           title: "Deal Jackets",
-          page: null,
+          page: "deal-jackets",
           keys: ["deal jacket", "deal jackets", "paperwork folder"],
           desc: () =>
             `Deal Jackets bundle contract, title, and funding docs into one folder per deal.`,
@@ -40407,7 +41568,7 @@
         },
         {
           title: "Payroll & Commissions",
-          page: null,
+          page: "payroll",
           keys: ["payroll", "commission", "reps pay", "rep pay", "wages"],
           desc: () =>
             `Payroll & Commissions tracks what each rep is owed and your payroll runs.`,
@@ -40416,7 +41577,7 @@
         },
         {
           title: "Calendar",
-          page: null,
+          page: "calendar",
           keys: ["calendar", "schedule", "appointment", "due dates"],
           desc: () =>
             `Calendar tracks appointments, payment due dates, and follow-ups.`,
@@ -40433,7 +41594,7 @@
         },
         {
           title: "State Tax",
-          page: null,
+          page: "tax",
           keys: ["state tax", "sales tax", "tax", "registration fee"],
           desc: () =>
             `State Tax tracks sales tax and registration fees collected and owed to the state.`,
@@ -40469,6 +41630,7 @@
       function jennaNav(page) {
         const el =
           document.querySelector(`[data-page="${page}"]`) ||
+          document.querySelector(`[data-nav="${page}"]`) ||
           [...document.querySelectorAll(".nav-item")].find((n) =>
             (n.getAttribute("onclick") || "").includes(`'${page}'`),
           );
@@ -41729,9 +42891,7 @@
         const r = computeRow(v);
         const hint = document.getElementById("djCostEditHint");
         if (hint) {
-          hint.textContent = vehicleMoneyLocked(v)
-            ? "costs locked after sale"
-            : "click any figure to edit";
+          hint.textContent = "click any figure to edit";
         }
         document.getElementById("djRos").value = v.ros || "";
         setDjRosStatus("", "");
@@ -41826,7 +42986,6 @@
       function djRenderBreakdown(v, r) {
         const host = document.getElementById("djBreakdown");
         if (!host) return;
-        const locked = vehicleMoneyLocked(v);
         const attachedRows = attachedExpensesForVehicle(v);
         const attachedItemsHtml = attachedRows.length
           ? attachedRows
@@ -41845,19 +43004,12 @@
               })
               .join("")
           : "";
-        const ed = (field, val, extra) => {
-          if (locked) {
-            return `<span class="vdp-row-value" id="djEd_${field}"${extra || ""}>${val}</span>`;
-          }
-          return `<span class="vdp-row-value" id="djEd_${field}"${extra || ""}>${djUndoBtn(v, field)}<span class="vdp-ed" onclick="djEditCost('${field}')" title="Click to edit">${val}</span></span>`;
-        };
-        const repairsClick = locked
-          ? fmt(r.repairs)
-          : `<span class="vdp-ed" onclick="openRepairsModal('${v.vin}')" title="Click to edit repair items">${fmt(r.repairs)}</span>`;
+        const ed = (field, val, extra) =>
+          `<span class="vdp-row-value" id="djEd_${field}"${extra || ""}>${djUndoBtn(v, field)}<span class="vdp-ed" onclick="djEditCost('${field}')" title="Click to edit">${val}</span></span>`;
         host.innerHTML = `
     <div class="vdp-row"><span class="vdp-row-label">Vehicle Purchase Price</span>${ed("price", fmt(v.price))}</div>
     <div class="vdp-row"><span class="vdp-row-label">Fees</span>${ed("fees", fmt(v.fees))}</div>
-    <div class="vdp-row"><span class="vdp-row-label">Repairs (${(v.repairsList || []).length})</span><span class="vdp-row-value">${repairsClick}</span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Repairs (${(v.repairsList || []).length})</span><span class="vdp-row-value"><span class="vdp-ed" onclick="openRepairsModal('${v.vin}')" title="Click to edit repair items">${fmt(r.repairs)}</span></span></div>
     <div class="vdp-row"><span class="vdp-row-label">Flooring</span>${ed("flooringOverride", r.flooringCost > 0 ? fmt(r.flooringCost) : "\u2014", ' style="color:var(--red);"')}</div>
     <div class="vdp-row"><span class="vdp-row-label">Expenses${attachedRows.length ? " <span style='color:var(--muted);font-weight:400;text-transform:none;'>(" + attachedRows.length + ")</span>" : ""}</span><span class="vdp-row-value">${r.attachedExp > 0 ? fmt(r.attachedExp) : "\u2014"}</span></div>
     ${attachedItemsHtml}
@@ -41878,7 +43030,7 @@
       }
       function djEditCost(field) {
         const v = vehicles.find((x) => x.vin === currentDealVin);
-        if (!v || vehicleMoneyLocked(v)) return;
+        if (!v) return;
         const host = document.getElementById("djEd_" + field);
         if (!host || host.querySelector("input")) return;
         const cur = djCurrentCostValue(v, field);
@@ -41915,20 +43067,41 @@
         v._undo[field] =
           oldVal === undefined || oldVal === null ? oldEffective : oldVal;
         v[field] = n;
-        if (host) {
+        const label =
+          field === "price"
+            ? "Purchase Price"
+            : field === "fees"
+              ? "Fees"
+              : field === "flooringOverride"
+                ? "Flooring"
+                : vehEditLabel(field);
+        if (typeof vdpSetSaving === "function") vdpSetSaving(host, true);
+        else if (host) {
           host.classList.add("vdp-saving");
           host.style.opacity = "0.55";
         }
         try {
           if (window.AVVehicles && v.id) {
-            await AVVehicles.persistMoneyField(currentDealVin, field, n);
+            await vehEditSave(
+              AVVehicles.persistMoneyField(currentDealVin, field, n),
+              {
+                loading: `Saving ${label}\u2026`,
+                loadingMsg: "Updating deal jacket cost breakdown",
+                success: `${label} updated`,
+                successTitle: "Saved",
+                error: `Failed to save ${label.toLowerCase()}`,
+                errorTitle: "Save failed",
+              },
+            );
+            djShowAutoSaved();
           }
-          djShowAutoSaved();
         } catch (err) {
           v[field] = oldVal;
-          if (typeof AVToast !== "undefined")
-            AVToast.error(err.message || "Failed to save cost");
+          try {
+            if (window.AVVehicles) await AVVehicles.loadAllVehicles();
+          } catch (_) {}
         } finally {
+          if (typeof vdpSetSaving === "function") vdpSetSaving(host, false);
           const vv = vehicles.find((x) => x.vin === currentDealVin) || v;
           djRenderBreakdown(vv, computeRow(vv));
           dealRecalc();
@@ -41939,19 +43112,22 @@
       }
       function djUndoCost(field) {
         const v = vehicles.find((x) => x.vin === currentDealVin);
-        if (!v || !v._undo || vehicleMoneyLocked(v)) return;
+        if (!v || !v._undo) return;
         const prev = v._undo[field];
         if (prev === undefined) return;
         djCommitCost(field, prev);
       }
       function djShowAutoSaved() {
         const el = document.getElementById("djAutoSaved");
-        if (!el) return;
-        el.textContent = "Saved ✓";
-        el.classList.add("show");
+        if (el) {
+          el.textContent = "All changes saved \u2713";
+          el.classList.add("show");
+        }
+        djSetCustSaveStatus("saved", "Saved");
         clearTimeout(djShowAutoSaved._t);
         djShowAutoSaved._t = setTimeout(function () {
-          el.classList.remove("show");
+          if (el) el.classList.remove("show");
+          djSetCustSaveStatus("", "");
         }, 1600);
       }
       window.djEditCost = djEditCost;
@@ -42002,10 +43178,12 @@
               await vehEditSave(
                 AVVehicles.persistMoneyField(currentDealVin, "date", val),
                 {
-                  loading: "Saving purchase date…",
+                  loading: "Saving purchase date\u2026",
                   loadingMsg: "Recalculating days & flooring",
                   success: "Purchase date updated",
+                  successTitle: "Saved",
                   error: "Failed to save purchase date",
+                  errorTitle: "Save failed",
                 },
               );
               djShowAutoSaved();
@@ -42171,10 +43349,131 @@
           tpEl.textContent = soldPrice > 0 ? fmtSigned(totalProfit) : "\u2014";
           tpEl.style.color = totalProfit >= 0 ? "var(--green)" : "var(--red)";
         }
-        set("djBrkTax", stateTax > 0 ? fmt(stateTax) : "\u2014");
-        set("djBrkReg", regFee > 0 ? fmt(regFee) : "\u2014");
-        set("djBrkCollected", soldPrice > 0 ? fmt(collected) : "\u2014");
+        const setColl = (id, kind, val) => {
+          const el = document.getElementById(id);
+          if (!el) return;
+          if (el.querySelector("input")) return;
+          el.innerHTML = `<span class="vdp-ed" onclick="djEditColl('${kind}')" title="Click to edit">${val}</span>`;
+        };
+        setColl("djBrkTax", "tax", stateTax > 0 ? fmt(stateTax) : "\u2014");
+        setColl("djBrkReg", "reg", regFee > 0 ? fmt(regFee) : "\u2014");
+        set(
+          "djBrkCollected",
+          soldPrice > 0 || stateTax > 0 || regFee > 0
+            ? fmt(collected)
+            : "\u2014",
+        );
       }
+
+      function djEditColl(kind) {
+        const hostId = kind === "tax" ? "djBrkTax" : "djBrkReg";
+        const srcId = kind === "tax" ? "djStateTax" : "djRegFee";
+        const host = document.getElementById(hostId);
+        if (!host || host.querySelector("input")) return;
+        const cur = Math.round(
+          parseFloat((document.getElementById(srcId) || {}).value) || 0,
+        );
+        host.innerHTML = `<input class="vdp-edit-input" type="number" step="1" min="0" value="${cur}"
+    onblur="djCommitColl('${kind}', this.value)"
+    onkeydown="if(event.key==='Enter'){this.blur();}else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
+        const inp = host.querySelector("input");
+        if (inp) {
+          inp.focus();
+          inp.select();
+        }
+      }
+      async function djCommitColl(kind, raw) {
+        const hostId = kind === "tax" ? "djBrkTax" : "djBrkReg";
+        const srcId = kind === "tax" ? "djStateTax" : "djRegFee";
+        const label = kind === "tax" ? "Sales Tax" : "Registration Fees";
+        const host = document.getElementById(hostId);
+        const inp = host ? host.querySelector("input") : null;
+        const cancelled = !!(inp && inp.dataset.cancel === "1");
+        if (cancelled) {
+          if (host) host.innerHTML = "";
+          dealRecalc();
+          return;
+        }
+        let n = parseFloat(raw);
+        if (!isFinite(n) || n < 0) n = 0;
+        n = Math.round(n * 100) / 100;
+        const src = document.getElementById(srcId);
+        if (src) src.value = n > 0 ? n : "";
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        const prevTax = v ? v.customerSalesTax : null;
+        const prevReg = v ? v.customerRegFees : null;
+        if (v) {
+          if (kind === "tax") {
+            v.customerSalesTax = n;
+            v.salesTax = n;
+          } else {
+            v.customerRegFees = n;
+            v.regFees = n;
+          }
+        }
+        if (typeof vdpSetSaving === "function") vdpSetSaving(host, true);
+        else if (host) {
+          host.classList.add("vdp-saving");
+          host.style.opacity = "0.55";
+          host.style.pointerEvents = "none";
+        }
+        try {
+          if (
+            v &&
+            v.id &&
+            window.AVVehicles &&
+            (v.sold || v.dealSaved || v.hasDealJacket || v.dealJacket)
+          ) {
+            const patch =
+              kind === "tax" ? { salesTaxAmount: n } : { licenseFees: n };
+            await vehEditSave(AVVehicles.persistPatch(currentDealVin, patch), {
+              loading: `Saving ${label}\u2026`,
+              loadingMsg: "Updating deal jacket collected amounts",
+              success: `${label} updated`,
+              successTitle: "Saved",
+              error: `Failed to save ${label.toLowerCase()}`,
+              errorTitle: "Save failed",
+            });
+            djShowAutoSaved();
+          } else if (typeof djAutoSave === "function") {
+            if (typeof AVToast !== "undefined" && AVToast.info) {
+              AVToast.info(
+                `${label} updated locally — will save with the deal`,
+              );
+            }
+            djAutoSave();
+          }
+        } catch (err) {
+          if (v) {
+            if (kind === "tax") {
+              v.customerSalesTax = prevTax;
+              v.salesTax = prevTax;
+              if (src) src.value = prevTax != null && prevTax > 0 ? prevTax : "";
+            } else {
+              v.customerRegFees = prevReg;
+              v.regFees = prevReg;
+              if (src) src.value = prevReg != null && prevReg > 0 ? prevReg : "";
+            }
+          }
+        } finally {
+          if (typeof vdpSetSaving === "function") vdpSetSaving(host, false);
+          else if (host) {
+            host.classList.remove("vdp-saving");
+            host.style.opacity = "";
+            host.style.pointerEvents = "";
+          }
+          if (host) host.innerHTML = "";
+          dealRecalc();
+          try {
+            if (typeof render === "function") render();
+          } catch (_) {}
+          try {
+            if (typeof renderTaxPage === "function") renderTaxPage();
+          } catch (_) {}
+        }
+      }
+      window.djEditColl = djEditColl;
+      window.djCommitColl = djCommitColl;
 
       function renderDealAddOns(vin) {
         const v = vehicles.find((x) => x.vin === vin);
@@ -42683,9 +43982,9 @@
         }
       }
 
-      let djCustSaveTimer = null;
-      let djCustSaveSeq = 0;
-      let djCustSavePending = null;
+      let __djAutoT = null;
+      let __djAutoSeq = 0;
+      let __djAutoPending = null;
 
       function djSetCustSaveStatus(state, message) {
         const el = document.getElementById("djCustSaveStatus");
@@ -42695,22 +43994,26 @@
         el.textContent = message || "";
       }
 
-      function djReadCustomerForm() {
-        return {
-          customerName: (document.getElementById("djCustName")?.value || "").trim() || null,
-          customerPhone: (document.getElementById("djCustCell")?.value || "").trim() || null,
-          customerEmail: (document.getElementById("djCustEmail")?.value || "").trim() || null,
-          customerAddress: (document.getElementById("djCustAddress")?.value || "").trim() || null,
+      function djBuildAutoSavePatch(v) {
+        const g = function (id) {
+          const el = document.getElementById(id);
+          return el ? el.value : "";
         };
-      }
+        const patch = {
+          customerName: (g("djCustName") || "").trim() || null,
+          customerPhone: (g("djCustCell") || "").trim() || null,
+          customerEmail: (g("djCustEmail") || "").trim() || null,
+          customerAddress: (g("djCustAddress") || "").trim() || null,
+          notes: g("djNotes") || null,
+          rosNumber: (g("djRos") || "").trim() || null,
+        };
 
-      function djApplyCustomerLocal(vin, patch) {
-        const v = vehicles.find((x) => x.vin === vin);
-        if (!v) return null;
         v.customer = patch.customerName;
         v.customerPhone = patch.customerPhone;
         v.customerEmail = patch.customerEmail;
         v.customerAddress = patch.customerAddress;
+        v.notes = patch.notes;
+        v.ros = patch.rosNumber;
         if (v._raw && v._raw.deal && v._raw.deal.customer) {
           const c = v._raw.deal.customer;
           if (patch.customerName) c.name = patch.customerName;
@@ -42718,113 +44021,193 @@
           c.email = patch.customerEmail;
           c.address = patch.customerAddress;
         }
-        return v;
+
+        // Financial fields only after sold/jacket exists (mock parity; never mark sold via autosave)
+        if (v.sold || v.dealSaved || v.hasDealJacket || v.dealJacket) {
+          const sp = parseFloat(g("djSoldPrice"));
+          if (!isNaN(sp) && sp >= 0) {
+            patch.soldPrice = sp;
+            v.soldPrice = sp;
+          }
+          const tx = parseFloat(g("djStateTax"));
+          if (!isNaN(tx) && tx >= 0) {
+            patch.salesTaxAmount = tx;
+            v.customerSalesTax = tx;
+            v.salesTax = tx;
+          }
+          const rf = parseFloat(g("djRegFee"));
+          if (!isNaN(rf) && rf >= 0) {
+            patch.licenseFees = rf;
+            v.customerRegFees = rf;
+          }
+          const sd = g("djSaleDate");
+          if (sd && /^\d{4}-\d{2}-\d{2}$/.test(sd)) {
+            patch.saleDate = sd;
+            v.soldDate = sd;
+          }
+          const rep = g("djRep");
+          if (rep) v.rep = rep;
+
+          if (djCommMode === "amt") {
+            const ca = parseFloat(g("djCommAmt"));
+            if (!isNaN(ca) && ca >= 0) {
+              patch.commissionAmount = ca;
+              patch.commissionType = "manual";
+              v.commissionOverride = ca;
+              v.commMode = "amt";
+            }
+          } else {
+            const pct = typeof djGetPct === "function" ? djGetPct() : 20;
+            if (!isNaN(pct) && pct >= 0) {
+              const gross = (Number(v.soldPrice) || 0) - (Number(v.price) || 0);
+              const commission = Math.max(0, Math.round((gross * pct) / 100));
+              patch.commissionRate = Math.round(pct * 10) / 1000;
+              patch.commissionAmount = commission;
+              patch.commissionType = "percentage";
+              v.commissionPct = Math.round(pct * 10) / 10;
+              v.commissionOverride = commission;
+              v.commMode = "pct";
+            }
+          }
+        }
+        return patch;
       }
 
-      async function djFlushCustomerSave() {
-        if (djCustSaveTimer) {
-          clearTimeout(djCustSaveTimer);
-          djCustSaveTimer = null;
+      async function djRunAutoSave(job) {
+        if (__djAutoPending !== job) return null;
+        __djAutoPending = null;
+        if (!window.AVVehicles || !job.vin) return null;
+        if (typeof AVBusy !== "undefined") AVBusy.inc();
+        try {
+          await AVVehicles.persistPatch(job.vin, job.patch);
+          if (job.seq === __djAutoSeq) djShowAutoSaved();
+          try {
+            dealRecalc();
+          } catch (_) {}
+        } catch (err) {
+          if (job.seq === __djAutoSeq) {
+            djSetCustSaveStatus("error", "Not saved");
+            if (typeof AVToast !== "undefined") {
+              AVToast.error(
+                err.message || "Failed to save deal jacket",
+                "Save failed",
+              );
+            }
+          }
+          throw err;
+        } finally {
+          if (typeof AVBusy !== "undefined") AVBusy.dec();
         }
-        if (djCustSavePending && typeof djCustSavePending.run === "function") {
-          return djCustSavePending.run();
+      }
+
+      function djAutoSave() {
+        if (!currentDealVin) return;
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v || !v.id) return;
+        const patch = djBuildAutoSavePatch(v);
+        djSetCustSaveStatus("saving", "Saving…");
+        clearTimeout(__djAutoT);
+        const seq = ++__djAutoSeq;
+        const job = { vin: currentDealVin, patch: patch, seq: seq, run: null };
+        job.run = function () {
+          return djRunAutoSave(job);
+        };
+        __djAutoPending = job;
+        __djAutoT = setTimeout(function () {
+          __djAutoT = null;
+          job.run().catch(function () {});
+        }, 300);
+      }
+
+      function djFlushAutoSave() {
+        if (__djAutoT) {
+          clearTimeout(__djAutoT);
+          __djAutoT = null;
+        }
+        if (__djAutoPending && typeof __djAutoPending.run === "function") {
+          return __djAutoPending.run();
         }
         return null;
       }
 
       function djAutoSaveCustomer() {
-        if (!currentDealVin) return;
-        const vin = currentDealVin;
-        const patch = djReadCustomerForm();
-        if (
-          !patch.customerName &&
-          !patch.customerPhone &&
-          !patch.customerEmail &&
-          !patch.customerAddress
-        ) {
-          return;
-        }
-
-        djApplyCustomerLocal(vin, patch);
-        djSetCustSaveStatus("saving", "Saving…");
-
-        clearTimeout(djCustSaveTimer);
-        const seq = ++djCustSaveSeq;
-        const job = {
-          vin,
-          patch,
-          run: null,
-        };
-        job.run = async function () {
-          if (djCustSavePending !== job) return null;
-          djCustSavePending = null;
-          if (!window.AVVehicles) return null;
-          if (typeof AVBusy !== "undefined") AVBusy.inc();
-          try {
-            await AVVehicles.persistPatch(vin, patch);
-            // Keep local + linked customer mirror in sync after server round-trip.
-            djApplyCustomerLocal(vin, patch);
-            if (seq === djCustSaveSeq) {
-              djSetCustSaveStatus("saved", "Saved");
-              djShowAutoSaved();
-              setTimeout(function () {
-                if (seq === djCustSaveSeq) djSetCustSaveStatus("", "");
-              }, 1800);
-            }
-          } catch (err) {
-            if (seq === djCustSaveSeq) {
-              djSetCustSaveStatus("error", "Not saved");
-              if (typeof AVToast !== "undefined") {
-                AVToast.error(err.message || "Failed to save customer");
-              }
-            }
-            throw err;
-          } finally {
-            if (typeof AVBusy !== "undefined") AVBusy.dec();
-          }
-        };
-        djCustSavePending = job;
-        djCustSaveTimer = setTimeout(function () {
-          djCustSaveTimer = null;
-          job.run().catch(function () {});
-        }, 450);
+        djAutoSave();
+      }
+      function djFlushCustomerSave() {
+        return djFlushAutoSave();
       }
 
-      // Flush pending customer autosave before leaving the jacket / switching VIN.
+      function djBindAutoSave() {
+        if (window.__djAutoBound) return;
+        const page = document.getElementById("page-deal-jacket");
+        if (!page) return;
+        window.__djAutoBound = true;
+        const isField = function (el) {
+          return (
+            el &&
+            typeof el.matches === "function" &&
+            el.matches("input, textarea, select") &&
+            !el.classList.contains("vdp-edit-input")
+          );
+        };
+        page.addEventListener("input", function (e) {
+          if (!isField(e.target)) return;
+          if (__djAutoT) clearTimeout(__djAutoT);
+          __djAutoT = setTimeout(djAutoSave, 250);
+        });
+        page.addEventListener("change", function (e) {
+          if (!isField(e.target)) return;
+          if (__djAutoT) clearTimeout(__djAutoT);
+          djAutoSave();
+        });
+        page.addEventListener("focusout", function (e) {
+          if (!isField(e.target)) return;
+          if (__djAutoT) clearTimeout(__djAutoT);
+          djAutoSave();
+        });
+      }
+
       const _openDealJacketOrig = openDealJacket;
       openDealJacket = async function (vin, context) {
         try {
-          await djFlushCustomerSave();
+          await djFlushAutoSave();
         } catch (_) {}
+        djBindAutoSave();
         return _openDealJacketOrig(vin, context);
       };
       if (typeof showPage === "function") {
         const _showPageOrig = showPage;
         showPage = function (pageId, el) {
           if (currentDealVin && pageId !== "deal-jacket") {
-            djFlushCustomerSave().catch(function () {});
+            djFlushAutoSave().catch(function () {});
           }
+          if (pageId === "deal-jacket") djBindAutoSave();
           return _showPageOrig(pageId, el);
         };
       }
       window.addEventListener("beforeunload", function () {
-        if (djCustSavePending || djCustSaveTimer) {
+        if (__djAutoPending || __djAutoT) {
           try {
-            // Best-effort sync flush via keepalive is not available for JSON PATCH here;
-            // AVBusy already warns when mutations are in flight after save starts.
-            if (djCustSaveTimer) {
-              clearTimeout(djCustSaveTimer);
-              djCustSaveTimer = null;
-              if (djCustSavePending && djCustSavePending.run) {
-                djCustSavePending.run().catch(function () {});
+            if (__djAutoT) {
+              clearTimeout(__djAutoT);
+              __djAutoT = null;
+              if (__djAutoPending && __djAutoPending.run) {
+                __djAutoPending.run().catch(function () {});
               }
             }
           } catch (_) {}
         }
       });
 
+      try {
+        djBindAutoSave();
+      } catch (_) {}
+
+      window.djAutoSave = djAutoSave;
+      window.djFlushAutoSave = djFlushAutoSave;
       window.djAutoSaveCustomer = djAutoSaveCustomer;
       window.djFlushCustomerSave = djFlushCustomerSave;
+      window.djBindAutoSave = djBindAutoSave;
 
       // Effective title status for a sold vehicle (infers historical deals from titlePresent).
       function soldTitleIn(v) {

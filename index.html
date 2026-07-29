@@ -649,6 +649,7 @@
   }
   .field input::placeholder{color:var(--faint)}
   .field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .field input.phone-invalid{border-color:var(--down)!important}
   .wl-form .btn-primary{width:100%;margin-top:8px;padding:14px}
   .wl-note{text-align:center;font-size:12px;color:var(--faint);margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px}
   .wl-note svg{width:12px;height:12px;color:var(--up)}
@@ -1447,7 +1448,7 @@
             </div>
             <div class="field">
               <label for="phone">Phone number</label>
-              <input id="phone" name="phone" type="tel" placeholder="(555) 010-2020" />
+              <input id="phone" name="phone" type="tel" placeholder="(555) 010-2020" oninput="formatPhoneInput(this)" />
             </div>
             <div class="field">
               <label for="dealership">Dealership name</label>
@@ -1746,6 +1747,15 @@
   };
   let activeRegistrationId = null;
 
+  function formatPhoneInput(el){
+    let d=(el.value||"").replace(/\D/g,"").slice(0,10);
+    if(d.length>6) el.value="("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6);
+    else if(d.length>3) el.value="("+d.slice(0,3)+") "+d.slice(3);
+    else if(d.length>0) el.value="("+d;
+    el.classList.toggle("phone-invalid",d.length>0&&d.length<10);
+  }
+  function isValidPhone(v){const d=(v||"").replace(/\D/g,"");return d.length===10}
+
   const stateSelect=document.getElementById('state');
   if(stateSelect && window.US_LOCATIONS){
     Object.keys(window.US_LOCATIONS).sort((a,b)=>(window.US_STATE_NAMES[a]||a).localeCompare(window.US_STATE_NAMES[b]||b)).forEach(code=>{
@@ -1761,9 +1771,15 @@
     e.preventDefault();
     const name=form.name.value.trim(), email=form.email.value.trim(), dealer=form.dealership.value.trim();
     const zipCode=form.zipCode.value.trim(), state=form.state.value.trim();
+    const phone=form.phone.value.trim();
     if(!name||!email||!dealer||!zipCode||!state||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
       form.querySelectorAll('input[required],select[required]').forEach(i=>{ i.style.borderColor=(i.value.trim()==='')?'var(--down)':'var(--line)'; });
       if(!zipCode||!state) AVToast.warning('Please enter your state and ZIP code.');
+      return;
+    }
+    if(phone&&!isValidPhone(phone)){
+      document.getElementById('phone').classList.add('phone-invalid');
+      AVToast.warning('Please enter a valid 10-digit phone number.');
       return;
     }
     try{
