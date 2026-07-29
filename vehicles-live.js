@@ -271,6 +271,8 @@
       const prev = list[idx];
       if (prev && prev._undo) ui._undo = prev._undo;
       if (prev && prev.flooringDetail) ui.flooringDetail = prev.flooringDetail;
+      if (prev && prev.djDocs) ui.djDocs = prev.djDocs;
+      if (prev && prev.djDocsRemoved) ui.djDocsRemoved = prev.djDocsRemoved;
       list[idx] = ui;
     } else list.unshift(ui);
   }
@@ -414,6 +416,8 @@
     ui.addOnItems = v.addOnItems != null ? v.addOnItems : ui.addOnItems;
     ui.commMode = v.commMode || ui.commMode;
     ui.documents = v.documents || ui.documents;
+    ui.djDocs = v.djDocs || [];
+    ui.djDocsRemoved = v.djDocsRemoved || [];
     ui.dealSaved = v.dealSaved != null ? v.dealSaved : ui.dealSaved;
     ui.flooringDetail = v.flooringDetail;
     replaceVehicleInPlace(ui);
