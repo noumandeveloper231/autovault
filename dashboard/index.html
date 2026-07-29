@@ -43067,9 +43067,9 @@
         if (saveBtn) {
           if (hasJacket) {
             saveBtn.innerHTML =
-              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Deal Jacket Saved';
-            saveBtn.disabled = true;
-            saveBtn.style.opacity = "0.7";
+              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Save Changes';
+            saveBtn.disabled = false;
+            saveBtn.style.opacity = "1";
           } else if (v.sold) {
             saveBtn.innerHTML =
               '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Save Deal Jacket';
@@ -43478,7 +43478,7 @@
         };
         set(
           "djBrkComm",
-          commission > 0 ? "\u2212" + fmt(commission) : "\u2014",
+          commission > 0 ? fmt(commission) : "\u2014",
         );
         const cl = document.getElementById("djBrkCommLbl");
         if (cl)
@@ -43837,6 +43837,27 @@
       async function saveDeal() {
         const v = vehicles.find((x) => x.vin === currentDealVin);
         if (!v) return;
+        if (v.dealSaved || v.hasDealJacket || v.dealJacket) {
+          if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
+          const btn = document.getElementById("djSaveBtn");
+          try {
+            if (typeof AVBusy !== "undefined") {
+              AVBusy.inc();
+              AVBusy.setBtnLoading(btn, true, "Saving\u2026");
+            }
+            await djFlushAutoSave();
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Changes saved");
+          } catch (err) {
+            if (typeof AVToast !== "undefined")
+              AVToast.error(err?.message || "Failed to save changes");
+          } finally {
+            if (typeof AVBusy !== "undefined") AVBusy.dec();
+            if (typeof AVBusy !== "undefined")
+              AVBusy.setBtnLoading(btn, false);
+          }
+          return;
+        }
         const saleDateCheck = avValidateDateField("djSaleDate", {
           label: "sale date",
           required: true,
@@ -44370,6 +44391,7 @@
           : !!v.titlePresent;
       }
       let djTitleConfirmVin = null;
+      let djTitleLoadingVin = null;
       function renderDjTitleBoxes() {
         const sold = (vehicles || []).filter(
           (v) =>
@@ -44389,10 +44411,11 @@
                   .replace(/>/g, "&gt;");
         const rowHtml = (v, isOut) => {
           const confirming = isOut && djTitleConfirmVin === v.vin;
+          const loading = confirming && djTitleLoadingVin === v.vin;
           return `<div class="dj-tb-row${confirming ? " confirming" : ""}" onclick="openDealJacket('${v.vin}','sold')">
       <div class="dj-tb-main"><div class="dj-tb-name">${v.year} ${v.make} ${v.model}</div>
       <div class="dj-tb-meta">${v.customer ? esc(v.customer) + " · " : ""}${v.soldDate ? fmtDate(v.soldDate) : ""} · VIN …${(v.vin || "").slice(-6)}</div>
-      ${confirming ? `<div class="dj-tb-confirm"><span>Mark this title as in?</span><button class="dj-tb-yes" onclick="event.stopPropagation(); confirmTitleIn('${v.vin}')">Yes, it&rsquo;s in</button><button class="dj-tb-cancel" onclick="event.stopPropagation(); cancelTitleIn()">Cancel</button></div>` : ""}
+      ${confirming ? `<div class="dj-tb-confirm"><span>Mark this title as in?</span>${loading ? `<button class="dj-tb-yes" disabled style="opacity:0.6;cursor:default;">Saving\u2026</button>` : `<button class="dj-tb-yes" onclick="event.stopPropagation(); confirmTitleIn('${v.vin}')">Yes, it&rsquo;s in</button><button class="dj-tb-cancel" onclick="event.stopPropagation(); cancelTitleIn()">Cancel</button>`}</div>` : ""}
       </div>
       ${isOut ? (confirming ? "" : `<button class="dj-tb-mark" onclick="event.stopPropagation(); askTitleIn('${v.vin}')">Mark title in</button>`) : '<span class="dj-tb-check">✓</span>'}
     </div>`;
@@ -44448,22 +44471,42 @@
       async function confirmTitleIn(vin) {
         const v = vehicles.find((x) => x.vin === vin);
         if (!v) return;
-        v.titleIn = true;
-        v.titlePresent = true;
-        djTitleConfirmVin = null;
+        djTitleLoadingVin = vin;
+        renderDjTitleBoxes();
         try {
           if (v.id && window.AVApi) {
-            await AVApi.updateVehicle(v.id, {
-              titleReceived: true,
-              titlePresent: true,
-            });
+            if (typeof AVToast !== "undefined" && AVToast.promise) {
+              await AVToast.promise(
+                AVApi.updateVehicle(v.id, {
+                  titleReceived: true,
+                  titlePresent: true,
+                }),
+                {
+                  loading: "Marking title as in\u2026",
+                  loadingMsg: "Updating title status",
+                  success: "Title marked as in",
+                  successTitle: "Updated",
+                  error: "Failed to mark title as in",
+                  errorTitle: "Something went wrong",
+                },
+              );
+            } else {
+              await AVApi.updateVehicle(v.id, {
+                titleReceived: true,
+                titlePresent: true,
+              });
+              if (typeof AVToast !== "undefined")
+                AVToast.success("Title marked as in");
+            }
           }
+          v.titleIn = true;
+          v.titlePresent = true;
         } catch (err) {
-          if (typeof AVToast !== "undefined")
-            AVToast.error(err.message || "Failed to update title status");
+          if (typeof AVToast !== "undefined" && !AVToast.promise)
+            AVToast.error(err?.message || "Failed to mark title as in");
         }
-        if (typeof AVToast !== "undefined")
-          AVToast.success("Title marked as in");
+        djTitleConfirmVin = null;
+        djTitleLoadingVin = null;
         renderDjTitleBoxes();
         if (typeof render === "function") render();
       }
