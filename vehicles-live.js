@@ -1,5 +1,5 @@
 /**
- * Live Vehicles module � maps API ? dashboard UI shape and persists mutations.
+ * Live Vehicles module - maps API ? dashboard UI shape and persists mutations.
  * Requires window.AVApi and global `vehicles` array.
  */
 (function (global) {
@@ -27,7 +27,7 @@
       btn.dataset.origText = btn.textContent;
       btn.disabled = true;
       btn.classList.add('av-btn-loading');
-      btn.innerHTML = '<span class="av-btn-spinner"></span> ' + (originalText || 'Saving�');
+      btn.innerHTML = '<span class="av-btn-spinner"></span> ' + (originalText || 'Saving...');
     } else {
       btn.disabled = false;
       btn.classList.remove('av-btn-loading');
@@ -37,7 +37,7 @@
 
   function guard() {
     if (isBusy()) {
-      if (global.AVToast) AVToast.warning('Please wait � a save is already in progress.');
+      if (global.AVToast) AVToast.warning('Please wait - a save is already in progress.');
       return false;
     }
     return true;
@@ -380,7 +380,7 @@
 
   async function persistPatch(vinOrId, patch) {
     const v = findUiVehicle(vinOrId);
-    if (!v || !v.id) throw new Error("Vehicle has no API id � reload inventory");
+    if (!v || !v.id) throw new Error("Vehicle has no API id - reload inventory");
     const { vehicle } = await AVApi.updateVehicle(v.id, patch);
     const expenses = vehicle.expenses || v.repairsList;
     const ui = mapApiToUi(
@@ -644,7 +644,7 @@
 
   async function addRepair(vin, entry) {
     const v = findUiVehicle(vin);
-    if (!v || !v.id) throw new Error("Vehicle not found � reload inventory");
+    if (!v || !v.id) throw new Error("Vehicle not found - reload inventory");
     if (!entry || !String(entry.desc || "").trim()) {
       throw new Error("Description is required");
     }

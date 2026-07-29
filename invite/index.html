@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Accept Invite — AutoVault</title>
+  <title>Accept Invite - AutoVault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
@@ -101,7 +101,7 @@
       }
 
       btn.disabled = true;
-      btn.textContent = "Activating…";
+      btn.textContent = "Activating...";
       try {
         const res = await AVApi.request("/api/v1/invitations/accept", {
           method: "POST",
@@ -111,7 +111,7 @@
         const user = (res && (res.user || res)) || {};
         const path = loginPathForRole(user.role);
         msg.className = "msg ok";
-        msg.textContent = "Account created. Redirecting to login…";
+        msg.textContent = "Account created. Redirecting to login...";
         setTimeout(() => location.replace(path), 1200);
       } catch (err) {
         msg.className = "msg err";

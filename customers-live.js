@@ -1,5 +1,5 @@
 /**
- * Live Customers + Leads � maps API ? dashboard UI and persists mutations.
+ * Live Customers + Leads - maps API ? dashboard UI and persists mutations.
  * Requires window.AVApi. Globals: customers, customerLeads.
  */
 (function (global) {

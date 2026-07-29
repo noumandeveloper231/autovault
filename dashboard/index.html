@@ -35011,7 +35011,7 @@
           "M. Reyes": "pill-orange",
           "A. Patel": "pill-purple",
         };
-        return `<span class="pill ${colors[rep] || "pill-blue"}">${rep || "�"}</span>`;
+        return `<span class="pill ${colors[rep] || "pill-blue"}">${rep || "-"}</span>`;
       }
 
       function vehicleMoneyLocked(v) {
@@ -38235,6 +38235,104 @@
       function isRecurring(e) {
         return e.recurring && e.recurring !== "One-Time";
       }
+      /** YYYY-MM-01 for a calendar month (0-based month). */
+      function pnlMonthDate(year, month) {
+        return `${year}-${String(month + 1).padStart(2, "0")}-01`;
+      }
+      /**
+       * Recurring templates carry forward from their start date until edited
+       * off recurring or deleted. Weekly/Monthly hit every month; Quarterly
+       * every 3 months from start; Annual on the anniversary month.
+       */
+      function recurringOccursInMonth(e, year, month) {
+        if (!isRecurring(e)) return false;
+        const start = pnlDateParts(e.dueDate);
+        if (!start) return false;
+        const startIdx = start.y * 12 + start.m;
+        const targetIdx = year * 12 + month;
+        if (targetIdx < startIdx) return false;
+        switch (e.recurring) {
+          case "Weekly":
+          case "Monthly":
+            return true;
+          case "Quarterly":
+            return (targetIdx - startIdx) % 3 === 0;
+          case "Annual":
+            return month === start.m;
+          default:
+            return false;
+        }
+      }
+      function recurringOccurrenceAmount(e) {
+        if (e.recurring === "Weekly") return monthlyEquivalent(e);
+        return Number(e.amount) || 0;
+      }
+      /**
+       * Expand one-time + recurring expenses into rows that belong in a P&L /
+       * expenses period. Carried months reuse the template id so edit/delete
+       * still updates the single source of truth.
+       */
+      function expensesForPeriod(expenses, opts) {
+        opts = opts || {};
+        const list = Array.isArray(expenses) ? expenses : [];
+        const year =
+          opts.year != null
+            ? opts.year
+            : typeof pnlPeriod !== "undefined"
+              ? pnlPeriod.year
+              : new Date().getFullYear();
+        const mode =
+          opts.mode ||
+          (typeof pnlPeriod !== "undefined" ? pnlPeriod.mode : "month");
+        const month =
+          opts.month != null
+            ? opts.month
+            : typeof pnlPeriod !== "undefined"
+              ? pnlPeriod.month
+              : new Date().getMonth();
+        const excludeVehicle = !!opts.excludeVehicle;
+        const out = [];
+
+        function pushOccurrence(e, y, m) {
+          const start = pnlDateParts(e.dueDate);
+          const isNative = start && start.y === y && start.m === m;
+          out.push({
+            ...e,
+            amount: recurringOccurrenceAmount(e),
+            dueDate: isNative ? e.dueDate : pnlMonthDate(y, m),
+            paid: isNative ? !!e.paid : false,
+            _carriedForward: !isNative,
+            _occurrenceKey: `${e.id}:${y}-${m}`,
+          });
+        }
+
+        for (let i = 0; i < list.length; i++) {
+          const e = list[i];
+          if (excludeVehicle && e.vehicleVin) continue;
+
+          if (!isRecurring(e)) {
+            const d = pnlDateParts(e.dueDate);
+            if (!d) continue;
+            if (d.y !== year) continue;
+            if (mode === "month" && d.m !== month) continue;
+            out.push(e);
+            continue;
+          }
+
+          if (mode === "month") {
+            if (recurringOccursInMonth(e, year, month)) {
+              pushOccurrence(e, year, month);
+            }
+          } else {
+            for (let m = 0; m < 12; m++) {
+              if (recurringOccursInMonth(e, year, m)) {
+                pushOccurrence(e, year, m);
+              }
+            }
+          }
+        }
+        return out;
+      }
 
       // Attached expenses feed straight into each vehicle's cost & P&L (used by computeRow)
       function isVehicleCostMirrorExpense(e) {
@@ -38417,13 +38515,9 @@
       function renderExpenseDonut() {
         const totals = {};
         SPEND_BUCKETS.forEach((b) => (totals[b.key] = 0));
-        _expenses
-          .filter(
-            (e) => typeof inPnlPeriod !== "function" || inPnlPeriod(e.dueDate),
-          )
-          .forEach((e) => {
-            totals[spendBucket(e.category)] += Number(e.amount) || 0;
-          });
+        expensesForPeriod(_expenses).forEach((e) => {
+          totals[spendBucket(e.category)] += Number(e.amount) || 0;
+        });
         const grand = Object.values(totals).reduce((s, v) => s + v, 0);
 
         document.getElementById("expDonutTotal").textContent = fmt(grand);
@@ -38478,20 +38572,18 @@
         const curMonth = today.getMonth(),
           curYear = today.getFullYear();
 
-        // KPIs
-        const monthTotal = _expenses
-          .filter((e) => {
-            const d = new Date(e.dueDate);
-            return d.getMonth() === curMonth && d.getFullYear() === curYear;
-          })
-          .reduce((s, e) => s + (Number(e.amount) || 0), 0);
-        const monthPaid = _expenses
-          .filter((e) => {
-            const d = new Date(e.dueDate);
-            return (
-              d.getMonth() === curMonth && d.getFullYear() === curYear && e.paid
-            );
-          })
+        // KPIs — include recurring carry-forward into the current calendar month
+        const monthRows = expensesForPeriod(_expenses, {
+          year: curYear,
+          mode: "month",
+          month: curMonth,
+        });
+        const monthTotal = monthRows.reduce(
+          (s, e) => s + (Number(e.amount) || 0),
+          0,
+        );
+        const monthPaid = monthRows
+          .filter((e) => e.paid)
           .reduce((s, e) => s + (Number(e.amount) || 0), 0);
         const recurringMonthly = _expenses
           .filter(isRecurring)
@@ -38546,10 +38638,8 @@
         const fStatus = document.getElementById("expFilterStatus").value;
         const fType = document.getElementById("expFilterType").value;
 
-        let rows = _expenses
+        let rows = expensesForPeriod(_expenses)
           .filter((e) => {
-            if (typeof inPnlPeriod === "function" && !inPnlPeriod(e.dueDate))
-              return false;
             const vlabel = e.vehicleVin ? vehicleLabel(e.vehicleVin) : "";
             const text =
               `${e.name} ${e.category} ${e.notes || ""} ${vlabel}`.toLowerCase();
@@ -38564,7 +38654,10 @@
           .sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate));
 
         document.getElementById("expFilterTag").textContent =
-          `Showing ${rows.length} of ${_expenses.length} expenses`;
+          `Showing ${rows.length} of ${_expenses.length} expenses` +
+          (rows.some((e) => e._carriedForward)
+            ? " (includes recurring carry-forward)"
+            : "");
         document.getElementById("expCountLabel").textContent =
           `— ${_expenses.length} expenses tracked`;
         document.getElementById("expTotalAmount").textContent = fmt(
@@ -38580,15 +38673,22 @@
         body.innerHTML = rows
           .map((e) => {
             const m = catMeta(e.category);
-            const overdue = !e.paid && new Date(e.dueDate) < today;
+            const overdue =
+              !e._carriedForward && !e.paid && new Date(e.dueDate) < today;
             const dueCls = overdue ? "exp-overdue" : "";
             const recurCls = isRecurring(e) ? "rp-recur" : "rp-once";
-            const recurLabel = isRecurring(e) ? e.recurring : "One-time";
+            const recurLabel = isRecurring(e)
+              ? e._carriedForward
+                ? `${e.recurring} · carried`
+                : e.recurring
+              : "One-time";
 
             // status hover-select (matches vehicles table)
             const statusColor = e.paid ? "var(--green)" : "var(--red)";
             const statusTxt = e.paid ? "Paid" : "Unpaid";
-            const statusCell = `
+            const statusCell = e._carriedForward
+              ? `<span style="color:${statusColor};font-size:12px;">${statusTxt}</span>`
+              : `
       <div class="status-wrap">
         <span class="status-text" style="color:${statusColor};">${statusTxt}</span>
         <select class="status-select" onchange="setExpPaid('${e.id}', this.value)">
@@ -38613,10 +38713,10 @@
               : '<span style="opacity:.5;">—</span>';
 
             return `<tr>
-      <td class="veh-cell exp-name-cell" style="cursor:pointer;" onclick="showExpenseDetail('${e.id}')"><div class="exp-name">${e.name}</div><div class="exp-sub">View details &rarr;</div></td>
+      <td class="veh-cell exp-name-cell" style="cursor:pointer;" onclick="showExpenseDetail('${e.id}')"><div class="exp-name">${e.name}${e._carriedForward ? ' <span style="font-size:10px;color:var(--muted);font-weight:500;">(carried)</span>' : ""}</div><div class="exp-sub">View details &rarr;</div></td>
       <td><span class="cat-chip" style="background:${m.bg};color:${m.color};"><span class="cat-dot" style="background:${m.color};"></span>${e.category}</span></td>
       <td style="color:var(--text);font-weight:700;">${fmt(e.amount)}</td>
-      <td class="${dueCls}">${fmtDate(e.dueDate)}${overdue ? " · overdue" : ""}</td>
+      <td class="${dueCls}">${fmtDate(e.dueDate)}${overdue ? " · overdue" : e._carriedForward ? " · auto" : ""}</td>
       <td><span class="recur-pill ${recurCls}">${recurLabel}</span></td>
       <td>${statusCell}</td>
       <td>${attachCell}</td>
@@ -42513,11 +42613,13 @@
         const grossMargin =
           totalRevenue > 0 ? (grossProfit / totalRevenue) * 100 : 0;
 
-        // Operating expenses
+        // Operating expenses — recurring templates auto-carry into every month
+        // from their start date until edited off recurring or deleted.
         const commissions = sold.reduce((s, r) => s + r.commission, 0);
-        const opExpenses = (
-          typeof _expenses !== "undefined" ? _expenses : []
-        ).filter((e) => !e.vehicleVin && inPnlPeriod(e.dueDate));
+        const opExpenses = expensesForPeriod(
+          typeof _expenses !== "undefined" ? _expenses : [],
+          { excludeVehicle: true },
+        );
         const byCat = {};
         opExpenses.forEach((e) => {
           byCat[e.category] =
@@ -42539,7 +42641,7 @@
           .filter(
             (e) => !e.vehicleVin && e.recurring && e.recurring !== "One-Time",
           )
-          .reduce((s, e) => s + (Number(e.amount) || 0), 0);
+          .reduce((s, e) => s + monthlyEquivalent(e), 0);
         const collected = sold.reduce(
           (s, r) => s + (r.salesTaxCollected || 0) + (r.regFeesCollected || 0),
           0,
@@ -42610,7 +42712,7 @@
     <div class="pnl-memo">
       <b style="color:var(--text);">Memo — outside the P&amp;L:</b><br>
       Sales tax &amp; registration collected for the state (pass-through, not income): <b>${fmt(collected)}</b><br>
-      Recurring monthly overhead obligation: <b>${fmt(recurringMonthly)}/mo</b>
+      Recurring expenses auto-carry into each month's Operating Expenses until edited or deleted. Run-rate: <b>${fmt(recurringMonthly)}/mo</b>
     </div>`;
         } else {
           document.getElementById("pnlStatement").innerHTML = `
@@ -42658,7 +42760,7 @@
               .map(
                 (e) => `
               <tr style="border-top:1px solid var(--border);">
-                <td style="padding:8px 12px;">${e.name || e.category}</td>
+                <td style="padding:8px 12px;">${e.name || e.category}${e._carriedForward ? ' <span style="font-size:10px;color:var(--muted);">(recurring)</span>' : isRecurring(e) ? ' <span style="font-size:10px;color:var(--muted);">(recurring)</span>' : ""}</td>
                 <td style="padding:8px 12px;color:var(--muted);">${e.category}</td>
                 <td style="padding:8px 12px;text-align:right;font-family:var(--mono);">${fmt(e.amount)}</td>
                 <td style="padding:8px 12px;text-align:center;">
@@ -42679,7 +42781,7 @@
     <div class="pnl-memo">
       <b style="color:var(--text);">Memo — outside the P&amp;L:</b><br>
       Sales tax &amp; registration collected for the state (pass-through, not income): <b>${fmt(collected)}</b><br>
-      Recurring monthly overhead obligation: <b>${fmt(recurringMonthly)}/mo</b>
+      Recurring expenses auto-carry into each month's Operating Expenses until edited or deleted. Run-rate: <b>${fmt(recurringMonthly)}/mo</b>
     </div>`;
         }
 

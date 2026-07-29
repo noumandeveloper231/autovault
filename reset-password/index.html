@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reset Password � AutoVault</title>
+  <title>Reset Password - AutoVault</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root { --bg:#0b0e14; --card:#12161b; --border:#232a32; --text:#eaecef; --muted:#8b95a1; --green:#2c9257; }
@@ -72,7 +72,7 @@
       try {
         await AVApi.resetPassword({ token, password });
         msg.className = "msg ok";
-        msg.textContent = "Password updated. Redirecting to login�";
+        msg.textContent = "Password updated. Redirecting to login...";
         setTimeout(() => location.replace("/login"), 1200);
       } catch (err) {
         msg.className = "msg err";
