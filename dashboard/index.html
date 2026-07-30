@@ -4602,6 +4602,33 @@
         box-shadow: 0 0 0 1px var(--orange) inset;
       }
 
+      .exp-kpi-click {
+        cursor: pointer;
+        transition:
+          transform 0.12s ease,
+          box-shadow 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .exp-kpi-click:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.28);
+      }
+      .exp-kpi-click.active {
+        border-color: var(--accent);
+        box-shadow:
+          0 0 0 1px var(--accent) inset,
+          0 8px 22px rgba(0, 0, 0, 0.25);
+      }
+      .exp-tag-clear {
+        margin-left: 8px;
+        color: var(--orange);
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .exp-tag-clear:hover {
+        text-decoration: underline;
+      }
+
       .kpi-gear {
         float: right;
         opacity: 0.55;
@@ -20656,32 +20683,62 @@
             </div>
           </div>
 
-          <!-- KPI STAT STRIP -->
+          <!-- KPI STAT STRIP — click a card to filter the table -->
           <div class="kpi-grid">
-            <div class="kpi" style="--accent: var(--blue)">
-              <div class="kpi-label">Total This Month</div>
+            <div
+              class="kpi exp-kpi-click"
+              data-bucket=""
+              style="--accent: var(--blue)"
+              onclick="expFilterBucket('')"
+              title="Show all expenses"
+            >
+              <div class="kpi-label">Total Expenses</div>
               <div class="kpi-value" id="expKpiMonth">$0</div>
               <div class="kpi-foot" id="expKpiMonthFoot">&mdash;</div>
             </div>
-            <div class="kpi" style="--accent: var(--purple)">
-              <div class="kpi-label">Recurring / Month</div>
+            <div
+              class="kpi exp-kpi-click"
+              data-bucket="Recurring Expense"
+              style="--accent: #a07bff"
+              onclick="expFilterBucket('Recurring Expense')"
+              title="View recurring expenses only"
+            >
+              <div class="kpi-label">Recurring Expense</div>
               <div class="kpi-value" id="expKpiRecurring">$0</div>
               <div class="kpi-foot" id="expKpiRecurringFoot">&mdash;</div>
             </div>
-            <div class="kpi" style="--accent: var(--orange)">
-              <div class="kpi-label">Vehicle Expenses</div>
+            <div
+              class="kpi exp-kpi-click"
+              data-bucket="Vehicle Expense"
+              style="--accent: #ff9f43"
+              onclick="expFilterBucket('Vehicle Expense')"
+              title="View vehicle expenses only"
+            >
+              <div class="kpi-label">Vehicle Expense</div>
               <div class="kpi-value" id="expKpiVehicle">$0</div>
               <div class="kpi-foot" id="expKpiVehicleFoot">&mdash;</div>
             </div>
-            <div class="kpi" style="--accent: var(--green)">
-              <div class="kpi-label">Payroll &amp; Commissions</div>
+            <div
+              class="kpi exp-kpi-click"
+              data-bucket="Dealership Expense"
+              style="--accent: #33c2c2"
+              onclick="expFilterBucket('Dealership Expense')"
+              title="View dealership expenses only"
+            >
+              <div class="kpi-label">Dealership Expense</div>
+              <div class="kpi-value" id="expKpiDealership">$0</div>
+              <div class="kpi-foot" id="expKpiDealershipFoot">&mdash;</div>
+            </div>
+            <div
+              class="kpi exp-kpi-click"
+              data-bucket="Payroll &amp; Commission"
+              style="--accent: #23d18b"
+              onclick="expFilterBucket('Payroll &amp; Commission')"
+              title="View payroll &amp; commission only"
+            >
+              <div class="kpi-label">Payroll &amp; Commission</div>
               <div class="kpi-value" id="expKpiPayroll">$0</div>
               <div class="kpi-foot" id="expKpiPayrollFoot">&mdash;</div>
-            </div>
-            <div class="kpi" style="--accent: var(--red)">
-              <div class="kpi-label">Upcoming Payments</div>
-              <div class="kpi-value" id="expKpiUpcoming">$0</div>
-              <div class="kpi-foot" id="expKpiUpcomingFoot">&mdash;</div>
             </div>
           </div>
 
@@ -20738,15 +20795,24 @@
               </svg>
               Add Expense
             </button>
-            <select id="expFilterCategory" onchange="renderExpenses()">
+            <select
+              id="expFilterCategory"
+              onchange="window.__expBucket='';renderExpenses()"
+            >
               <option value="">All Categories</option>
             </select>
-            <select id="expFilterStatus" onchange="renderExpenses()">
+            <select
+              id="expFilterStatus"
+              onchange="window.__expBucket='';renderExpenses()"
+            >
               <option value="">All Statuses</option>
               <option value="paid">Paid</option>
               <option value="unpaid">Unpaid</option>
             </select>
-            <select id="expFilterType" onchange="renderExpenses()">
+            <select
+              id="expFilterType"
+              onchange="window.__expBucket='';renderExpenses()"
+            >
               <option value="">Recurring &amp; One-Time</option>
               <option value="recurring">Recurring only</option>
               <option value="once">One-time only</option>
@@ -20762,7 +20828,7 @@
           </div>
 
           <!-- TABLE -->
-          <div class="table-card">
+          <div class="table-card" id="expTableCard">
             <div class="table-scroll">
               <table class="exp-table" id="expTable">
                 <thead>
@@ -38427,13 +38493,43 @@
         "Annual",
       ];
 
-      // Donut spend buckets (fixed order + colors so the chart reads consistently)
+      // Donut / KPI spend buckets (match the clickable top cards)
       const SPEND_BUCKETS = [
         { key: "Vehicle", color: "#ff9f43" },
         { key: "Recurring", color: "#3aa0ff" },
         { key: "Dealership", color: "#a07bff" },
         { key: "Other", color: "#7c8aa0" },
       ];
+      const EXP_BUCKET_META = {
+        "Recurring Expense": { color: "#a07bff" },
+        "Vehicle Expense": { color: "#ff9f43" },
+        "Dealership Expense": { color: "#33c2c2" },
+        "Payroll & Commission": { color: "#23d18b" },
+      };
+      const EXP_BUCKET_ORDER = [
+        "Recurring Expense",
+        "Vehicle Expense",
+        "Dealership Expense",
+        "Payroll & Commission",
+      ];
+      /** Map any expense to one of the four top-box buckets (mutually exclusive). */
+      function expBucketOf(e) {
+        const t = String(e.expType || "").toLowerCase();
+        if (
+          t.includes("payroll") ||
+          t.includes("commission") ||
+          e.category === "Payroll" ||
+          e.category === "Commissions"
+        ) {
+          return "Payroll & Commission";
+        }
+        const c =
+          (typeof EXP_LEGACY_MAP !== "undefined" && EXP_LEGACY_MAP[e.category]) ||
+          e.category;
+        if (c === "Vehicle Expense" || e.vehicleVin) return "Vehicle Expense";
+        if (c === "Dealership Expense") return "Dealership Expense";
+        return "Recurring Expense";
+      }
       function spendBucket(category) {
         switch (category) {
           case "Vehicle Expense":
@@ -39042,49 +39138,53 @@
 
       // ---- spend breakdown donut ----
       function renderExpenseDonut() {
+        // Match the four top boxes: Recurring, Vehicle, Dealership, Payroll & Commission.
         const totals = {};
-        SPEND_BUCKETS.forEach((b) => (totals[b.key] = 0));
+        EXP_BUCKET_ORDER.forEach((k) => (totals[k] = 0));
         expensesForPeriod(_expenses).forEach((e) => {
-          totals[spendBucket(e.category)] += Number(e.amount) || 0;
+          totals[expBucketOf(e)] += Number(e.amount) || 0;
         });
         const grand = Object.values(totals).reduce((s, v) => s + v, 0);
 
-        document.getElementById("expDonutTotal").textContent = fmt(grand);
+        const totalEl = document.getElementById("expDonutTotal");
+        if (totalEl) totalEl.textContent = fmt(grand);
 
         const R = 70,
           CX = 100,
           CY = 100,
           C = 2 * Math.PI * R;
         const svg = document.getElementById("expDonutSvg");
+        if (!svg) return;
         let segs = `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="var(--border)" stroke-width="26"/>`;
         let offset = 0;
-        const GAP = grand > 0 ? 1.4 : 0; // small visual gap between segments (in circumference units)
+        const GAP = grand > 0 ? 1.4 : 0;
 
-        const ordered = SPEND_BUCKETS.map((b) => ({
-          ...b,
-          amount: totals[b.key],
-        })).filter((b) => b.amount > 0);
-        ordered.forEach((b) => {
-          const frac = grand > 0 ? b.amount / grand : 0;
-          const len = Math.max(0, frac * C - GAP);
-          segs +=
-            `<circle class="donut-seg" cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${b.color}" stroke-width="26"` +
-            ` stroke-dasharray="${len} ${C - len}" stroke-dashoffset="${-offset}">` +
-            `<title>${b.key}: ${fmt(b.amount)} (${Math.round(frac * 100)}%)</title></circle>`;
-          offset += frac * C;
-        });
-        // rotate so the arc starts at 12 o'clock
+        const buckets = EXP_BUCKET_ORDER.map((k) => ({
+          key: k,
+          color: EXP_BUCKET_META[k].color,
+          amount: totals[k],
+        }));
+        buckets
+          .filter((b) => b.amount > 0)
+          .forEach((b) => {
+            const frac = grand > 0 ? b.amount / grand : 0;
+            const len = Math.max(0, frac * C - GAP);
+            const safeKey = String(b.key).replace(/'/g, "\\'");
+            segs +=
+              `<circle class="donut-seg" cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${b.color}" stroke-width="26"` +
+              ` stroke-dasharray="${len} ${C - len}" stroke-dashoffset="${-offset}" style="cursor:pointer;" onclick="expFilterBucket('${safeKey}')">` +
+              `<title>${b.key}: ${fmt(b.amount)} (${Math.round(frac * 100)}%)</title></circle>`;
+            offset += frac * C;
+          });
         svg.innerHTML = `<g transform="rotate(-90 ${CX} ${CY})">${segs}</g>`;
 
-        // legend (sorted high → low, always shows all buckets so the key is stable)
-        const legend = SPEND_BUCKETS.map((b) => ({
-          ...b,
-          amount: totals[b.key],
-        }))
+        const legend = buckets
+          .slice()
           .sort((a, b) => b.amount - a.amount)
           .map((b) => {
             const pct = grand > 0 ? Math.round((b.amount / grand) * 100) : 0;
-            return `<div class="dl-row">
+            const safeKey = String(b.key).replace(/'/g, "\\'");
+            return `<div class="dl-row" style="cursor:pointer;" onclick="expFilterBucket('${safeKey}')">
         <span class="dl-dot" style="background:${b.color};"></span>
         <span class="dl-name">${b.key}</span>
         <span class="dl-amt">${fmt(b.amount)}</span>
@@ -39092,112 +39192,167 @@
       </div>`;
           })
           .join("");
-        document.getElementById("expDonutLegend").innerHTML = legend;
+        const legendEl = document.getElementById("expDonutLegend");
+        if (legendEl) legendEl.innerHTML = legend;
+      }
+
+      // Clicking a top box filters the table to that bucket and scrolls to it.
+      function expFilterBucket(bucket) {
+        window.__expBucket = bucket || "";
+        const c = document.getElementById("expFilterCategory");
+        if (c) c.value = "";
+        const ty = document.getElementById("expFilterType");
+        if (ty) ty.value = "";
+        const st = document.getElementById("expFilterStatus");
+        if (st) st.value = "";
+        const sr = document.getElementById("expSearch");
+        if (sr) sr.value = "";
+        renderExpenses();
+        const anchor = document.getElementById("expTableCard");
+        if (anchor) anchor.scrollIntoView({ behavior: "smooth", block: "center" });
       }
 
       // ---- KPI + table render ----
       function renderExpenses() {
         if (typeof renderFinCalendars === "function") renderFinCalendars();
-        const curMonth = today.getMonth(),
-          curYear = today.getFullYear();
 
-        // KPIs — include recurring carry-forward into the current calendar month
-        const monthRows = expensesForPeriod(_expenses, {
-          year: curYear,
-          mode: "month",
-          month: curMonth,
+        // KPIs — scoped to the selected period so boxes, donut and table agree.
+        const periodExp = expensesForPeriod(_expenses);
+        const periodLbl =
+          typeof pnlPeriodLabel === "function" ? pnlPeriodLabel() : "this period";
+        const bTot = {
+          "Recurring Expense": 0,
+          "Vehicle Expense": 0,
+          "Dealership Expense": 0,
+          "Payroll & Commission": 0,
+        };
+        const bCnt = {
+          "Recurring Expense": 0,
+          "Vehicle Expense": 0,
+          "Dealership Expense": 0,
+          "Payroll & Commission": 0,
+        };
+        periodExp.forEach((e) => {
+          const b = expBucketOf(e);
+          bTot[b] += Number(e.amount) || 0;
+          bCnt[b]++;
         });
-        const monthTotal = monthRows.reduce(
+        const grandTotal = periodExp.reduce(
           (s, e) => s + (Number(e.amount) || 0),
           0,
         );
-        const monthPaid = monthRows
-          .filter((e) => e.paid)
-          .reduce((s, e) => s + (Number(e.amount) || 0), 0);
-        const recurringMonthly = _expenses
-          .filter(isRecurring)
-          .reduce((s, e) => s + monthlyEquivalent(e), 0);
-        const recurringCount = _expenses.filter(isRecurring).length;
-        const vehicleTotal = _expenses
-          .filter((e) => e.vehicleVin)
-          .reduce((s, e) => s + (Number(e.amount) || 0), 0);
-        const vehicleCount = new Set(
-          _expenses.filter((e) => e.vehicleVin).map((e) => e.vehicleVin),
-        ).size;
-        const payrollTotal = _expenses
-          .filter(
-            (e) =>
-              e.category === "Recurring Expense" &&
-              (e.expType === "Payroll" || e.expType === "Commissions"),
-          )
-          .reduce((s, e) => s + (Number(e.amount) || 0), 0);
-        const upcoming = _expenses.filter(
-          (e) => !e.paid && new Date(e.dueDate) >= today,
+        function setKpi(id, foot, val, ftxt) {
+          const v = document.getElementById(id);
+          if (v) v.textContent = fmt(val);
+          const f = document.getElementById(foot);
+          if (f) f.textContent = ftxt;
+        }
+        setKpi(
+          "expKpiMonth",
+          "expKpiMonthFoot",
+          grandTotal,
+          `${periodExp.length} expense${periodExp.length === 1 ? "" : "s"} · ${periodLbl}`,
         );
-        const upcomingTotal = upcoming.reduce(
-          (s, e) => s + (Number(e.amount) || 0),
-          0,
+        setKpi(
+          "expKpiRecurring",
+          "expKpiRecurringFoot",
+          bTot["Recurring Expense"],
+          `${bCnt["Recurring Expense"]} item${bCnt["Recurring Expense"] === 1 ? "" : "s"} · repeats monthly`,
         );
-
-        document.getElementById("expKpiMonth").textContent = fmt(monthTotal);
-        document.getElementById("expKpiMonthFoot").textContent =
-          `${fmt(monthPaid)} paid so far`;
-        document.getElementById("expKpiRecurring").textContent =
-          fmt(recurringMonthly);
-        document.getElementById("expKpiRecurringFoot").textContent =
-          `${recurringCount} recurring item${recurringCount === 1 ? "" : "s"}`;
-        document.getElementById("expKpiVehicle").textContent =
-          fmt(vehicleTotal);
-        document.getElementById("expKpiVehicleFoot").textContent =
-          `across ${vehicleCount} vehicle${vehicleCount === 1 ? "" : "s"} · feeds P&L`;
-        document.getElementById("expKpiPayroll").textContent =
-          fmt(payrollTotal);
-        document.getElementById("expKpiPayrollFoot").textContent =
-          "wages + commissions";
-        document.getElementById("expKpiUpcoming").textContent =
-          fmt(upcomingTotal);
-        document.getElementById("expKpiUpcomingFoot").textContent =
-          `${upcoming.length} unpaid due`;
+        setKpi(
+          "expKpiVehicle",
+          "expKpiVehicleFoot",
+          bTot["Vehicle Expense"],
+          `${bCnt["Vehicle Expense"]} item${bCnt["Vehicle Expense"] === 1 ? "" : "s"} · feeds P&L`,
+        );
+        setKpi(
+          "expKpiDealership",
+          "expKpiDealershipFoot",
+          bTot["Dealership Expense"],
+          `${bCnt["Dealership Expense"]} item${bCnt["Dealership Expense"] === 1 ? "" : "s"} · overhead`,
+        );
+        setKpi(
+          "expKpiPayroll",
+          "expKpiPayrollFoot",
+          bTot["Payroll & Commission"],
+          `${bCnt["Payroll & Commission"]} item${bCnt["Payroll & Commission"] === 1 ? "" : "s"} · wages + commissions`,
+        );
+        // Highlight the active box.
+        document
+          .querySelectorAll("#page-expenses .exp-kpi-click")
+          .forEach((k) => {
+            k.classList.toggle(
+              "active",
+              (k.getAttribute("data-bucket") || "") ===
+                (window.__expBucket || ""),
+            );
+          });
 
         renderExpenseDonut();
 
         // Filters
-        const q = document.getElementById("expSearch").value.toLowerCase();
-        const fCat = document.getElementById("expFilterCategory").value;
-        const fStatus = document.getElementById("expFilterStatus").value;
-        const fType = document.getElementById("expFilterType").value;
+        const q = (
+          document.getElementById("expSearch") || { value: "" }
+        ).value.toLowerCase();
+        const fCat = (
+          document.getElementById("expFilterCategory") || { value: "" }
+        ).value;
+        const fStatus = (
+          document.getElementById("expFilterStatus") || { value: "" }
+        ).value;
+        const fType = (
+          document.getElementById("expFilterType") || { value: "" }
+        ).value;
 
-        let rows = expensesForPeriod(_expenses)
-          .filter((e) => {
-            const vlabel = e.vehicleVin ? vehicleLabel(e.vehicleVin) : "";
-            const text =
-              `${e.name} ${e.category} ${e.notes || ""} ${vlabel}`.toLowerCase();
-            if (q && !text.includes(q)) return false;
-            if (fCat && e.category !== fCat) return false;
-            if (fStatus === "paid" && !e.paid) return false;
-            if (fStatus === "unpaid" && e.paid) return false;
-            if (fType === "recurring" && !isRecurring(e)) return false;
-            if (fType === "once" && isRecurring(e)) return false;
-            return true;
-          });
+        const bucket = window.__expBucket || "";
+        let rows = expensesForPeriod(_expenses).filter((e) => {
+          if (bucket && expBucketOf(e) !== bucket) return false;
+          const vlabel = e.vehicleVin ? vehicleLabel(e.vehicleVin) : "";
+          const text =
+            `${e.name} ${e.category} ${e.notes || ""} ${vlabel}`.toLowerCase();
+          if (q && !text.includes(q)) return false;
+          if (fCat && e.category !== fCat) return false;
+          if (fStatus === "paid" && !e.paid) return false;
+          if (fStatus === "unpaid" && e.paid) return false;
+          if (fType === "recurring" && !isRecurring(e)) return false;
+          if (fType === "once" && isRecurring(e)) return false;
+          return true;
+        });
         // Year view: don't list the same recurring expense 8–12 times.
         if (typeof pnlPeriod !== "undefined" && pnlPeriod.mode === "year") {
           rows = collapseExpensesForDisplay(rows);
         }
-        rows = rows.sort((a, b) => new Date(a.dueDate || a._firstDate || 0) - new Date(b.dueDate || b._firstDate || 0));
-
-        document.getElementById("expFilterTag").textContent =
-          `Showing ${rows.length} of ${_expenses.length} expenses` +
-          (rows.some((e) => e._carriedForward || (e._months && e._months > 1))
-            ? " (includes recurring carry-forward)"
-            : "");
-        document.getElementById("expCountLabel").textContent =
-          `— ${_expenses.length} expenses tracked`;
-        document.getElementById("expTotalAmount").textContent = fmt(
-          rows.reduce((s, e) => s + (Number(e.amount) || 0), 0),
+        rows = rows.sort(
+          (a, b) =>
+            new Date(a.dueDate || a._firstDate || 0) -
+            new Date(b.dueDate || b._firstDate || 0),
         );
 
+        const tag = document.getElementById("expFilterTag");
+        if (tag) {
+          if (bucket) {
+            tag.innerHTML = `Showing <b>${bucket}</b> — ${rows.length} item${rows.length === 1 ? "" : "s"} <span class="exp-tag-clear" onclick="expFilterBucket('')">clear &times;</span>`;
+          } else {
+            tag.textContent =
+              `Showing ${rows.length} of ${_expenses.length} expenses` +
+              (rows.some(
+                (e) => e._carriedForward || (e._months && e._months > 1),
+              )
+                ? " (includes recurring carry-forward)"
+                : "");
+          }
+        }
+        const countLbl = document.getElementById("expCountLabel");
+        if (countLbl)
+          countLbl.textContent = `— ${_expenses.length} expenses tracked`;
+        const totalAmt = document.getElementById("expTotalAmount");
+        if (totalAmt)
+          totalAmt.textContent = fmt(
+            rows.reduce((s, e) => s + (Number(e.amount) || 0), 0),
+          );
+
         const body = document.getElementById("expTableBody");
+        if (!body) return;
         if (rows.length === 0) {
           body.innerHTML = `<tr><td colspan="10"><div class="exp-empty">No expenses match these filters. <br>Click <b>Add Expense</b> to log where money is going.</div></td></tr>`;
           return;
