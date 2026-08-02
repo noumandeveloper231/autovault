@@ -430,6 +430,12 @@
         method: "POST",
         body: JSON.stringify(body),
       }),
+    /** Diff sync: keepDocumentIds stay; missing IDs are deleted (DB+R2); addDocuments created. */
+    syncJacketDocuments: (id, body) =>
+      request(`/api/v1/deal-jackets/${id}/documents/sync`, {
+        method: "PUT",
+        body: JSON.stringify(body),
+      }),
     removeJacketDocument: (id, documentId) =>
       request(
         `/api/v1/deal-jackets/${encodeURIComponent(id)}/documents/${encodeURIComponent(documentId)}`,

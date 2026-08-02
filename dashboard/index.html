@@ -4229,6 +4229,143 @@
         margin-top: 12px;
         padding: 0 2px;
       }
+      .exp-manage-recur {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto;
+        margin-right: 10px;
+        background: rgba(28, 122, 70, 0.1);
+        border: 1px solid rgba(28, 122, 70, 0.34);
+        color: #2dd47f;
+        font-size: 12px;
+        font-weight: 800;
+        padding: 6px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        font-family: inherit;
+        white-space: nowrap;
+        transition: background 0.13s;
+      }
+      .exp-manage-recur:hover { background: rgba(28, 122, 70, 0.2); }
+      .exp-manage-recur svg { width: 14px; height: 14px; }
+      .recur-mgr-note {
+        display: flex;
+        align-items: flex-start;
+        gap: 9px;
+        background: rgba(28, 122, 70, 0.1);
+        border: 1px solid rgba(28, 122, 70, 0.3);
+        border-radius: 11px;
+        padding: 11px 13px;
+        font-size: 12.5px;
+        color: var(--text);
+        line-height: 1.5;
+        margin-bottom: 14px;
+      }
+      .recur-mgr-note svg {
+        width: 17px;
+        height: 17px;
+        flex: 0 0 auto;
+        color: #2dd47f;
+        margin-top: 1px;
+      }
+      .recur-mgr-note b { color: #2dd47f; }
+      .rm-row {
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 10px;
+        background: var(--panel-2);
+      }
+      .rm-top { display: flex; align-items: center; gap: 12px; }
+      .rm-main { flex: 1; min-width: 0; }
+      .rm-name { font-size: 14px; font-weight: 700; color: var(--text); }
+      .rm-meta {
+        font-size: 12px;
+        color: var(--muted);
+        margin-top: 3px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        flex-wrap: wrap;
+      }
+      .rm-badge { font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 20px; }
+      .rm-badge.active { background: rgba(28, 122, 70, 0.16); color: #2dd47f; }
+      .rm-badge.stopped { background: rgba(255, 138, 76, 0.16); color: var(--orange); }
+      .rm-actions { display: flex; gap: 7px; flex: 0 0 auto; flex-wrap: wrap; }
+      .rm-btn {
+        font-size: 12px;
+        font-weight: 700;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
+        font-family: inherit;
+        transition: border-color 0.13s, background 0.13s;
+      }
+      .rm-btn:hover { border-color: var(--blue); }
+      .rm-btn.stop { color: var(--orange); border-color: rgba(255, 138, 76, 0.4); }
+      .rm-btn.stop:hover { background: rgba(255, 138, 76, 0.1); }
+      .rm-btn.resume { color: #2dd47f; border-color: rgba(28, 122, 70, 0.4); }
+      .rm-btn.resume:hover { background: rgba(28, 122, 70, 0.1); }
+      .rm-btn.change { color: var(--blue); border-color: rgba(58, 160, 255, 0.4); }
+      .rm-btn.change:hover { background: rgba(58, 160, 255, 0.1); }
+      .rm-stop {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 11px;
+        padding-top: 11px;
+        border-top: 1px solid var(--border);
+        font-size: 12.5px;
+        color: var(--muted);
+        flex-wrap: wrap;
+      }
+      .rm-stop input[type="month"],
+      .rm-change-row input {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 8px;
+        padding: 6px 10px;
+        font-size: 12.5px;
+        font-family: inherit;
+        outline: none;
+      }
+      .rm-stop input[type="month"]:focus,
+      .rm-change-row input:focus { border-color: var(--blue); }
+      .rm-change { margin-top: 11px; padding-top: 11px; border-top: 1px solid var(--border); }
+      .rm-change-lead { font-size: 12px; color: var(--muted); margin-bottom: 8px; line-height: 1.45; }
+      .rm-change-row { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+      .rm-change-row label { font-size: 11.5px; color: var(--muted); font-weight: 700; }
+      .rm-change-row input { width: 120px; }
+      #recurMgrModal { z-index: 140; }
+      .pne-add-btn {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 7px;
+        margin-top: 8px;
+        margin-bottom: 4px;
+        padding: 11px;
+        border-radius: 11px;
+        border: 1px dashed rgba(28, 122, 70, 0.5);
+        background: rgba(28, 122, 70, 0.06);
+        color: #2dd47f;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+        transition: background 0.14s, border-color 0.14s;
+      }
+      .pne-add-btn:hover {
+        background: rgba(28, 122, 70, 0.14);
+        border-color: #1c7a46;
+      }
+      .pne-add-btn svg { width: 16px; height: 16px; }
       #pnlExpModal .modal { max-width: 640px; }
       #pnlExpModal .modal-body { max-height: min(70vh, 560px); overflow: auto; }
 
@@ -4958,6 +5095,7 @@
         font-weight: 700;
         cursor: pointer;
         transition: 0.12s;
+        position: relative;
       }
 
       .pnl-month:hover {
@@ -4970,6 +5108,20 @@
         background: var(--blue);
         color: #fff;
         border-color: var(--blue);
+      }
+      .pnl-month.has-act::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        bottom: 2px;
+        transform: translateX(-50%);
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--green);
+      }
+      .pnl-month.active.has-act::after {
+        background: #fff;
       }
 
       /* P&L donut legend — readable single column */
@@ -21844,6 +21996,69 @@
       </div>
     </div>
 
+    <!-- MANAGE RECURRING EXPENSES MODAL -->
+    <div
+      class="modal-overlay"
+      id="recurMgrModal"
+      onclick="if(event.target===this) closeRecurMgr()"
+    >
+      <div class="modal">
+        <div class="modal-head">
+          <h3>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+            >
+              <path d="M17 2.1l4 4-4 4" />
+              <path d="M3 12.95v-1a4 4 0 0 1 4-4h14" />
+              <path d="M7 21.9l-4-4 4-4" />
+              <path d="M21 11.05v1a4 4 0 0 1-4 4H3" />
+            </svg>
+            <span
+              >Recurring Expenses &middot;
+              <span id="recurMgrYear" style="color: var(--muted); font-weight: 600"></span
+            ></span>
+          </h3>
+          <button class="modal-close" onclick="closeRecurMgr()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="recur-mgr-note">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <circle cx="12" cy="12" r="10" />
+              <path d="M12 16v-4M12 8h.01" />
+            </svg>
+            <span
+              >These repeat every month in your P&amp;L. <b>Stop</b> one to end
+              it after a chosen month (its past months stay in your history),
+              then <b>Add a new one</b> if the cost changed — e.g. cheaper rent
+              at a new office.</span
+            >
+          </div>
+          <div id="recurMgrList"></div>
+          <button class="pne-add-btn" onclick="recurMgrAdd()">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Add New Recurring Expense
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- EXPENSE MODAL -->
     <div class="modal-overlay" id="expenseModal">
       <div class="modal">
@@ -21864,6 +22079,24 @@
             </svg>
             <span id="expModalTitle">Add Expense</span>
           </h3>
+          <button
+            class="exp-manage-recur"
+            onclick="openRecurMgr()"
+            title="Stop or edit recurring expenses"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+            >
+              <path d="M17 2.1l4 4-4 4" />
+              <path d="M3 12.95v-1a4 4 0 0 1 4-4h14" />
+              <path d="M7 21.9l-4-4 4-4" />
+              <path d="M21 11.05v1a4 4 0 0 1-4 4H3" />
+            </svg>
+            Stop / Edit Recurring
+          </button>
           <button class="modal-close" onclick="closeExpenseModal()">
             &times;
           </button>
@@ -34924,6 +35157,20 @@
       /* ---- Remove Vehicle Doc Confirm Modal ---- */
       let _pendingRemoveDocVin = null;
       let _pendingRemoveDocId = null;
+      function djGetJacketId(v) {
+        if (!v) return null;
+        const fromRaw =
+          v._raw &&
+          Array.isArray(v._raw.dealJackets) &&
+          v._raw.dealJackets[0] &&
+          v._raw.dealJackets[0].id
+            ? v._raw.dealJackets[0].id
+            : null;
+        if (fromRaw) return fromRaw;
+        if (v._raw && v._raw.dealJacket && v._raw.dealJacket.id)
+          return v._raw.dealJacket.id;
+        return null;
+      }
       function openRemoveDocModal(vin, docId) {
         _pendingRemoveDocVin = vin;
         _pendingRemoveDocId = docId;
@@ -34944,18 +35191,54 @@
         const v = vehicles.find((x) => x.vin === vin);
         if (!v) return;
 
+        // Deal-jacket working set (create/edit jacket page)
         if (currentDealVin === vin && Array.isArray(v.djDocs)) {
           const doc = v.djDocs.find((d) => d && d.id === docId);
           if (doc) {
-            if (!doc.pending && !String(docId).startsWith("pending-")) {
+            const isPersisted =
+              !doc.pending && !String(docId).startsWith("pending-");
+            const jacketId = djGetJacketId(v);
+
+            // Optimistic UI remove
+            if (isPersisted) {
               v.djDocsRemoved = v.djDocsRemoved || [];
               if (!v.djDocsRemoved.includes(docId))
                 v.djDocsRemoved.push(docId);
             }
             v.djDocs = v.djDocs.filter((d) => d && d.id !== docId);
             renderDealDocs(vin);
+
+            // Persist immediately when a jacket already exists (DB + R2)
+            if (isPersisted && jacketId && window.AVApi) {
+              try {
+                await AVApi.removeJacketDocument(jacketId, docId);
+                v.djDocsRemoved = (v.djDocsRemoved || []).filter(
+                  (id) => id !== docId,
+                );
+                if (Array.isArray(v.documents)) {
+                  v.documents = v.documents.filter((d) => d && d.id !== docId);
+                }
+                if (typeof AVToast !== "undefined")
+                  AVToast.success("Document removed");
+              } catch (err) {
+                // Roll back local UI
+                v.djDocs.push(doc);
+                v.djDocsRemoved = (v.djDocsRemoved || []).filter(
+                  (id) => id !== docId,
+                );
+                renderDealDocs(vin);
+                if (typeof AVToast !== "undefined")
+                  AVToast.error(err.message || "Failed to remove document");
+              }
+              return;
+            }
+
             if (typeof AVToast !== "undefined")
-              AVToast.success("Document removed");
+              AVToast.success(
+                isPersisted
+                  ? "Document marked for removal — click Save Changes"
+                  : "Document removed",
+              );
             return;
           }
         }
@@ -35000,6 +35283,73 @@
         } else if (typeof AVToast !== "undefined") {
           AVToast.success("Document removed");
         }
+      }
+
+      async function djBuildPendingDocUploads(v, jacketId) {
+        const pending = (v.djDocs || []).filter((d) => d && d.pending && d.img);
+        const addDocuments = [];
+        for (const doc of pending) {
+          let fileUrl = doc.img;
+          let fileType =
+            doc.mimeType ||
+            (isPdfDoc(doc.name)
+              ? "application/pdf"
+              : isWordDoc(doc.name)
+                ? "application/msword"
+                : "image/jpeg");
+          if (
+            String(doc.img).startsWith("data:") &&
+            window.AVApi &&
+            typeof AVApi.uploadFile === "function"
+          ) {
+            const blob = dataUrlToBlob(doc.img);
+            const uploaded = await AVApi.uploadFile(blob, {
+              fileName: doc.name,
+              sourceEntity: "deal_jacket",
+              sourceEntityId: jacketId || undefined,
+            });
+            fileUrl = uploaded.publicUrl || uploaded.downloadUrl || doc.img;
+            fileType = blob.type || fileType;
+          }
+          addDocuments.push({
+            fileUrl,
+            documentName: doc.name,
+            fileType,
+          });
+        }
+        return addDocuments;
+      }
+
+      async function djSyncJacketDocuments(v, jacketId) {
+        if (!jacketId || !window.AVApi) return null;
+        const keepDocumentIds = (v.djDocs || [])
+          .filter(
+            (d) =>
+              d &&
+              d.id &&
+              !d.pending &&
+              !String(d.id).startsWith("pending-"),
+          )
+          .map((d) => d.id);
+        const addDocuments = await djBuildPendingDocUploads(v, jacketId);
+        if (typeof AVApi.syncJacketDocuments === "function") {
+          return AVApi.syncJacketDocuments(jacketId, {
+            keepDocumentIds,
+            addDocuments,
+          });
+        }
+        // Fallback if sync endpoint unavailable: delete then add one-by-one
+        const removed = Array.isArray(v.djDocsRemoved)
+          ? v.djDocsRemoved.slice()
+          : [];
+        for (const docId of removed) {
+          if (!docId || String(docId).startsWith("pending-")) continue;
+          await AVApi.removeJacketDocument(jacketId, docId);
+        }
+        for (const item of addDocuments) {
+          await AVApi.addJacketDocument(jacketId, item);
+        }
+        return { keepDocumentIds, addDocuments, removed };
       }
 
       /* ---- Deactivate Employee Confirm Modal ---- */
@@ -37143,6 +37493,13 @@
       }
       async function vehEditSave(promise, opts) {
         const o = opts || {};
+        // Deal-jacket background autosave must finish before an explicit edit
+        // save, otherwise AVBusy.guard() rejects with "already in progress".
+        if (typeof djFlushAutoSave === "function") {
+          try {
+            await djFlushAutoSave();
+          } catch (_) {}
+        }
         if (typeof AVBusy !== "undefined" && !AVBusy.guard()) {
           if (typeof AVToast !== "undefined")
             AVToast.info("Please wait — a save is already in progress.");
@@ -38578,9 +38935,33 @@
         return `${year}-${String(month + 1).padStart(2, "0")}-01`;
       }
       /**
+       * Months in a year that have at least one sold vehicle (soldDate).
+       * Yearly recurring P&L only counts these months — empty months are
+       * excluded so projected rent doesn't create a fake loss.
+       */
+      function pnlMonthsWithSales(year) {
+        const y =
+          year != null
+            ? year
+            : typeof pnlPeriod !== "undefined"
+              ? pnlPeriod.year
+              : new Date().getFullYear();
+        const active = new Set();
+        const list =
+          typeof vehicles !== "undefined" && Array.isArray(vehicles)
+            ? vehicles
+            : [];
+        list.forEach((v) => {
+          if (!v || !v.sold) return;
+          const d = pnlDateParts(v.soldDate);
+          if (d && d.y === y) active.add(d.m);
+        });
+        return active;
+      }
+      /**
        * Recurring templates carry forward from their start date until edited
-       * off recurring or deleted. Weekly/Monthly hit every month; Quarterly
-       * every 3 months from start; Annual on the anniversary month.
+       * off recurring, stopped (endDate), or deleted. Weekly/Monthly hit every
+       * month; Quarterly every 3 months from start; Annual on anniversary month.
        */
       function recurringOccursInMonth(e, year, month) {
         if (!isRecurring(e)) return false;
@@ -38589,6 +38970,10 @@
         const startIdx = start.y * 12 + start.m;
         const targetIdx = year * 12 + month;
         if (targetIdx < startIdx) return false;
+        if (e.endDate) {
+          const end = pnlDateParts(e.endDate);
+          if (end && targetIdx > end.y * 12 + end.m) return false;
+        }
         switch (e.recurring) {
           case "Weekly":
           case "Monthly":
@@ -38609,6 +38994,8 @@
        * Expand one-time + recurring expenses into rows that belong in a P&L /
        * expenses period. Carried months reuse the template id so edit/delete
        * still updates the single source of truth.
+       * Year mode: recurring only expands into months that have sales activity.
+       * Month mode: unchanged — the explicitly selected month always counts.
        */
       function expensesForPeriod(expenses, opts) {
         opts = opts || {};
@@ -38630,6 +39017,10 @@
               : new Date().getMonth();
         const excludeVehicle = !!opts.excludeVehicle;
         const out = [];
+        const activeMonths =
+          mode === "year"
+            ? opts.activeMonths || pnlMonthsWithSales(year)
+            : null;
 
         function pushOccurrence(e, y, m) {
           const start = pnlDateParts(e.dueDate);
@@ -38663,6 +39054,7 @@
             }
           } else {
             for (let m = 0; m < 12; m++) {
+              if (activeMonths && !activeMonths.has(m)) continue;
               if (recurringOccursInMonth(e, year, m)) {
                 pushOccurrence(e, year, m);
               }
@@ -39007,7 +39399,13 @@
         const receiptRaw = e.receiptStoragePath || null;
         const isDataUrl = receiptRaw && receiptRaw.startsWith("data:");
         const norm = normalizeExpenseCategory(e);
-        const notes = e.notes || "";
+        const notesRaw = e.notes || "";
+        const endMatch = String(notesRaw).match(
+          /\[recur-end:(\d{4}-\d{2})(?:-\d{2})?\]/,
+        );
+        const notes = String(notesRaw)
+          .replace(/\s*\[recur-end:[^\]]+\]/g, "")
+          .trim();
         return {
           id: e.id,
           name: e.name || e.vendor || "",
@@ -39026,11 +39424,20 @@
           paymentMethod: e.paymentMethod || null,
           paymentRef: e.referenceNumber || null,
           notes,
+          endDate: endMatch ? `${endMatch[1]}-28` : null,
           fromRepair: notes.indexOf("[from-repair]") === 0,
         };
       }
 
       function mapExpenseToApi(data) {
+        let notes = data.notes || "";
+        notes = String(notes)
+          .replace(/\s*\[recur-end:[^\]]+\]/g, "")
+          .trim();
+        if (data.endDate) {
+          const ym = String(data.endDate).slice(0, 7);
+          notes = (notes ? notes + "\n" : "") + `[recur-end:${ym}]`;
+        }
         return {
           name: data.name,
           vendor: data.name,
@@ -39049,7 +39456,7 @@
           paymentMethod: data.paymentMethod || null,
           referenceNumber: data.paymentRef || null,
           receiptStoragePath: data.receipt || null,
-          notes: data.notes || "",
+          notes,
           taxDeductible: true,
         };
       }
@@ -39082,6 +39489,220 @@
           }
         } catch (_) {}
       }
+
+      // ---------- MANAGE / STOP / EDIT RECURRING EXPENSES ----------
+      function fmtMonthYr(ds) {
+        const p = typeof pnlDateParts === "function" ? pnlDateParts(ds) : null;
+        return p ? `${PNL_MSHORT[p.m]} ${p.y}` : "—";
+      }
+      function openRecurMgr() {
+        renderRecurMgr();
+        const m = document.getElementById("recurMgrModal");
+        if (m) m.classList.add("open");
+      }
+      function closeRecurMgr() {
+        const m = document.getElementById("recurMgrModal");
+        if (m) m.classList.remove("open");
+      }
+      function recurMgrRefresh() {
+        renderRecurMgr();
+        try {
+          renderExpenses();
+        } catch (e) {}
+        try {
+          if (typeof renderPnlPage === "function") renderPnlPage();
+        } catch (e) {}
+      }
+      function renderRecurMgr() {
+        const yr =
+          typeof pnlPeriod !== "undefined"
+            ? pnlPeriod.year
+            : new Date().getFullYear();
+        const yEl = document.getElementById("recurMgrYear");
+        if (yEl) yEl.textContent = yr;
+        const list = document.getElementById("recurMgrList");
+        if (!list) return;
+        const recs = (_expenses || [])
+          .filter((e) => !e.vehicleVin && isRecurring(e))
+          .sort((a, b) =>
+            String(a.dueDate || "").localeCompare(String(b.dueDate || "")),
+          );
+        if (!recs.length) {
+          list.innerHTML = `<div style="padding:28px;text-align:center;color:var(--muted);font-size:13px;">No recurring expenses yet — add one below.</div>`;
+          return;
+        }
+        list.innerHTML = recs
+          .map((e) => {
+            const f = e.recurring || "Monthly";
+            const start = fmtMonthYr(e.dueDate);
+            const stopped = !!e.endDate;
+            const status = stopped
+              ? `<span class="rm-badge stopped">Ends ${fmtMonthYr(e.endDate)}</span>`
+              : `<span class="rm-badge active">Active &middot; ongoing</span>`;
+            const stopDef = (e.endDate || e.dueDate || yr + "-01-01").slice(
+              0,
+              7,
+            );
+            const sp =
+              typeof pnlDateParts === "function"
+                ? pnlDateParts(e.dueDate)
+                : null;
+            let nm = sp ? sp.m + 1 : 0,
+              ny = sp ? sp.y : yr;
+            if (nm > 11) {
+              nm = 0;
+              ny++;
+            }
+            const chgDef = `${ny}-${String(nm + 1).padStart(2, "0")}`;
+            return `<div class="rm-row">
+      <div class="rm-top">
+        <div class="rm-main">
+          <div class="rm-name">${e.name || "(unnamed)"}</div>
+          <div class="rm-meta">${fmt(e.amount)} &middot; ${f} &middot; since ${start} ${status}</div>
+        </div>
+        <div class="rm-actions">
+          <button class="rm-btn" type="button" onclick="closeRecurMgr(); openExpenseModal('${e.id}')">Edit</button>
+          <button class="rm-btn change" type="button" onclick="recurChangeToggle('${e.id}')">Change $</button>
+          ${
+            stopped
+              ? `<button class="rm-btn resume" type="button" onclick="recurResume('${e.id}')">Resume</button>`
+              : `<button class="rm-btn stop" type="button" onclick="recurStopToggle('${e.id}')">Stop</button>`
+          }
+        </div>
+      </div>
+      <div class="rm-change" id="rmChange_${e.id}" style="display:none;">
+        <div class="rm-change-lead">Rent or cost change? Enter the <b>new amount</b> and the <b>month it starts</b>. The old amount stays on every month before that — this one takes over from then on.</div>
+        <div class="rm-change-row">
+          <label>New amount $</label>
+          <input type="text" inputmode="decimal" id="rmChgAmt_${e.id}" placeholder="${Math.round(Number(e.amount) || 0)}">
+          <label>Effective from</label>
+          <input type="month" id="rmChgMon_${e.id}" value="${chgDef}">
+          <button class="rm-btn change" type="button" onclick="recurChangeConfirm('${e.id}')">Apply change</button>
+          <button class="rm-btn" type="button" onclick="recurChangeToggle('${e.id}')">Cancel</button>
+        </div>
+      </div>
+      <div class="rm-stop" id="rmStop_${e.id}" style="display:none;">
+        <span>Stop it after:</span>
+        <input type="month" id="rmStopInput_${e.id}" value="${stopDef}">
+        <button class="rm-btn stop" type="button" onclick="recurStopConfirm('${e.id}')">Confirm stop</button>
+        <button class="rm-btn" type="button" onclick="recurStopToggle('${e.id}')">Cancel</button>
+      </div>
+    </div>`;
+          })
+          .join("");
+      }
+      function recurChangeToggle(id) {
+        const el = document.getElementById("rmChange_" + id);
+        if (el)
+          el.style.display =
+            el.style.display === "none" || !el.style.display ? "block" : "none";
+      }
+      async function recurChangeConfirm(id) {
+        const e = (_expenses || []).find((x) => x.id === id);
+        if (!e) return;
+        const amtI = document.getElementById("rmChgAmt_" + id);
+        const monI = document.getElementById("rmChgMon_" + id);
+        const amt = parseFloat(((amtI && amtI.value) || "").replace(/,/g, ""));
+        const mon = monI && monI.value;
+        if (isNaN(amt) || amt < 0 || !mon) {
+          if (amtI) amtI.style.borderColor = "var(--red)";
+          return;
+        }
+        const p = pnlDateParts(mon + "-01");
+        if (!p) return;
+        let em = p.m - 1,
+          ey = p.y;
+        if (em < 0) {
+          em = 11;
+          ey--;
+        }
+        const oldEnd = `${ey}-${String(em + 1).padStart(2, "0")}-28`;
+        const freq = e.recurring || "Monthly";
+        try {
+          await AVApi.updateExpense(
+            id,
+            mapExpenseToApi({ ...e, endDate: oldEnd }),
+          );
+          await AVApi.createExpense(
+            mapExpenseToApi({
+              ...e,
+              id: undefined,
+              amount: amt,
+              dueDate: mon + "-01",
+              recurring: freq,
+              endDate: null,
+              notes: `Rate change from ${fmt(e.amount)} — supersedes earlier "${e.name}".`,
+              receipt: null,
+              paymentRef: null,
+            }),
+          );
+          await loadExpensesFromApi();
+          recurMgrRefresh();
+        } catch (err) {
+          console.error("recurChangeConfirm failed", err);
+          alert("Could not apply rate change. Please try again.");
+        }
+      }
+      function recurStopToggle(id) {
+        const el = document.getElementById("rmStop_" + id);
+        if (el)
+          el.style.display =
+            el.style.display === "none" || !el.style.display ? "flex" : "none";
+      }
+      async function recurStopConfirm(id) {
+        const e = (_expenses || []).find((x) => x.id === id);
+        if (!e) return;
+        const inp = document.getElementById("rmStopInput_" + id);
+        const v = inp && inp.value;
+        if (!v) return;
+        try {
+          await AVApi.updateExpense(
+            id,
+            mapExpenseToApi({ ...e, endDate: v + "-28" }),
+          );
+          await loadExpensesFromApi();
+          recurMgrRefresh();
+        } catch (err) {
+          console.error("recurStopConfirm failed", err);
+          alert("Could not stop recurring expense. Please try again.");
+        }
+      }
+      async function recurResume(id) {
+        const e = (_expenses || []).find((x) => x.id === id);
+        if (!e) return;
+        try {
+          await AVApi.updateExpense(
+            id,
+            mapExpenseToApi({ ...e, endDate: null }),
+          );
+          await loadExpensesFromApi();
+          recurMgrRefresh();
+        } catch (err) {
+          console.error("recurResume failed", err);
+          alert("Could not resume recurring expense. Please try again.");
+        }
+      }
+      function recurMgrAdd() {
+        closeRecurMgr();
+        if (typeof openExpenseModal !== "function") return;
+        openExpenseModal();
+        const c = document.getElementById("expCategory");
+        if (c) c.value = "Recurring Expense";
+        if (typeof onExpCategoryChange === "function") onExpCategoryChange();
+        setTimeout(() => {
+          const n = document.getElementById("expName");
+          if (n) n.focus();
+        }, 60);
+      }
+      window.openRecurMgr = openRecurMgr;
+      window.closeRecurMgr = closeRecurMgr;
+      window.recurChangeToggle = recurChangeToggle;
+      window.recurChangeConfirm = recurChangeConfirm;
+      window.recurStopToggle = recurStopToggle;
+      window.recurStopConfirm = recurStopConfirm;
+      window.recurResume = recurResume;
+      window.recurMgrAdd = recurMgrAdd;
+
       window.loadExpensesFromApi = loadExpensesFromApi;
       window.applyExpensesList = applyExpensesList;
 
@@ -39855,6 +40476,10 @@
           paymentRef: document.getElementById("expPayRef").value.trim() || null,
           notes: document.getElementById("expNotes").value.trim(),
           receipt: expPendingReceipt ? expPendingReceipt.data : null,
+          // Preserve stop-month from Recurring Manager when editing normally.
+          endDate: id
+            ? ((_expenses.find((x) => x.id === id) || {}).endDate || null)
+            : null,
         };
 
         const apiPayload = mapExpenseToApi(data);
@@ -43429,11 +44054,14 @@
           el.textContent = "All changes saved \u2713";
           el.classList.add("show");
         }
-        djSetCustSaveStatus("saved", "Saved");
+        if (__djAutoTouchesCustomer) {
+          djSetCustSaveStatus("saved", "Saved");
+        }
         clearTimeout(djShowAutoSaved._t);
         djShowAutoSaved._t = setTimeout(function () {
           if (el) el.classList.remove("show");
-          djSetCustSaveStatus("", "");
+          if (__djAutoTouchesCustomer) djSetCustSaveStatus("", "");
+          __djAutoTouchesCustomer = false;
         }, 1600);
       }
       window.djEditCost = djEditCost;
@@ -43992,6 +44620,11 @@
       async function saveDeal() {
         const v = vehicles.find((x) => x.vin === currentDealVin);
         if (!v) return;
+        // Let any in-flight / debounced autosave finish first so Save Changes
+        // doesn't collide with AVBusy / "save already in progress".
+        try {
+          await djFlushAutoSave();
+        } catch (_) {}
         if (v.dealSaved || v.hasDealJacket || v.dealJacket) {
           if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
           const btn = document.getElementById("djSaveBtn");
@@ -44000,59 +44633,10 @@
               AVBusy.inc();
               AVBusy.setBtnLoading(btn, true, "Saving\u2026");
             }
-            await djFlushAutoSave();
-            const jacket =
-              v && v._raw && v._raw.dealJackets && v._raw.dealJackets[0]
-                ? v._raw.dealJackets[0]
-                : null;
-            if (jacket && jacket.id && window.AVApi) {
-              const removed = Array.isArray(v.djDocsRemoved)
-                ? v.djDocsRemoved.slice()
-                : [];
-              for (const docId of removed) {
-                if (!docId || String(docId).startsWith("pending-")) continue;
-                try {
-                  await AVApi.removeJacketDocument(jacket.id, docId);
-                } catch (delErr) {
-                  console.warn("Doc remove failed:", docId, delErr);
-                }
-              }
-              const pending = (v.djDocs || []).filter(
-                (d) => d && d.pending && d.img,
-              );
-              for (const doc of pending) {
-                try {
-                  let fileUrl = doc.img;
-                  let fileType =
-                    doc.mimeType ||
-                    (isPdfDoc(doc.name)
-                      ? "application/pdf"
-                      : isWordDoc(doc.name)
-                        ? "application/msword"
-                        : "image/jpeg");
-                  if (
-                    String(doc.img).startsWith("data:") &&
-                    typeof AVApi.uploadFile === "function"
-                  ) {
-                    const blob = dataUrlToBlob(doc.img);
-                    const uploaded = await AVApi.uploadFile(blob, {
-                      fileName: doc.name,
-                      sourceEntity: "deal_jacket",
-                      sourceEntityId: jacket.id,
-                    });
-                    fileUrl =
-                      uploaded.publicUrl || uploaded.downloadUrl || doc.img;
-                    fileType = blob.type || fileType;
-                  }
-                  await AVApi.addJacketDocument(jacket.id, {
-                    fileUrl,
-                    documentName: doc.name,
-                    fileType,
-                  });
-                } catch (docErr) {
-                  console.warn("Doc upload failed:", doc.name, docErr);
-                }
-              }
+            const jacketId = djGetJacketId(v);
+            if (jacketId && window.AVApi) {
+              await djSyncJacketDocuments(v, jacketId);
+              v.djDocsRemoved = [];
               await AVVehicles.loadAllVehicles();
               const refreshed = vehicles.find(
                 (x) => x.vin === currentDealVin,
@@ -44204,6 +44788,9 @@
             AVToast.error("Vehicles API not loaded");
           return;
         }
+        try {
+          await djFlushAutoSave();
+        } catch (_) {}
         if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
         const saveBtn = document.getElementById("djSaveBtn");
         const wasAlreadySold = !!v.sold;
@@ -44245,55 +44832,8 @@
           });
           if (markResp && markResp.dealJacket) {
             const jacketId = markResp.dealJacket.id;
-            const removed = Array.isArray(v.djDocsRemoved)
-              ? v.djDocsRemoved.slice()
-              : [];
-            for (const docId of removed) {
-              if (!docId || String(docId).startsWith("pending-")) continue;
-              try {
-                await AVApi.removeJacketDocument(jacketId, docId);
-              } catch (delErr) {
-                console.warn("Doc remove failed:", docId, delErr);
-              }
-            }
-
-            const pending = (v.djDocs || []).filter(
-              (d) => d && d.pending && d.img,
-            );
-            for (const doc of pending) {
-              try {
-                let fileUrl = doc.img;
-                let fileType =
-                  doc.mimeType ||
-                  (isPdfDoc(doc.name)
-                    ? "application/pdf"
-                    : isWordDoc(doc.name)
-                      ? "application/msword"
-                      : "image/jpeg");
-                if (
-                  String(doc.img).startsWith("data:") &&
-                  window.AVApi &&
-                  typeof AVApi.uploadFile === "function"
-                ) {
-                  const blob = dataUrlToBlob(doc.img);
-                  const uploaded = await AVApi.uploadFile(blob, {
-                    fileName: doc.name,
-                    sourceEntity: "deal_jacket",
-                    sourceEntityId: jacketId,
-                  });
-                  fileUrl =
-                    uploaded.publicUrl || uploaded.downloadUrl || doc.img;
-                  fileType = blob.type || fileType;
-                }
-                await AVApi.addJacketDocument(jacketId, {
-                  fileUrl,
-                  documentName: doc.name,
-                  fileType,
-                });
-              } catch (docErr) {
-                console.warn("Doc upload failed:", doc.name, docErr);
-              }
-            }
+            await djSyncJacketDocuments(v, jacketId);
+            v.djDocsRemoved = [];
             await AVVehicles.loadAllVehicles();
             const refreshed = vehicles.find((x) => x.vin === currentDealVin);
             if (refreshed) bootstrapDjDocs(refreshed);
@@ -44371,6 +44911,18 @@
       let __djAutoT = null;
       let __djAutoSeq = 0;
       let __djAutoPending = null;
+      let __djAutoInFlight = null;
+      let __djAutoTouchesCustomer = false;
+      const DJ_CUSTOMER_FIELD_IDS = {
+        djCustName: true,
+        djCustCell: true,
+        djCustEmail: true,
+        djCustAddress: true,
+      };
+
+      function djIsCustomerField(el) {
+        return !!(el && el.id && DJ_CUSTOMER_FIELD_IDS[el.id]);
+      }
 
       function djSetCustSaveStatus(state, message) {
         const el = document.getElementById("djCustSaveStatus");
@@ -44378,6 +44930,17 @@
         el.classList.remove("is-saving", "is-saved", "is-error");
         if (state) el.classList.add("is-" + state);
         el.textContent = message || "";
+      }
+
+      function djShowAutoSaving(touchesCustomer) {
+        const el = document.getElementById("djAutoSaved");
+        if (el) {
+          el.textContent = "Saving\u2026";
+          el.classList.add("show");
+        }
+        // Only the Customer Information badge should say Saving when a
+        // customer field actually changed — not for sold price / notes / etc.
+        if (touchesCustomer) djSetCustSaveStatus("saving", "Saving\u2026");
       }
 
       function djBuildAutoSavePatch(v) {
@@ -44463,38 +45026,65 @@
         if (__djAutoPending !== job) return null;
         __djAutoPending = null;
         if (!window.AVVehicles || !job.vin) return null;
-        if (typeof AVBusy !== "undefined") AVBusy.inc();
-        try {
-          await AVVehicles.persistPatch(job.vin, job.patch);
-          if (job.seq === __djAutoSeq) djShowAutoSaved();
+        // Background autosave must NOT take AVBusy — that blocks "Save Changes"
+        // and shows "a save is already in progress." Serialize via __djAutoInFlight.
+        const run = (async function () {
           try {
-            dealRecalc();
-          } catch (_) {}
-        } catch (err) {
-          if (job.seq === __djAutoSeq) {
-            djSetCustSaveStatus("error", "Not saved");
-            if (typeof AVToast !== "undefined") {
-              AVToast.error(
-                err.message || "Failed to save deal jacket",
-                "Save failed",
-              );
+            await AVVehicles.persistPatch(job.vin, job.patch);
+            if (job.seq === __djAutoSeq) {
+              __djAutoTouchesCustomer = !!job.touchesCustomer;
+              djShowAutoSaved();
             }
+            try {
+              dealRecalc();
+            } catch (_) {}
+          } catch (err) {
+            if (job.seq === __djAutoSeq) {
+              if (job.touchesCustomer) djSetCustSaveStatus("error", "Not saved");
+              const el = document.getElementById("djAutoSaved");
+              if (el) {
+                el.textContent = "Not saved";
+                el.classList.add("show");
+              }
+              if (typeof AVToast !== "undefined") {
+                AVToast.error(
+                  err.message || "Failed to save deal jacket",
+                  "Save failed",
+                );
+              }
+            }
+            throw err;
           }
-          throw err;
+        })();
+        __djAutoInFlight = run;
+        try {
+          return await run;
         } finally {
-          if (typeof AVBusy !== "undefined") AVBusy.dec();
+          if (__djAutoInFlight === run) __djAutoInFlight = null;
         }
       }
 
-      function djAutoSave() {
+      function djAutoSave(opts) {
         if (!currentDealVin) return;
         const v = vehicles.find((x) => x.vin === currentDealVin);
         if (!v || !v.id) return;
+        // Keep the customer badge if this debounce replaces a pending
+        // customer save (e.g. user typed name then immediately edited price).
+        const touchesCustomer = !!(
+          (opts && opts.touchesCustomer) ||
+          (__djAutoPending && __djAutoPending.touchesCustomer)
+        );
         const patch = djBuildAutoSavePatch(v);
-        djSetCustSaveStatus("saving", "Saving…");
+        djShowAutoSaving(touchesCustomer);
         clearTimeout(__djAutoT);
         const seq = ++__djAutoSeq;
-        const job = { vin: currentDealVin, patch: patch, seq: seq, run: null };
+        const job = {
+          vin: currentDealVin,
+          patch: patch,
+          seq: seq,
+          touchesCustomer: touchesCustomer,
+          run: null,
+        };
         job.run = function () {
           return djRunAutoSave(job);
         };
@@ -44510,14 +45100,21 @@
           clearTimeout(__djAutoT);
           __djAutoT = null;
         }
-        if (__djAutoPending && typeof __djAutoPending.run === "function") {
-          return Promise.resolve(__djAutoPending.run());
-        }
-        return Promise.resolve();
+        const pendingRun =
+          __djAutoPending && typeof __djAutoPending.run === "function"
+            ? Promise.resolve(__djAutoPending.run())
+            : Promise.resolve();
+        return pendingRun
+          .catch(function () {})
+          .then(function () {
+            return __djAutoInFlight
+              ? __djAutoInFlight.catch(function () {})
+              : null;
+          });
       }
 
       function djAutoSaveCustomer() {
-        djAutoSave();
+        djAutoSave({ touchesCustomer: true });
       }
       function djFlushCustomerSave() {
         // Called from inline handlers — errors already surface via toast.
@@ -44537,20 +45134,28 @@
             !el.classList.contains("vdp-edit-input")
           );
         };
-        page.addEventListener("input", function (e) {
-          if (!isField(e.target)) return;
+        const schedule = function (el, immediate) {
+          if (!isField(el)) return;
+          // Customer fields already call djAutoSaveCustomer via oninput —
+          // skip the page-level handler so we don't flash a generic save.
+          if (djIsCustomerField(el)) return;
           if (__djAutoT) clearTimeout(__djAutoT);
-          __djAutoT = setTimeout(djAutoSave, 250);
+          if (immediate) {
+            djAutoSave({ touchesCustomer: false });
+            return;
+          }
+          __djAutoT = setTimeout(function () {
+            djAutoSave({ touchesCustomer: false });
+          }, 250);
+        };
+        page.addEventListener("input", function (e) {
+          schedule(e.target, false);
         });
         page.addEventListener("change", function (e) {
-          if (!isField(e.target)) return;
-          if (__djAutoT) clearTimeout(__djAutoT);
-          djAutoSave();
+          schedule(e.target, true);
         });
         page.addEventListener("focusout", function (e) {
-          if (!isField(e.target)) return;
-          if (__djAutoT) clearTimeout(__djAutoT);
-          djAutoSave();
+          schedule(e.target, true);
         });
       }
 
@@ -45050,11 +45655,17 @@
           .forEach((b) =>
             b.classList.toggle("active", b.dataset.mode === pnlPeriod.mode),
           );
+        const activeMonths = pnlMonthsWithSales(pnlPeriod.year);
         document.querySelectorAll(".fin-months").forEach((wrap) => {
-          wrap.innerHTML = PNL_MSHORT.map(
-            (m, i) =>
-              `<div class="pnl-month ${pnlPeriod.mode === "month" && pnlPeriod.month === i ? "active" : ""}" onclick="pnlPickMonth(${i})">${m}</div>`,
-          ).join("");
+          // Skip wholesale / CPA strips that own their own month renderers.
+          if (wrap.id === "cpaMonths" || wrap.id === "wsPnlMonths" || wrap.id === "wsExpMonths")
+            return;
+          wrap.innerHTML = PNL_MSHORT.map((m, i) => {
+            const isActive =
+              pnlPeriod.mode === "month" && pnlPeriod.month === i;
+            const hasAct = activeMonths.has(i);
+            return `<div class="pnl-month ${isActive ? "active" : ""}${hasAct ? " has-act" : ""}" onclick="pnlPickMonth(${i})" title="${hasAct ? "Has sales activity" : "No sales this month"}">${m}</div>`;
+          }).join("");
         });
       }
       function applyFinPeriod() {
@@ -45209,8 +45820,9 @@
         const grossMargin =
           totalRevenue > 0 ? (grossProfit / totalRevenue) * 100 : 0;
 
-        // Operating expenses — recurring templates auto-carry into every month
-        // from their start date until edited off recurring or deleted.
+        // Operating expenses — recurring templates auto-carry into months with
+        // sales activity (yearly) or the selected month (monthly). Stopped
+        // recurring (endDate) no longer projects past that month.
         const commissions = sold.reduce((s, r) => s + r.commission, 0);
         const opExpenses = expensesForPeriod(
           typeof _expenses !== "undefined" ? _expenses : [],
