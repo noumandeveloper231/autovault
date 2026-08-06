@@ -54,20 +54,27 @@
         return sessionStorage.getItem(IMP_ACCESS_KEY) || "";
       }
     } catch (_) {}
-    return (
-      localStorage.getItem(isOwnerPortal(portal) ? OWNER_ACCESS_KEY : ACCESS_KEY) ||
-      ""
-    );
+    const owner = isOwnerPortal(portal);
+    const key = owner ? OWNER_ACCESS_KEY : ACCESS_KEY;
+    try {
+      if (sessionStorage.getItem("av_session_only") === "1") {
+        return sessionStorage.getItem(key) || localStorage.getItem(key) || "";
+      }
+    } catch (_) {}
+    return localStorage.getItem(key) || sessionStorage.getItem(key) || "";
   }
 
   function getRefreshToken(portal) {
     // Impersonation sessions never get a refresh token (by design).
     if (isImpersonating()) return "";
-    return (
-      localStorage.getItem(
-        isOwnerPortal(portal) ? OWNER_REFRESH_KEY : REFRESH_KEY,
-      ) || ""
-    );
+    const owner = isOwnerPortal(portal);
+    const key = owner ? OWNER_REFRESH_KEY : REFRESH_KEY;
+    try {
+      if (sessionStorage.getItem("av_session_only") === "1") {
+        return sessionStorage.getItem(key) || localStorage.getItem(key) || "";
+      }
+    } catch (_) {}
+    return localStorage.getItem(key) || sessionStorage.getItem(key) || "";
   }
 
   function setSession({ token, refreshToken, portal }) {
@@ -81,16 +88,30 @@
       } catch (_) {}
       return;
     }
-    const p = normalizePortal(portal || localStorage.getItem(PORTAL_KEY) || "admin");
-    localStorage.setItem(PORTAL_KEY, p);
+    const p = normalizePortal(portal || localStorage.getItem(PORTAL_KEY) || sessionStorage.getItem(PORTAL_KEY) || "admin");
+    let sessionOnly = false;
+    try {
+      sessionOnly = sessionStorage.getItem("av_session_only") === "1";
+    } catch (_) {}
+    const store = sessionOnly ? sessionStorage : localStorage;
+    store.setItem(PORTAL_KEY, p);
+    if (!sessionOnly) {
+      try { sessionStorage.removeItem(PORTAL_KEY); } catch (_) {}
+    }
     if (isOwnerPortal(p)) {
-      if (token) localStorage.setItem(OWNER_ACCESS_KEY, token);
-      if (refreshToken) localStorage.setItem(OWNER_REFRESH_KEY, refreshToken);
-      else if (refreshToken === null) localStorage.removeItem(OWNER_REFRESH_KEY);
+      if (token) store.setItem(OWNER_ACCESS_KEY, token);
+      if (refreshToken) store.setItem(OWNER_REFRESH_KEY, refreshToken);
+      else if (refreshToken === null) {
+        localStorage.removeItem(OWNER_REFRESH_KEY);
+        try { sessionStorage.removeItem(OWNER_REFRESH_KEY); } catch (_) {}
+      }
     } else {
-      if (token) localStorage.setItem(ACCESS_KEY, token);
-      if (refreshToken) localStorage.setItem(REFRESH_KEY, refreshToken);
-      else if (refreshToken === null) localStorage.removeItem(REFRESH_KEY);
+      if (token) store.setItem(ACCESS_KEY, token);
+      if (refreshToken) store.setItem(REFRESH_KEY, refreshToken);
+      else if (refreshToken === null) {
+        localStorage.removeItem(REFRESH_KEY);
+        try { sessionStorage.removeItem(REFRESH_KEY); } catch (_) {}
+      }
     }
   }
 
@@ -158,6 +179,14 @@
     localStorage.removeItem(OWNER_ACCESS_KEY);
     localStorage.removeItem(OWNER_REFRESH_KEY);
     localStorage.removeItem(PORTAL_KEY);
+    try {
+      sessionStorage.removeItem(ACCESS_KEY);
+      sessionStorage.removeItem(REFRESH_KEY);
+      sessionStorage.removeItem(OWNER_ACCESS_KEY);
+      sessionStorage.removeItem(OWNER_REFRESH_KEY);
+      sessionStorage.removeItem(PORTAL_KEY);
+      sessionStorage.removeItem("av_session_only");
+    } catch (_) {}
   }
 
   let refreshPromise = null;
@@ -267,10 +296,28 @@
 
     const data = await resp.json().catch(() => ({}));
     if (!resp.ok) {
+      const code = data.error?.code || data.code;
+      if (
+        resp.status === 403 &&
+        (code === "PASSWORD_RESET_REQUIRED" ||
+          data.error?.details?.mustResetPassword ||
+          data.details?.mustResetPassword)
+      ) {
+        try {
+          sessionStorage.setItem("av_must_reset_password", "1");
+        } catch (_) {}
+        if (
+          typeof window !== "undefined" &&
+          typeof window.openChangePassword === "function"
+        ) {
+          window.openChangePassword(true);
+        }
+      }
       const err = new Error(
         data.error?.message || data.message || `Request failed (${resp.status})`,
       );
       err.status = resp.status;
+      err.code = code;
       err.data = data;
       throw err;
     }
@@ -516,7 +563,6 @@
       request(`/api/v1/calendar/day-notes${qs}`),
     upsertCalendarDayNote: (date, body) =>
       request(`/api/v1/calendar/day-notes/${date}`, { method: "PUT", body: JSON.stringify(body) }),
-    me: () => request("/api/auth/me"),
     dealershipsMe: () => request("/api/v1/dealerships/me"),
     listPayrollRuns: (qs = "") => request(`/api/v1/payroll-runs${qs}`),
     // Messages

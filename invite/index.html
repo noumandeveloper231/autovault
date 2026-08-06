@@ -47,7 +47,7 @@
       <label for="fullName">Full name</label>
       <input id="fullName" type="text" required autocomplete="name" placeholder="Your full name" />
       <label for="password">Password</label>
-      <input id="password" type="password" minlength="8" required autocomplete="new-password" placeholder="At least 8 characters" />
+      <input id="password" type="password" minlength="8" required autocomplete="new-password" placeholder="Strong password (8+ chars)" />
       <label for="confirm">Confirm password</label>
       <input id="confirm" type="password" minlength="8" required autocomplete="new-password" placeholder="Re-enter password" />
       <button type="submit" id="submitBtn">Accept invitation</button>
@@ -89,6 +89,17 @@
       if (password.length < 8) {
         msg.className = "msg err";
         msg.textContent = "Password must be at least 8 characters.";
+        return;
+      }
+      if (
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/[0-9]/.test(password) ||
+        !/[^A-Za-z0-9]/.test(password)
+      ) {
+        msg.className = "msg err";
+        msg.textContent =
+          "Password needs uppercase, lowercase, a number, and a special character.";
         return;
       }
       if (password !== confirm) {

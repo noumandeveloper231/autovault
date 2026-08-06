@@ -885,7 +885,7 @@
           <div class="lg-field"><label for="lgUser">Username or email</label><div class="lg-iw"><span class="lg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span><input id="lgUser" type="text" placeholder="you@yourdealership.com" autocomplete="username" /></div></div>
           <div class="lg-field"><label for="lgPass">Password</label><div class="lg-iw"><span class="lg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><input id="lgPass" type="password" placeholder="••••••••••" autocomplete="current-password" /><button type="button" class="lg-eye" id="lgEye" aria-label="Show password"><svg id="lgEyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
           <div class="lg-err" id="lgErr">Please enter your username and password.</div>
-          <div class="lg-row"><label class="lg-remember"><input type="checkbox" id="lgRemember" /><span class="lg-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span>Remember me</label><a href="/forgot-password" class="lg-forgot">Forgot password?</a></div>
+          <div class="lg-row"><label class="lg-remember"><input type="checkbox" id="lgRemember" checked /><span class="lg-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span>Stay signed in</label><a href="/forgot-password" class="lg-forgot">Forgot password?</a></div>
           <button type="submit" class="lg-btn" id="lgBtn"><span class="lg-label" id="lgBtnLabel">Sign in to dashboard</span><svg class="lg-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="lg-spin"></span></button>
         </form>
         <p class="lg-signup">New dealership? <a href="/#waitlist">Sign up here</a></p>
@@ -1915,12 +1915,40 @@
           if (data.refreshToken) localStorage.setItem('avRefreshToken', data.refreshToken);
           localStorage.setItem('avAuthPortal', userPortal);
         }
+        // Unchecked "Stay signed in" → session-only tokens (cleared when the browser tab/window closes).
+        try {
+          var stay = document.getElementById('lgRemember');
+          if (stay && !stay.checked) {
+            var keys = userPortal === 'owner'
+              ? ['avOwnerToken', 'avOwnerRefreshToken']
+              : ['avAuthToken', 'avRefreshToken'];
+            keys.forEach(function (k) {
+              var v = localStorage.getItem(k);
+              if (v) {
+                sessionStorage.setItem(k, v);
+                localStorage.removeItem(k);
+              }
+            });
+            sessionStorage.setItem('avAuthPortal', userPortal);
+            localStorage.removeItem('avAuthPortal');
+            sessionStorage.setItem('av_session_only', '1');
+          } else {
+            sessionStorage.removeItem('av_session_only');
+          }
+        } catch (e) {}
         if (data.user && data.user.introCompleted !== undefined) {
           sessionStorage.setItem('av_intro_completed', data.user.introCompleted ? '1' : '0');
         }
         if (data.user && data.user.termsAccepted !== undefined) {
           sessionStorage.setItem('av_terms_accepted', data.user.termsAccepted ? '1' : '0');
         }
+        try {
+          if (data.user && data.user.mustResetPassword) {
+            sessionStorage.setItem('av_must_reset_password', '1');
+          } else {
+            sessionStorage.removeItem('av_must_reset_password');
+          }
+        } catch (e) {}
         try { localStorage.removeItem('av_terms_accepted_db'); } catch (e) {}
         window.location.href = data.redirectDashboardPath || AVPortal.dashboardPath(userPortal) || '/dashboard';
       }catch(loginError){

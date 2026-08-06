@@ -26,7 +26,7 @@
 <body>
   <div class="card">
     <h1>Choose a new password</h1>
-    <p>Use at least 8 characters.</p>
+    <p>Use at least 8 characters with upper &amp; lowercase, a number, and a special character.</p>
     <form id="form">
       <label for="password">New password</label>
       <div class="pwd-wrap">
@@ -64,6 +64,22 @@
       const password = document.getElementById("password").value;
       const confirm = document.getElementById("confirm").value;
       msg.style.display = "block";
+      if (password.length < 8) {
+        msg.className = "msg err";
+        msg.textContent = "Password must be at least 8 characters.";
+        return;
+      }
+      if (
+        !/[A-Z]/.test(password) ||
+        !/[a-z]/.test(password) ||
+        !/[0-9]/.test(password) ||
+        !/[^A-Za-z0-9]/.test(password)
+      ) {
+        msg.className = "msg err";
+        msg.textContent =
+          "Password needs uppercase, lowercase, a number, and a special character.";
+        return;
+      }
       if (password !== confirm) {
         msg.className = "msg err";
         msg.textContent = "Passwords do not match.";

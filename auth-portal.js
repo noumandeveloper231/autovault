@@ -58,7 +58,13 @@
         return sessionStorage.getItem("avImpAccessToken") || "";
       }
     } catch (_) {}
-    return localStorage.getItem(tokenStorageKey(portal)) || "";
+    const key = tokenStorageKey(portal);
+    try {
+      if (sessionStorage.getItem("av_session_only") === "1") {
+        return sessionStorage.getItem(key) || localStorage.getItem(key) || "";
+      }
+    } catch (_) {}
+    return localStorage.getItem(key) || sessionStorage.getItem(key) || "";
   }
 
   function clearSession(portal) {
@@ -80,6 +86,15 @@
     localStorage.removeItem("avRefreshToken");
     localStorage.removeItem("avOwnerRefreshToken");
     localStorage.removeItem("avAuthPortal");
+    try {
+      sessionStorage.removeItem(key);
+      sessionStorage.removeItem("avAuthToken");
+      sessionStorage.removeItem("avOwnerToken");
+      sessionStorage.removeItem("avRefreshToken");
+      sessionStorage.removeItem("avOwnerRefreshToken");
+      sessionStorage.removeItem("avAuthPortal");
+      sessionStorage.removeItem("av_session_only");
+    } catch (_) {}
     if (global.AVApi) global.AVApi.clearSession(portal);
   }
 
@@ -132,10 +147,22 @@
     const claimedPortal = impersonating
       ? "sales_rep"
       : portalFromClaims(claims) ||
-        normalizePortal(localStorage.getItem("avAuthPortal") || "admin");
+        normalizePortal(
+          localStorage.getItem("avAuthPortal") ||
+            sessionStorage.getItem("avAuthPortal") ||
+            "admin",
+        );
     // Never overwrite the admin portal cookie/key while a support tab is open
     if (!impersonating) {
-      localStorage.setItem("avAuthPortal", claimedPortal);
+      try {
+        if (sessionStorage.getItem("av_session_only") === "1") {
+          sessionStorage.setItem("avAuthPortal", claimedPortal);
+        } else {
+          localStorage.setItem("avAuthPortal", claimedPortal);
+        }
+      } catch (_) {
+        localStorage.setItem("avAuthPortal", claimedPortal);
+      }
     }
     return {
       token,
@@ -145,6 +172,7 @@
       sub: claims.sub || "",
       role: claims.role || "",
       dealershipId: claims.dealershipId || null,
+      mustResetPassword: !!claims.mustResetPassword,
       impersonation: !!claims.impersonation,
     };
   }
@@ -210,15 +238,23 @@
     })
       .then((resp) => resp.json().then((data) => ({ resp, data })))
       .then(({ resp, data }) => {
-        if (!resp.ok) throw new Error(data.message || "Session expired");
+        // Only force logout on auth failures — not network/cold-start blips.
+        if (resp.status === 401 || resp.status === 403) {
+          throw new Error(data.error?.message || data.message || "Session expired");
+        }
+        if (!resp.ok) return;
         const portal = normalizePortal(data.user?.portal);
-        localStorage.setItem("avAuthPortal", portal);
-        if (routePortal !== portal) {
+        if (portal) localStorage.setItem("avAuthPortal", portal);
+        if (routePortal !== portal && portal) {
           clearSession(routePortal);
           redirect(LOGIN_BY_PORTAL[routePortal] || "/login");
         }
       })
-      .catch(() => {
+      .catch((err) => {
+        // Network errors: keep the local session; user can keep working offline-ish.
+        if (!err || !/Session expired|Unauthorized|Invalid|no longer valid/i.test(String(err.message || ""))) {
+          return;
+        }
         clearSession(routePortal);
         if (typeof onInvalid === "function") onInvalid();
         else {

@@ -24309,11 +24309,33 @@
       <div class="modal" style="max-width: 420px">
         <div class="modal-head">
           <h3 id="changePasswordTitle">Change Password</h3>
-          <button class="modal-close" onclick="closeChangePassword()">
+          <button
+            class="modal-close"
+            id="cpCloseBtn"
+            onclick="closeChangePassword()"
+            aria-label="Close"
+          >
             &times;
           </button>
         </div>
         <div class="modal-body">
+          <div
+            id="cpForceNote"
+            style="
+              display: none;
+              margin-bottom: 14px;
+              padding: 12px 14px;
+              border-radius: 10px;
+              border: 1px solid rgba(44, 146, 87, 0.35);
+              background: rgba(44, 146, 87, 0.1);
+              color: var(--text);
+              font-size: 13px;
+              line-height: 1.45;
+            "
+          >
+            For security, you must create a new password before using AutoVault.
+            Your temporary password will stop working after this step.
+          </div>
           <div class="form-group" id="cpCurrentGroup">
             <label>Current Password</label>
             <div class="cp-input-wrap">
@@ -24438,6 +24460,7 @@
           <div style="display: flex; gap: 10px; margin-top: 14px">
             <button
               class="btn-ghost"
+              id="cpCancelBtn"
               style="flex: 1"
               onclick="closeChangePassword()"
             >
@@ -26299,7 +26322,14 @@
             method: 'POST',
             body: JSON.stringify(rec),
           });
-        } catch (e) { console.warn('[terms] save failed', e); }
+        } catch (e) {
+          console.warn('[terms] save failed', e);
+          if (btn) { btn.disabled = false; btn.textContent = 'I Agree & Continue'; }
+          if (typeof AVToast !== 'undefined') {
+            AVToast.error((e && e.message) || 'Could not save agreement. Please try again.');
+          }
+          return;
+        }
         if (window.crmOwner) window.crmOwner.termsAccepted = true;
         try {
           sessionStorage.setItem('av_terms_accepted', '1');
@@ -26324,6 +26354,19 @@
         return true;
       }
       function avBootGate() {
+        try {
+          if (
+            _cpForceReset ||
+            sessionStorage.getItem("av_must_reset_password") === "1"
+          ) {
+            return;
+          }
+          var sess =
+            window.AVPortal && typeof AVPortal.readSession === "function"
+              ? AVPortal.readSession()
+              : null;
+          if (sess && sess.mustResetPassword) return;
+        } catch (_) {}
         if (termsNeedsSigning()) openTerms();
         else maybeShowWelcome();
       }
@@ -33056,8 +33099,7 @@
           location.hostname === "127.0.0.1"
             ? "http://localhost:3000"
             : "https://autovault-backend-cbdp.onrender.com"),
-        ownerApiKey:
-          window.AUTOVAULT_OWNER_API_KEY || "oLYIh09DuZVXCc3DjMqNuGv63kpOKWR7",
+        ownerApiKey: window.AUTOVAULT_OWNER_API_KEY || "",
       };
       const OWNER_STATES = {
         CA: { name: "California", x: 70, y: 300 },
@@ -33194,15 +33236,11 @@
           AVPortal.clearSession("owner");
         } else {
           localStorage.removeItem("avOwnerToken");
+          localStorage.removeItem("avOwnerRefreshToken");
           localStorage.removeItem("avAuthPortal");
         }
         document.body.classList.remove("owner-mode");
-        if (location.pathname.toLowerCase().startsWith("/owner/")) {
-          location.href = "/owner/login";
-          return;
-        }
-        showPage("dashboard", document.querySelector("[data-nav=dashboard]"));
-        if (typeof renderDashboard === "function") renderDashboard();
+        location.href = "/login?portal=owner";
       }
       function handleLogout() {
         var portal =
@@ -34908,7 +34946,12 @@
           });
           const inv = (res && (res.invitation || res)) || {};
           if (typeof AVToast !== "undefined") {
-            if (inv.resent) {
+            if (inv.emailSent === false) {
+              AVToast.warning(
+                inv.warning ||
+                  "Invite saved, but the email could not be sent. Try resending.",
+              );
+            } else if (inv.resent) {
               AVToast.success(
                 "CPA invite resent to " +
                   email +
@@ -35407,8 +35450,10 @@
         const m = document.getElementById("addAdminModal");
         if (m) m.classList.remove("open");
       }
+      var _cpForceReset = false;
       function openChangePassword(forceReset) {
         closeAdminMenu();
+        _cpForceReset = !!forceReset;
         document.getElementById("cpCurrentPass").value = "";
         document.getElementById("cpNewPass").value = "";
         document.getElementById("cpConfirmPass").value = "";
@@ -35419,6 +35464,17 @@
         document.getElementById("changePasswordTitle").textContent = forceReset
           ? "Set New Password"
           : "Change Password";
+        var forceNote = document.getElementById("cpForceNote");
+        if (forceNote) forceNote.style.display = forceReset ? "block" : "none";
+        var closeBtn = document.getElementById("cpCloseBtn");
+        if (closeBtn) closeBtn.style.display = forceReset ? "none" : "";
+        var cancelBtn = document.getElementById("cpCancelBtn");
+        if (cancelBtn) cancelBtn.style.display = forceReset ? "none" : "";
+        var saveBtn = document.getElementById("cpSaveBtn");
+        if (saveBtn) {
+          saveBtn.textContent = forceReset ? "Set Password" : "Update Password";
+          if (forceReset) saveBtn.style.flex = "1";
+        }
         document.getElementById("changePasswordModal").classList.add("open");
         document.querySelectorAll(".cp-eye").forEach(function (b) {
           b.classList.remove("visible");
@@ -35432,11 +35488,14 @@
         if (mt) mt.textContent = "Passwords must match";
         document.getElementById("cpMatch").className = "cp-match";
         setTimeout(function () {
-          var el = document.getElementById("cpNewPass");
+          var el = document.getElementById(
+            forceReset ? "cpNewPass" : "cpCurrentPass",
+          );
           if (el) el.focus();
         }, 60);
       }
       function closeChangePassword() {
+        if (_cpForceReset) return;
         var m = document.getElementById("changePasswordModal");
         if (m) m.classList.remove("open");
       }
@@ -35504,8 +35563,7 @@
         var newPass = document.getElementById("cpNewPass").value;
         var confirm = document.getElementById("cpConfirmPass").value;
         var msgEl = document.getElementById("cpMsg");
-        var forceReset =
-          document.getElementById("cpCurrentGroup").style.display === "none";
+        var forceReset = _cpForceReset;
         if (!forceReset && !current) {
           document.getElementById("cpCurrentPass").focus();
           if (typeof AVToast !== "undefined")
@@ -35538,14 +35596,40 @@
         }
         try {
           if (window.AVApi) {
-            await AVApi.changePassword({
+            var result = await AVApi.changePassword({
               currentPassword: forceReset ? undefined : current,
               newPassword: newPass,
             });
+            if (result && (result.accessToken || result.token || result.refreshToken)) {
+              var portal =
+                (localStorage.getItem("avAuthPortal") ||
+                  (window.AVPortal && AVPortal.getRoutePortal
+                    ? AVPortal.getRoutePortal()
+                    : "admin")) || "admin";
+              AVApi.setSession({
+                token: result.accessToken || result.token,
+                refreshToken: result.refreshToken,
+                portal: portal,
+              });
+            }
           }
-          closeChangePassword();
+          try {
+            sessionStorage.removeItem("av_must_reset_password");
+          } catch (_) {}
+          _cpForceReset = false;
+          var m = document.getElementById("changePasswordModal");
+          if (m) m.classList.remove("open");
           if (typeof AVToast !== "undefined")
-            AVToast.success("Password updated successfully");
+            AVToast.success(
+              forceReset
+                ? "Password set — you're all set"
+                : "Password updated successfully",
+            );
+          if (forceReset) {
+            setTimeout(function () {
+              location.reload();
+            }, 600);
+          }
         } catch (err) {
           console.error("[change-password]", err);
           if (typeof AVToast !== "undefined")
@@ -35562,6 +35646,9 @@
           }
         }
       }
+      window.openChangePassword = openChangePassword;
+      window.closeChangePassword = closeChangePassword;
+      window.saveChangePassword = saveChangePassword;
       function openAuditLog() {
         closeAdminMenu();
         document.getElementById("auditLogContent").innerHTML = "Loading\u2026";
@@ -50216,6 +50303,40 @@
         var session = AVPortal.readSession(routePortal);
         if (!session || session.portal !== routePortal) return;
 
+        function jwtNeedsPasswordReset() {
+          try {
+            if (session && session.mustResetPassword) return true;
+          } catch (_) {}
+          try {
+            return sessionStorage.getItem("av_must_reset_password") === "1";
+          } catch (_) {
+            return false;
+          }
+        }
+
+        if (jwtNeedsPasswordReset()) {
+          openChangePassword(true);
+          if (window.AVApi) {
+            AVApi.me()
+              .then(function (meData) {
+                var still =
+                  (meData && meData.user && meData.user.mustResetPassword) ||
+                  (meData && meData.mustResetPassword);
+                if (!still) {
+                  try {
+                    sessionStorage.removeItem("av_must_reset_password");
+                  } catch (_) {}
+                  _cpForceReset = false;
+                  var m = document.getElementById("changePasswordModal");
+                  if (m) m.classList.remove("open");
+                  location.reload();
+                }
+              })
+              .catch(function () {});
+          }
+          return;
+        }
+
         applyPlanRestrictions();
 
         updateMsgBadge();
@@ -50287,10 +50408,15 @@
         if (window.AVApi) {
           try {
             var meData = await AVApi.me();
-            if (meData && meData.mustResetPassword) {
-              setTimeout(function () {
-                openChangePassword(true);
-              }, 500);
+            var mustReset =
+              (meData && meData.user && meData.user.mustResetPassword) ||
+              (meData && meData.mustResetPassword) ||
+              false;
+            if (mustReset) {
+              try {
+                sessionStorage.setItem("av_must_reset_password", "1");
+              } catch (_) {}
+              openChangePassword(true);
             }
           } catch (e) {}
         }
@@ -50328,6 +50454,18 @@
       (function () {
         var routePortal =
           (window.AVPortal && AVPortal.getRoutePortal()) || "admin";
+        try {
+          var sess =
+            window.AVPortal && typeof AVPortal.readSession === "function"
+              ? AVPortal.readSession(routePortal)
+              : null;
+          if (
+            (sess && sess.mustResetPassword) ||
+            sessionStorage.getItem("av_must_reset_password") === "1"
+          ) {
+            return;
+          }
+        } catch (_) {}
         var _rendered = false;
         function afterLive() {
           if (_rendered) return;
