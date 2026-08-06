@@ -636,12 +636,18 @@
   .wl-form{padding:48px;border-left:1px solid var(--line-soft);background:rgba(10,13,16,.35)}
   .field{margin-bottom:15px}
   .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
-  .field input{
+  .field input,.field select{
     width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;
     padding:13px 14px;color:var(--text);font-family:var(--ff-body);font-size:15px;transition:border-color .18s,box-shadow .18s;
   }
+  .field select{
+    appearance:none;-webkit-appearance:none;cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%238B95A1' stroke-width='2'%3E%3Cpath d='M3 5l4 4 4-4'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;
+  }
+  .field select option{background:var(--ink-2);color:var(--text)}
   .field input::placeholder{color:var(--faint)}
-  .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
   .wl-form .btn-primary{width:100%;margin-top:8px;padding:14px}
   .wl-note{text-align:center;font-size:12px;color:var(--faint);margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px}
   .wl-note svg{width:12px;height:12px;color:var(--up)}
