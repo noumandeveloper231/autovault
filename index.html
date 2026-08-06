@@ -4,10 +4,10 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>AutoVault — The Dealership Operating System</title>
-<meta name="description" content="AutoVault brings inventory, sales, commissions, payments, taxes, and profit into one platform built for how dealerships actually run. Start today from $39.99 a month." />
+<meta name="description" content="AutoVault brings inventory, sales, commissions, payments, taxes, and profit into one platform built for how dealerships actually run. Your first month is on us." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
 <style>
   /* ============ TOKENS ============ */
   :root{
@@ -31,7 +31,7 @@
     --down:#F87171;
     --radius:14px;
     --radius-sm:10px;
-    --maxw:1220px;
+    --maxw:1200px;
     --ff-display:"Space Grotesk",system-ui,sans-serif;
     --ff-body:"Inter",system-ui,sans-serif;
     --ff-mono:"JetBrains Mono",ui-monospace,monospace;
@@ -101,14 +101,12 @@
   .btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(44,146,87,.34)}
   .btn-ghost{background:transparent;color:var(--text);border-color:var(--line)}
   .btn-ghost:hover{border-color:var(--accent-line);background:rgba(255,255,255,.02)}
-  .btn-login{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent);font-weight:600}
-  .btn-login:hover{background:rgba(44,146,87,.20);color:var(--accent-2)}
   .nav .btn{padding:9px 17px}
   .nav-toggle{display:none;background:none;border:0;color:var(--text);cursor:pointer}
 
   /* ============ HERO ============ */
-  .hero{padding:66px 0 40px;position:relative;overflow-x:clip}
-  .hero-grid{display:grid;grid-template-columns:0.78fr 1.22fr;gap:40px;align-items:center}
+  .hero{padding:30px 0 52px;position:relative;overflow-x:clip}
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:38px;align-items:center}
   .hero h1{font-size:clamp(38px,5.1vw,62px);margin:20px 0 0}
   .hero h1 .glow{color:var(--accent)}
   .hero-sub{color:var(--muted);font-size:18px;max-width:33ch;margin-top:20px}
@@ -125,38 +123,35 @@
     border:1px solid var(--line);border-radius:16px;overflow:hidden;
     background:linear-gradient(180deg,var(--panel),var(--ink-2));
     box-shadow:0 40px 80px -30px rgba(0,0,0,.75),0 0 0 1px rgba(255,255,255,.02) inset,0 0 64px -20px rgba(44,146,87,.55);
-    transform:perspective(1600px) rotateY(-6deg) rotateX(2deg);
-    transition:transform .5s ease;
-    width:100%;
-    min-width:0;
+    transform:none;
   }
-  .app:hover{transform:perspective(1600px) rotateY(-2deg) rotateX(1deg)}
+  .app:hover{transform:none}
   .app-bar{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--line-soft);background:var(--ink-2)}
   .app-bar .tl{display:flex;gap:6px}
   .app-bar .tl i{width:11px;height:11px;border-radius:50%;background:#2a323b;display:block}
   .app-url{margin-left:8px;flex:1;background:#0c1014;border:1px solid var(--line-soft);border-radius:7px;padding:5px 11px;font-family:var(--ff-mono);font-size:11.5px;color:var(--faint);display:flex;align-items:center;gap:7px}
   .app-url svg{width:11px;height:11px;color:var(--up)}
-  .app-body{display:grid;grid-template-columns:56px 1fr;min-height:430px}
+  .app-body{display:grid;grid-template-columns:56px 1fr;min-height:500px}
   .app-side{border-right:1px solid var(--line-soft);padding:14px 0;display:flex;flex-direction:column;align-items:center;gap:16px;background:var(--ink-2)}
   .app-side .ico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;color:var(--faint)}
   .app-side .ico.on{background:var(--accent-soft);color:var(--accent)}
   .app-side .ico svg{width:16px;height:16px}
-  .app-main{padding:16px;min-width:0}
+  .app-main{padding:16px}
   .app-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
   .app-head .h{font-family:var(--ff-display);font-size:15px;font-weight:600}
   .app-head .sub{font-size:11px;color:var(--faint)}
   .app-head .who{display:flex;align-items:center;gap:8px}
   .app-head .who .av{width:26px;height:26px;border-radius:50%;background:linear-gradient(140deg,#2a3140,#161b22);border:1px solid var(--line);display:grid;place-items:center;font-size:10px;font-family:var(--ff-mono);color:var(--muted)}
 
-  .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px}
-  .kpi{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:11px;padding:10px 9px;overflow:hidden;min-width:0}
-  .kpi .lbl{font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:5px;white-space:nowrap}
-  .kpi .lbl .d{width:6px;height:6px;border-radius:2px;background:var(--accent);flex:0 0 auto}
-  .kpi .val{font-family:var(--ff-mono);font-weight:700;font-size:13.5px;margin-top:7px;letter-spacing:-.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2;font-variant-numeric:tabular-nums}
-  .kpi .foot{display:flex;align-items:center;justify-content:space-between;margin-top:6px;gap:4px;min-width:0}
-  .kpi .cap{font-size:9.5px;color:var(--faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-  .delta{font-family:var(--ff-mono);font-size:10px;color:var(--up);background:var(--up-soft);padding:2px 6px;border-radius:20px;display:inline-flex;align-items:center;gap:2px;flex:0 0 auto;white-space:nowrap}
-  .delta svg{width:8px;height:8px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+  .kpi{background:var(--panel-2);border:1px solid var(--line-soft);border-radius:11px;padding:12px}
+  .kpi .lbl{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);display:flex;align-items:center;gap:6px}
+  .kpi .lbl .d{width:6px;height:6px;border-radius:2px;background:var(--accent)}
+  .kpi .val{font-family:var(--ff-mono);font-weight:700;font-size:19px;margin-top:8px;letter-spacing:-.02em}
+  .kpi .foot{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+  .kpi .cap{font-size:10px;color:var(--faint)}
+  .delta{font-family:var(--ff-mono);font-size:11px;color:var(--up);background:var(--up-soft);padding:2px 7px;border-radius:20px;display:inline-flex;align-items:center;gap:3px}
+  .delta svg{width:9px;height:9px}
   .kpi.pending .delta{color:var(--accent);background:var(--accent-soft)}
 
   .app-cols{display:grid;grid-template-columns:1.3fr 1fr;gap:12px}
@@ -237,7 +232,7 @@
   .alloclegend span::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--c)}
 
   /* ============ FLOATING DASHBOARD (aura) ============ */
-  .app-stage{position:relative;display:flex;justify-content:center;align-items:center}
+  .app-stage{position:relative;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:26px;order:1}
   .app-aura{position:absolute;left:50%;top:50%;width:118%;height:120%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(44,146,87,.30),rgba(44,146,87,.08) 42%,transparent 64%);filter:blur(26px);pointer-events:none;z-index:0;animation:auraPulse 6s ease-in-out infinite}
   @keyframes auraPulse{0%,100%{opacity:.5;transform:translate(-50%,-50%) scale(.95)}50%{opacity:.92;transform:translate(-50%,-50%) scale(1.06)}}
   .app-float{position:relative;z-index:1;width:100%;animation:appBob 6s ease-in-out infinite;will-change:transform}
@@ -520,7 +515,7 @@
   .float-phone{position:absolute;z-index:4;pointer-events:none}
   .float-phone .mini-phone{width:168px;animation-duration:7.2s}
   .float-phone .mp-screen{min-height:322px}
-  .hero-phone{left:-54px;bottom:-4px}
+  .hero-phone{display:none}
   .hero-phone .mini-phone{width:140px}
   .hero-phone .mp-screen{min-height:302px}
   .hero-phone .mp-t{font-size:11px}
@@ -640,16 +635,13 @@
 
   .wl-form{padding:48px;border-left:1px solid var(--line-soft);background:rgba(10,13,16,.35)}
   .field{margin-bottom:15px}
-  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:15px}
-  .field-row .field{margin-bottom:0}
   .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px;font-weight:500}
-  .field input,.field select{
+  .field input{
     width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;
     padding:13px 14px;color:var(--text);font-family:var(--ff-body);font-size:15px;transition:border-color .18s,box-shadow .18s;
   }
   .field input::placeholder{color:var(--faint)}
-  .field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
-  .field input.phone-invalid{border-color:var(--down)!important}
+  .field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
   .wl-form .btn-primary{width:100%;margin-top:8px;padding:14px}
   .wl-note{text-align:center;font-size:12px;color:var(--faint);margin-top:14px;display:flex;align-items:center;justify-content:center;gap:7px}
   .wl-note svg{width:12px;height:12px;color:var(--up)}
@@ -717,9 +709,9 @@
     .sec-head h2{font-size:clamp(24px,7vw,32px)}
 
     /* dashboard panel */
-    .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .kpis{grid-template-columns:repeat(2,1fr);gap:8px}
     .kpi{padding:10px}
-    .kpi .val{font-size:14px}
+    .kpi .val{font-size:16px}
     .app-cols{grid-template-columns:1fr}
     .app-body{grid-template-columns:1fr}
     .app-side{flex-direction:row;justify-content:center;gap:14px;border-right:0;border-bottom:1px solid var(--line-soft);padding:10px}
@@ -744,7 +736,7 @@
   }
   @media(max-width:390px){
     .kpis{grid-template-columns:1fr 1fr;gap:7px}
-    .kpi .val{font-size:13px}
+    .kpi .val{font-size:15px}
     .taxbar{grid-template-columns:1fr 1fr}
     .taxbar .taxstat:first-child{grid-column:1 / -1}
     .brand{font-size:17px}
@@ -761,6 +753,7 @@
   .price{display:flex;align-items:baseline;gap:9px;margin-top:22px}
   .price .amt{font-family:var(--ff-display);font-weight:700;font-size:46px;letter-spacing:-.02em;color:var(--text)}
   .price .per{font-size:14px;color:var(--muted)}
+  .tier-price .tp-free{font-family:var(--ff-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:20px;padding:4px 9px;align-self:center}
   .price .price-tag{font-family:var(--ff-mono);font-size:10px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:20px;padding:4px 9px;margin-left:4px;align-self:center}
   .price-note{font-size:12.5px;color:var(--faint);margin-top:20px;line-height:1.5}
   .price .was{font-family:var(--ff-mono);font-size:18px;color:var(--faint);text-decoration:line-through;align-self:center}
@@ -796,9 +789,294 @@
   .gs-confirm{max-width:520px;margin:24px auto 0;text-align:center;border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:18px;padding:38px 28px}
   .gs-cbadge{width:52px;height:52px;border-radius:50%;background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;display:grid;place-items:center;margin:0 auto 16px}
   .gs-cbadge svg{width:26px;height:26px}
+  .btn-login{background:var(--accent-soft);border:1px solid var(--accent-line);color:var(--accent);font-weight:600}
+  .btn-login:hover{background:rgba(44,146,87,.20);color:var(--accent-2)}
+  .gs-home-btn{margin-top:22px}
   .gs-confirm h3{font-size:22px}
   .gs-confirm p{color:var(--muted);font-size:15px;margin-top:10px}
   @media(max-width:900px){.tiers-grid{grid-template-columns:1fr}}
+  /* ============ LOGIN (top) ============ */
+  .lg-view{position:relative;min-height:100vh;display:flex;flex-direction:column;border-bottom:1px solid var(--line-soft);overflow:hidden}
+  .lg-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .lg-grid{position:absolute;inset:0;background-image:linear-gradient(var(--line-soft) 1px,transparent 1px),linear-gradient(90deg,var(--line-soft) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse 70% 60% at 28% 45%,#000,transparent 76%);mask-image:radial-gradient(ellipse 70% 60% at 28% 45%,#000,transparent 76%);opacity:.5}
+  .lg-aura{position:absolute;left:6%;right:auto;top:54%;width:760px;height:680px;transform:translateY(-50%);background:radial-gradient(ellipse at center,rgba(44,146,87,.20),transparent 62%);filter:blur(24px);animation:lgaura 6.5s ease-in-out infinite}
+  @keyframes lgaura{0%,100%{opacity:.55;transform:translateY(-50%) scale(.96)}50%{opacity:.95;transform:translateY(-50%) scale(1.05)}}
+  .lg-marquee{position:relative;z-index:3;border-bottom:1px solid var(--line-soft);background:rgba(12,16,19,.7);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);overflow:hidden;padding:13px 0;flex:0 0 auto}
+  .lg-track{display:flex;white-space:nowrap;width:max-content;animation:lgtm 32s linear infinite}
+  .lg-track span{font-family:var(--ff-mono);font-size:13px;letter-spacing:.05em;display:inline-flex;align-items:center}
+  .lg-track b{color:var(--muted);font-weight:500;padding:0 22px}
+  .lg-track .sep{color:var(--accent-line)}
+  @keyframes lgtm{to{transform:translateX(-50%)}}
+  .lg-shell{position:relative;z-index:1;flex:1;display:grid;grid-template-columns:1fr 1fr;min-height:0}
+  .lg-form-side,.lg-dash-side{min-width:0}
+  .lg-form-side{display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px 32px;order:2}
+  .lg-form-inner{width:100%;max-width:400px;background:linear-gradient(180deg,var(--panel),var(--ink-2));border:1px solid var(--line);border-radius:18px;padding:34px 32px;box-shadow:0 40px 80px -34px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.02) inset}
+  .lg-brand{display:flex;align-items:center;gap:11px;margin-bottom:30px}
+  .lg-mark{height:30px;width:64px;background:url("data:image/png;base64,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") no-repeat left center;background-size:contain;flex:0 0 auto}
+  .lg-name{font-family:var(--ff-display);font-weight:700;font-size:19px}
+  .lg-eyebrow{font-family:var(--ff-mono);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);display:inline-flex;align-items:center;gap:9px}
+  .lg-eyebrow::before{content:"";width:20px;height:1px;background:var(--accent-line)}
+  .lg-welcome{font-family:var(--ff-display);font-weight:700;letter-spacing:-.02em;font-size:32px;margin:16px 0 0}
+  .lg-sub{color:var(--muted);font-size:15px;margin-top:10px}
+  #lgForm{margin-top:28px}
+  .lg-field{margin-bottom:16px}
+  .lg-field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:8px;font-weight:500}
+  .lg-iw{position:relative}
+  .lg-iw .lg-ic{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint);pointer-events:none}
+  .lg-iw .lg-ic svg{width:17px;height:17px;display:block}
+  .lg-field input{width:100%;background:var(--ink-2);border:1px solid var(--line);border-radius:11px;padding:13px 14px 13px 40px;color:var(--text);font-family:var(--ff-body);font-size:15px;transition:border-color .18s,box-shadow .18s}
+  .lg-field input::placeholder{color:var(--faint)}
+  .lg-field input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .lg-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:0;color:var(--faint);cursor:pointer;padding:7px;border-radius:8px;display:grid;place-items:center}
+  .lg-eye:hover{color:var(--muted)}.lg-eye svg{width:18px;height:18px}
+  .lg-row{display:flex;align-items:center;justify-content:space-between;margin:4px 0 22px;font-size:13px}
+  .lg-remember{display:flex;align-items:center;gap:9px;color:var(--muted);cursor:pointer;user-select:none}
+  .lg-remember input{position:absolute;opacity:0;width:0;height:0}
+  .lg-box{width:18px;height:18px;border-radius:6px;border:1px solid var(--line);background:var(--ink-2);display:grid;place-items:center;transition:.18s;flex:0 0 auto}
+  .lg-box svg{width:12px;height:12px;color:#fff;opacity:0;transform:scale(.6);transition:.18s}
+  .lg-remember input:checked + .lg-box{background:linear-gradient(150deg,#1B7A46,#218A4E);border-color:transparent}
+  .lg-remember input:checked + .lg-box svg{opacity:1;transform:scale(1)}
+  .lg-forgot{color:var(--accent);font-weight:500}.lg-forgot:hover{color:var(--accent-2)}
+  .lg-btn{width:100%;display:inline-flex;align-items:center;justify-content:center;gap:9px;background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;font-weight:700;font-size:15px;text-shadow:0 1px 1px rgba(0,0,0,.28);border:0;border-radius:11px;padding:14px;cursor:pointer;box-shadow:0 8px 24px rgba(44,146,87,.3);transition:transform .12s,box-shadow .2s}
+  .lg-btn:hover{transform:translateY(-1px);box-shadow:0 12px 32px rgba(44,146,87,.4)}
+  .lg-btn:disabled{opacity:.75;cursor:default;transform:none}.lg-btn svg{width:16px;height:16px}
+  .lg-spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:lgspin .7s linear infinite;display:none}
+  @keyframes lgspin{to{transform:rotate(360deg)}}
+  .lg-btn.loading .lg-spin{display:block}.lg-btn.loading .lg-label,.lg-btn.loading .lg-arrow{display:none}
+  .lg-signup{text-align:center;color:var(--muted);font-size:13.5px;margin-top:24px}.lg-signup a{color:var(--accent);font-weight:600}
+  .lg-secure{display:flex;align-items:center;justify-content:center;gap:7px;color:var(--faint);font-size:11.5px;margin-top:28px}.lg-secure svg{width:13px;height:13px;color:var(--up)}
+  .lg-err{color:var(--down);font-size:12.5px;margin-top:-8px;margin-bottom:14px;display:none}.lg-err.show{display:block}
+  .lg-dash-side{display:flex;align-items:center;justify-content:center;position:relative;padding:44px 52px;order:1}
+  .lg-dash-float{width:100%;min-width:0;display:flex;justify-content:center;animation:lgbob 5.6s ease-in-out infinite;will-change:transform}
+  @keyframes lgbob{0%,100%{transform:translateY(-7px)}50%{transform:translateY(7px)}}
+  .lg-dash-app{width:100%;max-width:600px;border:0;border-radius:0;overflow:visible;background:transparent;box-shadow:none}
+  .lg-dbar{display:none}
+  .lg-tl{display:flex;gap:6px}.lg-tl i{width:10px;height:10px;border-radius:50%;background:#2a323b;display:block}
+  .lg-url{margin-left:6px;flex:1;background:#0c1014;border:1px solid var(--line-soft);border-radius:7px;padding:5px 10px;font-family:var(--ff-mono);font-size:11px;color:var(--faint);display:flex;align-items:center;gap:6px}
+  .lg-url svg{width:11px;height:11px;color:var(--up)}
+  .lg-dtabs{display:flex;gap:6px;padding:0 0 18px;overflow:hidden;flex-wrap:wrap}
+  .lg-dtab{font-size:12.5px;font-weight:600;color:var(--faint);padding:7px 12px;border-radius:8px;white-space:nowrap;transition:color .2s,background .2s;background:none;border:1px solid transparent;cursor:pointer;font-family:var(--ff-body)}
+  .lg-dtab.on{color:var(--accent);background:var(--accent-soft);border-color:var(--accent-line)}
+  .lg-dstage{position:relative;min-height:366px;padding:0}
+  .lg-dslide{position:absolute;inset:0;opacity:0;transition:opacity .5s ease;pointer-events:none}
+  .lg-dslide.on{opacity:1;pointer-events:auto}
+  .lg-dhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;gap:10px}
+  .lg-dhead .t{font-family:var(--ff-display);font-weight:600;font-size:17px}
+  .lg-dhead .p{font-family:var(--ff-mono);font-size:10px;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:20px;white-space:nowrap}
+  .lg-dkpis{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+  .lg-dkpi{background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.055);border-radius:14px;padding:16px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .lg-dkpi .l{font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)}
+  .lg-dkpi .v{font-family:var(--ff-mono);font-weight:700;font-size:25px;margin-top:8px}
+  .lg-dstat{font-family:var(--ff-mono);font-size:12px;color:var(--muted);background:rgba(255,255,255,.022);border:1px solid rgba(255,255,255,.055);border-radius:11px;padding:11px 14px;margin-bottom:12px}
+  .lg-drow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:15px 2px;border-bottom:1px solid rgba(255,255,255,.06)}
+  .lg-drow:last-child{border-bottom:0}
+  .lg-drow .n{font-size:14.5px;font-weight:600}.lg-drow .s{font-family:var(--ff-mono);font-size:10.5px;color:var(--faint);margin-top:3px}
+  .lg-drow .val{font-family:var(--ff-mono);font-weight:700;font-size:14.5px;white-space:nowrap}
+  .lg-dash-app .pos{color:var(--up)}.lg-dash-app .neg{color:var(--down)}
+  .lg-ddots{display:flex;gap:5px;justify-content:center;padding-top:12px}
+  .lg-ddots i{width:5px;height:5px;border-radius:50%;background:var(--line);display:block;transition:.25s}
+  .lg-ddots i.on{background:var(--accent);width:15px;border-radius:3px}
+  .lg-mobile-logo{display:none}
+  @media(max-width:960px){
+    .lg-shell{grid-template-columns:1fr}
+    .lg-dash-side{display:none}
+    .lg-aura{left:50%;right:auto;transform:translate(-50%,-50%)}
+    .lg-form-side{min-height:calc(100vh - 46px);padding:36px 24px}
+    .lg-brand{display:none}
+    .lg-mobile-logo{display:flex;align-items:center;gap:11px;justify-content:center;margin-bottom:32px}
+    .lg-mobile-logo .lg-mark{height:34px;width:72px}
+    .lg-mobile-logo .lg-name{font-size:20px}
+  }
+
+  /* login overlay (opens from landing) */
+  .login-overlay{position:fixed;inset:0;z-index:300;background:var(--ink);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .login-close{position:fixed;top:18px;right:20px;z-index:320;display:inline-flex;align-items:center;gap:8px;padding:9px 15px;border-radius:10px;background:rgba(18,22,27,.82);border:1px solid var(--line);color:var(--muted);cursor:pointer;font-family:var(--ff-body);font-size:13px;font-weight:600;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:.18s}
+  .login-close:hover{color:var(--text);border-color:var(--accent-line)}
+  .login-close svg{width:15px;height:15px}
+  /* Lock document scroll so only the overlay scrollbar shows */
+  html.lock,body.lock{overflow:hidden!important;height:100%;overscroll-behavior:none}
+  /* consistent sleek gray scrollbar (page + login overlay) */
+  html{scrollbar-width:thin;scrollbar-color:#2b333d transparent}
+  .login-overlay{scrollbar-width:thin;scrollbar-color:#2b333d transparent}
+  ::-webkit-scrollbar{width:11px;height:11px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:#2b333d;border-radius:8px;border:2.5px solid transparent;background-clip:content-box}
+  ::-webkit-scrollbar-thumb:hover{background:#3a434e;background-clip:content-box}
+
+  /* ============ YOUR DESK ============ */
+  .desk-wrap{position:relative;padding:22px 18px}
+  .desk-panel{position:relative;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,var(--panel),var(--ink-2));box-shadow:0 40px 80px -34px rgba(0,0,0,.8),0 0 0 1px rgba(255,255,255,.02) inset,0 0 70px -26px rgba(44,146,87,.4);padding:22px}
+  .desk-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  .desk-head .dt{font-family:var(--ff-display);font-weight:600;font-size:15px}
+  .desk-head .dd{font-family:var(--ff-mono);font-size:11px;color:var(--faint)}
+  .desk-cols{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+  .cal-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
+  .cal-h b{font-family:var(--ff-display);font-weight:600;font-size:12.5px}
+  .cal-h span{font-family:var(--ff-mono);font-size:13px;color:var(--faint)}
+  .cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;font-family:var(--ff-mono);font-size:8px;color:var(--faint);text-align:center;margin-bottom:6px}
+  .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+  .cal-day{aspect-ratio:1;display:grid;place-items:center;font-family:var(--ff-mono);font-size:10.5px;color:var(--muted);border-radius:7px;position:relative}
+  .cal-day.dim{color:var(--faint);opacity:.35}
+  .cal-day.today{background:linear-gradient(150deg,#1B7A46,#218A4E);color:#fff;font-weight:700}
+  .cal-day.ev::after{content:"";position:absolute;bottom:3px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent)}
+  .cal-day.today.ev::after{background:#fff}
+  .desk-notes .nt{font-family:var(--ff-mono);font-size:9.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin-bottom:8px}
+  .todo{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:12px;color:var(--muted);line-height:1.35}
+  .todo:last-child{border-bottom:0}
+  .todo .tc{width:15px;height:15px;border-radius:5px;border:1px solid var(--line);flex:0 0 auto;margin-top:1px;display:grid;place-items:center;color:var(--accent)}
+  .todo .tc svg{width:9px;height:9px}
+  .todo.done .tc{background:var(--accent-soft);border-color:var(--accent-line)}
+  .todo.done{color:var(--faint);text-decoration:line-through;text-decoration-color:var(--faint)}
+  .sticky{position:absolute;z-index:3;padding:12px 14px;border-radius:3px 3px 10px 3px;font-family:"Caveat",cursive;font-weight:700;font-size:18px;line-height:1.1;box-shadow:0 14px 26px -10px rgba(0,0,0,.55)}
+  .sticky .pin{position:absolute;top:-5px;left:50%;transform:translateX(-50%);width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,.28);box-shadow:0 2px 3px rgba(0,0,0,.35)}
+  .sticky.s1{background:#F0DB6E;color:#4a3d05;top:-15px;right:-8px;width:132px;transform:rotate(3.5deg)}
+  .sticky.s2{background:#88E0A6;color:#0c2c18;bottom:-13px;left:-10px;width:120px;transform:rotate(-4deg)}
+  @media(max-width:560px){.desk-cols{grid-template-columns:1fr;gap:20px}.sticky.s1{right:2px}.sticky.s2{left:2px}}
+  .hero-feats{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px;max-width:560px}
+  .hf{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:500;color:var(--muted);background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:7px 13px}
+  .hf svg{width:14px;height:14px;color:var(--accent);flex:0 0 auto}
+  .hf-ai{color:var(--accent);border-color:var(--accent-line);background:var(--accent-soft)}
+  .hf-ai svg{color:var(--accent)}
+  .hero-copy{max-width:900px;margin:0 auto;text-align:center;order:2}
+  .hero-copy .hero-cta,.hero-copy .hero-feats,.hero-copy .hero-trust,.hero-copy .touch-tag{justify-content:center}
+  .app-caption{text-align:center;max-width:780px;margin:0 auto}
+  .app-caption h3{font-family:var(--ff-display);font-size:21px;font-weight:600}
+  .app-caption p{color:var(--muted);font-size:15px;margin-top:11px;line-height:1.55}
+  @media(max-width:640px){.app-caption h3{font-size:18px}.app-caption p{font-size:14px}}
+  .hero-boxes{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:30px;text-align:left}
+  .hbox{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px 18px 20px;transition:border-color .18s,transform .18s}
+  .hbox:hover{border-color:var(--accent-line);transform:translateY(-2px)}
+  .hb-ic{width:36px;height:36px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent-line);display:grid;place-items:center;color:var(--accent);margin-bottom:13px}
+  .hb-ic svg{width:18px;height:18px}
+  .hbox h4{font-family:var(--ff-display);font-size:15px;font-weight:600;margin:0}
+  .hbox p{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.45}
+  .hbox.hb-ai{border-color:var(--accent-line);background:var(--accent-soft)}
+  @media(max-width:860px){.hero-boxes{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.hero-boxes{grid-template-columns:1fr}}
+  .hero-split{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px;text-align:left}
+  .hero-box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px 26px 28px}
+  .hero-box.good{border-color:var(--accent-line);background:linear-gradient(180deg,var(--accent-soft),rgba(44,146,87,0))}
+  .hb-tag{font-family:var(--ff-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:14px}
+  .hero-box.good .hb-tag{color:var(--accent)}
+  .hero-box h3{font-family:var(--ff-display);font-size:23px;font-weight:600;line-height:1.16;margin:0;letter-spacing:-.01em}
+  .hero-box p{color:var(--muted);font-size:14.5px;margin-top:13px;line-height:1.55}
+  @media(max-width:760px){.hero-split{grid-template-columns:1fr}}
+  .cal-cols{grid-template-columns:1.15fr .85fr}
+  .cal-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+  .cal-mon{font-family:var(--ff-display);font-weight:600;font-size:14px}
+  .cal-nav{color:var(--faint);font-family:var(--ff-mono);letter-spacing:2px}
+  .cal-wk{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:6px}
+  .cal-wk span{text-align:center;font-family:var(--ff-mono);font-size:9px;color:var(--faint)}
+  .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cd{position:relative;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-family:var(--ff-mono);font-size:11.5px;color:var(--muted);border-radius:8px;background:rgba(255,255,255,.02)}
+  .cd.empty{visibility:hidden;background:none}
+  .cd.today{background:var(--accent);color:#fff;font-weight:700}
+  .cd i{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:5px;height:5px;border-radius:50%}
+  .dot-sold{background:var(--up)}.dot-auc{background:#4C93F5}.dot-tax{background:var(--down)}.dot-rerun{background:#E0A93B}
+  .cal-legend{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap}
+  .cl{display:inline-flex;align-items:center;gap:5px;font-size:10px;color:var(--muted)}
+  .cl i{width:6px;height:6px;border-radius:50%}
+  .cal-feed .ct{margin-bottom:6px}
+  .cn{display:flex;gap:11px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line-soft)}
+  .cn:last-child{border-bottom:0}
+  .cn-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex:0 0 auto}
+  .cn-t{font-size:12.5px;font-weight:600}
+  .cn-s{font-family:var(--ff-mono);font-size:10px;color:var(--faint);margin-top:2px}
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;margin-top:6px}
+  .about-mission{background:linear-gradient(180deg,var(--panel),var(--ink));border:1px solid var(--line);border-radius:20px;padding:38px}
+  .am-tag{font-family:var(--ff-mono);font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:5px 12px;border-radius:20px;display:inline-block}
+  .about-mission h3{font-family:var(--ff-display);font-size:27px;font-weight:600;line-height:1.18;margin:20px 0 0;letter-spacing:-.01em}
+  .about-mission p{color:var(--muted);font-size:15px;line-height:1.62;margin-top:17px}
+  .about-values{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .av-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px;transition:border-color .18s,transform .18s}
+  .av-card:hover{border-color:var(--accent-line);transform:translateY(-2px)}
+  .av-ic{width:38px;height:38px;border-radius:10px;background:var(--accent-soft);border:1px solid var(--accent-line);display:grid;place-items:center;color:var(--accent);margin-bottom:14px}
+  .av-ic svg{width:19px;height:19px}
+  .av-card h4{font-family:var(--ff-display);font-size:16px;font-weight:600;margin:0}
+  .av-card p{color:var(--muted);font-size:13px;margin-top:8px;line-height:1.5}
+  @media(max-width:900px){.about-grid{grid-template-columns:1fr}}
+  @media(max-width:560px){.about-values{grid-template-columns:1fr}}
+  .oc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  #outcomes .oc-grid{margin-top:18px}
+  .oc{background:linear-gradient(180deg,var(--panel),var(--ink));border:1px solid var(--line);border-radius:18px;padding:28px 24px;transition:border-color .18s,transform .18s}
+  .oc:hover{border-color:var(--accent-line);transform:translateY(-3px)}
+  .oc-ic{width:50px;height:50px;border-radius:14px;background:var(--accent-soft);border:1px solid var(--accent-line);display:grid;place-items:center;color:var(--accent);margin-bottom:20px}
+  .oc-ic svg{width:26px;height:26px}
+  .oc h3{font-family:var(--ff-display);font-size:19px;font-weight:600;margin:0;letter-spacing:-.01em}
+  .oc-stat{font-family:var(--ff-mono);font-size:12.5px;font-weight:700;color:var(--accent);margin-top:7px;letter-spacing:.01em}
+  .oc ul{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-direction:column;gap:12px}
+  .oc li{position:relative;padding-left:25px;font-size:13.5px;color:var(--muted);line-height:1.4}
+  .oc li::before{content:"";position:absolute;left:0;top:2px;width:16px;height:16px;border-radius:5px;background:var(--accent-soft);border:1px solid var(--accent-line)}
+  .oc li::after{content:"";position:absolute;left:4.5px;top:6px;width:6px;height:3px;border-left:1.6px solid var(--accent);border-bottom:1.6px solid var(--accent);transform:rotate(-45deg)}
+  @media(max-width:1000px){.oc-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:560px){.oc-grid{grid-template-columns:1fr}}
+  .cd.taxdue{background:rgba(248,113,113,.15);border:1px solid rgba(248,113,113,.42);color:#fca5a5;font-weight:700}
+  .cal-notecell{display:flex;align-items:center;gap:12px;margin-top:14px;background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:13px;padding:12px 14px}
+  .ncd{width:42px;height:42px;border-radius:11px;background:var(--accent);color:#fff;display:grid;place-items:center;font-family:var(--ff-mono);font-weight:700;font-size:16px;flex:0 0 auto}
+  .ncd-body{flex:1;min-width:0}
+  .ncd-t{font-family:var(--ff-mono);font-size:9.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.07em}
+  .ncd-note{font-size:12.5px;color:var(--text);margin-top:3px;line-height:1.4}
+  .ncd-add{font-family:var(--ff-mono);font-size:10px;color:var(--accent);border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:9px;padding:7px 11px;flex:0 0 auto;white-space:nowrap}
+  .cn.due{background:rgba(248,113,113,.07);border:1px solid rgba(248,113,113,.28);border-radius:11px;padding:10px 12px;margin-bottom:6px}
+  .cn.due .cn-t{color:#fca5a5}
+  .contact-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .contact-aura{position:absolute;top:30%;left:50%;width:760px;height:680px;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(44,146,87,.18),transparent 62%);filter:blur(26px)}
+  .contact-wrap{position:relative;z-index:2;max-width:640px;margin:0 auto;padding:96px 24px 70px}
+  .contact-card{background:linear-gradient(180deg,var(--panel),var(--ink));border:1px solid var(--line);border-radius:22px;padding:42px 40px;box-shadow:0 46px 100px -44px rgba(0,0,0,.85)}
+  .contact-card h2{font-family:var(--ff-display);font-size:34px;font-weight:700;letter-spacing:-.02em;margin:14px 0 0}
+  .contact-card .c-sub{color:var(--muted);font-size:15px;margin-top:10px}
+  #contactForm{margin-top:28px}
+  .c-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .c-field{margin-bottom:15px}
+  .c-field label{display:block;font-size:12.5px;color:var(--muted);margin-bottom:7px;font-weight:500}
+  .c-field input,.c-field select,.c-field textarea{width:100%;background:#0c1014;border:1px solid var(--line);border-radius:11px;padding:13px 14px;color:var(--text);font-family:var(--ff-body);font-size:15px;transition:border-color .18s,box-shadow .18s}
+  .c-field select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%238B95A1' stroke-width='2'%3E%3Cpath d='M3 5l4 4 4-4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+  .c-field textarea{resize:vertical;min-height:112px;line-height:1.5}
+  .c-field input::placeholder,.c-field textarea::placeholder{color:var(--faint)}
+  .c-field input:focus,.c-field select:focus,.c-field textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+  .c-submit{width:100%;justify-content:center;margin-top:8px}
+  .c-success{display:none;align-items:center;justify-content:center;gap:10px;color:var(--accent);font-weight:600;font-size:16px;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:14px;padding:22px;text-align:center}
+  .c-success[hidden]{display:none!important}
+  .c-success.is-shown{display:flex}
+  .c-success svg{width:20px;height:20px}
+  @media(max-width:560px){.c-row{grid-template-columns:1fr}.contact-wrap{padding:86px 18px 50px}.contact-card{padding:32px 24px}}
+  .topticker{position:relative;z-index:6;overflow:hidden;background:linear-gradient(90deg,rgba(44,146,87,.14),rgba(44,146,87,.05) 60%,rgba(44,146,87,.14));border-bottom:1px solid var(--line-soft);padding:11px 0}
+  .tt-track{display:flex;white-space:nowrap;width:max-content;animation:ttscroll 34s linear infinite}
+  .tt-track span{display:inline-flex;align-items:center;font-family:var(--ff-mono);font-size:13px;letter-spacing:.02em;color:var(--muted);font-weight:500}
+  .tt-track b{color:var(--accent);font-weight:700}
+  .tt-sep{color:var(--accent-line);padding:0 22px;font-style:normal}
+  @keyframes ttscroll{to{transform:translateX(-50%)}}
+  @media(prefers-reduced-motion:reduce){.tt-track{animation:none}}
+  .legal-wrap{position:relative;z-index:2;max-width:820px;margin:0 auto;padding:96px 24px 90px}
+  .legal-wrap h1{font-family:var(--ff-display);font-size:42px;font-weight:700;letter-spacing:-.02em;margin:14px 0 0}
+  .legal-updated{color:var(--faint);font-family:var(--ff-mono);font-size:13px;margin-top:12px}
+  .legal-body{margin-top:20px}
+  .legal-body h2{font-family:var(--ff-display);font-size:22px;font-weight:600;margin:36px 0 0;letter-spacing:-.01em}
+  .legal-body p{color:var(--muted);font-size:15px;line-height:1.72;margin-top:14px}
+  .legal-body ul{margin:14px 0 0;padding-left:22px}
+  .legal-body li{color:var(--muted);font-size:15px;line-height:1.7;margin-top:9px}
+  .legal-body a{color:var(--accent)}
+  .legal-body strong{color:var(--text);font-weight:600}
+  @media(max-width:560px){.legal-wrap{padding:86px 18px 60px}.legal-wrap h1{font-size:33px}}
+  .lang-btn{font-family:var(--ff-mono);font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:20px;padding:6px 13px;transition:.18s}
+  .lang-btn:hover{color:var(--text);border-color:var(--accent-line)}
+  .hero-action{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:34px;max-width:1080px;margin:8px auto 0}
+  .hero-action .touch-tag{order:1;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:11px;margin:0 0 0 auto;max-width:250px;line-height:1.45}
+  .hero-action .hero-cta{order:2;margin:0;justify-content:center}
+  .hero-action .hero-trust{order:3;justify-content:flex-start;text-align:left;margin:0;flex-wrap:wrap;max-width:320px}
+  .hero-action .btn-primary{min-width:248px;justify-content:center;padding:15px 42px;border-radius:100px;font-size:15px;font-weight:700;letter-spacing:.005em;background:linear-gradient(180deg,#2fa563,#1b7d47);box-shadow:0 1px 0 rgba(255,255,255,.2) inset,0 12px 32px -8px rgba(44,146,87,.6);transition:transform .16s ease,box-shadow .22s ease}
+  .hero-action .btn-primary:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.26) inset,0 18px 46px -10px rgba(44,146,87,.78)}
+  .hero-action .btn-primary svg{transition:transform .18s ease}
+  .hero-action .btn-primary:hover svg{transform:translateX(3px)}
+  @media(max-width:860px){
+    .hero-action{grid-template-columns:1fr;gap:16px;max-width:440px}
+    .hero-action .touch-tag{order:2;justify-content:center;text-align:center;max-width:none;margin:0 auto}
+    .hero-action .hero-cta{order:1}
+    .hero-action .hero-trust{order:3;justify-content:center;text-align:center;max-width:none}
+  }
+  .tt-ic{width:36px;height:36px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--accent-line);display:grid;place-items:center;color:var(--accent);flex:0 0 auto}
+  .tt-ic svg{width:18px;height:18px}
+  @media(max-width:860px){.hero-action .touch-tag{margin:0 auto}}
 </style>
 </head>
 <body>
@@ -815,7 +1093,10 @@
       <a href="#jenna">Jenna</a>
       <a href="#team">Team</a>
       <a href="#wholesale">Wholesale</a>
-      <a href="#finance">Finance</a>
+      <a href="#finance">Profit Tracker</a>
+      <a href="#about">About</a>
+      <a href="/contact">Contact</a>
+      <a href="#" class="lang-btn" id="langBtn">Español</a>
       <a href="/login" class="btn btn-login">Log In</a>
       <a href="#waitlist" class="btn btn-primary">Get Started</a>
     </nav>
@@ -825,27 +1106,44 @@
   </div>
 </header>
 
+<!-- ============ TOP TICKER ============ -->
+<div class="topticker">
+  <div class="tt-track"><span>&#10022; Welcome to <b>AutoVault</b> &mdash; the dealership operating system<i class="tt-sep">&#10022;</i>Your <b>first month is free</b><i class="tt-sep">&#10022;</i>Run your entire dealership from one login<i class="tt-sep">&#10022;</i>Inventory &middot; Sales Tax &middot; Payroll &middot; P&amp;L &middot; Jenna AI<i class="tt-sep">&#10022;</i>Built by dealers, for dealers<i class="tt-sep">&#10022;</i><b>Now live &mdash; start free today</b><i class="tt-sep">&#10022;</i>&nbsp;</span><span>&#10022; Welcome to <b>AutoVault</b> &mdash; the dealership operating system<i class="tt-sep">&#10022;</i>Your <b>first month is free</b><i class="tt-sep">&#10022;</i>Run your entire dealership from one login<i class="tt-sep">&#10022;</i>Inventory &middot; Sales Tax &middot; Payroll &middot; P&amp;L &middot; Jenna AI<i class="tt-sep">&#10022;</i>Built by dealers, for dealers<i class="tt-sep">&#10022;</i><b>Now live &mdash; start free today</b><i class="tt-sep">&#10022;</i>&nbsp;</span></div>
+</div>
+
 <!-- ============ HERO ============ -->
 <section class="hero">
   <div class="wrap hero-grid">
     <div class="hero-copy">
-      <span class="eyebrow">The Dealership Operating System</span>
-      <h1>The biggest losses aren't on the lot.<br /><span class="glow">They're in the numbers you don't track.</span></h1>
-      <p class="hero-sub">Most dealerships don't lose money because they can't sell cars — they lose it because they can't track them. AutoVault pulls inventory, sales, commissions, payments, taxes, and profit into one platform.</p>
+      <div class="hero-action">
       <div class="hero-cta">
-        <a href="#waitlist" class="btn btn-primary">Get Started
+        <a href="#waitlist" class="btn btn-primary">Get started free
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a href="#tracking" class="btn btn-ghost">See how it tracks</a>
       </div>
       <div class="hero-trust">
         <span class="live-pill"><span class="beat"></span>Live now</span>
         <span class="dot"></span>
-        <span>Start today for <b style="color:var(--text);font-weight:600">$39.99/mo</b></span>
+        <span><b style="color:var(--text);font-weight:600">First month free</b></span>
         <span class="dot"></span>
         <span>No setup fees · cancel anytime</span>
       </div>
-      <div class="touch-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg>Run your entire dealership from the touch of your phone.</div>
+      <div class="touch-tag">Every number. Every vehicle. Every dollar. All at the touch of a button.</div>
+      </div>
+
+      <span class="eyebrow">The Dealership Operating System</span>
+      <div class="hero-split">
+        <div class="hero-box">
+          <div class="hb-tag">The problem</div>
+          <h3>The biggest losses aren't on the lot.<br /><span class="glow">They're in the numbers you don't track.</span></h3>
+          <p>Most dealerships don't lose money because they can't sell cars &mdash; they lose it because they can't track them.</p>
+        </div>
+        <div class="hero-box good">
+          <div class="hb-tag">With AutoVault</div>
+          <h3>One live dashboard. Every number, tracked.</h3>
+          <p>Inventory, true profit per VIN, sales tax, payroll and P&amp;L &mdash; one login, updated in real time and ready for tax season.</p>
+        </div>
+      </div>
     </div>
 
     <div class="app-stage">
@@ -864,6 +1162,7 @@
             <span class="ico" data-i="2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></span>
             <span class="ico" data-i="3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-5 6-5s6 1.7 6 5"/><path d="M17 9l2 2 3-3"/></svg></span>
             <span class="ico" data-i="4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h10"/></svg></span>
+            <span class="ico" data-i="5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></span>
           </div>
           <div class="app-main">
             <div class="app-tabs" id="appTabs">
@@ -872,6 +1171,7 @@
               <button class="atab" data-i="2">Sales Tax</button>
               <button class="atab" data-i="3">Payroll</button>
               <button class="atab" data-i="4">P&amp;L</button>
+              <button class="atab" data-i="5">Calendar</button>
               <span class="atab-prog" id="atabProg"></span>
             </div>
 
@@ -915,7 +1215,7 @@
                     <tr><td><div class="v">Jeep Grand Cherokee</div><div class="vin">1C4RJFAG3JC411882</div></td><td class="num">41</td><td class="num">$18,145</td><td class="num">$22,900</td><td class="num pos">+26%</td><td class="num pos">+$4,755</td><td class="r"><span class="schip sold">Sold</span></td></tr>
                     <tr><td><div class="v">Ford F-150 XLT</div><div class="vin">1FTFW1E5XMFA12345</div></td><td class="num">22</td><td class="num">$26,210</td><td class="num">$29,900</td><td class="num pos">+14%</td><td class="num pos">+$3,690</td><td class="r"><span class="schip stock">In stock</span></td></tr>
                     <tr><td><div class="v">Toyota Camry SE</div><div class="vin">4T1G11AK5NU552310</div></td><td class="num">17</td><td class="num">$20,600</td><td class="num">$23,400</td><td class="num pos">+14%</td><td class="num pos">+$2,800</td><td class="r"><span class="schip stock">In stock</span></td></tr>
-                    <tr><td><div class="v">Chevrolet Silverado LT</div><div class="vin">3GCUYDED5KG215566</div></td><td class="num">63</td><td class="num">$23,900</td><td class="num">$24,500</td><td class="num neg">+3%</td><td class="num neg">+$600</td><td class="r"><span class="schip under">Underwater</span></td></tr>
+                    <tr><td><div class="v">Chevrolet Silverado LT</div><div class="vin">3GCUYDED5KG215566</div></td><td class="num">63</td><td class="num">$23,900</td><td class="num">$24,500</td><td class="num neg">−3%</td><td class="num neg">−$800</td><td class="r"><span class="schip under">Underwater</span></td></tr>
                   </tbody>
                 </table></div>
                 <div class="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>Every car carries purchase price, auction &amp; doc fees, repairs, add-ons, and flooring — so you see true net profit, not sticker vs. sale.</div>
@@ -970,15 +1270,89 @@
                 </div>
               </div>
 
+              <div class="slide" data-i="5">
+                <div class="s-head"><div><div class="st">Calendar</div><div class="ss">July 2026 &middot; what sold &amp; what's due</div></div><span class="s-pill">3 sold this week</span></div>
+                <div class="app-cols cal-cols">
+                  <div class="card cal-card">
+                    <div class="cal-top"><span class="cal-mon">July 2026</span><span class="cal-nav">&lsaquo;&nbsp;&nbsp;&rsaquo;</span></div>
+                    <div class="cal-wk"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+                    <div class="cal-days"><div class="cd empty"></div><div class="cd empty"></div><div class="cd empty"></div><div class="cd">1</div><div class="cd">2</div><div class="cd">3</div><div class="cd">4</div><div class="cd">5</div><div class="cd">6</div><div class="cd">7</div><div class="cd">8</div><div class="cd">9<i class="dot-sold"></i></div><div class="cd">10</div><div class="cd">11<i class="dot-auc"></i></div><div class="cd">12</div><div class="cd">13</div><div class="cd">14<i class="dot-sold"></i></div><div class="cd today">15</div><div class="cd">16</div><div class="cd">17</div><div class="cd">18</div><div class="cd">19</div><div class="cd">20</div><div class="cd">21</div><div class="cd">22<i class="dot-sold"></i></div><div class="cd">23</div><div class="cd">24<i class="dot-rerun"></i></div><div class="cd">25</div><div class="cd">26</div><div class="cd">27</div><div class="cd">28</div><div class="cd">29</div><div class="cd">30</div><div class="cd taxdue">31<i class="dot-tax"></i></div></div>
+                    <div class="cal-legend"><span class="cl"><i class="dot-sold"></i>Sold</span><span class="cl"><i class="dot-auc"></i>Auction</span><span class="cl"><i class="dot-rerun"></i>Re-run</span><span class="cl"><i class="dot-tax"></i>Filing</span></div>
+                    <div class="cal-notecell">
+                      <div class="ncd">15</div>
+                      <div class="ncd-body"><div class="ncd-t">Wed, Jul 15 &middot; Your note</div><div class="ncd-note">Rogue title's in &mdash; call the buyer. Pull Silverado for Friday's re-run.</div></div>
+                      <span class="ncd-add">+ Add</span>
+                    </div>
+                  </div>
+                  <div class="card cal-feed">
+                    <div class="ct">Notifications</div>
+                    <div class="cn due"><span class="cn-dot dot-tax"></span><div><div class="cn-t">Sales tax due &mdash; File Q2</div><div class="cn-s">Jul 31 &middot; $18,240 collected</div></div></div>
+                    <div class="cn"><span class="cn-dot dot-sold"></span><div><div class="cn-t">Jeep Grand Cherokee sold</div><div class="cn-s">Jul 9 &middot; +$4,755 profit</div></div></div>
+                    <div class="cn"><span class="cn-dot dot-auc"></span><div><div class="cn-t">Manheim Riverside &middot; 4 cars</div><div class="cn-s">Jul 11 &middot; Auction day</div></div></div>
+                    <div class="cn"><span class="cn-dot dot-sold"></span><div><div class="cn-t">Ford F-150 XLT sold</div><div class="cn-s">Jul 14 &middot; +$3,690 profit</div></div></div>
+                    <div class="cn"><span class="cn-dot dot-rerun"></span><div><div class="cn-t">Silverado LT &mdash; re-run</div><div class="cn-s">Jul 24 &middot; Manheim Las Vegas</div></div></div>
+                    
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <div id="appCaption" class="app-caption" style="padding:14px 18px 4px;border-top:1px solid var(--line-soft)">
+              <h3 style="font-family:var(--ff-display);font-size:16px;margin:0 0 4px;color:var(--text)">The dashboard — your whole operation, live</h3>
+              <p style="margin:0;color:var(--muted);font-size:13px;line-height:1.5">Net profit, revenue, gross profit and commissions owed, updated in real time — plus your top-selling reps and your entire inventory mix at a glance.</p>
+            </div>
             </div>
           </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
 </section>
 
+
+<!-- ============ OUTCOMES ============ -->
+<section class="sec" id="outcomes" style="padding-top:14px">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Real outcomes</span>
+      <h2>What AutoVault does for your dealership.</h2>
+    </div>
+    <div class="oc-grid reveal">
+        <div class="oc">
+          <div class="oc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M21 7v5h-5"/></svg></div>
+          <h3>Increase Profitability</h3>
+          <div class="oc-stat">See every hidden dollar</div>
+          <ul><li>True profit on every VIN</li><li>Catch cars losing money</li><li>Every expense captured</li><li>Higher net on every deal</li></ul>
+        </div>
+        <div class="oc">
+          <div class="oc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div>
+          <h3>Increase Efficiency</h3>
+          <div class="oc-stat">Your whole desk, one login</div>
+          <ul><li>One login for everything</li><li>Automated daily reminders</li><li>Jenna AI does the digging</li><li>No more spreadsheets</li></ul>
+        </div>
+        <div class="oc">
+          <div class="oc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2h12v20l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg></div>
+          <h3>Stay Tax-Ready</h3>
+          <div class="oc-stat">Never scramble at filing</div>
+          <ul><li>Sales tax organized by state</li><li>Filing reminders &amp; schedule</li><li>Tax-ready P&amp;L, always</li><li>CPA / accountant login</li></ul>
+        </div>
+        <div class="oc">
+          <div class="oc-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h3>Never Miss a Number</h3>
+          <div class="oc-stat">Nothing slips through</div>
+          <ul><li>Title tracking, in &amp; out</li><li>Flooring costs controlled</li><li>Every deal &amp; payout logged</li><li>Nothing lost in a text</li></ul>
+        </div>
+      </div>
+  </div>
+</section>
+
+<!-- ============ MARQUEE ============ -->
+<div class="marquee-band">
+  <div class="marquee">
+    <span>Inventory&nbsp;&nbsp;Cost per VIN&nbsp;&nbsp;Flooring&nbsp;&nbsp;Sales Reps&nbsp;&nbsp;Commissions&nbsp;&nbsp;Payroll&nbsp;&nbsp;Sales Tax&nbsp;&nbsp;Filing Schedule&nbsp;&nbsp;Expenses&nbsp;&nbsp;Profit &amp; Loss&nbsp;&nbsp;ROI&nbsp;&nbsp;Customers&nbsp;&nbsp;Auctions</span>
+    <span>Inventory&nbsp;&nbsp;Cost per VIN&nbsp;&nbsp;Flooring&nbsp;&nbsp;Sales Reps&nbsp;&nbsp;Commissions&nbsp;&nbsp;Payroll&nbsp;&nbsp;Sales Tax&nbsp;&nbsp;Filing Schedule&nbsp;&nbsp;Expenses&nbsp;&nbsp;Profit &amp; Loss&nbsp;&nbsp;ROI&nbsp;&nbsp;Customers&nbsp;&nbsp;Auctions</span>
+  </div>
+</div>
 
 <!-- ============ JENNA ============ -->
 <section class="sec" id="jenna">
@@ -1010,13 +1384,6 @@
   </div>
 </section>
 
-<!-- ============ MARQUEE ============ -->
-<div class="marquee-band">
-  <div class="marquee">
-    <span>Inventory&nbsp;&nbsp;Cost per VIN&nbsp;&nbsp;Flooring&nbsp;&nbsp;Sales Reps&nbsp;&nbsp;Commissions&nbsp;&nbsp;Payroll&nbsp;&nbsp;Sales Tax&nbsp;&nbsp;Filing Schedule&nbsp;&nbsp;Expenses&nbsp;&nbsp;Profit &amp; Loss&nbsp;&nbsp;ROI&nbsp;&nbsp;Customers&nbsp;&nbsp;Auctions</span>
-    <span>Inventory&nbsp;&nbsp;Cost per VIN&nbsp;&nbsp;Flooring&nbsp;&nbsp;Sales Reps&nbsp;&nbsp;Commissions&nbsp;&nbsp;Payroll&nbsp;&nbsp;Sales Tax&nbsp;&nbsp;Filing Schedule&nbsp;&nbsp;Expenses&nbsp;&nbsp;Profit &amp; Loss&nbsp;&nbsp;ROI&nbsp;&nbsp;Customers&nbsp;&nbsp;Auctions</span>
-  </div>
-</div>
 
 
 
@@ -1052,6 +1419,47 @@
   </div>
 </section>
 
+<!-- ============ YOUR DESK ============ -->
+<section class="sec" id="desk">
+  <div class="wrap">
+    <div class="show2">
+      <div class="reveal">
+        <span class="eyebrow">Your desk, organized</span>
+        <h2 style="font-size:clamp(28px,3.4vw,40px);margin-top:16px">Your entire desk, in one login.</h2>
+        <ul class="check-list">
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>A day-to-day calendar.</b> Everything happening today &mdash; auctions, filings, follow-ups &mdash; at a glance.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Notes &amp; to-dos.</b> Jot down what matters and check it off. Never lose track again.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Sticky reminders.</b> Keep the important stuff front and center to stay sharp all day.</span></li>
+          <li><span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>One login, one desk.</b> Your whole operation, one click at the tip of your fingertips.</span></li>
+        </ul>
+        <p class="hero-sub" style="max-width:52ch;margin-top:20px">Instead of paperwork spread all over your desk, it&rsquo;s all one click away. Keep it all organized, sharp, and in one place.</p>
+      </div>
+
+      <div class="desk-wrap reveal">
+        <div class="desk-panel">
+          <div class="desk-head"><span class="dt">My Desk</span><span class="dd">Wed, Jul 15</span></div>
+          <div class="desk-cols">
+            <div class="desk-cal">
+              <div class="cal-h"><b>July 2026</b><span>&#8249; &#8250;</span></div>
+              <div class="cal-dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+              <div class="cal-days"><div class="cal-day dim">28</div><div class="cal-day dim">29</div><div class="cal-day dim">30</div><div class="cal-day ">1</div><div class="cal-day ">2</div><div class="cal-day ">3</div><div class="cal-day ">4</div><div class="cal-day ">5</div><div class="cal-day ">6</div><div class="cal-day ">7</div><div class="cal-day ">8</div><div class="cal-day ev">9</div><div class="cal-day ev">10</div><div class="cal-day ">11</div><div class="cal-day ">12</div><div class="cal-day ">13</div><div class="cal-day ">14</div><div class="cal-day today ev">15</div><div class="cal-day ">16</div><div class="cal-day ">17</div><div class="cal-day ">18</div><div class="cal-day ">19</div><div class="cal-day ">20</div><div class="cal-day ">21</div><div class="cal-day ev">22</div><div class="cal-day ">23</div><div class="cal-day ">24</div><div class="cal-day ">25</div><div class="cal-day ">26</div><div class="cal-day ">27</div><div class="cal-day ">28</div><div class="cal-day ">29</div><div class="cal-day ">30</div><div class="cal-day ev">31</div><div class="cal-day dim">1</div></div>
+            </div>
+            <div class="desk-notes">
+              <div class="nt">Today's notes</div>
+              <div class="todo done"><span class="tc"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span>Log Silverado expenses</div>
+              <div class="todo"><span class="tc"></span>Call Manheim about Thursday's run</div>
+              <div class="todo"><span class="tc"></span>Follow up on Jeep title</div>
+              <div class="todo"><span class="tc"></span>Review this week's P&amp;L</div>
+            </div>
+          </div>
+          <div class="sticky s1"><span class="pin"></span>Payroll runs Friday!</div>
+          <div class="sticky s2"><span class="pin"></span>Title for Silverado &#10003;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ MODULES ============ -->
 <section class="sec" id="modules" style="padding-top:0">
   <div class="wrap">
@@ -1081,7 +1489,7 @@
 <section class="sec" id="finance" style="padding-top:0">
   <div class="wrap">
     <div class="sec-head reveal">
-      <span class="eyebrow">Finance &amp; every deal</span>
+      <span class="eyebrow">Profit Tracker</span>
       <h2>Every vehicle, down to the dollar.</h2>
       <p>Purchase, auction fees, flooring, and sales tax &mdash; captured per VIN &mdash; so you see true gross and net profit on every car, and catch the ones quietly losing money.</p>
     </div>
@@ -1143,7 +1551,7 @@
             <div class="tr-d">July 31, 2026</div>
             <div class="tr-s">Quarterly filing · reminder set 7 days before</div>
           </div>
-          <span class="tax-chip due">Due in 28 days</span>
+          <span class="tax-chip due" id="taxDueIn">Due soon</span>
         </div>
         <div class="tax-sub">Filing schedule · Quarterly</div>
         <div class="sched">
@@ -1405,6 +1813,31 @@
   </div>
 </section>
 
+<!-- ============ ABOUT / MISSION ============ -->
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Our Company</span>
+      <h2>Built by dealership people,<br />for dealership people.</h2>
+      <p>AutoVault started with a simple frustration: the hardest part of running a dealership isn't selling cars &mdash; it's keeping track of everything that happens around the sale. So we built the tool we always wished we had.</p>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-mission">
+        <span class="am-tag">Our mission</span>
+        <h3>Give every dealer total command of their numbers.</h3>
+        <p>From independent lots to wholesalers, our mission is to put every number that runs a dealership &mdash; inventory, true profit per VIN, sales tax, payroll, flooring, and P&amp;L &mdash; into one login. So you always know exactly where the money goes, and keep more of it.</p>
+        <p>No enterprise price tag. No spreadsheet chaos. Just the numbers that keep you profitable, tracked automatically &mdash; from the day a car hits the lot to the day it's sold, paid out, and filed.</p>
+      </div>
+      <div class="about-values">
+        <div class="av-card"><div class="av-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l2-5h14l2 5"/><path d="M5 17h14"/><circle cx="7.5" cy="17" r="1.4"/><circle cx="16.5" cy="17" r="1.4"/></svg></div><h4>Built by dealers</h4><p>Every feature comes from real dealership workflows &mdash; auctions, flooring, titles, commissions &mdash; not a boardroom.</p></div>
+        <div class="av-card"><div class="av-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><h4>Every number, tracked</h4><p>From auction fees to rep commissions, nothing slips through the cracks or gets lost in a text thread.</p></div>
+        <div class="av-card"><div class="av-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8M21 7v5"/></svg></div><h4>Made to keep you profitable</h4><p>See true profit on every deal &mdash; and catch the cars quietly losing money before they cost you.</p></div>
+        <div class="av-card"><div class="av-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div><h4>One login, your whole desk</h4><p>Inventory, taxes, payroll, calendar, notes and your team &mdash; all in one place, on any device.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ STATEMENT ============ -->
 <section class="statement">
   <p class="q reveal">The difference between a good dealership and a great one is <span class="glow">knowing every number.</span></p>
@@ -1418,25 +1851,20 @@
     <div class="wl-card reveal">
       <div class="wl-inner">
         <div class="wl-left">
-          <span class="eyebrow">Start today</span>
-          <h2>Sign up today for <span class="glow">$39.99/month.</span></h2>
+          <span class="eyebrow">First month free</span>
+          <h2>Get your <span class="glow">first month free.</span></h2>
           <p>Get full access to every module and start running your dealership on AutoVault today &mdash; at our introductory rate. Lock it in while it lasts.</p>
-          <div class="price"><span class="was">$99.99</span><span class="amt">$39.99</span><span class="per">/ month to start</span><span class="price-tag">Intro rate</span></div>
+          <div class="price"><span class="amt">Free</span><span class="per">first month &middot; then $99.99/mo</span></div>
           <ul class="wl-perks">
             <li><span class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Unlimited vehicles, VINs &amp; users</b> &mdash; no per-seat charges.</span></li>
             <li><span class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Every module included</b> &mdash; inventory, sales tax, payroll, P&amp;L, and Jenna AI.</span></li>
             <li><span class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span><span><b>Cancel anytime</b> &mdash; no setup fees, no long-term contract.</span></li>
           </ul>
-          <p class="price-note">Introductory pricing for dealers who start now &mdash; no credit card required to get going.</p>
+          <p class="price-note">Your first month is free. A card is required at checkout so billing can start automatically after the free month.</p>
         </div>
 
         <div class="wl-form">
-          <!--
-            To make this live: point the form at your handler.
-            Options: a Next.js /api/waitlist route on autovault360.com, Formspree,
-            or your CRM's lead endpoint. Replace the JS submit handler below,
-            or set: <form action="https://YOUR_ENDPOINT" method="POST">
-          -->
+          <!-- Signup posts to /api/registrations then Stripe Checkout with a free first month. -->
           <form id="waitForm" novalidate>
             <div class="field">
               <label for="name">Full name</label>
@@ -1448,25 +1876,25 @@
             </div>
             <div class="field">
               <label for="phone">Phone number</label>
-              <input id="phone" name="phone" type="tel" placeholder="(555) 010-2020" oninput="formatPhoneInput(this)" />
+              <input id="phone" name="phone" type="tel" placeholder="(555) 010-2020" />
             </div>
             <div class="field">
               <label for="dealership">Dealership name</label>
               <input id="dealership" name="dealership" type="text" placeholder="Riverside Auto Group" required />
             </div>
-            <div class="field-row">
+            <div class="c-row" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
               <div class="field">
                 <label for="state">State</label>
                 <select id="state" name="state" required>
-                  <option value="">Select state</option>
+                  <option value="" disabled selected>Select state</option>
                 </select>
               </div>
               <div class="field">
                 <label for="zipCode">ZIP Code</label>
-                <input id="zipCode" name="zipCode" type="text" placeholder="e.g. 90210" required />
+                <input id="zipCode" name="zipCode" type="text" inputmode="numeric" placeholder="e.g. 90210" required />
               </div>
             </div>
-            <button type="submit" class="btn btn-primary">Get Started
+            <button type="submit" class="btn btn-primary">Get started free
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
             </button>
             <div class="wl-note">
@@ -1484,14 +1912,14 @@
       <div class="tiers-head">
         <span class="eyebrow">One more step</span>
         <h2>Choose the plan that fits your dealership.</h2>
-        <p>Every plan starts today for $39.99/month, then $99.99/month. Pick the one built for how you operate.</p>
+        <p>Every plan starts with your first month free. Pick the one built for how you operate.</p>
       </div>
       <div class="tiers-grid">
         <div class="tier tier-featured">
           <div class="tier-badge">Built for wholesalers</div>
           <h3>Wholesalers</h3>
           <p class="tier-desc">Move cars fast and know your numbers at every auction.</p>
-          <div class="tier-price"><span class="was">$99.99</span><span class="now">$39.99</span><span class="per">/mo to start</span></div>
+          <div class="tier-price"><span class="now">$99.99</span><span class="per">/mo</span><span class="tp-free">1st month free</span></div>
           <ul class="tier-feats">
             <li class="feat-jenna"><b>Jenna AI assistant</b> &mdash; ask your numbers, log deals &amp; get answers instantly</li>
             <li><b>Organizes all your vehicles</b> &mdash; every unit tied to its VIN</li>
@@ -1504,12 +1932,12 @@
             <li><b>Title tracking</b> &mdash; which titles are in hand, which aren't</li>
             <li><b>Tax-ready profit &amp; loss</b> &mdash; organized for filing: this week, this month, this year</li>
           </ul>
-          <button type="button" class="btn btn-primary tier-btn" data-tier="Wholesalers">Start today for $39.99</button>
+          <button type="button" class="btn btn-primary tier-btn" data-tier="Wholesalers">Start free</button>
         </div>
         <div class="tier">
           <h3>Independent Dealers</h3>
           <p class="tier-desc">Everything to run your retail lot &mdash; with Jenna and your CPA built in.</p>
-          <div class="tier-price"><span class="was">$99.99</span><span class="now">$39.99</span><span class="per">/mo to start</span></div>
+          <div class="tier-price"><span class="now">$99.99</span><span class="per">/mo</span><span class="tp-free">1st month free</span></div>
           <ul class="tier-feats">
             <li class="feat-jenna"><b>Jenna AI assistant</b> &mdash; the AI built for dealerships; ask about your lot, profit or deals and she answers instantly &amp; takes action</li>
             <li><b>Full inventory</b> &mdash; every vehicle tracked to its VIN, with real profit per unit</li>
@@ -1526,12 +1954,12 @@
             <li class="feat-off"><b>Sales rep payroll &amp; commission</b> &mdash; pay every rep from the deals they closed</li>
             <li class="feat-off"><b>Each rep gets their own login</b> to message &amp; work within the platform</li>
           </ul>
-          <button type="button" class="btn btn-ghost tier-btn" data-tier="Independent Dealers">Start today for $39.99</button>
+          <button type="button" class="btn btn-ghost tier-btn" data-tier="Independent Dealers">Start free</button>
         </div>
         <div class="tier">
           <h3>Growing Dealerships</h3>
           <p class="tier-desc">The full platform &mdash; your whole team, your reps, and your accountant, together.</p>
-          <div class="tier-price"><span class="was">$199.99</span><span class="now">$39.99</span><span class="per">/mo to start</span></div>
+          <div class="tier-price"><span class="now">$199.99</span><span class="per">/mo</span><span class="tp-free">1st month free</span></div>
           <ul class="tier-feats">
             <li class="feat-jenna"><b>Jenna AI assistant</b> &mdash; the AI built for dealerships; ask about your lot, profit or deals and she answers instantly &amp; takes action</li>
             <li><b>Full inventory</b> &mdash; every vehicle tracked to its VIN, with real profit per unit</li>
@@ -1548,13 +1976,14 @@
             <li><b>Sales rep payroll &amp; commission</b> &mdash; pay every rep from the deals they closed</li>
             <li><b>Each rep gets their own login</b> to message &amp; work within the platform</li>
           </ul>
-          <button type="button" class="btn btn-ghost tier-btn" data-tier="Growing Dealerships">Start today for $39.99</button>
+          <button type="button" class="btn btn-ghost tier-btn" data-tier="Growing Dealerships">Start free</button>
         </div>
       </div>
       <div class="gs-confirm" id="gsConfirm" hidden>
         <div class="gs-cbadge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l4 4 10-10"/></svg></div>
         <h3>You're all set!</h3>
         <p id="gsConfirmText">Check your email to finish setting up your dashboard.</p>
+        <a href="#top" class="btn btn-primary gs-home-btn">Back to home</a>
       </div>
     </div>
   </div>
@@ -1576,21 +2005,22 @@
           <h4>Platform</h4>
           <a href="#platform">Overview</a>
           <a href="#modules">What's inside</a>
-          <a href="#finance">Finance &amp; payroll</a>
+          <a href="#finance">Profit Tracker</a>
           <a href="#waitlist">Early access</a>
         </div>
         <div class="foot-col">
           <h4>Company</h4>
-          <a href="#">About</a>
-          <a href="https://www.autovault360.com/#contact">Contact</a>
-          <a href="https://www.autovault360.com/privacy-policy">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
+          <a href="#about">About</a>
+          <a href="/contact">Contact</a>
+          <a href="/privacy-center">Privacy Center</a>
+          <a href="/privacy-policy">Privacy Policy</a>
+          <a href="/terms">Terms of Service</a>
         </div>
       </div>
     </div>
     <div class="foot-bottom">
       <span>© 2026 AutoVault. All rights reserved.</span>
-      <span class="mono" style="color:var(--faint)">Live now · Start today for $39.99/month</span>
+      <span class="mono" style="color:var(--faint)">Live now · First month free</span>
     </div>
   </div>
 </footer>
@@ -1639,6 +2069,15 @@
     const tabs=[...document.querySelectorAll('#appTabs .atab')];
     const icons=[...document.querySelectorAll('#appSide .ico')];
     const prog=document.getElementById('atabProg');
+    const cap=document.getElementById('appCaption');
+    const CAPS=[
+      {t:'The dashboard — your whole operation, live',d:'Net profit, revenue, gross profit and commissions owed, updated in real time — plus your top-selling reps and your entire inventory mix at a glance.'},
+      {t:'Inventory — true profit on every VIN',d:'Every vehicle carries its real all-in cost: purchase, auction and doc fees, repairs, add-ons and flooring — so you see net profit and ROI per car, not sticker vs. sale.'},
+      {t:'Sales Tax — always filing-ready',d:'Tax collected is organized by state and by VIN, with filing reminders and a quarterly schedule, so you never scramble when a deadline lands.'},
+      {t:'Payroll — pay from what they closed',d:'Base pay plus commission calculates itself from every deal they close, hourly staff clock in automatically, and each payout is logged with proof.'},
+      {t:'Profit & Loss — tax-ready in one click',d:'A live P&L for this week, this month and this year — revenue, cost of goods, commissions and net profit — organized and ready to hand to your accountant.'},
+      {t:'Calendar — never miss a filing or payday',d:'Filing dates, payroll runs, auction days and title pickups on one calendar so the whole desk stays ahead of deadlines.'}
+    ];
     const DWELL=4200;
     const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
     let i=0,timer=null,paused=false;
@@ -1648,6 +2087,7 @@
       slides.forEach((s,k)=>s.classList.toggle('on',k===i));
       tabs.forEach((t,k)=>t.classList.toggle('on',k===i));
       icons.forEach(ic=>ic.classList.toggle('on',+ic.dataset.i===i));
+      if(cap&&CAPS[i]){cap.querySelector('h3').textContent=CAPS[i].t;cap.querySelector('p').textContent=CAPS[i].d;}
       if(prog && !reduce){
         const w=(tabs[i].offsetLeft-tabs[0].offsetLeft)+'px';
         prog.style.transition='none';prog.style.width='0';prog.style.transform='translateX('+w+')';
@@ -1755,16 +2195,27 @@
     el.classList.toggle("phone-invalid",d.length>0&&d.length<10);
   }
   function isValidPhone(v){const d=(v||"").replace(/\D/g,"");return d.length===10}
+  const phoneEl=document.getElementById('phone');
+  if(phoneEl) phoneEl.addEventListener('input',()=>formatPhoneInput(phoneEl));
 
-  const stateSelect=document.getElementById('state');
-  if(stateSelect && window.US_LOCATIONS){
+  function fillStateSelect(sel){
+    if(!sel || !window.US_LOCATIONS) return;
+    const keep = sel.querySelector('option[disabled]');
+    sel.innerHTML = '';
+    if(keep) sel.appendChild(keep);
+    else {
+      const opt=document.createElement('option');
+      opt.value=''; opt.disabled=true; opt.selected=true; opt.textContent='Select state';
+      sel.appendChild(opt);
+    }
     Object.keys(window.US_LOCATIONS).sort((a,b)=>(window.US_STATE_NAMES[a]||a).localeCompare(window.US_STATE_NAMES[b]||b)).forEach(code=>{
       const opt=document.createElement('option');
       opt.value=code;
       opt.textContent=(window.US_STATE_NAMES[code]||code)+' ('+code+')';
-      stateSelect.appendChild(opt);
+      sel.appendChild(opt);
     });
   }
+  fillStateSelect(document.getElementById('state'));
 
   const form=document.getElementById('waitForm'), gsStep1=document.getElementById('gsStep1'), gsStep2=document.getElementById('gsStep2');
   form.addEventListener('submit', async (e)=>{
@@ -1774,21 +2225,21 @@
     const phone=form.phone.value.trim();
     if(!name||!email||!dealer||!zipCode||!state||!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){
       form.querySelectorAll('input[required],select[required]').forEach(i=>{ i.style.borderColor=(i.value.trim()==='')?'var(--down)':'var(--line)'; });
-      if(!zipCode||!state) AVToast.warning('Please enter your state and ZIP code.');
+      if(window.AVToast && (!zipCode||!state)) AVToast.warning('Please enter your state and ZIP code.');
       return;
     }
     if(phone&&!isValidPhone(phone)){
       document.getElementById('phone').classList.add('phone-invalid');
-      AVToast.warning('Please enter a valid 10-digit phone number.');
+      if(window.AVToast) AVToast.warning('Please enter a valid 10-digit phone number.');
       return;
     }
     try{
       const submitBtn=form.querySelector('button[type="submit"]');
       if(submitBtn){ submitBtn.disabled=true; submitBtn.textContent='Saving...'; }
-      const resp=await fetch(`${API_URL}/api/registrations`,{
+      const resp=await fetch(API_URL+'/api/registrations',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
-        body:JSON.stringify({name,email,phone:form.phone.value.trim(),dealership:dealer,zipCode,state})
+        body:JSON.stringify({name,email,phone,dealership:dealer,zipCode,state})
       });
       const data=await resp.json();
       if(!resp.ok) throw new Error(data.error?.message||data.message||'Unable to save registration.');
@@ -1797,21 +2248,28 @@
       gsStep2.hidden=false;
       gsStep2.scrollIntoView({behavior:'smooth',block:'start'});
     }catch(err){
-      AVToast.error(err.message||'Failed to start registration. Please try again.');
+      if(window.AVToast) AVToast.error(err.message||'Failed to start registration. Please try again.');
+      else alert(err.message||'Failed to start registration.');
     }finally{
       const submitBtn=form.querySelector('button[type="submit"]');
-      if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='Get Started'; }
+      if(submitBtn){ submitBtn.disabled=false; submitBtn.innerHTML='Get started free<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>'; }
     }
   });
   document.querySelectorAll('#gsStep2 .tier-btn').forEach(btn=>{
     btn.addEventListener('click', async ()=>{
-      if(!activeRegistrationId){ AVToast.warning('Please submit your details first.'); return; }
+      if(!activeRegistrationId){
+        if(window.AVToast) AVToast.warning('Please submit your details first.');
+        return;
+      }
       const plan=PLAN_MAP[btn.getAttribute('data-tier')]||null;
-      if(!plan){ AVToast.error('Invalid plan selected.'); return; }
+      if(!plan){
+        if(window.AVToast) AVToast.error('Invalid plan selected.');
+        return;
+      }
       const originalText=btn.textContent;
       try{
         btn.disabled=true; btn.textContent='Redirecting...';
-        const resp=await fetch(`${API_URL}/api/checkout`,{
+        const resp=await fetch(API_URL+'/api/checkout',{
           method:'POST',
           headers:{'Content-Type':'application/json'},
           body:JSON.stringify({registrationId:activeRegistrationId,plan})
@@ -1820,12 +2278,153 @@
         if(!resp.ok||!data.url) throw new Error(data.error?.message||data.message||'Unable to create checkout session.');
         window.location.href=data.url;
       }catch(err){
-        AVToast.error(err.message||'Checkout failed. Please try again.');
+        if(window.AVToast) AVToast.error(err.message||'Checkout failed. Please try again.');
+        else alert(err.message||'Checkout failed.');
         btn.disabled=false;
         btn.textContent=originalText;
       }
     });
   });
+  document.querySelectorAll('.gs-home-btn').forEach(b=>b.addEventListener('click',(e)=>{e.preventDefault();window.scrollTo({top:0,behavior:'smooth'});}));
 </script>
+
+<script>
+  function avLockScroll(){
+    document.documentElement.classList.add('lock');
+    document.body.classList.add('lock');
+  }
+  function avUnlockScroll(){
+    const open=document.querySelector('.login-overlay:not([hidden])');
+    if(open) return;
+    document.documentElement.classList.remove('lock');
+    document.body.classList.remove('lock');
+  }
+</script>
+<!-- ============ LOGIN OVERLAY ============ -->
+<div id="loginOverlay" class="login-overlay" hidden>
+  <button class="login-close" id="loginClose" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back to site</button>
+<!-- ============ LOGIN (top) ============ -->
+<section class="lg-view">
+  <div class="lg-bg"><div class="lg-grid"></div><div class="lg-aura"></div></div>
+  <div class="lg-marquee"><div class="lg-track"><span><b>Inventory</b><i class="sep">◆</i><b>Payroll</b><i class="sep">◆</i><b>Sales Tax</b><i class="sep">◆</i><b>Commissions</b><i class="sep">◆</i><b>Profit &amp; Loss</b><i class="sep">◆</i><b>Flooring</b><i class="sep">◆</i><b>Auctions</b><i class="sep">◆</i><b>Reports</b><i class="sep">◆</i><b>Customers</b><i class="sep">◆</i><b>Expenses</b><i class="sep">◆</i></span><span><b>Inventory</b><i class="sep">◆</i><b>Payroll</b><i class="sep">◆</i><b>Sales Tax</b><i class="sep">◆</i><b>Commissions</b><i class="sep">◆</i><b>Profit &amp; Loss</b><i class="sep">◆</i><b>Flooring</b><i class="sep">◆</i><b>Auctions</b><i class="sep">◆</i><b>Reports</b><i class="sep">◆</i><b>Customers</b><i class="sep">◆</i><b>Expenses</b><i class="sep">◆</i></span></div></div>
+  <div class="lg-shell">
+    <div class="lg-form-side">
+      <div class="lg-form-inner">
+        <a href="#" class="lg-brand"><span class="lg-mark"></span><span class="lg-name">AutoVault</span></a>
+        <div class="lg-mobile-logo"><span class="lg-mark"></span><span class="lg-name">AutoVault</span></div>
+        <span class="lg-eyebrow">Dealership Login</span>
+        <h1 class="lg-welcome">Welcome back</h1>
+        <p class="lg-sub">Sign in to your dealership dashboard.</p>
+        <form id="lgForm" novalidate>
+          <div class="lg-field"><label for="lgUser">Username or email</label><div class="lg-iw"><span class="lg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span><input id="lgUser" type="text" placeholder="you@yourdealership.com" autocomplete="username" /></div></div>
+          <div class="lg-field"><label for="lgPass">Password</label><div class="lg-iw"><span class="lg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></span><input id="lgPass" type="password" placeholder="••••••••••" autocomplete="current-password" /><button type="button" class="lg-eye" id="lgEye" aria-label="Show password"><svg id="lgEyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+          <div class="lg-err" id="lgErr">Please enter your username and password.</div>
+          <div class="lg-row"><label class="lg-remember"><input type="checkbox" id="lgRemember" /><span class="lg-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12l4 4 10-10"/></svg></span>Remember me</label><a href="#" class="lg-forgot">Forgot password?</a></div>
+          <button type="submit" class="lg-btn" id="lgBtn"><span class="lg-label">Sign in to dashboard</span><svg class="lg-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg><span class="lg-spin"></span></button>
+        </form>
+        <p class="lg-signup">New dealership? <a href="#waitlist">Sign up here</a></p>
+        <div class="lg-secure"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Secured with 256-bit encryption</div>
+      </div>
+    </div>
+    <div class="lg-dash-side">
+      <div class="lg-dash-float"><div class="lg-dash-app">
+        <div class="lg-dbar"><span class="lg-tl"><i></i><i></i><i></i></span><span class="lg-url"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>AutoVault Dashboard</span></div>
+        <div class="lg-dtabs" id="lgTabs">
+          <button class="lg-dtab on" data-i="0">Dashboard</button>
+          <button class="lg-dtab" data-i="1">Inventory</button>
+          <button class="lg-dtab" data-i="2">Sales Tax</button>
+          <button class="lg-dtab" data-i="3">Payroll</button>
+          <button class="lg-dtab" data-i="4">P&amp;L</button>
+        </div>
+        <div class="lg-dstage" id="lgStage">
+          <div class="lg-dslide on" data-i="0">
+            <div class="lg-dhead"><span class="t">Profit &amp; Loss · This month</span><span class="p">Live</span></div>
+            <div class="lg-dkpis">
+              <div class="lg-dkpi"><div class="l">Net Profit</div><div class="v pos">$187,452</div><div class="d">▲ 16% vs last month</div></div>
+              <div class="lg-dkpi"><div class="l">Revenue</div><div class="v">$1,247,499</div><div class="d">▲ 12% vs last month</div></div>
+              <div class="lg-dkpi"><div class="l">Gross Profit</div><div class="v">$261,199</div><div class="d">▲ 14% vs last month</div></div>
+              <div class="lg-dkpi"><div class="l">Owed to Reps</div><div class="v">$9,280</div><div class="d">3 reps</div></div>
+            </div>
+          </div>
+          <div class="lg-dslide" data-i="1">
+            <div class="lg-dhead"><span class="t">Inventory · Profit per VIN</span><span class="p">128 tracked</span></div>
+            <div class="lg-drow"><div><div class="n">Jeep Grand Cherokee</div><div class="s">Sold</div></div><span class="val pos">+$4,755</span></div>
+            <div class="lg-drow"><div><div class="n">Ford F-150 XLT</div><div class="s">In stock</div></div><span class="val pos">+$3,690</span></div>
+            <div class="lg-drow"><div><div class="n">Toyota Camry SE</div><div class="s">In stock</div></div><span class="val pos">+$2,800</span></div>
+            <div class="lg-drow"><div><div class="n">Chevy Silverado LT</div><div class="s">Underwater</div></div><span class="val neg">−$800</span></div>
+          </div>
+          <div class="lg-dslide" data-i="2">
+            <div class="lg-dhead"><span class="t">Sales Tax · Collected</span><span class="p">Due Jul 31</span></div>
+            <div class="lg-dstat">$18,240 collected for state · Quarterly filing</div>
+            <div class="lg-drow"><div><div class="n">Ford F-150 XLT</div><div class="s">On file</div></div><span class="val">$1,470</span></div>
+            <div class="lg-drow"><div><div class="n">Chevrolet Silverado LT</div><div class="s">On file</div></div><span class="val">$1,272</span></div>
+            <div class="lg-drow"><div><div class="n">Toyota Camry SE</div><div class="s">On file</div></div><span class="val">$1,194</span></div>
+          </div>
+          <div class="lg-dslide" data-i="3">
+            <div class="lg-dhead"><span class="t">Payroll · Base + commission</span><span class="p">Owed $9,280</span></div>
+            <div class="lg-drow"><div><div class="n">D. Cole</div><div class="s">Salary + comm</div></div><span class="val">$3,120</span></div>
+            <div class="lg-drow"><div><div class="n">A. Patel</div><div class="s">Salary + comm</div></div><span class="val">$2,740</span></div>
+            <div class="lg-drow"><div><div class="n">C. Mendez</div><div class="s">Hourly</div></div><span class="val">$2,560</span></div>
+          </div>
+          <div class="lg-dslide" data-i="4">
+            <div class="lg-dhead"><span class="t">Profit &amp; Loss · Statement</span><span class="p">Net margin 15%</span></div>
+            <div class="lg-drow"><div class="n">Revenue</div><span class="val">$1,247,499</span></div>
+            <div class="lg-drow"><div class="n">− Cost of goods</div><span class="val neg">$986,300</span></div>
+            <div class="lg-drow"><div class="n">− Commissions</div><span class="val neg">$34,120</span></div>
+            <div class="lg-drow"><div class="n">Net profit</div><span class="val pos">$187,452</span></div>
+          </div>
+          <div class="lg-ddots" id="lgDots"><i class="on"></i><i></i><i></i><i></i><i></i></div>
+        </div>
+      </div></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+  /* ===== login (top) interactions ===== */
+  (function(){
+    const pw=document.getElementById('lgPass'), eye=document.getElementById('lgEye'), icon=document.getElementById('lgEyeIcon');
+    if(!pw)return;
+    const open='<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/>';
+    const off='<path d="M3 3l18 18M10.6 10.6a3 3 0 0 0 4.2 4.2"/><path d="M9.9 4.6A9.5 9.5 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3 3.7M6.1 6.1A17 17 0 0 0 2 12s3.5 7 10 7a9.5 9.5 0 0 0 3-.5"/>';
+    eye.addEventListener('click',()=>{const s=pw.type==='password';pw.type=s?'text':'password';icon.innerHTML=s?off:open;});
+    const form=document.getElementById('lgForm'), btn=document.getElementById('lgBtn'), err=document.getElementById('lgErr');
+    form.addEventListener('submit',(e)=>{e.preventDefault();if(!document.getElementById('lgUser').value.trim()||!pw.value){err.classList.add('show');return;}err.classList.remove('show');btn.classList.add('loading');btn.disabled=true;setTimeout(()=>{btn.classList.remove('loading');btn.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" style="width:17px;height:17px"><path d="M5 12l4 4 10-10"/></svg><span class="lg-label">Welcome back</span>';},1300);});
+    const slides=[...document.querySelectorAll('#lgStage .lg-dslide')], tabs=[...document.querySelectorAll('#lgTabs .lg-dtab')], dots=[...document.querySelectorAll('#lgDots i')];
+    const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches; let i=0;
+    function show(n){i=(n+slides.length)%slides.length;slides.forEach((s,k)=>s.classList.toggle('on',k===i));tabs.forEach((t,k)=>t.classList.toggle('on',k===i));dots.forEach((d,k)=>d.classList.toggle('on',k===i));}
+    show(0); if(!reduce) setInterval(()=>show(i+1),2800);
+    tabs.forEach(t=>t.addEventListener('click',()=>show(+t.dataset.i)));
+  })();
+  /* open/close the login overlay from the landing */
+  (function(){
+    const ov=document.getElementById('loginOverlay'); if(!ov)return;
+    const open=()=>{ov.hidden=false;avLockScroll();window.scrollTo(0,0);};
+    const close=()=>{ov.hidden=true;avUnlockScroll();};
+    /* Log In uses /login — overlay kept as unused marketing chrome */
+    document.getElementById('loginClose').addEventListener('click',close);
+    ov.querySelectorAll('.lg-signup a').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault();close();const w=document.getElementById('waitlist');if(w)w.scrollIntoView({behavior:'smooth'});}));
+    document.addEventListener('keydown',(e)=>{if(e.key==='Escape'&&!ov.hidden)close();});
+  })();
+
+</script>
+
+<script>
+  (function(){
+    const DICT={"Privacy Center": "Centro de privacidad", "Team": "Equipo", "Wholesale": "Mayoristas", "Profit Tracker": "Rastreador de ganancias", "About": "Nosotros", "Contact": "Contacto", "Log In": "Iniciar sesión", "Get Started": "Comenzar", "Get started free": "Empieza gratis", "✦ Welcome to": "✦ Bienvenido a", "— the dealership operating system": "— el sistema operativo para concesionarios", "Your": "Tu", "first month is free": "primer mes es gratis", "Run your entire dealership from one login": "Dirige todo tu concesionario desde un solo inicio de sesión", "Inventory · Sales Tax · Payroll · P&L · Jenna AI": "Inventario · Impuesto · Nómina · Ganancias y pérdidas · Jenna AI", "Built by dealers, for dealers": "Hecho por dealers, para dealers", "Now live — start free today": "Ya disponible — empieza gratis hoy", "The Dealership Operating System": "El sistema operativo para concesionarios", "The problem": "El problema", "The biggest losses aren't on the lot.": "Las mayores pérdidas no están en el lote.", "They're in the numbers you don't track.": "Están en los números que no rastreas.", "Most dealerships don't lose money because they can't sell cars — they lose it because they can't track them.": "La mayoría de los concesionarios no pierden dinero porque no puedan vender autos, lo pierden porque no pueden rastrearlos.", "With AutoVault": "Con AutoVault", "One live dashboard. Every number, tracked.": "Un panel en vivo. Cada número, rastreado.", "Inventory, true profit per VIN, sales tax, payroll and P&L — one login, updated in real time and ready for tax season.": "Inventario, ganancia real por VIN, impuesto sobre ventas, nómina y ganancias y pérdidas — un inicio de sesión, actualizado en tiempo real y listo para la temporada de impuestos.", "Live now": "Ya disponible", "First month free": "Primer mes gratis", "No setup fees · cancel anytime": "Sin cuota de instalación · cancela cuando quieras", "Run your entire dealership from the touch of your phone.": "Dirige todo tu concesionario desde tu teléfono.", "Real outcomes": "Resultados reales", "What AutoVault does for your dealership.": "Lo que AutoVault hace por tu concesionario.", "Increase Profitability": "Aumenta la rentabilidad", "Increase Efficiency": "Aumenta la eficiencia", "Stay Tax-Ready": "Listo para impuestos", "Never Miss a Number": "Nunca pierdas un número", "See every hidden dollar": "Ve cada dólar oculto", "Your whole desk, one login": "Todo tu escritorio, un inicio de sesión", "Never scramble at filing": "Nunca corras al declarar", "Nothing slips through": "Nada se te escapa", "True profit on every VIN": "Ganancia real en cada VIN", "Catch cars losing money": "Detecta autos que pierden dinero", "Every expense captured": "Cada gasto registrado", "Higher net on every deal": "Mayor ganancia neta en cada venta", "One login for everything": "Un inicio de sesión para todo", "Automated daily reminders": "Recordatorios diarios automáticos", "Jenna AI does the digging": "Jenna AI hace la búsqueda", "No more spreadsheets": "Sin más hojas de cálculo", "Sales tax organized by state": "Impuesto organizado por estado", "Filing reminders & schedule": "Recordatorios y calendario de declaración", "Tax-ready P&L, always": "Ganancias y pérdidas listas para impuestos", "CPA / accountant login": "Acceso para tu contador (CPA)", "Title tracking, in & out": "Seguimiento de títulos, entrada y salida", "Flooring costs controlled": "Costos de flooring controlados", "Every deal & payout logged": "Cada venta y pago registrado", "Nothing lost in a text": "Nada se pierde en un mensaje", "One platform, whole operation": "Una plataforma, toda la operación", "Your desk, organized": "Tu escritorio, organizado", "What's inside": "Qué incluye", "State Tax Center": "Centro de impuestos estatales", "Team communication": "Comunicación del equipo", "For wholesalers": "Para mayoristas", "Why dealers switch": "Por qué los dealers cambian", "How it tracks every number": "Cómo rastrea cada número", "Our Company": "Nuestra empresa", "One more step": "Un paso más", "Get in touch": "Contáctanos", "Legal": "Legal", "The AI assistant built for dealerships.": "El asistente de IA hecho para concesionarios.", "Selling cars makes revenue. Tracking numbers builds wealth.": "Vender autos genera ingresos. Rastrear números crea riqueza.", "Your entire desk, in one login.": "Todo tu escritorio, en un inicio de sesión.", "Every part of the dealership, in one login.": "Cada parte del concesionario, en un inicio de sesión.", "Every vehicle, down to the dollar.": "Cada vehículo, hasta el último dólar.", "Your sales tax, organized and never late.": "Tu impuesto sobre ventas, organizado y nunca tarde.", "Keep the whole floor connected — and closing.": "Mantén a todo el equipo conectado — y cerrando ventas.", "Your cars move fast. Your numbers should move faster.": "Tus autos se mueven rápido. Tus números deberían moverse más rápido.", "The lot runs on gut feel and six open tabs.": "El lote funciona por intuición y seis pestañas abiertas.", "Every dollar tied to a VIN, a rep, or a filing.": "Cada dólar ligado a un VIN, un vendedor o una declaración.", "Get your first month free.": "Obtén tu primer mes gratis.", "Choose the plan that fits your dealership.": "Elige el plan ideal para tu concesionario.", "Contact us": "Contáctanos", "Give every dealer total command of their numbers.": "Darle a cada dealer control total de sus números.", "Built by dealers": "Hecho por dealers", "Every number, tracked": "Cada número, rastreado", "Made to keep you profitable": "Hecho para mantenerte rentable", "One login, your whole desk": "Un inicio de sesión, todo tu escritorio", "Platform": "Plataforma", "Company": "Empresa", "List a car in Inventory, close it in Transactions, and the sale flows straight into Payments, Sales Reps, and your live Reports — no double entry, no drift between files.": "Registra un auto en Inventario, ciérralo en Transacciones, y la venta fluye directo a Pagos, Vendedores y tus Reportes en vivo — sin doble captura, sin descuadres entre archivos.", "Purchase, auction fees, flooring, and sales tax — captured per VIN — so you see true gross and net profit on every car, and catch the ones quietly losing money.": "Compra, tarifas de subasta, flooring e impuesto — capturado por VIN — para que veas la ganancia bruta y neta real de cada auto, y detectes los que pierden dinero en silencio.", "Set your filing frequency — monthly, quarterly, or annual — and AutoVault reminds you before every due date. Separate what you've collected by state, keep each vehicle's tax tied to its VIN, and export a filing-ready report in one click.": "Configura tu frecuencia de declaración — mensual, trimestral o anual — y AutoVault te recuerda antes de cada fecha límite. Separa lo recaudado por estado, mantén el impuesto de cada vehículo ligado a su VIN, y exporta un reporte listo para declarar con un clic.", "Deals live in a spreadsheet, commissions in a text thread, expenses on a shoebox of receipts. By the time the numbers add up, the month is over. AutoVault closes the gap.": "Las ventas viven en una hoja de cálculo, las comisiones en mensajes, los gastos en una caja de recibos. Para cuando cuadran los números, el mes ya terminó. AutoVault cierra esa brecha.", "Flip through the dashboard and you'll see the same data broken down four ways. Here's what each screen is actually doing.": "Recorre el panel y verás los mismos datos desglosados de cuatro maneras. Esto es lo que hace cada pantalla.", "AutoVault started with a simple frustration: the hardest part of running a dealership isn't selling cars — it's keeping track of everything that happens around the sale. So we built the tool we always wished we had.": "AutoVault nació de una frustración simple: lo más difícil de manejar un concesionario no es vender autos — es llevar el control de todo lo que pasa alrededor de la venta. Así que creamos la herramienta que siempre quisimos tener.", "Built for wholesalers": "Para mayoristas", "Built by dealership people,": "Hecho por gente de concesionarios,", "for dealership people.": "para gente de concesionarios.", "Wholesalers": "Mayoristas", "Independent Dealers": "Dealers independientes", "Growing Dealerships": "Concesionarios en crecimiento", "You're all set!": "¡Todo listo!", "Start free": "Empieza gratis", "Increase profit": "Aumenta la ganancia", "Save time": "Ahorra tiempo", "Stay compliant": "Cumple las normas", "Access anywhere": "Accede desde donde sea", "Cost to the penny, per vehicle": "Costo al centavo, por vehículo", "Sales tax kept on file": "Impuesto sobre ventas registrado", "Payroll & commissions in one run": "Nómina y comisiones en una sola corrida", "A live profit & loss statement": "Un estado de ganancias y pérdidas en vivo", "First name": "Nombre", "Last name": "Apellido", "Company / Dealership": "Empresa / Concesionario", "Email": "Correo electrónico", "Mobile number": "Número de celular", "State": "Estado", "How can we help?": "¿Cómo podemos ayudarte?", "1. Information We Collect": "1. Información que recopilamos", "2. How We Use Your Information": "2. Cómo usamos tu información", "3. How We Share Information": "3. Cómo compartimos la información", "4. Data Security": "4. Seguridad de los datos", "5. Data Retention": "5. Retención de datos", "6. Your Rights & Choices": "6. Tus derechos y opciones", "7. Cookies & Tracking": "7. Cookies y seguimiento", "8. Third-Party Services": "8. Servicios de terceros", "9. Children's Privacy": "9. Privacidad de menores", "10. Changes to This Policy": "10. Cambios a esta política", "11. Contact Us": "11. Contáctanos", "Dashboard": "Panel", "Inventory": "Inventario", "Sales Tax": "Impuesto", "Payroll": "Nómina", "Calendar": "Calendario", "This month": "Este mes", "Net profit": "Ganancia neta", "Revenue": "Ingresos", "Owed to reps": "Debido a vendedores", "Owed to Reps": "Debido a vendedores", "Profit per VIN": "Ganancia por VIN", "Sold": "Vendido", "In stock": "En inventario", "Underwater": "En pérdida", "Quarterly": "Trimestral", "Next filing due": "Próxima declaración", "Collected": "Recaudado", "On file": "Registrado", "Salary + comm": "Salario + comisión", "Hourly": "Por hora", "Profit & Loss": "Ganancias y pérdidas", "Cost of goods": "Costo de bienes", "Commissions": "Comisiones", "Net Profit": "Ganancia neta", "Total revenue": "Ingresos totales", "Gross Profit": "Ganancia bruta", "Before overhead": "Antes de gastos", "Commissions due": "Comisiones pendientes", "Inventory Overview": "Resumen de inventario", "Vehicles": "Vehículos", "Floored": "En flooring", "True cost & profit per VIN": "Costo real y ganancia por VIN", "All-in cost": "Costo total", "Sold / Ask": "Vendido / Pedido", "Days": "Días", "Vehicle": "Vehículo", "Frequency": "Frecuencia", "Due date": "Fecha límite", "Sale price": "Precio de venta", "Tax collected": "Impuesto recaudado", "Filed": "Declarado", "Employee": "Empleado", "Type": "Tipo", "Notifications": "Notificaciones", "Dealership Login": "Acceso de concesionario", "Welcome back": "Bienvenido de nuevo", "Sign in to your dealership dashboard.": "Inicia sesión en el panel de tu concesionario.", "Username or email": "Usuario o correo", "Password": "Contraseña", "Remember me": "Recuérdame", "Forgot password?": "¿Olvidaste tu contraseña?", "Sign in to dashboard": "Entrar al panel", "New dealership?": "¿Nuevo concesionario?", "Sign up here": "Regístrate aquí", "Secured with 256-bit encryption": "Protegido con cifrado de 256 bits", "Back to site": "Volver al sitio", "Send message": "Enviar mensaje", "Tell us about your dealership and we'll get right back to you.": "Cuéntanos sobre tu concesionario y te responderemos enseguida.", "Privacy Policy": "Política de privacidad", "Overview": "Resumen", "Early access": "Acceso anticipado", "Terms of Service": "Términos del servicio", "Back to home": "Volver al inicio", "you@yourdealership.com": "tu@concesionario.com", "Jane": "Juana", "Dealer": "Dealer", "Riverside Auto Group": "Grupo Auto Riverside", "jane@yourdealership.com": "juana@concesionario.com", "(555) 010-2020": "(555) 010-2020", "Tell us what you're looking for...": "Cuéntanos qué buscas...", "Select your state": "Elige tu estado", "Last updated: August 5, 2026": "Última actualización: 5 de agosto de 2026", "Introducing Jenna": "Te presentamos a Jenna", "The AI assistant": "El asistente de IA", "built for dealerships.": "hecho para concesionarios.", "Jenna is modeled for dealerships and nothing else. Ask her about your lot, your profit, or your deals — she answers instantly, takes action, and keeps you profitable. The assistant every dealership needs, right in your pocket — one click away.": "Jenna está diseñada solo para concesionarios. Pregúntale sobre tu lote, tus ganancias o tus ventas — responde al instante, toma acción y te mantiene rentable. El asistente que todo concesionario necesita, en tu bolsillo — a un clic de distancia.", "Every car carries purchase price, auction & doc fees, repairs, add-ons, and flooring — so you see true net profit, not sticker vs. sale.": "Cada auto incluye precio de compra, tarifas de subasta y documentos, reparaciones, extras y flooring — para que veas la ganancia neta real, no precio de lista vs. venta.", "Tax collected is captured on every sale, tied to the VIN, and rolled into your filing schedule — you always know what's owed and when.": "El impuesto recaudado se captura en cada venta, se liga al VIN y se integra a tu calendario de declaración — siempre sabes cuánto debes y cuándo.", "Base pay plus commission per deal calculates itself, hourly staff clock automatically, and every payout is logged with proof.": "El salario base más comisión por venta se calcula solo, el personal por hora registra su tiempo automáticamente, y cada pago queda con comprobante.", "Auction": "Subasta", "Re-run": "Repetir", "Filing": "Declaración", "July 2026 · what sold & what's due": "Julio 2026 · qué se vendió y qué vence", "3 sold this week": "3 vendidos esta semana", "July 2026": "Julio 2026", "Wed, Jul 15 · Your note": "Mié, 15 jul · Tu nota", "Rogue title's in — call the buyer. Pull Silverado for Friday's re-run.": "Llegó el título del Rogue — llama al comprador. Saca el Silverado para repetir el viernes.", "+ Add": "+ Agregar", "Sales tax due — File Q2": "Impuesto vence — Declara Q2", "Jeep Grand Cherokee sold": "Jeep Grand Cherokee vendido", "Manheim Riverside · 4 cars": "Manheim Riverside · 4 autos", "Ford F-150 XLT sold": "Ford F-150 XLT vendido", "Silverado LT — re-run": "Silverado LT — repetir", "Statement · This month": "Estado · Este mes", "Net margin · 15%": "Margen neto · 15%", "− Cost of goods sold": "− Costo de bienes vendidos", "− Commissions": "− Comisiones", "− Operating expenses": "− Gastos operativos", "COGS 79%": "Costo 79%", "Commissions 3%": "Comisiones 3%", "Overhead 3%": "Generales 3%", "Net profit 15%": "Ganancia neta 15%", "Collected & on file, per VIN": "Recaudado y registrado, por VIN", "Next filing · Jul 31": "Próxima declaración · 31 jul", "Collected for state": "Recaudado para el estado", "Salary, hourly & commission in one run": "Salario, por hora y comisión en una corrida", "Owed · $9,280": "Debido · $9,280", "Base / rate": "Base / tarifa", "Commission": "Comisión", "Net pay": "Pago neto", "Salesperson": "Vendedor", "Mechanic": "Mecánico", "Finance Manager": "Gerente de finanzas", "Salary": "Salario", "Live": "En vivo", "Profit & Loss · This month": "Ganancias y pérdidas · Este mes", "Top Performers · Cars sold": "Mejores vendedores · Autos vendidos", "AutoVault Dashboard": "Panel de AutoVault", "3 reps": "3 vendedores", "128 tracked": "128 rastreados", "tracked": "rastreados", "Inventory  Cost per VIN  Flooring  Sales Reps  Commissions  Payroll  Sales Tax  Filing Schedule  Expenses  Profit & Loss  ROI  Customers  Auctions": "Inventario  Costo por VIN  Flooring  Vendedores  Comisiones  Nómina  Impuesto  Calendario de declaración  Gastos  Ganancias y pérdidas  ROI  Clientes  Subastas", "Thanks — we'll be in touch soon!": "¡Gracias — pronto nos pondremos en contacto!", "Welcome to AutoVault!": "¡Bienvenido a AutoVault!", "Check your inbox to finish setting up your dealership dashboard.": "Revisa tu correo para terminar de configurar el panel de tu concesionario.", "Every plan starts with your first month free. Pick the one built for how you operate.": "Cada plan comienza con tu primer mes gratis. Elige el que se adapte a cómo operas."};
+    const btn=document.getElementById("langBtn"); if(!btn) return;
+    let es=false;
+    function apply(toEs){
+      const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(n){const p=n.parentElement;if(!p||p.id==="langBtn"||["SCRIPT","STYLE"].includes(p.tagName))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});
+      const nodes=[];while(w.nextNode())nodes.push(w.currentNode);
+      nodes.forEach(n=>{const raw=n.nodeValue;const t=raw.trim();if(!t)return;if(toEs){if(DICT[t]!==undefined){if(n.__en===undefined)n.__en=raw;n.nodeValue=raw.replace(t,DICT[t]);}}else{if(n.__en!==undefined)n.nodeValue=n.__en;}});
+      document.querySelectorAll("[placeholder]").forEach(el=>{const t=(el.getAttribute("placeholder")||"").trim();if(toEs){if(DICT[t]!==undefined){if(el.__ph===undefined)el.__ph=el.getAttribute("placeholder");el.setAttribute("placeholder",DICT[t]);}}else{if(el.__ph!==undefined)el.setAttribute("placeholder",el.__ph);}});
+    }
+    btn.addEventListener("click",(e)=>{e.preventDefault();es=!es;apply(es);btn.textContent=es?"English":"Español";document.documentElement.lang=es?"es":"en";try{localStorage.setItem("av_landing_lang",es?"es":"en");}catch(_){}});
+    try{if(localStorage.getItem("av_landing_lang")==="es"){es=true;apply(true);btn.textContent="English";document.documentElement.lang="es";}}catch(_){}
+  })();
+</script>
+
 </body>
 </html>

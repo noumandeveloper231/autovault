@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Contact Us — AutoVault</title>
+<meta name="description" content="Contact AutoVault about your dealership, privacy questions, or product support." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="/site-page.css" />
+</head>
+<body>
+  <div class="contact-bg"><div class="contact-aura"></div></div>
+  <a class="page-close" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>Back to site</a>
+  <div class="contact-wrap">
+    <div class="contact-card">
+      <span class="eyebrow">Get in touch</span>
+      <h1>Contact us</h1>
+      <p class="c-sub">Tell us about your dealership and we'll get right back to you.</p>
+      <form id="contactForm" novalidate>
+        <div class="c-row">
+          <div class="c-field"><label>First name</label><input name="first" type="text" placeholder="Jane" autocomplete="given-name" /></div>
+          <div class="c-field"><label>Last name</label><input name="last" type="text" placeholder="Dealer" autocomplete="family-name" /></div>
+        </div>
+        <div class="c-field"><label>Company / Dealership</label><input name="company" type="text" placeholder="Riverside Auto Group" autocomplete="organization" /></div>
+        <div class="c-row">
+          <div class="c-field"><label>Email</label><input name="email" type="email" placeholder="jane@yourdealership.com" autocomplete="email" /></div>
+          <div class="c-field"><label>Mobile number</label><input name="phone" id="contactPhone" type="tel" inputmode="tel" placeholder="(555) 010-2020" autocomplete="tel" maxlength="14" /></div>
+        </div>
+        <div class="c-field"><label>State</label><select name="state" id="contactState"><option value="" disabled selected>Select your state</option></select></div>
+        <input type="text" name="website" value="" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;height:0;width:0;opacity:0" />
+        <div class="c-field"><label>How can we help?</label><textarea name="message" rows="4" placeholder="Tell us what you're looking for..."></textarea></div>
+        <button type="submit" class="btn btn-primary c-submit">Send message</button>
+        <div class="c-success" id="contactSuccess" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6"><path d="M5 12l4 4 10-10"/></svg>Thanks &mdash; we'll be in touch soon!</div>
+      </form>
+    </div>
+  </div>
+<script src="/us-locations.js"></script>
+<script src="/toast.js"></script>
+<script>
+(function(){
+  const form=document.getElementById('contactForm');
+  const ok=document.getElementById('contactSuccess');
+  const sel=document.getElementById('contactState');
+  const phoneEl=document.getElementById('contactPhone');
+
+  function formatPhoneInput(el){
+    let d=(el.value||"").replace(/\D/g,"").slice(0,10);
+    if(d.length>6) el.value="("+d.slice(0,3)+") "+d.slice(3,6)+"-"+d.slice(6);
+    else if(d.length>3) el.value="("+d.slice(0,3)+") "+d.slice(3);
+    else if(d.length>0) el.value="("+d;
+    else el.value="";
+    el.classList.toggle("phone-invalid",d.length>0&&d.length<10);
+  }
+  function isValidPhone(v){const d=(v||"").replace(/\D/g,"");return d.length===10}
+  if(phoneEl) phoneEl.addEventListener('input',()=>formatPhoneInput(phoneEl));
+
+  if(sel && window.US_LOCATIONS){
+    Object.keys(window.US_LOCATIONS).sort((a,b)=>(window.US_STATE_NAMES[a]||a).localeCompare(window.US_STATE_NAMES[b]||b)).forEach(code=>{
+      const opt=document.createElement('option');
+      opt.value=code;
+      opt.textContent=(window.US_STATE_NAMES[code]||code)+' ('+code+')';
+      sel.appendChild(opt);
+    });
+  }
+  const API_URL = window.AUTOVAULT_API_URL || (
+    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+      ? 'http://localhost:3000'
+      : 'https://autovault-backend-cbdp.onrender.com'
+  );
+  form.addEventListener('submit', async (e)=>{
+    e.preventDefault();
+    const need=['first','email']; let bad=false;
+    need.forEach(n=>{const el=form.elements[n]; if(!el.value.trim()){el.style.borderColor='var(--down)'; bad=true;} else {el.style.borderColor='';}});
+    const phone=form.elements.phone.value.trim();
+    if(phone && !isValidPhone(phone)){
+      if(phoneEl) phoneEl.classList.add('phone-invalid');
+      if(window.AVToast) AVToast.warning('Please enter a valid 10-digit phone number.');
+      else alert('Please enter a valid 10-digit phone number.');
+      bad=true;
+    }
+    if(bad) return;
+    const submitBtn=form.querySelector('.c-submit');
+    try{
+      if(submitBtn){ submitBtn.disabled=true; submitBtn.textContent='Sending...'; }
+      const payload={
+        first: form.elements.first.value.trim(),
+        last: form.elements.last.value.trim(),
+        company: form.elements.company.value.trim(),
+        email: form.elements.email.value.trim(),
+        phone,
+        state: form.elements.state.value.trim(),
+        message: form.elements.message.value.trim(),
+        website: form.elements.website ? form.elements.website.value : ''
+      };
+      const resp=await fetch(API_URL+'/api/contact',{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      const data=await resp.json().catch(()=>({}));
+      if(!resp.ok) throw new Error(data.error?.message||data.message||'Unable to send message.');
+      form.querySelectorAll('input,select,textarea,.c-submit').forEach(el=>el.style.display='none');
+      form.querySelectorAll('.c-field').forEach(el=>el.style.display='none');
+      ok.hidden=false;
+      ok.classList.add('is-shown');
+    }catch(err){
+      if(window.AVToast) AVToast.error(err.message||'Failed to send message.');
+      else alert(err.message||'Failed to send message.');
+      if(submitBtn){ submitBtn.disabled=false; submitBtn.textContent='Send message'; }
+    }
+  });
+})();
+</script>
+</body>
+</html>

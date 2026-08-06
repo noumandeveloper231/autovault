@@ -1,31 +1,37 @@
-{
-  "redirects": [
-    { "source": "/wholesale/login", "destination": "/login", "permanent": true },
-    { "source": "/wholesale/login/:path*", "destination": "/login", "permanent": true },
-    { "source": "/sales-rep/login", "destination": "/login", "permanent": true },
-    { "source": "/sales-rep/login/:path*", "destination": "/login", "permanent": true },
-    { "source": "/cpa/login", "destination": "/login", "permanent": true },
-    { "source": "/cpa/login/:path*", "destination": "/login", "permanent": true }
-  ],
-  "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/thank-you", "destination": "/thank-you/index.html" },
-    { "source": "/forgot-password", "destination": "/forgot-password/index.html" },
-    { "source": "/reset-password", "destination": "/reset-password/index.html" },
-    { "source": "/invite", "destination": "/invite/index.html" },
-    { "source": "/accept-invitation", "destination": "/invite/index.html" },
-    { "source": "/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/login", "destination": "/login/index.html" },
-    { "source": "/wholesale/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/wholesale/dashboard/:path*", "destination": "/dashboard/index.html" },
-    { "source": "/sales-rep/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/sales-rep/dashboard/:path*", "destination": "/dashboard/index.html" },
-    { "source": "/cpa/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/cpa/dashboard/:path*", "destination": "/dashboard/index.html" },
-    { "source": "/owner/login", "destination": "/login/index.html" },
-    { "source": "/owner/login/:path*", "destination": "/login/index.html" },
-    { "source": "/owner/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/owner/dashboard/:path*", "destination": "/dashboard/index.html" }
-  ],
-  "cleanUrls": true
-}
+{
+  "redirects": [
+    { "source": "/wholesale/login", "destination": "/login", "permanent": true },
+    { "source": "/wholesale/login/:path*", "destination": "/login", "permanent": true },
+    { "source": "/sales-rep/login", "destination": "/login", "permanent": true },
+    { "source": "/sales-rep/login/:path*", "destination": "/login", "permanent": true },
+    { "source": "/cpa/login", "destination": "/login", "permanent": true },
+    { "source": "/cpa/login/:path*", "destination": "/login", "permanent": true },
+    { "source": "/terms-of-service", "destination": "/terms", "permanent": true },
+    { "source": "/privacy", "destination": "/privacy-policy", "permanent": true }
+  ],
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/thank-you", "destination": "/thank-you/index.html" },
+    { "source": "/forgot-password", "destination": "/forgot-password/index.html" },
+    { "source": "/reset-password", "destination": "/reset-password/index.html" },
+    { "source": "/invite", "destination": "/invite/index.html" },
+    { "source": "/accept-invitation", "destination": "/invite/index.html" },
+    { "source": "/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/login", "destination": "/login/index.html" },
+    { "source": "/wholesale/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/wholesale/dashboard/:path*", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/sales-rep/dashboard/:path*", "destination": "/dashboard/index.html" },
+    { "source": "/cpa/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/cpa/dashboard/:path*", "destination": "/dashboard/index.html" },
+    { "source": "/owner/login", "destination": "/login/index.html" },
+    { "source": "/owner/login/:path*", "destination": "/login/index.html" },
+    { "source": "/owner/dashboard", "destination": "/dashboard/index.html" },
+    { "source": "/owner/dashboard/:path*", "destination": "/dashboard/index.html" },
+    { "source": "/contact", "destination": "/contact/index.html" },
+    { "source": "/privacy-policy", "destination": "/privacy-policy/index.html" },
+    { "source": "/privacy-center", "destination": "/privacy-center/index.html" },
+    { "source": "/terms", "destination": "/terms/index.html" }
+  ],
+  "cleanUrls": true
+}
