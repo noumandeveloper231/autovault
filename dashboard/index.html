@@ -26340,7 +26340,34 @@
         document.body.style.overflow = '';
         maybeShowWelcome();
       }
+      function isPlatformOwnerSession() {
+        try {
+          if (
+            window.AVPortal &&
+            typeof AVPortal.getRoutePortal === "function" &&
+            AVPortal.getRoutePortal() === "owner"
+          ) {
+            return true;
+          }
+        } catch (_) {}
+        var role =
+          (window.crmOwner && window.crmOwner.role) ||
+          (function () {
+            try {
+              var sess =
+                window.AVPortal && typeof AVPortal.readSession === "function"
+                  ? AVPortal.readSession()
+                  : null;
+              return (sess && sess.role) || "";
+            } catch (_) {
+              return "";
+            }
+          })();
+        return role === "platform_owner";
+      }
       function termsNeedsSigning() {
+        /* Platform owners run the site — not dealership onboarding. */
+        if (isPlatformOwnerSession()) return false;
         /* Prefer live user from API (crmOwner). Never trust a global localStorage
            flag across accounts — that skipped the agreement after intro. */
         if (window.crmOwner && typeof window.crmOwner.termsAccepted === 'boolean') {
@@ -26367,6 +26394,9 @@
               : null;
           if (sess && sess.mustResetPassword) return;
         } catch (_) {}
+        /* Owner portal shares this dashboard shell but must not get dealer
+           agreement / intro tour. */
+        if (isPlatformOwnerSession()) return;
         if (termsNeedsSigning()) openTerms();
         else maybeShowWelcome();
       }
@@ -26558,6 +26588,11 @@
         markIntroCompleted();
       }
       function maybeShowWelcome() {
+        if (isPlatformOwnerSession()) return;
+        var role = window.crmOwner && window.crmOwner.role;
+        /* Intro is dealership admin onboarding only — check role before
+           sessionStorage so platform_owner never gets forced in via '0'. */
+        if (role !== "owner" && role !== "manager") return;
         try {
           var sv = sessionStorage.getItem("av_intro_completed");
           if (sv === "1") return;
@@ -26576,8 +26611,6 @@
           } catch (e) {}
           return;
         }
-        var role = window.crmOwner && window.crmOwner.role;
-        if (role !== "owner" && role !== "manager") return;
         setTimeout(openWelcome, 600);
       }
       async function markIntroCompleted() {

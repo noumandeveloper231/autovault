@@ -1936,11 +1936,19 @@
             sessionStorage.removeItem('av_session_only');
           }
         } catch (e) {}
-        if (data.user && data.user.introCompleted !== undefined) {
-          sessionStorage.setItem('av_intro_completed', data.user.introCompleted ? '1' : '0');
-        }
-        if (data.user && data.user.termsAccepted !== undefined) {
-          sessionStorage.setItem('av_terms_accepted', data.user.termsAccepted ? '1' : '0');
+        // Dealership onboarding flags only — platform owner portal skips these UIs.
+        if (userPortal !== 'owner') {
+          if (data.user && data.user.introCompleted !== undefined) {
+            sessionStorage.setItem('av_intro_completed', data.user.introCompleted ? '1' : '0');
+          }
+          if (data.user && data.user.termsAccepted !== undefined) {
+            sessionStorage.setItem('av_terms_accepted', data.user.termsAccepted ? '1' : '0');
+          }
+        } else {
+          try {
+            sessionStorage.removeItem('av_intro_completed');
+            sessionStorage.removeItem('av_terms_accepted');
+          } catch (e) {}
         }
         try {
           if (data.user && data.user.mustResetPassword) {
