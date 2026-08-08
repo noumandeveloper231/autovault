@@ -3,7 +3,7 @@
     global.AUTOVAULT_API_URL ||
     (location.hostname === "localhost" || location.hostname === "127.0.0.1"
       ? "http://localhost:3000"
-      : "https://autovault-backend-cbdp.onrender.com");
+      : "https://api.autovault360.com");
 
   const DASHBOARD_BY_PORTAL = {
     wholesale: "/wholesale/dashboard",
