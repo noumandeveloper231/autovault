@@ -238,7 +238,9 @@
       })(),
       commissionOverride: deal ? num(deal.commissionAmount, null) : null,
       commissionPct: deal && deal.commissionRate ? Math.round(deal.commissionRate * 1000) / 10 : null,
-      commMode: deal && deal.commissionType ? (deal.commissionType === 'manual' ? 'amt' : 'pct') : null,
+      commMode: deal && deal.commissionType
+        ? (deal.commissionType === "manual" || deal.commissionType === "flat" ? "amt" : "pct")
+        : null,
       floored: !!(api.flooringPlanId || api.flooringStartDate || (flooringFees != null && flooringFees > 0) || !!(api.fees && api.fees.flooringManual)),
       titlePresent: api.titlePresent !== false && api.titleReceived !== false,
       titleIn:

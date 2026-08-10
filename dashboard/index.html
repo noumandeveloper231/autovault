@@ -13383,6 +13383,58 @@
         }
       }
 
+      /* Merged commission rate field: value + %/$ toggle */
+      .comm-rate-field {
+        display: flex;
+        align-items: stretch;
+        width: 100%;
+        background-color: var(--panel-2);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        overflow: hidden;
+      }
+      .comm-rate-field:focus-within {
+        border-color: var(--blue);
+      }
+      .comm-rate-field input {
+        flex: 1;
+        min-width: 0;
+        border: none !important;
+        border-radius: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        outline: none;
+      }
+      .comm-rate-toggle {
+        display: flex;
+        flex-shrink: 0;
+        border-left: 1px solid var(--border);
+        background: var(--panel);
+      }
+      .comm-rate-toggle button {
+        appearance: none;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        font-size: 12.5px;
+        font-weight: 700;
+        padding: 0 12px;
+        cursor: pointer;
+        min-width: 40px;
+        transition: background 0.12s, color 0.12s;
+      }
+      .comm-rate-toggle button + button {
+        border-left: 1px solid var(--border);
+      }
+      .comm-rate-toggle button.active {
+        background: var(--blue);
+        color: #fff;
+      }
+      .comm-rate-toggle button:hover:not(.active) {
+        color: var(--text);
+        background: var(--panel-2);
+      }
+
       .rep-modal-col .rep-login-section {
         margin-top: 0;
         padding-top: 0;
@@ -25821,15 +25873,36 @@
                 ><input type="date" id="repModalBirthday" />
               </div>
               <div class="form-group">
-                <label>Commission Rate (% of gross)</label
-                ><input
-                  type="number"
-                  id="repModalPct"
-                  placeholder="e.g. 20"
-                  step="0.5"
-                  min="0"
-                  oninput="repCalcSummary()"
-                />
+                <label id="repModalPctLabel">Commission Rate</label>
+                <div class="comm-rate-field">
+                  <input
+                    type="number"
+                    id="repModalPct"
+                    placeholder="e.g. 20"
+                    step="0.5"
+                    min="0"
+                    oninput="repCalcSummary()"
+                  />
+                  <div class="comm-rate-toggle" role="group" aria-label="Commission type">
+                    <button
+                      type="button"
+                      id="repCommTypePct"
+                      class="active"
+                      onclick="setRepCommType('percentage')"
+                      title="Percentage of gross"
+                    >
+                      %
+                    </button>
+                    <button
+                      type="button"
+                      id="repCommTypeFlat"
+                      onclick="setRepCommType('flat')"
+                      title="Flat dollar amount per deal"
+                    >
+                      $
+                    </button>
+                  </div>
+                </div>
               </div>
               <div class="form-group">
                 <label>Base Salary ($ / month)</label
@@ -25864,6 +25937,7 @@
               </div>
               <div class="emp-pay-calc" id="repModalCalc"></div>
               <div
+                id="repCommHint"
                 style="
                   font-size: 11.5px;
                   color: var(--muted);
@@ -28599,7 +28673,19 @@
       }
       function repRateFor(name) {
         const r = (salesReps || []).find((x) => x.name === name);
-        return r ? (Number(r.commissionPct) || 20) / 100 : 0.2;
+        if (!r) return { type: "percentage", rate: 0.2, flat: 0 };
+        if (r.commissionType === "flat") {
+          return {
+            type: "flat",
+            rate: 0,
+            flat: Number(r.commissionFlat) || 0,
+          };
+        }
+        return {
+          type: "percentage",
+          rate: (Number(r.commissionPct) || 20) / 100,
+          flat: 0,
+        };
       }
       function repCommEst() {
         const box = document.getElementById("rcCalc");
@@ -28608,18 +28694,25 @@
         const price =
           parseFloat((document.getElementById("rcPrice") || {}).value) || 0;
         const v = (vehicles || []).find((x) => x && x.vin === vin);
-        const rate = repRateFor(repUser);
+        const cfg = repRateFor(repUser);
         if (!v) {
           box.innerHTML =
             '<div class="rc-calc-head">Your Commission</div><div class="rc-calc-empty">Choose a vehicle and enter the sale price to see your commission for this deal.</div>';
           return;
         }
         const frontEndGross = Math.max(0, price - (v.price || 0));
-        const comm = Math.round(frontEndGross * rate);
+        const comm =
+          cfg.type === "flat"
+            ? Math.round(cfg.flat)
+            : Math.round(frontEndGross * cfg.rate);
+        const rateLbl =
+          cfg.type === "flat"
+            ? fmt(cfg.flat) + " flat"
+            : Math.round(cfg.rate * 100) + "%";
         box.innerHTML = `<div class="rc-calc-head">Your Commission</div>
     <div class="rc-calc-veh">${v.year} ${v.make} ${v.model}</div>
     <div class="rc-calc-row"><span>Sale price</span><b>${price ? fmt(price) : "\u2014"}</b></div>
-    <div class="rc-calc-row"><span>Commission rate</span><b>${Math.round(rate * 100)}%</b></div>
+    <div class="rc-calc-row"><span>Commission rate</span><b>${rateLbl}</b></div>
     <div class="rc-calc-total"><span>Your commission</span><b>${fmt(comm)}</b></div>`;
       }
       async function renderRepCustomers() {
@@ -34855,8 +34948,11 @@
           v.commissionPct != null && v.commissionPct > 0
             ? v.commissionPct / 100
             : 0.04;
+        const repForComm = (salesReps || []).find((x) => x.name === v.rep);
         const autoCommission =
-          Math.round((Number(v.price) || 0) * commRate) + extraRepPay;
+          (repForComm && repForComm.commissionType === "flat"
+            ? Math.max(0, Math.round(Number(repForComm.commissionFlat) || 0))
+            : Math.round((Number(v.price) || 0) * commRate)) + extraRepPay;
         const commission =
           v.commissionOverride !== null && v.commissionOverride !== undefined
             ? Number(v.commissionOverride)
@@ -36171,7 +36267,36 @@
       }
       function repRate(name) {
         const r = salesReps.find((x) => x.name === name);
-        return r ? Number(r.commissionPct) : null;
+        if (!r) return null;
+        if (r.commissionType === "flat") return null;
+        return Number(r.commissionPct);
+      }
+      function repCommissionLabel(r) {
+        if (!r) return "";
+        if (typeof AVReps !== "undefined" && AVReps.formatRateLabel) {
+          return AVReps.formatRateLabel(r);
+        }
+        if (r.commissionType === "flat") {
+          return fmt(r.commissionFlat || 0) + " flat";
+        }
+        return (r.commissionPct || 0) + "% of gross";
+      }
+      function calcRepCommissionAmount(repOrName, gross) {
+        const r =
+          typeof repOrName === "string"
+            ? salesReps.find((x) => x.name === repOrName)
+            : repOrName;
+        if (!r) return Math.max(0, Math.round((Number(gross) || 0) * 0.04));
+        if (typeof AVReps !== "undefined" && AVReps.calcCommission) {
+          return AVReps.calcCommission(r, gross);
+        }
+        if (r.commissionType === "flat") {
+          return Math.max(0, Math.round(Number(r.commissionFlat) || 0));
+        }
+        return Math.max(
+          0,
+          Math.round(((Number(gross) || 0) * (Number(r.commissionPct) || 0)) / 100),
+        );
       }
 
       function repPill(rep) {
@@ -36757,8 +36882,10 @@
                     '<div class="rep-id"><div class="n">' +
                     r.name +
                     '</div><div class="r">' +
-                    r.commissionPct +
-                    "% of gross</div></div>" +
+                    (typeof repCommissionLabel === "function"
+                      ? repCommissionLabel(r)
+                      : r.commissionPct + "% of gross") +
+                    "</div></div>" +
                     '<div class="rep-metrics">' +
                     '<div class="rep-metric"><div class="v">' +
                     skVal(40) +
@@ -36791,7 +36918,7 @@
       <div class="sl-info">
         <div class="sl-tag">\uD83D\uDC51 Top Sales Rep</div>
         <div class="sl-name">${top.name}</div>
-        <div class="sl-rate">${top.commissionPct}% commission rate${top.activeCount ? ` \u00b7 ${top.activeCount} active in inventory` : ""}</div>
+        <div class="sl-rate">${typeof repCommissionLabel === "function" ? repCommissionLabel(top) : top.commissionPct + "% commission rate"}${top.activeCount ? ` \u00b7 ${top.activeCount} active in inventory` : ""}</div>
       </div>
       <div class="sl-stats">
         <div class="sl-stat"><div class="v">${top.carsSold}</div><div class="l">Cars Sold</div></div>
@@ -36811,7 +36938,7 @@
     <div class="rep-row" style="cursor:pointer;" onclick="openRepDetail('${r.id}','reps')">
       <div class="rep-rank">${i + 1}</div>
       <div class="rep-av">${repInitials(r.name)}</div>
-      <div class="rep-id"><div class="n">${r.name}</div><div class="r">${r.commissionPct}% of gross${r.activeCount ? ` \u00b7 ${r.activeCount} active` : ""}</div></div>
+      <div class="rep-id"><div class="n">${r.name}</div><div class="r">${typeof repCommissionLabel === "function" ? repCommissionLabel(r) : r.commissionPct + "% of gross"}${r.activeCount ? ` \u00b7 ${r.activeCount} active` : ""}</div></div>
       <div class="rep-metrics">
         <div class="rep-metric"><div class="v">${r.carsSold}</div><div class="l">Cars Sold</div></div>
         <div class="rep-metric"><div class="v green">${fmt(r.totalCommission)}</div><div class="l">Commission</div></div>
@@ -36832,6 +36959,40 @@
 
       let repModalEditingId = null;
       let repApplyAll = false;
+      let repModalCommType = "percentage";
+
+      function setRepCommType(type, keepValue) {
+        repModalCommType = type === "flat" ? "flat" : "percentage";
+        const pctBtn = document.getElementById("repCommTypePct");
+        const flatBtn = document.getElementById("repCommTypeFlat");
+        const pctEl = document.getElementById("repModalPct");
+        const label = document.getElementById("repModalPctLabel");
+        const hint = document.getElementById("repCommHint");
+        if (pctBtn) pctBtn.classList.toggle("active", repModalCommType === "percentage");
+        if (flatBtn) flatBtn.classList.toggle("active", repModalCommType === "flat");
+        if (label) {
+          label.textContent =
+            repModalCommType === "flat"
+              ? "Commission Rate (flat $ per deal)"
+              : "Commission Rate (% of gross)";
+        }
+        if (pctEl) {
+          pctEl.placeholder =
+            repModalCommType === "flat" ? "e.g. 500" : "e.g. 20";
+          pctEl.step = repModalCommType === "flat" ? "1" : "0.5";
+          if (!keepValue) {
+            /* keep typed number when toggling — user decides the value */
+          }
+        }
+        if (hint) {
+          hint.textContent =
+            repModalCommType === "flat"
+              ? "Flat dollar amount paid per deal when this rep is chosen — not based on gross profit."
+              : "Gross = sold price − purchase price. This rate auto-fills the commission whenever this rep is chosen on a deal.";
+        }
+        repCalcSummary();
+      }
+
       function openRepModal(id) {
         repModalEditingId = id || null;
         const rep = id ? salesReps.find((x) => x.id === id) : null;
@@ -36843,7 +37004,16 @@
         if (rep) {
           nameEl.value = rep.name;
           nameEl.disabled = true;
-          pctEl.value = rep.commissionPct;
+          repModalCommType =
+            rep.commissionType === "flat" ? "flat" : "percentage";
+          pctEl.value =
+            repModalCommType === "flat"
+              ? rep.commissionFlat != null
+                ? rep.commissionFlat
+                : ""
+              : rep.commissionPct != null
+                ? rep.commissionPct
+                : "";
           {
             avSetDate("repModalBirthday", rep.birthday || "");
           }
@@ -36863,6 +37033,7 @@
         } else {
           nameEl.value = "";
           nameEl.disabled = false;
+          repModalCommType = "percentage";
           pctEl.value = "";
           {
             avSetDate("repModalBirthday", "");
@@ -36890,7 +37061,7 @@
             ? rep.payDay
             : 5
           : 5;
-        repCalcSummary();
+        setRepCommType(repModalCommType, true);
         setApplyAll(false);
         document.getElementById("repModal").style.display = "flex";
         if (!rep)
@@ -36917,14 +37088,24 @@
       function recalcRepCommissions(names) {
         vehicles.forEach((v) => {
           if (v.sold && names.includes(v.rep) && v.soldPrice) {
-            const rate = repRate(v.rep);
-            if (rate != null) {
-              const gross = v.soldPrice - v.price;
-              v.commissionOverride = Math.max(
-                0,
-                Math.round((gross * rate) / 100),
-              );
-              v.commissionPct = rate;
+            const rep = salesReps.find((x) => x.name === v.rep);
+            if (!rep) return;
+            const gross = v.soldPrice - v.price;
+            const amount =
+              typeof AVReps !== "undefined" && AVReps.calcCommission
+                ? AVReps.calcCommission(rep, gross)
+                : rep.commissionType === "flat"
+                  ? Math.max(0, Math.round(Number(rep.commissionFlat) || 0))
+                  : Math.max(
+                      0,
+                      Math.round((gross * (Number(rep.commissionPct) || 0)) / 100),
+                    );
+            v.commissionOverride = amount;
+            if (rep.commissionType === "flat") {
+              v.commissionPct = null;
+              v.commMode = "amt";
+            } else {
+              v.commissionPct = Number(rep.commissionPct) || 0;
               v.commMode = "pct";
             }
           }
@@ -36933,14 +37114,18 @@
       function repCalcSummary() {
         const el = document.getElementById("repModalCalc");
         if (!el) return;
-        const pct =
+        const val =
           parseFloat(document.getElementById("repModalPct").value) || 0;
         const base =
           parseFloat(document.getElementById("repModalBase").value) || 0;
         const freq = document.getElementById("repModalFreq").value;
         const payLbl =
           EMP_DAYS_FULL[+document.getElementById("repModalPayDay").value];
-        el.innerHTML = `<div class="epc-line">Paid <b>${freq === "biweekly" ? "every other" : "every"} ${payLbl}</b> \u00b7 <b>${pct}%</b> commission \u00b7 base <b>${fmt(base)}/mo</b></div><div class="epc-pay">Each pay period they receive the <b>greater</b> of their base salary or the commission they earned \u2014 auto-calculated from their sales.</div>`;
+        const rateLbl =
+          repModalCommType === "flat"
+            ? `<b>${fmt(val)}</b> flat / deal`
+            : `<b>${val}%</b> commission`;
+        el.innerHTML = `<div class="epc-line">Paid <b>${freq === "biweekly" ? "every other" : "every"} ${payLbl}</b> \u00b7 ${rateLbl} \u00b7 base <b>${fmt(base)}/mo</b></div><div class="epc-pay">Each pay period they receive the <b>greater</b> of their base salary or the commission they earned \u2014 auto-calculated from their sales.</div>`;
       }
       function selectInviteMethod(method) {
         document
@@ -37002,10 +37187,14 @@
       }
       async function saveSalesRep() {
         const name = document.getElementById("repModalName").value.trim();
-        const pct = Math.max(
+        const rateVal = Math.max(
           0,
           parseFloat(document.getElementById("repModalPct").value) || 0,
         );
+        const commType =
+          repModalCommType === "flat" ? "flat" : "percentage";
+        const pct = commType === "percentage" ? rateVal : 0;
+        const flat = commType === "flat" ? rateVal : 0;
         if (!name && !repApplyAll) {
           document.getElementById("repModalName").focus();
           return;
@@ -37049,6 +37238,11 @@
           btn.disabled = true;
           btn.classList.add("veh-busy");
         }
+        const rateFields = {
+          commissionType: commType,
+          commissionPct: pct,
+          commissionFlat: flat,
+        };
         try {
           if (repModalEditingId) {
             const existing = salesReps.find((r) => r.id === repModalEditingId);
@@ -37058,7 +37252,7 @@
               await AVReps.updateRep(existing.id, {
                 username: uname,
                 name,
-                commissionPct: pct,
+                ...rateFields,
                 base,
                 payFreq: freq,
                 payDay,
@@ -37067,7 +37261,9 @@
               });
             } else {
               if (existing) {
+                existing.commissionType = commType;
                 existing.commissionPct = pct;
+                existing.commissionFlat = flat;
                 existing.base = base;
                 existing.payFreq = freq;
                 existing.payDay = payDay;
@@ -37087,7 +37283,7 @@
                 name,
                 email: uemail,
                 phone: uphone,
-                commissionPct: pct,
+                ...rateFields,
                 base,
                 payFreq: freq,
                 payDay,
@@ -37107,7 +37303,9 @@
             } else {
               salesReps.push({
                 name,
+                commissionType: commType,
                 commissionPct: pct,
+                commissionFlat: flat,
                 base,
                 payFreq: freq,
                 payDay,
@@ -37122,7 +37320,18 @@
             }
           }
           if (repApplyAll) {
-            salesReps.forEach((r) => (r.commissionPct = pct));
+            for (const r of salesReps) {
+              r.commissionType = commType;
+              r.commissionPct = pct;
+              r.commissionFlat = flat;
+              if (useLive && r.id) {
+                try {
+                  await AVReps.updateRep(r.id, rateFields);
+                } catch (e) {
+                  console.warn("[apply-all-rate]", r.name, e);
+                }
+              }
+            }
           }
           const affected = repApplyAll ? salesReps.map((r) => r.name) : [name];
           recalcRepCommissions(affected);
@@ -37181,10 +37390,17 @@
       // auto-calc commission when a rep is picked on a deal jacket
       function djRepChanged() {
         const name = document.getElementById("djRep").value;
-        const rate = repRate(name);
-        if (rate != null) {
-          djCommMode = "pct";
-          syncPctControl(rate);
+        const rep = salesReps.find((x) => x.name === name);
+        if (rep && rep.commissionType === "flat") {
+          djCommMode = "amt";
+          const amtEl = document.getElementById("djCommAmt");
+          if (amtEl) amtEl.value = Number(rep.commissionFlat) || 0;
+        } else {
+          const rate = repRate(name);
+          if (rate != null) {
+            djCommMode = "pct";
+            syncPctControl(rate);
+          }
         }
         dealRecalc();
       }
@@ -44511,7 +44727,16 @@
               `<option value="${rp}" ${v.rep === rp ? "selected" : ""}>${rp}</option>`,
           ).join("");
         djCommMode = v.commMode || "pct";
+        const repObj = salesReps.find((x) => x.name === v.rep);
         const rrRate = repRate(v.rep);
+        if (
+          !v.commMode &&
+          repObj &&
+          repObj.commissionType === "flat" &&
+          (v.commissionOverride == null || v.commissionOverride === undefined)
+        ) {
+          djCommMode = "amt";
+        }
         const curPct =
           v.commissionPct != null
             ? Number(v.commissionPct)
@@ -44532,11 +44757,16 @@
           custWrap.style.display = "";
           document.getElementById("djCommPctCustom").value = curPct;
         }
-        document.getElementById("djCommAmt").value =
-          djCommMode === "amt" && v.commissionOverride != null
-            ? v.commissionOverride
-            : "";
-
+        if (djCommMode === "amt") {
+          document.getElementById("djCommAmt").value =
+            v.commissionOverride != null
+              ? v.commissionOverride
+              : repObj && repObj.commissionType === "flat"
+                ? Number(repObj.commissionFlat) || 0
+                : "";
+        } else {
+          document.getElementById("djCommAmt").value = "";
+        }
         djRenderBreakdown(v, r);
 
         renderDealDocs(vin);
@@ -44983,8 +45213,19 @@
             : "\u2014",
         );
         const ncHost = document.getElementById("djBrkNetCheck");
-        if (ncHost && !ncHost.querySelector("input")) {
-          ncHost.innerHTML = `<span class="vdp-ed" onclick="djEditNetCheck()" title="Click to enter actual net check from finance">${hasNetCheck ? fmt(netCheckAmt) : "Enter net check"}</span>`;
+        if (ncHost) {
+          const activeInp = ncHost.querySelector("input");
+          // Keep the field only while the user is still typing in it
+          const editing =
+            activeInp &&
+            document.activeElement === activeInp &&
+            !activeInp.disabled;
+          if (!editing) {
+            ncHost.classList.remove("vdp-saving");
+            ncHost.style.opacity = "";
+            ncHost.style.pointerEvents = "";
+            ncHost.innerHTML = `<span class="vdp-ed" onclick="djEditNetCheck()" title="Click to enter actual net check from finance">${hasNetCheck ? fmt(netCheckAmt) : "Enter net check"}</span>`;
+          }
         }
         const varRow = document.getElementById("djBrkNetCheckVarRow");
         const varEl = document.getElementById("djBrkNetCheckVar");
@@ -45029,6 +45270,7 @@
         const host = document.getElementById("djBrkNetCheck");
         const inp = inpEl || (host && host.querySelector("input"));
         if (inp && inp.dataset.cancel === "1") {
+          if (host) host.innerHTML = "";
           dealRecalc();
           return;
         }
@@ -45045,14 +45287,15 @@
             ? true
             : Number(prev) === Number(next);
         if (same) {
+          if (host) host.innerHTML = "";
           dealRecalc();
           return;
         }
         v.netCheck = next;
-        if (typeof vdpSetSaving === "function") vdpSetSaving(host, true);
-        else if (host) {
+        // Leave edit mode immediately so the blue focus ring can't stick
+        if (host) {
+          host.innerHTML = `<span class="vdp-ed" style="opacity:.55">${next == null ? "—" : fmt(next)}</span>`;
           host.classList.add("vdp-saving");
-          host.style.opacity = "0.55";
         }
         try {
           if (window.AVVehicles && v.id && AVVehicles.persistNetCheck) {
@@ -45072,7 +45315,11 @@
             if (window.AVVehicles) await AVVehicles.loadAllVehicles();
           } catch (_) {}
         } finally {
-          if (typeof vdpSetSaving === "function") vdpSetSaving(host, false);
+          if (host) {
+            host.classList.remove("vdp-saving");
+            host.style.opacity = "";
+            host.style.pointerEvents = "";
+          }
           dealRecalc();
           try {
             if (typeof render === "function") render();
@@ -45605,8 +45852,16 @@
             salesRepId,
             additionalExpenses,
             commissionAmount: commission,
-            commissionRate: pct > 0 ? pct / 100 : undefined,
-            commissionType: djCommMode === "amt" ? "manual" : "percentage",
+            commissionRate:
+              djCommMode === "amt" ? undefined : pct > 0 ? pct / 100 : undefined,
+            commissionType:
+              djCommMode === "amt"
+                ? saleRep &&
+                  (salesReps.find((x) => x.name === saleRep) || {}).commissionType ===
+                    "flat"
+                  ? "flat"
+                  : "manual"
+                : "percentage",
             customerAddress:
               document.getElementById("djCustAddress").value || undefined,
             fees: {
@@ -45790,8 +46045,11 @@
           if (djCommMode === "amt") {
             const ca = parseFloat(g("djCommAmt"));
             if (!isNaN(ca) && ca >= 0) {
+              const repName = g("djRep") || v.rep;
+              const repObj = (salesReps || []).find((x) => x.name === repName);
               patch.commissionAmount = ca;
-              patch.commissionType = "manual";
+              patch.commissionType =
+                repObj && repObj.commissionType === "flat" ? "flat" : "manual";
               v.commissionOverride = ca;
               v.commMode = "amt";
             }
@@ -47300,7 +47558,7 @@
               v.rep === ref &&
               (v.soldDate || "").startsWith(String(today.getFullYear())),
           ).length;
-          basis = `${rec.commissionPct}% of gross \u00b7 ${cars} car${cars === 1 ? "" : "s"} sold this year`;
+          basis = `${typeof repCommissionLabel === "function" ? repCommissionLabel(rec) : rec.commissionPct + "% of gross"} \u00b7 ${cars} car${cars === 1 ? "" : "s"} sold this year`;
         } else {
           rec = staff[ref];
           if (!rec) return;
@@ -47453,8 +47711,10 @@
             role: "Sales Rep",
             payType: "Commission",
             basis: r.base
-              ? `greater of ${fmt(r.base)}/mo base or ${r.commissionPct}%`
-              : `${r.commissionPct}% of gross`,
+              ? `greater of ${fmt(r.base)}/mo base or ${typeof repCommissionLabel === "function" ? repCommissionLabel(r) : r.commissionPct + "%"}`
+              : typeof repCommissionLabel === "function"
+                ? repCommissionLabel(r)
+                : `${r.commissionPct}% of gross`,
             meta: `${cars} car${cars === 1 ? "" : "s"} sold this period`,
             earnings: net,
             comm,
@@ -49285,7 +49545,10 @@
         document.getElementById("rdNet").textContent = fmt(net);
         document.getElementById("rdBase").textContent = fmt(base);
         document.getElementById("rdSalesB").textContent = fmt(salesValue);
-        document.getElementById("rdPct").textContent = rep.commissionPct + "%";
+        document.getElementById("rdPct").textContent =
+          typeof repCommissionLabel === "function"
+            ? repCommissionLabel(rep)
+            : rep.commissionPct + "%";
         document.getElementById("rdCommB").textContent = fmt(commission);
         document.getElementById("rdNetB").textContent = fmt(net);
         {
