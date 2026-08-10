@@ -34973,21 +34973,24 @@
               : Math.round((Number(v.price) || 0) * 1.27)
           : Math.round((Number(v.price) || 0) * 1.27);
         const estimatedSale = baseSale + addOnRevenue;
-        // Option 1: when Net Check is entered, profit = Net Check − (vehicle cost + commission).
-        // Commission still comes from Sold Price / Gross; add-ons are assumed inside the check.
+        const salesTaxCollected = Number(v.customerSalesTax) || 0;
+        const regFeesCollected = Number(v.customerRegFees) || 0;
+        // Net Check − Sales Tax − Reg Fees = amount applied to profit,
+        // then subtract vehicle cost + commission (tax/reg are not profit).
         const hasNetCheck =
           v.netCheck !== null &&
           v.netCheck !== undefined &&
           v.netCheck !== "";
         const netCheckAmt = hasNetCheck ? Number(v.netCheck) || 0 : null;
+        const netCheckAppliedToProfit = hasNetCheck
+          ? Math.max(0, netCheckAmt - salesTaxCollected - regFeesCollected)
+          : null;
         const netProfit = hasNetCheck
-          ? netCheckAmt - totalVehicleCost - commission
+          ? netCheckAppliedToProfit - totalVehicleCost - commission
           : estimatedSale - totalVehicleCost - commission;
         const grossProfit = baseSale - (Number(v.price) || 0);
         const roi =
           totalVehicleCost > 0 ? (netProfit / totalVehicleCost) * 100 : 0;
-        const salesTaxCollected = v.customerSalesTax || 0;
-        const regFeesCollected = v.customerRegFees || 0;
         const totalCollected =
           baseSale + addOnRevenue + salesTaxCollected + regFeesCollected;
         const floored = vehicleFloored(v);
@@ -35020,6 +35023,7 @@
           totalCollected,
           netCheck: hasNetCheck ? netCheckAmt : null,
           hasNetCheck: !!hasNetCheck,
+          netCheckAppliedToProfit,
         };
       }
 
@@ -38461,6 +38465,88 @@
         }
         vdpAfterEdit();
       }
+      function vdpEditNetCheck() {
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v) return;
+        const host = document.getElementById("vdpEd_netCheck");
+        if (!host || host.querySelector("input")) return;
+        const cur =
+          v.netCheck !== null && v.netCheck !== undefined
+            ? Math.round(Number(v.netCheck) || 0)
+            : "";
+        host.innerHTML = `<input class="vdp-edit-input" type="number" step="1" min="0" value="${cur}" placeholder="0"
+    onblur="vdpCommitNetCheck(this.value, this)"
+    onkeydown="if(event.key==='Enter'){this.blur();}else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
+        const inp = host.querySelector("input");
+        if (inp) {
+          inp.focus();
+          inp.select();
+        }
+      }
+      async function vdpCommitNetCheck(raw, inpEl) {
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v) return;
+        const host = document.getElementById("vdpEd_netCheck");
+        const inp = inpEl || (host && host.querySelector("input"));
+        if (inp && inp.dataset.cancel === "1") {
+          renderVehicleDetailPage(currentVdpVin);
+          return;
+        }
+        const trimmed = String(raw == null ? "" : raw).trim();
+        let next = null;
+        if (trimmed !== "") {
+          let n = parseFloat(trimmed);
+          if (!isFinite(n) || n < 0) n = 0;
+          next = Math.round(n * 100) / 100;
+        }
+        const prev = v.netCheck;
+        const same =
+          (prev === null || prev === undefined) && next === null
+            ? true
+            : Number(prev) === Number(next);
+        if (same) {
+          renderVehicleDetailPage(currentVdpVin);
+          return;
+        }
+        v.netCheck = next;
+        if (host) {
+          host.innerHTML = `<span class="vdp-ed" style="opacity:.55">${next == null ? "—" : fmt(next)}</span>`;
+          host.classList.add("vdp-saving");
+        }
+        try {
+          if (window.AVVehicles && v.id && AVVehicles.persistNetCheck) {
+            await vehEditSave(AVVehicles.persistNetCheck(currentVdpVin, next), {
+              loading: "Saving Net Check\u2026",
+              loadingMsg: "Updating vehicle profit from finance remittance",
+              success: next == null ? "Net Check cleared" : "Net Check updated",
+              successTitle: "Saved",
+              error: "Failed to save Net Check",
+              errorTitle: "Save failed",
+            });
+          }
+        } catch (err) {
+          v.netCheck = prev;
+          try {
+            if (window.AVVehicles) await AVVehicles.loadAllVehicles();
+          } catch (_) {}
+        } finally {
+          if (host) {
+            host.classList.remove("vdp-saving");
+            host.style.opacity = "";
+            host.style.pointerEvents = "";
+          }
+          vdpAfterEdit();
+        }
+      }
+      async function vdpClearNetCheck() {
+        const v = vehicles.find((x) => x.vin === currentVdpVin);
+        if (!v) return;
+        if (v.netCheck === null || v.netCheck === undefined) return;
+        await vdpCommitNetCheck("", null);
+      }
+      window.vdpEditNetCheck = vdpEditNetCheck;
+      window.vdpCommitNetCheck = vdpCommitNetCheck;
+      window.vdpClearNetCheck = vdpClearNetCheck;
       async function vdpResetCost(field) {
         const v = vehicles.find((x) => x.vin === currentVdpVin);
         if (!v) return;
@@ -38757,8 +38843,14 @@
       <div class="vdp-row" style="border-top:none;"><span class="vdp-row-label">Vehicle Sale Price</span><span class="vdp-row-value" id="vdpEd_soldPrice" style="color:var(--blue);">${vdpUndoBtn(v, "soldPrice")}<span class="vdp-ed" onclick="vdpEditCost('soldPrice')" title="Click to edit">${r.soldPrice ? fmt(r.soldPrice) : fmt(r.estimatedSale - r.addOnRevenue) + " (est.)"}</span></span></div>
       ${r.addOnRevenue > 0 ? `<div class="vdp-row"><span class="vdp-row-label">Add-On Revenue (${(r.addOnItems || []).length} items)</span><span class="vdp-row-value" style="color:var(--green);">+ ${fmt(r.addOnRevenue)}</span></div>` : ""}
       ${r.addOnRevenue > 0 ? `<div class="vdp-row"><span class="vdp-row-label" style="font-weight:700;">Total Revenue</span><span class="vdp-row-value" style="color:var(--blue);font-size:14px;">${fmt(r.estimatedSale)}</span></div>` : ""}
+      <div class="vdp-row"><span class="vdp-row-label">Total Amount Collected</span><span class="vdp-row-value" style="color:var(--blue);font-weight:700;">${fmt(r.totalCollected)}</span></div>
+      <div class="vdp-row"><span class="vdp-row-label">Net Check <span style="color:var(--muted);font-weight:400;text-transform:none;">(finance remittance)</span></span><span class="vdp-row-value" id="vdpEd_netCheck">${r.hasNetCheck ? `<button class="vdp-reset" onclick="vdpClearNetCheck()" title="Clear net check and use sold-price profit">clear</button>` : ""}<span class="vdp-ed" onclick="vdpEditNetCheck()" title="Click to enter actual net check from finance">${r.hasNetCheck ? fmt(r.netCheck) : "Enter net check"}</span></span></div>
+      ${r.hasNetCheck ? `<div class="vdp-row"><span class="vdp-row-label" style="color:var(--muted);font-weight:500;">− Sales Tax</span><span class="vdp-row-value" style="color:var(--muted);">− ${fmt(r.salesTaxCollected)}</span></div>` : ""}
+      ${r.hasNetCheck ? `<div class="vdp-row"><span class="vdp-row-label" style="color:var(--muted);font-weight:500;">− Registration Fees</span><span class="vdp-row-value" style="color:var(--muted);">− ${fmt(r.regFeesCollected)}</span></div>` : ""}
+      ${r.hasNetCheck ? `<div class="vdp-row"><span class="vdp-row-label" style="font-weight:700;">Amount Applied to Profit</span><span class="vdp-row-value" style="color:var(--blue);font-weight:700;">${fmt(r.netCheckAppliedToProfit)}</span></div>` : ""}
+      ${r.hasNetCheck ? `<div class="vdp-row"><span class="vdp-row-label" style="color:var(--muted);font-weight:500;">vs Collected</span><span class="vdp-row-value" style="color:${r.netCheck - r.totalCollected > 0 ? "var(--green)" : r.netCheck - r.totalCollected < 0 ? "var(--red)" : "var(--muted)"};">${fmtSigned(r.netCheck - r.totalCollected)}</span></div>` : ""}
       <div class="vdp-row" style="padding-top:10px;border-top:1px solid rgba(255,255,255,0.08);">
-        <span class="vdp-row-label" style="font-weight:800;color:var(--text);font-size:14px;">Net Profit</span>
+        <span class="vdp-row-label" style="font-weight:800;color:var(--text);font-size:14px;">Net Profit${r.hasNetCheck ? ' <span style="color:var(--muted);font-weight:400;font-size:11px;">(from net check)</span>' : ""}</span>
         <span class="vdp-row-value" style="font-size:18px;color:${profitColor};">${fmtSigned(r.netProfit)}</span>
       </div>
     </div>
@@ -44834,9 +44926,7 @@
     <div class="dj-brk-label" style="margin-top:16px;">Collected for State <span style="text-transform:none;font-weight:400;">(pass-through)</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Sales Tax</span><span class="vdp-row-value" id="djBrkTax" style="color:var(--muted);">\u2014</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Registration Fees</span><span class="vdp-row-value" id="djBrkReg" style="color:var(--muted);">\u2014</span></div>
-    <div class="vdp-row" style="border-top:2px solid var(--border);"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Total Amount Collected</span><span class="vdp-row-value" id="djBrkCollected" style="font-weight:800;color:var(--blue);">\u2014</span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Net Check <span style="color:var(--muted);font-weight:400;text-transform:none;">(finance remittance)</span></span><span class="vdp-row-value" id="djBrkNetCheck">\u2014</span></div>
-    <div class="vdp-row" id="djBrkNetCheckVarRow" style="display:none;"><span class="vdp-row-label" style="color:var(--muted);font-weight:500;">vs Collected</span><span class="vdp-row-value" id="djBrkNetCheckVar" style="color:var(--muted);">\u2014</span></div>`;
+    <div class="vdp-row" style="border-top:2px solid var(--border);"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Total Amount Collected</span><span class="vdp-row-value" id="djBrkCollected" style="font-weight:800;color:var(--blue);">\u2014</span></div>`;
       }
       function djEditCost(field) {
         const v = vehicles.find((x) => x.vin === currentDealVin);
@@ -45112,9 +45202,12 @@
           v.netCheck !== undefined &&
           v.netCheck !== "";
         const netCheckAmt = hasNetCheck ? Number(v.netCheck) || 0 : null;
-        // Option 1: Net Check − Total Cost (commission subtracted from net check)
+        // Net Check − Sales Tax − Reg Fees = amount applied to profit
+        const netCheckApplied = hasNetCheck
+          ? Math.max(0, netCheckAmt - stateTax - regFee)
+          : null;
         const netVehicle = hasNetCheck
-          ? netCheckAmt - totalCost
+          ? netCheckApplied - totalCost
           : soldPrice > 0
             ? soldPrice - totalCost
             : 0;
@@ -45212,119 +45305,6 @@
             ? fmt(collected)
             : "\u2014",
         );
-        const ncHost = document.getElementById("djBrkNetCheck");
-        if (ncHost) {
-          const activeInp = ncHost.querySelector("input");
-          // Keep the field only while the user is still typing in it
-          const editing =
-            activeInp &&
-            document.activeElement === activeInp &&
-            !activeInp.disabled;
-          if (!editing) {
-            ncHost.classList.remove("vdp-saving");
-            ncHost.style.opacity = "";
-            ncHost.style.pointerEvents = "";
-            ncHost.innerHTML = `<span class="vdp-ed" onclick="djEditNetCheck()" title="Click to enter actual net check from finance">${hasNetCheck ? fmt(netCheckAmt) : "Enter net check"}</span>`;
-          }
-        }
-        const varRow = document.getElementById("djBrkNetCheckVarRow");
-        const varEl = document.getElementById("djBrkNetCheckVar");
-        if (varRow && varEl) {
-          if (hasNetCheck && (soldPrice > 0 || collected > 0)) {
-            const diff = netCheckAmt - collected;
-            varRow.style.display = "";
-            varEl.textContent =
-              (diff >= 0 ? "+" : "") + fmtSigned(diff).replace(/^\+?/, diff >= 0 ? "+" : "");
-            // fmtSigned already has minus for negative; simplify:
-            varEl.textContent = fmtSigned(diff);
-            varEl.style.color =
-              diff > 0 ? "var(--green)" : diff < 0 ? "var(--red)" : "var(--muted)";
-          } else {
-            varRow.style.display = "none";
-          }
-        }
-      }
-
-      function djEditNetCheck() {
-        const v = vehicles.find((x) => x.vin === currentDealVin);
-        if (!v) return;
-        const host = document.getElementById("djBrkNetCheck");
-        if (!host || host.querySelector("input")) return;
-        const cur =
-          v.netCheck !== null && v.netCheck !== undefined
-            ? Math.round(Number(v.netCheck) || 0)
-            : "";
-        host.innerHTML = `<input class="vdp-edit-input" type="number" step="1" min="0" value="${cur}" placeholder="0"
-    onblur="djCommitNetCheck(this.value, this)"
-    onkeydown="if(event.key==='Enter'){this.blur();}else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
-        const inp = host.querySelector("input");
-        if (inp) {
-          inp.focus();
-          inp.select();
-        }
-      }
-
-      async function djCommitNetCheck(raw, inpEl) {
-        const v = vehicles.find((x) => x.vin === currentDealVin);
-        if (!v) return;
-        const host = document.getElementById("djBrkNetCheck");
-        const inp = inpEl || (host && host.querySelector("input"));
-        if (inp && inp.dataset.cancel === "1") {
-          if (host) host.innerHTML = "";
-          dealRecalc();
-          return;
-        }
-        const trimmed = String(raw == null ? "" : raw).trim();
-        let next = null;
-        if (trimmed !== "") {
-          let n = parseFloat(trimmed);
-          if (!isFinite(n) || n < 0) n = 0;
-          next = Math.round(n * 100) / 100;
-        }
-        const prev = v.netCheck;
-        const same =
-          (prev === null || prev === undefined) && next === null
-            ? true
-            : Number(prev) === Number(next);
-        if (same) {
-          if (host) host.innerHTML = "";
-          dealRecalc();
-          return;
-        }
-        v.netCheck = next;
-        // Leave edit mode immediately so the blue focus ring can't stick
-        if (host) {
-          host.innerHTML = `<span class="vdp-ed" style="opacity:.55">${next == null ? "—" : fmt(next)}</span>`;
-          host.classList.add("vdp-saving");
-        }
-        try {
-          if (window.AVVehicles && v.id && AVVehicles.persistNetCheck) {
-            await vehEditSave(AVVehicles.persistNetCheck(currentDealVin, next), {
-              loading: "Saving Net Check\u2026",
-              loadingMsg: "Updating deal profit from finance remittance",
-              success: next == null ? "Net Check cleared" : "Net Check updated",
-              successTitle: "Saved",
-              error: "Failed to save Net Check",
-              errorTitle: "Save failed",
-            });
-            djShowAutoSaved();
-          }
-        } catch (err) {
-          v.netCheck = prev;
-          try {
-            if (window.AVVehicles) await AVVehicles.loadAllVehicles();
-          } catch (_) {}
-        } finally {
-          if (host) {
-            host.classList.remove("vdp-saving");
-            host.style.opacity = "";
-            host.style.pointerEvents = "";
-          }
-          dealRecalc();
-          try {
-            if (typeof render === "function") render();
-          } catch (_) {}
-        }
       }
 
       function djEditColl(kind) {
@@ -45436,8 +45416,6 @@
       }
       window.djEditColl = djEditColl;
       window.djCommitColl = djCommitColl;
-      window.djEditNetCheck = djEditNetCheck;
-      window.djCommitNetCheck = djCommitNetCheck;
 
       function renderDealAddOns(vin) {
         const v = vehicles.find((x) => x.vin === vin);
