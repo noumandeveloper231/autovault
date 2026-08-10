@@ -217,6 +217,7 @@
       soldDate,
       soldPrice: api.soldPrice != null ? num(api.soldPrice, null) : null,
       ros: deal ? (deal.rosNumber || jacket?.rosNumber || "") : "",
+      jacketNumber: jacket ? (jacket.jacketNumber || "") : "",
       notes: deal ? (deal.notes || jacket?.notes || api.notes || "") : (api.notes || ""),
       addOns: jacket ? num(jacket.additionalExpenses, 0) : 0,
       addOnItems: (jacket && jacket.fees && Array.isArray(jacket.fees.addOnItems))

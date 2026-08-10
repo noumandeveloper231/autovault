@@ -243,62 +243,183 @@
     }
   }
 
+  function setModuleSearch(inputId, query) {
+    var input = document.getElementById(inputId);
+    if (!input) return null;
+    input.value = query || "";
+    try {
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+    } catch (_) {
+      if (document.createEvent) {
+        var ev = document.createEvent("Event");
+        ev.initEvent("input", true, true);
+        input.dispatchEvent(ev);
+      }
+    }
+    return input;
+  }
+
+  function pulseFilteredRows(scopeSel, focusKey) {
+    var root = document.querySelector(scopeSel);
+    if (!root) return;
+    var rows = root.querySelectorAll("tr[data-gs-key]");
+    if (!rows.length) {
+      rows = root.querySelectorAll(
+        "tbody tr:not(.veh-load-row):not(.page-sk-row)",
+      );
+    }
+    if (!rows.length) return;
+
+    var focusEl = null;
+    if (focusKey) {
+      try {
+        focusEl = root.querySelector(
+          'tr[data-gs-key="' +
+            String(focusKey).replace(/\\/g, "\\\\").replace(/"/g, '\\"') +
+            '"]',
+        );
+      } catch (_) {
+        focusEl = null;
+      }
+    }
+
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].classList.remove("gs-pulse");
+      void rows[i].offsetWidth;
+      rows[i].classList.add("gs-pulse");
+    }
+
+    var scrollTarget = focusEl || rows[0];
+    if (scrollTarget && scrollTarget.scrollIntoView) {
+      try {
+        scrollTarget.scrollIntoView({ block: "center", behavior: "smooth" });
+      } catch (_) {
+        scrollTarget.scrollIntoView(true);
+      }
+    }
+
+    setTimeout(function () {
+      for (var j = 0; j < rows.length; j++) {
+        rows[j].classList.remove("gs-pulse");
+      }
+    }, 1700);
+  }
+
+  function goFiltered(opts) {
+    var query = (opts.query != null ? opts.query : lastQuery || "").trim();
+    navToPage(opts.pageId, opts.navSel);
+    setTimeout(function () {
+      setModuleSearch(opts.searchId, query);
+      if (typeof opts.render === "function") {
+        try {
+          opts.render();
+        } catch (_) {}
+      } else if (opts.renderName && typeof global[opts.renderName] === "function") {
+        try {
+          global[opts.renderName]();
+        } catch (_) {}
+      }
+      function tryPulse(attempt) {
+        var root = document.querySelector(opts.scopeSel);
+        var ready =
+          root &&
+          root.querySelectorAll("tr[data-gs-key]").length > 0 &&
+          !root.querySelector(".page-sk-row, .veh-load-row, .sk-bar");
+        if (ready || attempt >= 10) {
+          pulseFilteredRows(opts.scopeSel, opts.focusKey);
+          return;
+        }
+        if (typeof opts.render === "function") {
+          try {
+            opts.render();
+          } catch (_) {}
+        } else if (
+          opts.renderName &&
+          typeof global[opts.renderName] === "function"
+        ) {
+          try {
+            global[opts.renderName]();
+          } catch (_) {}
+        }
+        setTimeout(function () {
+          tryPulse(attempt + 1);
+        }, 180);
+      }
+      setTimeout(function () {
+        tryPulse(0);
+      }, 60);
+    }, 90);
+  }
+
   async function openResult(item) {
     if (!item) return;
     setOpen(false);
     if (inputEl) inputEl.blur();
+    var q = (lastQuery || (inputEl && inputEl.value) || "").trim();
 
     if (item.type === "vehicle") {
-      var vin = await ensureVehicleLocal(item);
-      if (item.hasDealJacket || item.status === "sold" || item.status === "loss") {
-        if (typeof global.openDealJacket === "function") {
-          global.openDealJacket(vin, "inventory");
-          return;
-        }
-      }
-      if (typeof global.showVehicleDetail === "function") {
-        global.showVehicleDetail(vin);
-        return;
-      }
-      if (typeof global.openDealJacket === "function") {
-        global.openDealJacket(vin, "inventory");
-        return;
-      }
-      navToPage("vehicles");
+      await ensureVehicleLocal(item);
+      goFiltered({
+        pageId: "vehicles",
+        searchId: "tableSearch",
+        query: q,
+        renderName: "render",
+        scopeSel: "#page-vehicles",
+        focusKey: item.vin ? "vehicle:" + item.vin : null,
+      });
       return;
     }
 
     if (item.type === "jacket") {
-      var jVin = item.vin || (await ensureVehicleLocal(item));
-      if (jVin && typeof global.openDealJacket === "function") {
-        global.openDealJacket(jVin, "sold");
-        return;
-      }
-      navToPage("deal-jackets", '[data-nav="deal-jackets"]');
+      if (item.vin) await ensureVehicleLocal(item);
+      goFiltered({
+        pageId: "deal-jackets",
+        navSel: '[data-nav="deal-jackets"]',
+        searchId: "djlSearch",
+        query: q,
+        renderName: "renderDealJacketsList",
+        scopeSel: "#page-deal-jackets",
+        focusKey: item.vin ? "jacket:" + item.vin : null,
+      });
       return;
     }
 
     if (item.type === "customer") {
       if (item.status === "lead") {
-        navToPage("customer-leads");
-        setTimeout(function () {
-          if (typeof global.openCustLeadModal === "function") {
-            global.openCustLeadModal(item.id);
-          }
-        }, 60);
+        goFiltered({
+          pageId: "customer-leads",
+          searchId: "custLeadSearch",
+          query: q,
+          renderName: "renderCustomerLeads",
+          scopeSel: "#page-customer-leads",
+          focusKey: item.id ? "lead:" + item.id : null,
+        });
         return;
       }
-      navToPage("customers");
+      goFiltered({
+        pageId: "customers",
+        searchId: "custSearch",
+        query: q,
+        renderName: "renderCustomersPage",
+        scopeSel: "#page-customers",
+        focusKey: item.id
+          ? "customer:" + item.id
+          : item.title
+            ? "customer-name:" + String(item.title).toLowerCase()
+            : null,
+      });
       return;
     }
 
     if (item.type === "expense") {
-      navToPage("expenses");
-      setTimeout(function () {
-        if (typeof global.openExpenseModal === "function") {
-          global.openExpenseModal(item.id);
-        }
-      }, 60);
+      goFiltered({
+        pageId: "expenses",
+        searchId: "expSearch",
+        query: q,
+        renderName: "renderExpenses",
+        scopeSel: "#page-expenses",
+        focusKey: item.id ? "expense:" + item.id : null,
+      });
     }
   }
 

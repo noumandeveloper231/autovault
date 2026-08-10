@@ -451,6 +451,33 @@
         }
       }
 
+      @keyframes gsPulseHighlight {
+        0% {
+          background-color: transparent;
+          box-shadow: inset 0 0 0 0 transparent;
+        }
+        20% {
+          background-color: rgba(58, 160, 255, 0.28);
+          box-shadow: inset 3px 0 0 0 var(--blue);
+        }
+        45% {
+          background-color: rgba(58, 160, 255, 0.08);
+        }
+        70% {
+          background-color: rgba(58, 160, 255, 0.22);
+          box-shadow: inset 3px 0 0 0 var(--blue);
+        }
+        100% {
+          background-color: transparent;
+          box-shadow: inset 0 0 0 0 transparent;
+        }
+      }
+
+      tr.gs-pulse,
+      .gs-pulse {
+        animation: gsPulseHighlight 1.5s ease-in-out 1;
+      }
+
       .quick-actions {
         display: flex;
         gap: 8px;
@@ -16297,13 +16324,33 @@
               <h2>Customer Directory</h2>
               <div class="section-sub" id="custRowCount">— customers</div>
             </div>
-            <button
-              class="btn-primary"
-              style="box-shadow: none"
-              onclick="openAddCustomerModal()"
-            >
-              + Add Customer
-            </button>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+              <input
+                type="search"
+                id="custSearch"
+                class="module-search-input"
+                placeholder="Search customers, phone, email, VIN…"
+                autocomplete="off"
+                oninput="renderCustomersPage()"
+                style="
+                  background: var(--panel);
+                  border: 1px solid var(--border);
+                  color: var(--text);
+                  border-radius: 8px;
+                  padding: 9px 12px;
+                  font-size: 12.5px;
+                  min-width: 220px;
+                  outline: none;
+                "
+              />
+              <button
+                class="btn-primary"
+                style="box-shadow: none"
+                onclick="openAddCustomerModal()"
+              >
+                + Add Customer
+              </button>
+            </div>
           </div>
           <div class="table-card">
             <div class="table-scroll">
@@ -16355,9 +16402,29 @@
             </button>
           </div>
 
-          <div class="section-heading">
-            <h2>Leads</h2>
-            <div class="section-sub" id="custLeadCount">&mdash; leads</div>
+          <div class="section-heading" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div>
+              <h2>Leads</h2>
+              <div class="section-sub" id="custLeadCount">&mdash; leads</div>
+            </div>
+            <input
+              type="search"
+              id="custLeadSearch"
+              class="module-search-input"
+              placeholder="Search leads by name, phone, email…"
+              autocomplete="off"
+              oninput="renderCustomerLeads()"
+              style="
+                background: var(--panel);
+                border: 1px solid var(--border);
+                color: var(--text);
+                border-radius: 8px;
+                padding: 9px 12px;
+                font-size: 12.5px;
+                min-width: 220px;
+                outline: none;
+              "
+            />
           </div>
           <div id="custLeadBody"></div>
         </div>
@@ -21906,7 +21973,25 @@
                 <span class="dash-inline-spin">Loading deals…</span>
               </div>
             </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap">
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
+              <input
+                type="search"
+                id="djlSearch"
+                class="module-search-input"
+                placeholder="Search jackets, VIN, customer, ROS…"
+                autocomplete="off"
+                oninput="renderDealJacketsList()"
+                style="
+                  background: var(--panel);
+                  border: 1px solid var(--border);
+                  color: var(--text);
+                  border-radius: 8px;
+                  padding: 9px 12px;
+                  font-size: 12.5px;
+                  min-width: 220px;
+                  outline: none;
+                "
+              />
               <button
                 class="grid-toggle-btn"
                 id="djTitlesBtn"
@@ -29312,7 +29397,19 @@
         const host = document.getElementById("custLeadBody");
         if (!host) return;
         const loading = !!(customersLoading && window.AVCustomers);
+        const q = (
+          (document.getElementById("custLeadSearch") || {}).value || ""
+        )
+          .trim()
+          .toLowerCase();
+        const filtered = q
+          ? customerLeads.filter(function (l) {
+              const text = `${l.name || ""} ${l.phone || ""} ${l.email || ""} ${l.notes || ""}`.toLowerCase();
+              return text.includes(q);
+            })
+          : customerLeads.slice();
         const n = customerLeads.length;
+        const shown = filtered.length;
         const sub = document.getElementById("custLeadSub");
         if (sub)
           sub.textContent = loading
@@ -29326,7 +29423,9 @@
         if (cnt)
           cnt.textContent = loading
             ? "Loading\u2026"
-            : n + " lead" + (n === 1 ? "" : "s");
+            : q
+              ? "Showing " + shown + " of " + n + " lead" + (n === 1 ? "" : "s")
+              : n + " lead" + (n === 1 ? "" : "s");
         if (loading) {
           host.innerHTML =
             '<div class="table-card"><div class="table-scroll"><table class="dash-sold-table lead-table"><thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Notes</th><th>Added</th></tr></thead><tbody>' +
@@ -29339,16 +29438,25 @@
             '<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No leads yet. Click <b>+ Add Lead</b> to log a potential customer\u2019s name, phone, and email.</div>';
           return;
         }
+        if (!shown) {
+          host.innerHTML =
+            '<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No leads match &ldquo;' +
+            msgEsc(q) +
+            "&rdquo;.</div>";
+          return;
+        }
         const thead =
           "<thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Notes</th><th>Added</th></tr></thead>";
         host.innerHTML =
           '<div class="table-card"><div class="table-scroll"><table class="dash-sold-table lead-table">' +
           thead +
           "<tbody>" +
-          customerLeads
+          filtered
             .map(function (l) {
               return (
-                '<tr style="cursor:pointer;" onclick="openCustLeadModal(\'' +
+                '<tr data-gs-key="lead:' +
+                l.id +
+                '" style="cursor:pointer;" onclick="openCustLeadModal(\'' +
                 l.id +
                 "')\">" +
                 '<td style="font-weight:700;color:var(--text);">' +
@@ -36149,7 +36257,7 @@
 
         let filtered = rows.filter((r) => {
           const text =
-            `${r.year} ${r.make} ${r.model} ${r.vin} ${r.rep}`.toLowerCase();
+            `${r.year} ${r.make} ${r.model} ${r.vin} ${r.rep} ${r.customer || ""} ${r.stockNumber || ""} ${r.ros || ""}`.toLowerCase();
           // "View Current Inventory Numbers" — show ONLY vehicles still in stock.
           if (window.__invCurrentOnly) {
             if (r.sold || vehicleIsSold(r)) return false;
@@ -36231,7 +36339,7 @@
             tableBody.innerHTML = vehRender(
               filtered,
               (r) => `
-    <tr>
+    <tr data-gs-key="vehicle:${r.vin}">
       <td><span class="tbl-date-ed" onclick="tblEditDate(event, this, '${r.vin}')" title="Click to edit purchase date">${fmtDate(r.date)}</span></td>
       <td class="veh-cell" style="cursor:pointer;" onclick="showVehicleDetail('${r.vin}')">
         <div class="veh-name" style="color:var(--blue);text-decoration:none;">${r.year} ${r.make} ${r.model}</div>
@@ -40561,7 +40669,7 @@
               ? e.notes
               : '<span style="opacity:.5;">—</span>';
 
-            return `<tr>
+            return `<tr data-gs-key="expense:${e.id}">
       <td class="veh-cell exp-name-cell" style="cursor:pointer;" onclick="showExpenseDetail('${e.id}')"><div class="exp-name">${e.name}${e._carriedForward ? ' <span style="font-size:10px;color:var(--muted);font-weight:500;">(carried)</span>' : ""}</div><div class="exp-sub">View details &rarr;</div></td>
       <td><span class="cat-chip" style="background:${m.bg};color:${m.color};"><span class="cat-dot" style="background:${m.color};"></span>${e.category}</span></td>
       <td style="color:var(--text);font-weight:700;">${fmt(e.amount)}</td>
@@ -46049,13 +46157,26 @@
         try {
           renderDjTitleBoxes();
         } catch (e) {}
-        const rows = vehicles
+        const rowsAll = vehicles
           .map(computeRow)
           .filter(
             (r) =>
               r.sold &&
               (typeof inPnlPeriod !== "function" || inPnlPeriod(r.soldDate)),
           );
+        const djlQ = (
+          (document.getElementById("djlSearch") || {}).value || ""
+        )
+          .trim()
+          .toLowerCase();
+        const rows = djlQ
+          ? rowsAll.filter((r) => {
+              const src = vehicles.find((v) => v.vin === r.vin);
+              const text =
+                `${r.year} ${r.make} ${r.model} ${r.vin} ${r.customer || ""} ${r.ros || ""} ${r.rep || ""} ${r.jacketNumber || ""} ${(src && src.jacketNumber) || ""} ${(src && src.ros) || ""}`.toLowerCase();
+              return text.includes(djlQ);
+            })
+          : rowsAll;
         const withJacket = rows.filter((r) => {
           const src = vehicles.find((v) => v.vin === r.vin);
           return !!(src && (src.dealSaved || src.hasDealJacket || src.dealJacket));
@@ -46064,17 +46185,18 @@
           const src = vehicles.find((v) => v.vin === r.vin);
           return !(src && (src.dealSaved || src.hasDealJacket || src.dealJacket));
         });
-        document.getElementById("djlSub").textContent =
-          `\u2014 ${withJacket.length} jackets · ${needsJacket.length} pending`;
-        const soldValue = rows.reduce(
+        document.getElementById("djlSub").textContent = djlQ
+          ? `\u2014 showing ${rows.length} of ${rowsAll.length} deals`
+          : `\u2014 ${withJacket.length} jackets · ${needsJacket.length} pending`;
+        const soldValue = rowsAll.reduce(
           (s, r) => s + (r.soldPrice || r.estimatedSale || 0),
           0,
         );
-        const net = rows.reduce((s, r) => s + r.netProfit, 0);
-        const avgRoi = rows.length
-          ? rows.reduce((s, r) => s + r.roi, 0) / rows.length
+        const net = rowsAll.reduce((s, r) => s + r.netProfit, 0);
+        const avgRoi = rowsAll.length
+          ? rowsAll.reduce((s, r) => s + r.roi, 0) / rowsAll.length
           : 0;
-        document.getElementById("djlCount").textContent = rows.length;
+        document.getElementById("djlCount").textContent = rowsAll.length;
         document.getElementById("djlSoldValue").textContent = fmt(soldValue);
         document.getElementById("djlNet").textContent = fmtSigned(net);
         document.getElementById("djlRoi").textContent =
@@ -46092,7 +46214,7 @@
           const jacketCell = hasJacket
             ? `<span style="color:var(--green);font-weight:800;">Yes</span>`
             : `<span style="color:var(--orange);font-weight:800;">No</span> <button class="print-btn" style="padding:3px 8px;font-size:11px;margin-left:6px;" onclick="event.stopPropagation();openDealJacket('${r.vin}','sold')">Create</button>`;
-          return `<tr style="cursor:pointer;" onclick="openDealJacket('${r.vin}','sold')">
+          return `<tr data-gs-key="jacket:${r.vin}" style="cursor:pointer;" onclick="openDealJacket('${r.vin}','sold')">
       <td><div class="exp-name">${r.year} ${r.make} ${r.model}</div><div class="exp-sub" style="opacity:.6;">${r.vin}</div></td>
       <td>${r.customer || "\u2014"}</td>
       <td>${r.ros || "\u2014"}</td>
@@ -46754,18 +46876,31 @@
 
       function renderCustomersPage() {
         const loading = !!(customersLoading && window.AVCustomers);
-        const rows = window.AVCustomers
+        const allRows = window.AVCustomers
           ? AVCustomers.soldBuyerRows()
           : (vehicles || [])
               .filter((v) => v.sold && v.customer && String(v.customer).trim())
               .map((v) => computeRow(v));
-        const total = rows.length;
-        const totalValue = rows.reduce(
+        const q = (
+          (document.getElementById("custSearch") || {}).value || ""
+        )
+          .trim()
+          .toLowerCase();
+        const rows = q
+          ? allRows.filter((r) => {
+              const text =
+                `${r.customer || ""} ${r.customerPhone || ""} ${r.customerEmail || ""} ${r.customerAddress || ""} ${r.year || ""} ${r.make || ""} ${r.model || ""} ${r.vin || ""}`.toLowerCase();
+              return text.includes(q);
+            })
+          : allRows;
+        const total = allRows.length;
+        const shown = rows.length;
+        const totalValue = allRows.reduce(
           (s, r) => s + (Number(r.soldPrice) || 0),
           0,
         );
         const avg = total ? totalValue / total : 0;
-        const withContact = rows.filter(
+        const withContact = allRows.filter(
           (r) => r.customerPhone || r.customerEmail,
         ).length;
 
@@ -46802,12 +46937,19 @@
         if (rowCountEl)
           rowCountEl.textContent = loading
             ? "Loading\u2026"
-            : total
-              ? total +
+            : q
+              ? "Showing " +
+                shown +
+                " of " +
+                total +
                 " customer" +
-                (total === 1 ? "" : "s") +
-                " \u2014 newest first"
-              : "No customers yet";
+                (total === 1 ? "" : "s")
+              : total
+                ? total +
+                  " customer" +
+                  (total === 1 ? "" : "s") +
+                  " \u2014 newest first"
+                : "No customers yet";
 
         const body = document.getElementById("custBody");
         if (!body) return;
@@ -46836,6 +46978,11 @@
             '<tr><td colspan="7"><div style="padding:40px;text-align:center;color:var(--muted);font-size:13px;">No paid customers yet. Mark a vehicle sold in Deal Jacket with customer details \u2014 they will appear here.</div></td></tr>';
           return;
         }
+        if (!shown) {
+          body.innerHTML =
+            '<tr><td colspan="7"><div style="padding:40px;text-align:center;color:var(--muted);font-size:13px;">No customers match this search.</div></td></tr>';
+          return;
+        }
         body.innerHTML = rows
           .map((r) => {
             const name = r.customer || "\u2014";
@@ -46850,13 +46997,20 @@
                 : r.soldDate
               : dash;
             const price = r.soldPrice ? fmt(r.soldPrice) : dash;
+            const gsKey = r.customerId
+              ? "customer:" + r.customerId
+              : r.vin
+                ? "customer-vin:" + r.vin
+                : "customer-name:" + String(name).toLowerCase();
             const click = r.vin
               ? "onclick=\"openDealJacket('" +
                 r.vin +
                 "','customers')\" style=\"cursor:pointer;\""
               : "";
             return (
-              "<tr " +
+              "<tr data-gs-key=\"" +
+              gsKey.replace(/"/g, "") +
+              "\" " +
               click +
               ">" +
               '<td style="font-weight:700;">' +
