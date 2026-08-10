@@ -406,6 +406,8 @@
 
     // Dashboard & CRM
     dashboardSummary: () => request("/api/v1/dashboard/summary"),
+    globalSearch: (qs = "", opts = {}) =>
+      request(`/api/v1/search${qs}`, opts),
     listVehicles: (qs = "", opts = {}) => request(`/api/v1/vehicles${qs}`, opts),
     vehicleInventoryStats: (opts = {}) =>
       request("/api/v1/vehicles/stats", opts),

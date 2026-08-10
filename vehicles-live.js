@@ -222,6 +222,19 @@
       addOnItems: (jacket && jacket.fees && Array.isArray(jacket.fees.addOnItems))
         ? jacket.fees.addOnItems
         : (api.fees && Array.isArray(api.fees.addOnItems) ? api.fees.addOnItems : []),
+      /* Actual finance-company remittance; drives profit when set (incl. $0). */
+      netCheck: (function () {
+        const fromJacket =
+          jacket && jacket.fees && jacket.fees.netCheck != null
+            ? jacket.fees.netCheck
+            : null;
+        const fromVehicle =
+          api.fees && api.fees.netCheck != null ? api.fees.netCheck : null;
+        const raw = fromJacket != null ? fromJacket : fromVehicle;
+        if (raw === null || raw === undefined || raw === "") return null;
+        const n = Number(raw);
+        return Number.isFinite(n) ? n : null;
+      })(),
       commissionOverride: deal ? num(deal.commissionAmount, null) : null,
       commissionPct: deal && deal.commissionRate ? Math.round(deal.commissionRate * 1000) / 10 : null,
       commMode: deal && deal.commissionType ? (deal.commissionType === 'manual' ? 'amt' : 'pct') : null,
@@ -485,6 +498,9 @@
     ui.notes = v.notes != null ? v.notes : ui.notes;
     ui.addOns = v.addOns != null ? v.addOns : ui.addOns;
     ui.addOnItems = v.addOnItems != null ? v.addOnItems : ui.addOnItems;
+    if (v.netCheck !== null && v.netCheck !== undefined) {
+      ui.netCheck = Number(v.netCheck);
+    }
     ui.commMode = v.commMode || ui.commMode;
     ui.documents = v.documents || ui.documents;
     ui.djDocs = v.djDocs || [];
@@ -550,13 +566,7 @@
     else if (field === "fees") patch.auctionFees = value;
     else if (field === "flooring" || field === "flooringOverride") {
       const v = findUiVehicle(vin);
-      const prevFees =
-        (v && v._raw && v._raw.fees && typeof v._raw.fees === "object"
-          ? { ...v._raw.fees }
-          : {}) || {};
-      if (Array.isArray(v && v.addOnItems) && !Array.isArray(prevFees.addOnItems)) {
-        prevFees.addOnItems = v.addOnItems;
-      }
+      const prevFees = mergeFees(v, {});
       if (value === null || value === undefined) {
         // Reset to auto-calculated flooring
         patch.flooringFees = 0;
@@ -607,22 +617,70 @@
     return persistPatch(vin, patch);
   }
 
+  function mergeFees(v, extra) {
+    const vehicleFees =
+      v && v._raw && v._raw.fees && typeof v._raw.fees === "object"
+        ? { ...v._raw.fees }
+        : {};
+    const jacket =
+      v && v._raw && Array.isArray(v._raw.dealJackets) && v._raw.dealJackets[0];
+    const jacketFees =
+      jacket && jacket.fees && typeof jacket.fees === "object"
+        ? { ...jacket.fees }
+        : {};
+    const merged = { ...vehicleFees, ...jacketFees, ...(extra || {}) };
+    if (Array.isArray(v && v.addOnItems)) merged.addOnItems = v.addOnItems;
+    else if (!Array.isArray(merged.addOnItems)) merged.addOnItems = [];
+    if (v && v.netCheck !== null && v.netCheck !== undefined && merged.netCheck == null) {
+      merged.netCheck = Number(v.netCheck);
+    }
+    return merged;
+  }
+
+  async function persistNetCheck(vin, value) {
+    const v = findUiVehicle(vin);
+    if (!v || !v.id) throw new Error("Vehicle not found");
+    const hasValue = value !== null && value !== undefined && value !== "";
+    const amount = hasValue ? Number(value) : null;
+    if (hasValue && !Number.isFinite(amount)) {
+      throw new Error("Invalid net check amount");
+    }
+    v.netCheck = hasValue ? amount : null;
+    const fees = mergeFees(v, {
+      netCheck: hasValue ? amount : null,
+    });
+    if (!hasValue) delete fees.netCheck;
+
+    const jacket =
+      v._raw && Array.isArray(v._raw.dealJackets) && v._raw.dealJackets[0];
+    if (jacket && jacket.id) {
+      await AVApi.updateDealJacket(jacket.id, { fees });
+      jacket.fees = fees;
+    } else {
+      await AVApi.updateVehicle(v.id, { fees });
+      if (v._raw) v._raw.fees = fees;
+    }
+    refreshUi();
+    return v;
+  }
+
   async function persistAddOnItems(vin) {
     const v = findUiVehicle(vin);
     if (!v || !v.id) return;
     const items = v.addOnItems || [];
     const total = items.reduce(function(s, it) { return s + (parseFloat(it.price) || 0); }, 0);
+    const fees = mergeFees(v, { addOnItems: items });
     var jacket = v._raw && v._raw.dealJackets && v._raw.dealJackets[0];
     if (jacket && jacket.id) {
       await AVApi.updateDealJacket(jacket.id, {
-        fees: { addOnItems: items },
+        fees,
         additionalExpenses: total,
       });
-      jacket.fees = { addOnItems: items };
+      jacket.fees = fees;
       jacket.additionalExpenses = total;
     } else {
       await AVApi.updateVehicle(v.id, {
-        fees: { addOnItems: items },
+        fees,
         additionalExpenses: total,
       });
     }
@@ -820,6 +878,7 @@
     createFromForm,
     persistPatch,
     persistMoneyField,
+    persistNetCheck,
     persistAddOnItems,
     persistStatus,
     markSoldViaForm,
