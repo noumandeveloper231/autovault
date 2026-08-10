@@ -191,9 +191,10 @@
   .atab:hover{color:var(--muted)}
   .atab.on{color:var(--accent);background:var(--accent-soft)}
   .atab-prog{position:absolute;left:12px;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));border-radius:2px}
-  .stage{position:relative;min-height:352px;padding:14px}
-  .slide{position:absolute;inset:14px;opacity:0;transform:translateY(12px) scale(.99);pointer-events:none;transition:opacity .5s ease,transform .5s ease}
-  .slide.on{opacity:1;transform:none;pointer-events:auto}
+  .stage{position:relative;min-height:352px;padding:14px;overflow:hidden}
+  /* Inactive slides overlay; the .on slide is in-flow so tall panels (Sales Tax, etc.) don't spill onto #appCaption */
+  .slide{position:absolute;top:14px;left:14px;right:14px;opacity:0;transform:translateY(12px) scale(.99);pointer-events:none;visibility:hidden;transition:opacity .5s ease,transform .5s ease}
+  .slide.on{position:relative;top:auto;left:auto;right:auto;opacity:1;transform:none;pointer-events:auto;visibility:visible}
   .s-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px;gap:12px}
   .s-head .st{font-family:var(--ff-display);font-size:14px;font-weight:600}
   .s-head .ss{font-size:10.5px;color:var(--faint);margin-top:2px}
@@ -720,8 +721,8 @@
     .app-side{flex-direction:row;justify-content:center;gap:14px;border-right:0;border-bottom:1px solid var(--line-soft);padding:10px}
     .app-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
     .app-tabs::-webkit-scrollbar{display:none}
-    .stage{min-height:auto;padding:12px}
-    .slide{position:relative;inset:auto;display:none;opacity:1;transform:none}
+    .stage{min-height:auto;padding:12px;overflow:visible}
+    .slide{position:relative;top:auto;left:auto;right:auto;display:none;opacity:1;transform:none;visibility:visible}
     .slide.on{display:block}
     .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -12px;padding:0 12px}
     .tscroll .dtable{min-width:498px}
