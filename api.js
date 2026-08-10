@@ -186,7 +186,29 @@
       sessionStorage.removeItem(OWNER_REFRESH_KEY);
       sessionStorage.removeItem(PORTAL_KEY);
       sessionStorage.removeItem("av_session_only");
+      sessionStorage.removeItem("av_must_reset_password");
+      sessionStorage.removeItem("av_intro_completed");
+      sessionStorage.removeItem("av_terms_accepted");
     } catch (_) {}
+    try {
+      localStorage.removeItem("av_terms_accepted_db");
+    } catch (_) {}
+  }
+
+  async function logout(portal) {
+    const p = normalizePortal(portal || localStorage.getItem(PORTAL_KEY) || "admin");
+    const refreshToken = getRefreshToken(p);
+    try {
+      if (refreshToken) {
+        await fetch(`${API_URL}/api/v1/auth/logout`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ refreshToken }),
+          keepalive: true,
+        });
+      }
+    } catch (_) {}
+    clearSession(p);
   }
 
   let refreshPromise = null;
@@ -328,6 +350,7 @@
     API_URL,
     setSession,
     clearSession,
+    logout,
     getAccessToken,
     isImpersonating,
     restoreAdminSessionFromBackup,
@@ -384,6 +407,8 @@
     // Dashboard & CRM
     dashboardSummary: () => request("/api/v1/dashboard/summary"),
     listVehicles: (qs = "", opts = {}) => request(`/api/v1/vehicles${qs}`, opts),
+    vehicleInventoryStats: (opts = {}) =>
+      request("/api/v1/vehicles/stats", opts),
     getVehicle: (id) => request(`/api/v1/vehicles/${id}`),
     createVehicle: (body) =>
       request("/api/v1/vehicles", { method: "POST", body: JSON.stringify(body) }),

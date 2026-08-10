@@ -8169,6 +8169,68 @@
         margin: 0 0 8px 2px;
       }
 
+      #page-vehicles .inv-label-row {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 0 0 8px 2px;
+      }
+
+      #page-vehicles .inv-label-row .veh-kpi-group-label {
+        margin: 0;
+      }
+
+      #page-vehicles .inv-toggle-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        background: rgba(255, 255, 255, 0.035);
+        border: 1px solid var(--border);
+        color: var(--text);
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: 0;
+        text-transform: none;
+        padding: 6px 13px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-family: inherit;
+        white-space: nowrap;
+        transition:
+          background 0.14s,
+          border-color 0.14s,
+          box-shadow 0.14s;
+      }
+
+      #page-vehicles .inv-toggle-btn svg {
+        width: 14px;
+        height: 14px;
+        opacity: 0.85;
+        flex-shrink: 0;
+      }
+
+      #page-vehicles .inv-toggle-btn:hover {
+        background: rgba(58, 160, 255, 0.09);
+        border-color: rgba(58, 160, 255, 0.5);
+        color: var(--blue);
+      }
+
+      #page-vehicles .inv-toggle-btn.active {
+        background: rgba(28, 122, 70, 0.14);
+        border-color: rgba(28, 122, 70, 0.6);
+        color: #2dd47f;
+        box-shadow: 0 0 0 1px rgba(28, 122, 70, 0.3) inset;
+      }
+
+      #page-vehicles .inv-view-note {
+        font-size: 11px;
+        color: var(--muted);
+        margin: -4px 0 8px 2px;
+        min-height: 1em;
+      }
+
       #page-vehicles .veh-kpi-group .kpi-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
@@ -13810,8 +13872,9 @@
         padding: 9px 0;
       }
 
-      html.av-auth-pending body {
-        visibility: hidden;
+      html.av-auth-pending body,
+      html.av-logging-out body {
+        visibility: hidden !important;
       }
 
       /* Keep custom select chevron even when shorthand background is set inline */
@@ -20204,12 +20267,40 @@
           <div class="veh-kpi-board" id="vehKpiBoard">
             <div class="veh-kpi-row">
               <div class="veh-kpi-group inventory">
-                <div class="veh-kpi-group-label">Inventory</div>
+                <div class="inv-label-row">
+                  <div class="veh-kpi-group-label">Inventory</div>
+                  <button
+                    type="button"
+                    class="inv-toggle-btn"
+                    id="invToggleBtn"
+                    onclick="toggleInvView()"
+                    title="Show only vehicles still in inventory (not sold)"
+                  >
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"
+                      />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <span id="invToggleTxt">View Current Inventory Numbers</span>
+                  </button>
+                </div>
+                <div class="inv-view-note" id="invViewNote">
+                  Showing all vehicles (sold + in stock)
+                </div>
                 <div class="kpi-grid">
                   <div class="kpi" style="--accent: var(--blue)">
                     <div class="kpi-label">Total Inventory</div>
                     <div class="kpi-value" id="kpiTotalInventory">0</div>
-                    <div class="kpi-foot">vehicles on lot</div>
+                    <div class="kpi-foot" id="kpiTotalInventoryFoot">
+                      unsold vehicles on lot
+                    </div>
                   </div>
                   <div
                     class="kpi clickable"
@@ -20256,7 +20347,9 @@
             </div>
 
             <div class="veh-kpi-group costs">
-              <div class="veh-kpi-group-label">Costs</div>
+              <div class="veh-kpi-group-label" id="vehCostsLabel">
+                Costs · all vehicles
+              </div>
               <div class="kpi-grid">
                 <div class="kpi" style="--accent: var(--orange)">
                   <div class="kpi-label">Purchase Cost</div>
@@ -26856,26 +26949,19 @@
       }
 
       function exitCpaMode() {
-        document.body.classList.remove("cpa-mode");
-        try {
-          if (window.AVPortal) AVPortal.clearSession("cpa");
-          else {
-            localStorage.removeItem("avAuthToken");
-            localStorage.removeItem("avRefreshToken");
-            localStorage.removeItem("avAuthPortal");
-          }
-        } catch (_) {}
-        if (
-          location.pathname.toLowerCase().startsWith("/cpa/") ||
-          (window.AVPortal && AVPortal.getRoutePortal() === "cpa")
-        ) {
-          location.href =
-            (window.AVPortal && AVPortal.loginPath("cpa")) || "/login";
+        if (window.AVPortal && typeof AVPortal.logout === "function") {
+          AVPortal.logout("cpa");
           return;
         }
-        var nav = document.querySelector('[data-page="dashboard"]');
-        showPage("dashboard", nav);
-        if (typeof renderDashboard === "function") renderDashboard();
+        try {
+          document.documentElement.classList.add("av-auth-pending");
+        } catch (_) {}
+        try {
+          if (window.AVPortal) AVPortal.clearSession("cpa");
+        } catch (_) {}
+        location.replace(
+          (window.AVPortal && AVPortal.loginPath("cpa")) || "/login",
+        );
       }
 
       function cpaToast(msg) {
@@ -28112,20 +28198,19 @@
           exitImpersonation();
           return;
         }
-        localStorage.removeItem("avAuthToken");
-        localStorage.removeItem("avRefreshToken");
-        localStorage.removeItem("avAuthPortal");
-        document.body.classList.remove("rep-mode", "impersonating");
-        repUser = null;
-        if (location.pathname.toLowerCase().startsWith("/sales-rep/")) {
-          location.href = "/login";
+        if (window.AVPortal && typeof AVPortal.logout === "function") {
+          AVPortal.logout("sales_rep");
           return;
         }
-        showPage(
-          "dashboard",
-          document.querySelector('[data-page="dashboard"]'),
-        );
-        if (typeof renderDashboard === "function") renderDashboard();
+        try {
+          document.documentElement.classList.add("av-auth-pending");
+        } catch (_) {}
+        try {
+          localStorage.removeItem("avAuthToken");
+          localStorage.removeItem("avRefreshToken");
+          localStorage.removeItem("avAuthPortal");
+        } catch (_) {}
+        location.replace("/login");
       }
       function renderRepMy() {
         const sub = document.getElementById("repMySub");
@@ -31720,15 +31805,17 @@
         window.scrollTo(0, 0);
       }
       function exitWholesale() {
-        localStorage.removeItem("avAuthToken");
-        localStorage.removeItem("avAuthPortal");
-        document.body.classList.remove("ws-mode");
-        if (location.pathname.toLowerCase().startsWith("/wholesale/")) {
-          location.href = "/login";
+        if (window.AVPortal && typeof AVPortal.logout === "function") {
+          AVPortal.logout("wholesale");
           return;
         }
-        showPage("dashboard", document.querySelector("[data-nav=dashboard]"));
-        if (typeof renderDashboard === "function") renderDashboard();
+        try {
+          document.documentElement.classList.add("av-auth-pending");
+        } catch (_) {}
+        try {
+          if (window.AVPortal) AVPortal.clearSession("wholesale");
+        } catch (_) {}
+        location.replace("/login");
       }
       function renderWsDashboard() {
         var token = ++__wsRenderToken;
@@ -33265,39 +33352,42 @@
         window.scrollTo(0, 0);
       }
       function exitOwner() {
-        if (typeof AVPortal !== "undefined" && AVPortal.clearSession) {
-          AVPortal.clearSession("owner");
-        } else {
-          localStorage.removeItem("avOwnerToken");
-          localStorage.removeItem("avOwnerRefreshToken");
-          localStorage.removeItem("avAuthPortal");
+        if (window.AVPortal && typeof AVPortal.logout === "function") {
+          AVPortal.logout("owner");
+          return;
         }
-        document.body.classList.remove("owner-mode");
-        location.href = "/login?portal=owner";
+        try {
+          document.documentElement.classList.add("av-auth-pending");
+        } catch (_) {}
+        try {
+          if (typeof AVPortal !== "undefined" && AVPortal.clearSession) {
+            AVPortal.clearSession("owner");
+          }
+        } catch (_) {}
+        location.replace("/login?portal=owner");
       }
       function handleLogout() {
+        try {
+          if (typeof readImpersonationMeta === "function" && readImpersonationMeta()) {
+            exitImpersonation();
+            return;
+          }
+        } catch (_) {}
         var portal =
           (window.AVPortal && AVPortal.getRoutePortal()) || "admin";
-        switch (portal) {
-          case "cpa":
-            exitCpaMode();
-            break;
-          case "sales_rep":
-            exitRepMode();
-            break;
-          case "wholesale":
-            exitWholesale();
-            break;
-          case "owner":
-            exitOwner();
-            break;
-          default:
-            localStorage.removeItem("avAuthToken");
-            localStorage.removeItem("avRefreshToken");
-            localStorage.removeItem("avAuthPortal");
-            location.href = "/login";
-            break;
+        if (window.AVPortal && typeof AVPortal.logout === "function") {
+          AVPortal.logout(portal);
+          return;
         }
+        try {
+          document.documentElement.classList.add("av-auth-pending");
+        } catch (_) {}
+        try {
+          if (window.AVPortal) AVPortal.clearSession(portal);
+        } catch (_) {}
+        location.replace(
+          (window.AVPortal && AVPortal.loginPath(portal)) || "/login",
+        );
       }
       function ownerFmtLogin(dt) {
         if (!dt) return "—";
@@ -35852,6 +35942,16 @@
         let filtered = rows.filter((r) => {
           const text =
             `${r.year} ${r.make} ${r.model} ${r.vin} ${r.rep}`.toLowerCase();
+          // "View Current Inventory Numbers" — show ONLY vehicles still in stock.
+          if (window.__invCurrentOnly) {
+            if (r.sold || vehicleIsSold(r)) return false;
+            return (
+              text.includes(searchVal) &&
+              (repVal === "" || r.rep === repVal) &&
+              (!onlyUpcomingFloored || (r.floored && r.daysOnLot > 30)) &&
+              (!onlyTitlesPresent || r.titlePresent)
+            );
+          }
           const matchUpcoming =
             !onlyUpcomingFloored || (!r.sold && r.floored && r.daysOnLot > 30);
           // When browsing a past period, show sold vehicles from that period (and hide active stock).
@@ -35876,8 +35976,21 @@
         if (sortVal === "flooring_desc")
           filtered.sort((a, b) => b.flooringCost - a.flooringCost);
 
-        (document.getElementById("filterTag") || {}).textContent =
-          `Showing ${filtered.length} of ${vehicles.length} vehicles`;
+        {
+          const stats = window.__vehicleInventoryStats;
+          const invHint =
+            window.__invCurrentOnly &&
+            stats &&
+            typeof stats.currentInventoryCount === "number"
+              ? stats.currentInventoryCount
+              : window.__invCurrentOnly
+                ? vehicles.filter((v) => v && !v.sold).length
+                : vehicles.length;
+          (document.getElementById("filterTag") || {}).textContent = window
+            .__invCurrentOnly
+            ? `Showing ${filtered.length} of ${invHint} in current inventory`
+            : `Showing ${filtered.length} of ${vehicles.length} vehicles`;
+        }
         try {
           renderVehCalendars();
         } catch (e) {}
@@ -35902,7 +36015,9 @@
           if (filtered.length === 0) {
             const emptyMsg = vehPeriod.active
               ? "No sold vehicles in this period."
-              : "No vehicles in inventory yet. Use + Add Vehicle to get started.";
+              : window.__invCurrentOnly
+                ? "No vehicles currently in inventory (all units sold or none added yet)."
+                : "No vehicles in inventory yet. Use + Add Vehicle to get started.";
             tableBody.innerHTML = `<tr class="veh-load-row"><td colspan="19"><div class="veh-load-inner" style="font-weight:500;">${emptyMsg}</div></td></tr>`;
           } else {
             tableBody.innerHTML = vehRender(
@@ -35987,25 +36102,77 @@
         renderColumnTotals(vehPeriod.active ? filtered : rows);
       }
 
+      /** Toggle cost KPIs + table between all vehicles and current (unsold) inventory. */
+      function toggleInvView() {
+        window.__invCurrentOnly = !window.__invCurrentOnly;
+        const on = !!window.__invCurrentOnly;
+        const btn = document.getElementById("invToggleBtn");
+        if (btn) {
+          btn.classList.toggle("active", on);
+          btn.setAttribute("aria-pressed", on ? "true" : "false");
+        }
+        const txt = document.getElementById("invToggleTxt");
+        if (txt) {
+          txt.textContent = on
+            ? "Showing Current Inventory Only"
+            : "View Current Inventory Numbers";
+        }
+        const note = document.getElementById("invViewNote");
+        if (note) {
+          note.textContent = on
+            ? "Costs below reflect current in-stock inventory only"
+            : "Showing all vehicles (sold + in stock)";
+        }
+        // Leaving sold-history browse mode when focusing current inventory.
+        if (on && vehPeriod && vehPeriod.active) {
+          try {
+            if (typeof vehSetMode === "function") vehSetMode("all");
+          } catch (_) {}
+        }
+        if (typeof render === "function") render();
+      }
+
       function renderKPIs(rows, filteredRows) {
         const set = (id, val) => {
           const el = document.getElementById(id);
           if (el) el.textContent = val;
         };
         const periodActive = !!(vehPeriod && vehPeriod.active);
+        const currentOnly = !!window.__invCurrentOnly && !periodActive;
+        const stats = window.__vehicleInventoryStats || null;
+
+        // Prefer authoritative backend counts when available.
+        const active = rows.filter((r) => !r.sold && !vehicleIsSold(r));
+        const totalInv =
+          stats && typeof stats.currentInventoryCount === "number"
+            ? stats.currentInventoryCount
+            : active.length;
+        const totalTracked =
+          stats && typeof stats.totalCount === "number"
+            ? stats.totalCount
+            : rows.length;
+
         const periodRows = periodActive ? filteredRows || rows : rows;
-        const active = rows.filter((r) => !r.sold);
-        const totalInv = active.length;
-        const purchaseCost = periodRows.reduce((s, r) => s + r.price, 0);
-        const fees = periodRows.reduce((s, r) => s + r.fees, 0);
-        const repairs = periodRows.reduce((s, r) => s + r.repairs, 0);
-        const totalCost = periodRows.reduce((s, r) => s + r.totalVehicleCost, 0);
-        const salesTax = periodRows.reduce((s, r) => s + r.salesTaxCollected, 0);
-        const commission = periodRows.reduce((s, r) => s + r.commission, 0);
+        // Cost figures follow the toggle: current inventory only, or all vehicles.
+        const costRows = periodActive
+          ? periodRows
+          : currentOnly
+            ? active
+            : rows;
+
+        const purchaseCost = costRows.reduce((s, r) => s + r.price, 0);
+        const fees = costRows.reduce((s, r) => s + r.fees, 0);
+        const repairs = costRows.reduce((s, r) => s + r.repairs, 0);
+        const totalCost = costRows.reduce((s, r) => s + r.totalVehicleCost, 0);
+        const salesTax = costRows.reduce((s, r) => s + r.salesTaxCollected, 0);
+        const commission = costRows.reduce((s, r) => s + r.commission, 0);
         const flooringTotal = periodActive
           ? periodRows.reduce((s, r) => s + r.flooringCost, 0)
           : active.reduce((s, r) => s + r.flooringCost, 0);
-        const titlesInHand = active.filter((r) => r && r.titlePresent).length;
+        const titlesInHand =
+          stats && typeof stats.titlesPresentCount === "number" && !periodActive
+            ? stats.titlesPresentCount
+            : active.filter((r) => r && r.titlePresent).length;
         let soldThisMonthRows;
         if (periodActive) {
           soldThisMonthRows = periodRows.filter((r) => r.sold);
@@ -36035,10 +36202,15 @@
             "vehicleCountLabel",
             `${soldThisMonth} vehicle${soldThisMonth === 1 ? "" : "s"} sold in ${periodLbl}`,
           );
+        } else if (currentOnly) {
+          set(
+            "vehicleCountLabel",
+            `${totalInv} vehicle${totalInv === 1 ? "" : "s"} in current inventory (unsold) · ${totalTracked} total in system`,
+          );
         } else {
           set(
             "vehicleCountLabel",
-            `${totalInv} vehicles in active inventory · ${rows.length} total tracked`,
+            `${totalInv} vehicles in active inventory · ${totalTracked} total tracked`,
           );
         }
 
@@ -36063,14 +36235,28 @@
             : "net, sold this month";
         }
 
-        set("kpiTotalInventory", totalInv);
+        const invValue =
+          stats && typeof stats.currentInventoryValue === "number"
+            ? stats.currentInventoryValue
+            : active.reduce((s, r) => s + (Number(r.totalVehicleCost) || 0), 0);
+        const kpiInv = document.getElementById("kpiTotalInventory");
+        if (kpiInv) {
+          kpiInv.innerHTML = `${totalInv} car${totalInv === 1 ? "" : "s"} <span class="kpi-slash" style="opacity:.45;margin:0 4px;">/</span> ${fmt(invValue)}`;
+        }
+        const invFoot = document.getElementById("kpiTotalInventoryFoot");
+        if (invFoot) {
+          invFoot.textContent = currentOnly
+            ? "current inventory · unsold only"
+            : "unsold on lot · total value all-in";
+        }
+
         set("kpiPurchaseCost", fmt(purchaseCost));
         set("kpiFees", fmt(fees));
         set("kpiRepairs", fmt(repairs));
         set("kpiTotalCost", fmt(totalCost));
         set("kpiSalesTax", fmt(salesTax));
         set("kpiCommission", fmt(commission));
-        set("kpiTitles", `${titlesInHand} of ${active.length}`);
+        set("kpiTitles", `${titlesInHand} of ${totalInv}`);
         set("kpiSoldMonth", soldThisMonth);
         set("kpiProfitMonth", fmtSigned(profitThisMonth));
         const profitEl = document.getElementById("kpiProfitMonth");
@@ -36086,6 +36272,18 @@
           "totalFlooringCost",
           flooringTotal > 0 ? fmt(flooringTotal) : "$0",
         );
+
+        const costsLabel = document.getElementById("vehCostsLabel");
+        if (costsLabel) {
+          if (periodActive) {
+            costsLabel.textContent = `Costs · ${periodLbl}`;
+          } else if (currentOnly) {
+            costsLabel.innerHTML =
+              'Costs · <span style="color:var(--green);">current inventory</span>';
+          } else {
+            costsLabel.textContent = "Costs · all vehicles";
+          }
+        }
       }
 
       function renderColumnTotals(rows) {
@@ -50323,18 +50521,34 @@
             plan !== "wholesaler" &&
             claims.role !== "platform_owner"
           ) {
+            if (window.AVPortal && typeof AVPortal.hideAppShell === "function") {
+              AVPortal.hideAppShell();
+            }
             AVPortal.clearSession("wholesale");
             AVPortal.redirect("/login");
+            return false;
           }
         } catch (e) {
           /* ignore */
         }
+        return true;
       }
 
       async function bootstrapPortalAccess() {
         var routePortal = AVPortal.getRoutePortal();
         var session = AVPortal.readSession(routePortal);
-        if (!session || session.portal !== routePortal) return;
+        if (!session || session.portal !== routePortal) {
+          if (window.AVPortal && typeof AVPortal.hideAppShell === "function") {
+            AVPortal.hideAppShell();
+          }
+          return;
+        }
+
+        function revealWhenReady() {
+          if (window.AVPortal && typeof AVPortal.revealDashboard === "function") {
+            AVPortal.revealDashboard();
+          }
+        }
 
         function jwtNeedsPasswordReset() {
           try {
@@ -50349,6 +50563,7 @@
 
         if (jwtNeedsPasswordReset()) {
           openChangePassword(true);
+          revealWhenReady();
           if (window.AVApi) {
             AVApi.me()
               .then(function (meData) {
@@ -50370,7 +50585,7 @@
           return;
         }
 
-        applyPlanRestrictions();
+        if (applyPlanRestrictions() === false) return;
 
         updateMsgBadge();
         if (typeof updateNotifBadge === "function") updateNotifBadge();
@@ -50434,7 +50649,13 @@
           }
         }
 
+        // Reveal only after the correct portal shell / page is painted.
+        revealWhenReady();
+
         AVPortal.verifySessionInBackground(function () {
+          if (window.AVPortal && typeof AVPortal.hideAppShell === "function") {
+            AVPortal.hideAppShell();
+          }
           AVPortal.redirect(AVPortal.loginPath(routePortal));
         });
 

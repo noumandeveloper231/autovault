@@ -334,20 +334,70 @@
     }
     try {
       if (!global.AVApi) throw new Error("AVApi not loaded");
-      let data;
+
+      const pageSize = 100;
+      const fetchPage = async (page, timeout) => {
+        const qs = `?limit=${pageSize}&page=${page}&scope=all`;
+        const opts = timeout ? { timeout } : {};
+        return AVApi.listVehicles(qs, opts);
+      };
+
+      // Parallel: authoritative inventory stats + first page of vehicles.
+      let firstPage;
+      let statsPayload = null;
       try {
-        data = await AVApi.listVehicles("?limit=100");
+        const [pageResult, statsResult] = await Promise.all([
+          fetchPage(1),
+          AVApi.vehicleInventoryStats().catch((err) => {
+            console.warn("[vehicles] inventory stats unavailable:", err.message || err);
+            return null;
+          }),
+        ]);
+        firstPage = pageResult;
+        statsPayload = statsResult;
       } catch (e) {
         if (e.message && e.message.includes("timed out")) {
           console.warn("[vehicles] first fetch timed out, retrying with 120s timeout…");
-          data = await AVApi.listVehicles("?limit=100", { timeout: 120000 });
+          firstPage = await fetchPage(1, 120000);
+          statsPayload = await AVApi.vehicleInventoryStats({
+            timeout: 120000,
+          }).catch(() => null);
         } else {
           throw e;
         }
       }
-      const rows = data.vehicles || data.data || [];
+
+      const stats = statsPayload && (statsPayload.stats || statsPayload);
+      if (stats && typeof stats.currentInventoryCount === "number") {
+        global.__vehicleInventoryStats = stats;
+      }
+
+      const allRows = [];
+      const pushRows = (data) => {
+        const rows = data.vehicles || data.data || [];
+        allRows.push.apply(allRows, rows);
+        return rows;
+      };
+
+      const firstRows = pushRows(firstPage);
+      const total =
+        (firstPage.meta && firstPage.meta.total) != null
+          ? Number(firstPage.meta.total)
+          : firstRows.length;
+
+      // Paginate remaining pages so KPI / inventory counts aren't capped at 100.
+      let page = 2;
+      while (allRows.length < total) {
+        const data = await fetchPage(page);
+        const rows = pushRows(data);
+        if (!rows.length || rows.length < pageSize) break;
+        page += 1;
+        // Safety cap: 50 pages × 100 = 5,000 vehicles.
+        if (page > 50) break;
+      }
+
       // Expenses + deal come from listVehicles in one round-trip (no N+1).
-      const mapped = rows.map((row) => mapApiToUi(row, row.expenses || []));
+      const mapped = allRows.map((row) => mapApiToUi(row, row.expenses || []));
       const list = getVehiclesList();
       list.length = 0;
       mapped.forEach((v) => list.push(v));
@@ -363,6 +413,22 @@
         global.vehiclesLoading = false;
       }
       refreshUi();
+    }
+  }
+
+  /** Refresh inventory counts without reloading the full vehicle table. */
+  async function refreshInventoryStats() {
+    try {
+      if (!global.AVApi || !AVApi.vehicleInventoryStats) return null;
+      const data = await AVApi.vehicleInventoryStats();
+      const stats = data && (data.stats || data);
+      if (stats && typeof stats.currentInventoryCount === "number") {
+        global.__vehicleInventoryStats = stats;
+      }
+      return stats;
+    } catch (err) {
+      console.warn("[vehicles] refreshInventoryStats failed:", err.message || err);
+      return null;
     }
   }
 
@@ -725,6 +791,7 @@
   global.AVVehicles = {
     mapApiToUi,
     loadAllVehicles,
+    refreshInventoryStats,
     createFromForm,
     persistPatch,
     persistMoneyField,

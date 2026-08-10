@@ -1959,7 +1959,12 @@
           }
         } catch (e) {}
         try { localStorage.removeItem('av_terms_accepted_db'); } catch (e) {}
-        window.location.href = data.redirectDashboardPath || AVPortal.dashboardPath(userPortal) || '/dashboard';
+        var dest = data.redirectDashboardPath || AVPortal.dashboardPath(userPortal) || '/dashboard';
+        try {
+          window.location.replace(dest);
+        } catch (e) {
+          window.location.href = dest;
+        }
       }catch(loginError){
         err.textContent = loginError.message || 'Invalid email or password.';
         err.classList.add('show');
