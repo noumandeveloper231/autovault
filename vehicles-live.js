@@ -225,7 +225,7 @@
       commissionOverride: deal ? num(deal.commissionAmount, null) : null,
       commissionPct: deal && deal.commissionRate ? Math.round(deal.commissionRate * 1000) / 10 : null,
       commMode: deal && deal.commissionType ? (deal.commissionType === 'manual' ? 'amt' : 'pct') : null,
-      floored: !!(api.flooringPlanId || api.flooringStartDate || (flooringFees != null && flooringFees > 0)),
+      floored: !!(api.flooringPlanId || api.flooringStartDate || (flooringFees != null && flooringFees > 0) || !!(api.fees && api.fees.flooringManual)),
       titlePresent: api.titlePresent !== false && api.titleReceived !== false,
       titleIn:
         api.titlePresent !== false && api.titleReceived !== false
@@ -237,9 +237,14 @@
       statusDate: null,
       repairsList: effectiveRepairs,
       reconditioningCost: reconCost,
-      /* Only treat a positive stored fee as a manual override; $0 + start date = auto-calc from purchase date */
-      flooringOverride:
-        flooringFees != null && flooringFees > 0 ? flooringFees : null,
+      /* Explicit override (including $0) when fees.flooringManual is set.
+         Positive flooringFees alone also counts as a legacy manual override. */
+      flooringOverride: (function () {
+        const manual = !!(api.fees && api.fees.flooringManual);
+        if (manual) return flooringFees != null ? Number(flooringFees) || 0 : 0;
+        if (flooringFees != null && flooringFees > 0) return flooringFees;
+        return null;
+      })(),
       isWholesale: !!api.isWholesale,
       documents: (jacket && Array.isArray(jacket.documents))
         ? jacket.documents.map(d => ({ id: d.id, name: d.documentName, img: d.fileUrl, ts: d.uploadedAt }))
@@ -486,6 +491,14 @@
     ui.djDocsRemoved = v.djDocsRemoved || [];
     ui.dealSaved = v.dealSaved != null ? v.dealSaved : ui.dealSaved;
     ui.flooringDetail = v.flooringDetail;
+    // Keep an in-flight explicit $0 override if the API remap somehow drops it
+    if (
+      v.flooringOverride !== null &&
+      v.flooringOverride !== undefined &&
+      (ui.flooringOverride === null || ui.flooringOverride === undefined)
+    ) {
+      ui.flooringOverride = Number(v.flooringOverride) || 0;
+    }
     replaceVehicleInPlace(ui);
     refreshUi();
     return ui;
@@ -536,12 +549,24 @@
     if (field === "price") patch.acquisitionCost = value;
     else if (field === "fees") patch.auctionFees = value;
     else if (field === "flooring" || field === "flooringOverride") {
+      const v = findUiVehicle(vin);
+      const prevFees =
+        (v && v._raw && v._raw.fees && typeof v._raw.fees === "object"
+          ? { ...v._raw.fees }
+          : {}) || {};
+      if (Array.isArray(v && v.addOnItems) && !Array.isArray(prevFees.addOnItems)) {
+        prevFees.addOnItems = v.addOnItems;
+      }
       if (value === null || value === undefined) {
+        // Reset to auto-calculated flooring
         patch.flooringFees = 0;
+        patch.fees = { ...prevFees, flooringManual: false };
       } else {
-        patch.flooringFees = value;
-        if (value > 0) {
-          const v = findUiVehicle(vin);
+        const amount = Number(value);
+        patch.flooringFees = Number.isFinite(amount) ? amount : 0;
+        // Persist explicit override — including $0 — so auto-calc does not win
+        patch.fees = { ...prevFees, flooringManual: true };
+        if (patch.flooringFees > 0) {
           if (v && !v._raw?.flooringStartDate) {
             patch.flooringStartDate = (v.date
               ? new Date(v.date + "T12:00:00")

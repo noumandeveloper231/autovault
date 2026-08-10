@@ -31566,7 +31566,10 @@
               }, 0),
               repairsList: v.repairsList || [],
               floored: !!v.floored,
-              flooringOverride: v.flooringOverride || null,
+              flooringOverride:
+                v.flooringOverride !== null && v.flooringOverride !== undefined
+                  ? Number(v.flooringOverride) || 0
+                  : null,
               o2: !!v.isWholesale,
               titlePresent: v.titlePresent !== false,
               sold: v.sold,
@@ -36042,8 +36045,8 @@
       <td data-col="purchase"><span class="editable-cell" data-vin="${r.vin}" data-field="price" onclick="startEditCell(this)" title="Click to edit">${fmt(r.price)}</span></td>
       <td data-col="fees"><span class="editable-cell" data-vin="${r.vin}" data-field="fees" onclick="startEditCell(this)" title="Click to edit">${fmt(r.fees)}</span></td>
       <td data-col="repairs"><span class="editable-cell repairs-cell" data-vin="${r.vin}" onclick="openRepairsModal('${r.vin}')" title="Click to view repairs & attached expenses">${fmt(r.repairs + r.attachedExp)}</span></td>
-      <td data-col="flooring"><span class="editable-cell flooring-cell" onclick="openFlooringDetail('${r.vin}')" title="Click to configure flooring">${r.flooringCost > 0 ? fmt(r.flooringCost) : '<span style="color:var(--muted);font-size:11px;">Set flooring</span>'}</span>${r.flooringPaidOff ? '<div class="fl-paid-tag">Paid off</div>' : ""}</td>
-      <td style="color:var(--muted);font-size:12px;">${r.flooringCost > 0 || flooringConfig.applied ? r.daysOnLot + "d" : "—"}</td>
+      <td data-col="flooring"><span class="editable-cell flooring-cell" onclick="openFlooringDetail('${r.vin}')" title="Click to configure flooring">${r.flooringOverride !== null && r.flooringOverride !== undefined ? fmt(Number(r.flooringOverride) || 0) : r.flooringCost > 0 ? fmt(r.flooringCost) : '<span style="color:var(--muted);font-size:11px;">Set flooring</span>'}</span>${r.flooringPaidOff ? '<div class="fl-paid-tag">Paid off</div>' : ""}</td>
+      <td style="color:var(--muted);font-size:12px;">${r.flooringCost > 0 || (r.flooringOverride !== null && r.flooringOverride !== undefined) || flooringConfig.applied ? r.daysOnLot + "d" : "—"}</td>
       <td data-col="salestax">${fmt(r.salesTaxCollected)}</td>
       <td><span class="editable-cell" onclick="openRegFeesNotice()" title="Mark vehicle as sold to enable Registration Fees">${fmt(r.regFeesCollected)}</span></td>
       <td>${fmt(r.totalInvestment)}</td>
@@ -37109,7 +37112,7 @@
         <div class="vd-line"><span>Purchase Price</span><span>${fmt(r.price)}</span></div>
         <div class="vd-line"><span>Auction Fees</span><span>${fmt(r.fees)}</span></div>
         <div class="vd-line"><span>Repairs</span><span>${fmt(r.repairs)}</span></div>
-        <div class="vd-line"><span>Flooring Cost</span><span>${r.flooringCost > 0 ? fmt(r.flooringCost) : "—"}</span></div>
+        <div class="vd-line"><span>Flooring Cost</span><span>${r.flooringOverride !== null && r.flooringOverride !== undefined ? fmt(Number(r.flooringOverride) || 0) : r.flooringCost > 0 ? fmt(r.flooringCost) : "—"}</span></div>
         <div class="vd-line"><span>Flooring Age</span><span>${flooringConfig.applied ? r.daysOnLot + "d" : "—"}</span></div>
         <div class="vd-line"><span>Registration Fees</span><span>${fmt(r.regFees)}</span></div>
         <div class="vd-line"><span>Sales Tax</span><span>${fmt(r.salesTaxCollected)}</span></div>
@@ -37892,7 +37895,10 @@
         n = Math.round(n * 100) / 100;
         const oldVal = v[field];
         const oldEffective = vdpCurrentValue(v, field);
-        if (n === oldEffective && oldVal !== undefined) {
+        const hadOverride =
+          field !== "flooringOverride" ||
+          (oldVal !== null && oldVal !== undefined);
+        if (n === oldEffective && hadOverride && oldVal !== undefined) {
           renderVehicleDetailPage(currentVdpVin);
           return;
         }
@@ -38183,7 +38189,11 @@
           `rep: ${r.rep || "unassigned"}`;
         document.getElementById("vdpDays").textContent = r.daysOnLot + "d";
         document.getElementById("vdpFlooring").textContent =
-          r.flooringCost > 0 ? fmt(r.flooringCost) : "—";
+          r.flooringOverride !== null && r.flooringOverride !== undefined
+            ? fmt(Number(r.flooringOverride) || 0)
+            : r.flooringCost > 0
+              ? fmt(r.flooringCost)
+              : "—";
         const lender = r.flooringDetail
           ? r.flooringDetail.lender || "floor plan"
           : "not set";
@@ -38197,7 +38207,7 @@
     <div class="vdp-row"><span class="vdp-row-label">Purchase Price</span><span class="vdp-row-value" id="vdpEd_price">${vdpUndoBtn(v, "price")}<span class="vdp-ed" onclick="vdpEditCost('price')" title="Click to edit">${fmt(r.price)}</span></span></div>
     <div class="vdp-row"><span class="vdp-row-label">Auction / Doc Fees</span><span class="vdp-row-value" id="vdpEd_fees">${vdpUndoBtn(v, "fees")}<span class="vdp-ed" onclick="vdpEditCost('fees')" title="Click to edit">${fmt(r.fees)}</span></span></div>
     <div class="vdp-row"><span class="vdp-row-label">Repairs (${(r.repairsList || []).length} items)</span><span class="vdp-row-value"><span class="vdp-ed" onclick="openRepairsModal('${r.vin}')" title="Click to edit repair items">${fmt(r.repairs)}</span></span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Flooring Cost${r.flooringDetail?.lender ? " — " + r.flooringDetail.lender : ""}</span><span class="vdp-row-value" id="vdpEd_flooringOverride" style="color:var(--red);">${vdpUndoBtn(v, "flooringOverride")}${v.flooringOverride !== null && v.flooringOverride !== undefined ? `<button class="vdp-reset" onclick="vdpResetCost('flooringOverride')" title="Back to auto-calculated">reset</button>` : `<span class="vdp-auto-tag">auto</span>`}<span class="vdp-ed" onclick="vdpEditCost('flooringOverride')" title="Click to edit">${r.flooringCost > 0 ? fmt(r.flooringCost) : "—"}</span></span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Flooring Cost${r.flooringDetail?.lender ? " — " + r.flooringDetail.lender : ""}</span><span class="vdp-row-value" id="vdpEd_flooringOverride" style="color:var(--red);">${vdpUndoBtn(v, "flooringOverride")}${v.flooringOverride !== null && v.flooringOverride !== undefined ? `<button class="vdp-reset" onclick="vdpResetCost('flooringOverride')" title="Back to auto-calculated">reset</button>` : `<span class="vdp-auto-tag">auto</span>`}<span class="vdp-ed" onclick="vdpEditCost('flooringOverride')" title="Click to edit">${v.flooringOverride !== null && v.flooringOverride !== undefined ? fmt(Number(v.flooringOverride) || 0) : r.flooringCost > 0 ? fmt(r.flooringCost) : "—"}</span></span></div>
     <div class="vdp-row"><span class="vdp-row-label">Sales Tax</span><span class="vdp-row-value" id="vdpEd_salesTax">${vdpUndoBtn(v, "salesTax")}<span class="vdp-ed" onclick="vdpEditCost('salesTax')" title="Click to edit">${fmt(r.salesTax)}</span></span></div>
     <div class="vdp-row"><span class="vdp-row-label">Reg. Fees</span><span class="vdp-row-value" id="vdpEd_regFees">${vdpUndoBtn(v, "regFees")}<span class="vdp-ed" onclick="vdpEditCost('regFees')" title="Click to edit">${fmt(r.regFees)}</span></span></div>
     <div class="vdp-row"><span class="vdp-row-label">Add-ons (cost)</span><span class="vdp-row-value" id="vdpEd_addOns">${vdpUndoBtn(v, "addOns")}<span class="vdp-ed" onclick="vdpEditCost('addOns')" title="Click to edit">${r.addOns > 0 ? fmt(r.addOns) : "—"}</span></span></div>
@@ -44255,11 +44265,17 @@
           : "";
         const ed = (field, val, extra) =>
           `<span class="vdp-row-value" id="djEd_${field}"${extra || ""}>${djUndoBtn(v, field)}<span class="vdp-ed" onclick="djEditCost('${field}')" title="Click to edit">${val}</span></span>`;
+        const flooringDisplay =
+          v.flooringOverride !== null && v.flooringOverride !== undefined
+            ? fmt(Number(v.flooringOverride) || 0)
+            : r.flooringCost > 0
+              ? fmt(r.flooringCost)
+              : "\u2014";
         host.innerHTML = `
     <div class="vdp-row"><span class="vdp-row-label">Vehicle Purchase Price</span>${ed("price", fmt(v.price))}</div>
     <div class="vdp-row"><span class="vdp-row-label">Fees</span>${ed("fees", fmt(v.fees))}</div>
     <div class="vdp-row"><span class="vdp-row-label">Repairs (${(v.repairsList || []).length})</span><span class="vdp-row-value"><span class="vdp-ed" onclick="openRepairsModal('${v.vin}')" title="Click to edit repair items">${fmt(r.repairs)}</span></span></div>
-    <div class="vdp-row"><span class="vdp-row-label">Flooring</span>${ed("flooringOverride", r.flooringCost > 0 ? fmt(r.flooringCost) : "\u2014", ' style="color:var(--red);"')}</div>
+    <div class="vdp-row"><span class="vdp-row-label">Flooring</span>${ed("flooringOverride", flooringDisplay, ' style="color:var(--red);"')}</div>
     <div class="vdp-row"><span class="vdp-row-label">Expenses${attachedRows.length ? " <span style='color:var(--muted);font-weight:400;text-transform:none;'>(" + attachedRows.length + ")</span>" : ""}</span><span class="vdp-row-value">${r.attachedExp > 0 ? fmt(r.attachedExp) : "\u2014"}</span></div>
     ${attachedItemsHtml}
     <div class="vdp-row"><span class="vdp-row-label" id="djBrkCommLbl">Commission</span><span class="vdp-row-value" id="djBrkComm" style="color:var(--purple);">\u2014</span></div>
@@ -44307,7 +44323,10 @@
         n = Math.round(n * 100) / 100;
         const oldEffective = djCurrentCostValue(v, field);
         const oldVal = v[field];
-        if (n === oldEffective) {
+        const hadOverride =
+          field !== "flooringOverride" ||
+          (oldVal !== null && oldVal !== undefined);
+        if (n === oldEffective && hadOverride) {
           djRenderBreakdown(v, computeRow(v));
           dealRecalc();
           return;
