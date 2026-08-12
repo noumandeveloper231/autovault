@@ -2294,11 +2294,64 @@
         padding-top: 14px;
       }
 
+      .add-repair-form.is-draft {
+        border-top-color: rgba(255, 159, 67, 0.45);
+        background: rgba(255, 159, 67, 0.04);
+        margin-left: -4px;
+        margin-right: -4px;
+        padding-left: 4px;
+        padding-right: 4px;
+        border-radius: 0 0 10px 10px;
+      }
+
+      .add-on-form.is-draft {
+        border-color: rgba(255, 159, 67, 0.45) !important;
+        background: rgba(255, 159, 67, 0.08) !important;
+        box-shadow: 0 0 0 1px rgba(255, 159, 67, 0.2);
+      }
+
       .add-repair-form .form-row-3 {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
         margin-bottom: 10px;
+      }
+
+      .repair-draft-hint,
+      .addon-draft-hint {
+        display: none;
+        margin-top: 10px;
+        font-size: 11.5px;
+        line-height: 1.45;
+        color: var(--orange);
+        font-weight: 600;
+      }
+
+      .add-repair-form.is-draft .repair-draft-hint,
+      .add-on-form.is-draft .addon-draft-hint {
+        display: block;
+      }
+
+      #addRepairBtn.needs-attention,
+      #saveAddOnItem.needs-attention {
+        animation: repairAddPulse 1.2s ease-in-out infinite;
+      }
+
+      #addRepairBtn.needs-attention.btn-ghost,
+      #saveAddOnItem.needs-attention.btn-ghost {
+        border-color: var(--orange);
+        color: var(--orange);
+        box-shadow: 0 0 0 2px rgba(255, 159, 67, 0.2);
+      }
+
+      @keyframes repairAddPulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 2px rgba(255, 159, 67, 0.18);
+        }
+        50% {
+          box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.32);
+        }
       }
 
       .file-input-wrap {
@@ -6872,8 +6925,12 @@
         display: none;
       }
 
+      #receiptPrintArea {
+        display: none;
+      }
+
       @media print {
-        body > *:not(#filingPrintArea) {
+        body > *:not(#filingPrintArea):not(#receiptPrintArea) {
           display: none !important;
         }
 
@@ -6881,6 +6938,254 @@
           display: block !important;
           background: #fff;
         }
+
+        #receiptPrintArea {
+          display: block !important;
+          background: #fff;
+        }
+
+        #receiptPrintArea img {
+          max-width: 100%;
+        }
+      }
+
+      .validation-toast {
+        position: fixed;
+        top: 18px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-16px);
+        z-index: 100000;
+        background: #2a0f14;
+        border: 1px solid var(--red);
+        color: #fff;
+        border-radius: 12px;
+        padding: 13px 40px 13px 18px;
+        max-width: min(540px, 92vw);
+        box-shadow: 0 14px 44px rgba(0, 0, 0, 0.55);
+        font-size: 13px;
+        line-height: 1.45;
+        opacity: 0;
+        pointer-events: none;
+        transition:
+          opacity 0.2s ease,
+          transform 0.2s ease;
+      }
+      .validation-toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+        pointer-events: auto;
+      }
+      .validation-toast .vt-title {
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 3px;
+      }
+      .validation-toast .vt-title::before {
+        content: "!";
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: var(--red);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 900;
+        flex-shrink: 0;
+      }
+      .validation-toast .vt-body {
+        color: #f4ccd1;
+        font-weight: 600;
+      }
+      .validation-toast .vt-x {
+        position: absolute;
+        top: 9px;
+        right: 12px;
+        color: #f4ccd1;
+        font-size: 16px;
+        font-weight: 800;
+        cursor: pointer;
+        line-height: 1;
+        opacity: 0.8;
+      }
+      .validation-toast .vt-x:hover {
+        opacity: 1;
+      }
+      .field-error-msg {
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+        margin-top: 5px;
+        font-size: 11.5px;
+        color: var(--red);
+        font-weight: 700;
+        line-height: 1.35;
+      }
+      .field-error-msg::before {
+        content: "!";
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background: var(--red);
+        color: #fff;
+        font-size: 9px;
+        font-weight: 800;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      @keyframes fieldShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-5px);
+        }
+        40% {
+          transform: translateX(5px);
+        }
+        60% {
+          transform: translateX(-3px);
+        }
+        80% {
+          transform: translateX(3px);
+        }
+      }
+      .field-shake {
+        animation: fieldShake 0.34s ease;
+      }
+      .pv-addon-hdr,
+      .pv-addon-row {
+        display: grid;
+        grid-template-columns: 1fr 108px 108px 26px;
+        gap: 7px;
+        align-items: center;
+      }
+      .pv-addon-hdr {
+        font-size: 9.5px;
+        letter-spacing: 0.4px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 800;
+        margin-bottom: 5px;
+        padding: 0 2px;
+      }
+      .pv-addon-row {
+        margin-bottom: 7px;
+      }
+      .pv-addon-row input {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 8px;
+        padding: 8px 10px;
+        font-size: 12.5px;
+        outline: none;
+        font-family: inherit;
+        width: 100%;
+      }
+      .pv-addon-row input:focus {
+        border-color: var(--blue);
+      }
+      .pv-addon-del {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 17px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0;
+      }
+      .pv-addon-del:hover {
+        color: var(--red);
+      }
+      .pv-addon-add {
+        background: none;
+        border: 1px dashed var(--border);
+        color: var(--blue);
+        border-radius: 8px;
+        padding: 8px 14px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        font-family: inherit;
+        margin-top: 2px;
+      }
+      .pv-addon-add:hover {
+        border-color: var(--blue);
+      }
+      .pv-addon-sum {
+        font-size: 11.5px;
+        color: var(--muted);
+        margin-top: 9px;
+        line-height: 1.5;
+      }
+      .pv-addon-empty {
+        font-size: 11.5px;
+        color: var(--muted);
+        padding: 2px 0 6px;
+      }
+      .dj-addon-hdr,
+      .dj-addon-row {
+        display: grid;
+        grid-template-columns: 0.95fr 1.2fr 84px 84px 20px;
+        gap: 6px;
+        align-items: center;
+      }
+      .dj-addon-hdr {
+        font-size: 9px;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        color: var(--muted);
+        font-weight: 800;
+        margin-bottom: 5px;
+        padding: 0 2px;
+      }
+      .dj-addon-row {
+        margin-bottom: 6px;
+      }
+      .dj-addon-row input {
+        background: var(--panel-2);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 7px;
+        padding: 7px 8px;
+        font-size: 12px;
+        outline: none;
+        font-family: inherit;
+        width: 100%;
+      }
+      .dj-addon-row input:focus {
+        border-color: var(--blue);
+      }
+      .dj-addon-del {
+        background: none;
+        border: none;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0;
+      }
+      .dj-addon-del:hover {
+        color: var(--red);
+      }
+      .dj-addon-sum {
+        font-size: 11.5px;
+        margin-top: 9px;
+        padding-top: 9px;
+        border-top: 1px dashed var(--border);
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        color: var(--muted);
+        font-weight: 700;
       }
 
       .filing-detail-scroll {
@@ -14362,11 +14667,12 @@
     </style>
     <script src="/auth-portal.js"></script>
     <script src="/api.js"></script>
+    <script src="/finance-persist.js"></script>
     <script src="/vehicles-live.js"></script>
     <script src="/wholesale/wholesale-shell.js"></script>
     <script src="/wholesale/wholesale-live.js"></script>
     <script src="/customers-live.js"></script>
-    <script src="/sales-reps-live.js"></script>
+    <script src="/sales-reps-live.js?v=bday2"></script>
     <script src="/billing-live.js"></script>
     <script src="/global-search.js"></script>
     <script>
@@ -15841,7 +16147,7 @@
           <div class="page-head">
             <button
               class="print-btn"
-              onclick="window.print()"
+              onclick="exportTaxCsv()"
               style="position: absolute; top: 2px; right: 0"
             >
               <svg
@@ -15853,10 +16159,10 @@
                 stroke-width="2"
               >
                 <path
-                  d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"
+                  d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"
                 />
               </svg>
-              Print / Export
+              Export CSV
             </button>
             <div class="page-title">FINANCIALS <b>SALES TAX</b></div>
             <div class="page-sub">
@@ -16626,7 +16932,7 @@
             </div>
             <button
               class="btn-ghost pnl-actions"
-              onclick="window.print()"
+              onclick="exportPnlCsv()"
               style="white-space: nowrap"
             >
               <svg
@@ -16638,10 +16944,10 @@
                 stroke-width="2"
               >
                 <path
-                  d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"
+                  d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"
                 />
               </svg>
-              Print / Export
+              Export CSV
             </button>
           </div>
 
@@ -20039,7 +20345,7 @@
             </div>
             <button
               class="btn-ghost"
-              onclick="window.print()"
+              onclick="exportWsPnlCsv()"
               style="white-space: nowrap"
             >
               <svg
@@ -20131,7 +20437,7 @@
           <div class="page-head" style="position: relative">
             <button
               class="print-btn"
-              onclick="window.print()"
+              onclick="exportWsExpensesCsv()"
               style="position: absolute; top: 2px; right: 0"
             >
               <svg
@@ -21191,7 +21497,7 @@
           <div class="page-head">
             <button
               class="print-btn"
-              onclick="window.print()"
+              onclick="exportExpensesCsv()"
               style="position: absolute; top: 2px; right: 0"
             >
               <svg
@@ -21203,10 +21509,10 @@
                 stroke-width="2"
               >
                 <path
-                  d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"
+                  d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"
                 />
               </svg>
-              Print / Export
+              Export CSV
             </button>
             <div class="page-title">FINANCIALS <b>EXPENSES</b></div>
             <div class="page-sub" id="expCountLabel">
@@ -21590,6 +21896,97 @@
                     oninput="dealRecalc()"
                   />
                 </div>
+                <div class="form-group">
+                  <label
+                    >Net Check
+                    <span style="color: var(--muted); font-weight: 400"
+                      >(financed — optional)</span
+                    ></label
+                  ><input
+                    type="number"
+                    id="djNetCheck"
+                    placeholder="e.g. 28000"
+                    oninput="djNetCheckInput()"
+                  />
+                  <div
+                    style="
+                      font-size: 11px;
+                      color: var(--muted);
+                      line-height: 1.5;
+                      margin-top: 4px;
+                    "
+                  >
+                    The final funding check from the finance company — already
+                    includes any dealer reserve / finance income. If entered,
+                    this becomes the amount received for profit (sales tax &amp;
+                    registration are still subtracted). Leave blank to use the
+                    sold price.
+                  </div>
+                  <div
+                    id="djNetDetails"
+                    style="
+                      display: none;
+                      margin-top: 9px;
+                      padding: 11px 12px;
+                      background: var(--panel-2);
+                      border: 1px solid var(--border);
+                      border-radius: 9px;
+                    "
+                  >
+                    <label style="font-size: 11.5px">Reason / Description</label>
+                    <input
+                      type="text"
+                      id="djNetReason"
+                      list="djNetReasonList"
+                      placeholder="e.g. Dealer Reserve / Finance Income"
+                    />
+                    <datalist id="djNetReasonList">
+                      <option value="Dealer Reserve / Finance Income"></option>
+                      <option value="Rate Spread Income"></option>
+                      <option value="Finance Reserve"></option>
+                      <option value="Bank Funding Check"></option>
+                    </datalist>
+                    <label
+                      style="font-size: 11.5px; margin-top: 8px; display: block"
+                      >Notes</label
+                    >
+                    <textarea
+                      id="djNetNotes"
+                      placeholder="Any notes about this funding check…"
+                      style="
+                        width: 100%;
+                        min-height: 52px;
+                        resize: vertical;
+                        background: var(--panel);
+                        border: 1px solid var(--border);
+                        color: var(--text);
+                        border-radius: 9px;
+                        padding: 8px 10px;
+                        font-size: 12px;
+                        outline: none;
+                        font-family: inherit;
+                        line-height: 1.5;
+                      "
+                    ></textarea>
+                    <button
+                      type="button"
+                      onclick="djSaveNetDetails()"
+                      style="
+                        margin-top: 9px;
+                        background: var(--blue);
+                        color: #fff;
+                        border: none;
+                        border-radius: 8px;
+                        padding: 7px 18px;
+                        font-size: 12px;
+                        font-weight: 800;
+                        cursor: pointer;
+                      "
+                    >
+                      Save
+                    </button>
+                  </div>
+                </div>
                 <div class="form-row" style="margin-bottom: 0">
                   <div class="form-group">
                     <label>State Sales Tax ($)</label
@@ -21862,12 +22259,12 @@
 
               <div class="vdp-section" id="djAddonSection">
                 <div class="dj-form-title">
-                  Add-On Upcharges
+                  Add-On Purchases
                   <button
                     class="btn-scan ghost dj-scan-inline"
-                    onclick="openAddOnModal(currentDealVin)"
+                    onclick="djAddAddOn()"
                   >
-                    + Add Item
+                    + Add Add-On
                   </button>
                 </div>
                 <div class="vdp-sk">
@@ -23169,6 +23566,10 @@
                 <span id="repairReceiptName" class="hint"></span>
               </div>
             </div>
+            <div class="repair-draft-hint" id="repairDraftHint">
+              Click <strong>+ Add Repair</strong> to add this entry before
+              closing.
+            </div>
           </div>
         </div>
         <div class="modal-foot">
@@ -23178,7 +23579,7 @@
             id="saveRepairsBtn"
             style="box-shadow: none"
           >
-            Save
+            Done
           </button>
         </div>
       </div>
@@ -23219,6 +23620,7 @@
 
           <!-- Add new item form -->
           <div
+            class="add-on-form"
             style="
               background: var(--panel-2);
               border: 1px solid var(--border);
@@ -23283,6 +23685,26 @@
                 </select>
               </div>
               <div class="form-group" style="margin-bottom: 0">
+                <label>Dealer Cost ($)</label>
+                <input
+                  type="number"
+                  id="addOnCost"
+                  placeholder="e.g. 500"
+                  step="0.01"
+                  style="
+                    width: 100%;
+                    background: var(--panel);
+                    border: 1px solid var(--border);
+                    color: var(--text);
+                    border-radius: 9px;
+                    padding: 9px 12px;
+                    font-size: 13px;
+                    outline: none;
+                    font-family: var(--mono);
+                  "
+                />
+              </div>
+              <div class="form-group" style="margin-bottom: 0">
                 <label>Upcharge Price ($)</label>
                 <input
                   type="number"
@@ -23302,6 +23724,10 @@
                   "
                 />
               </div>
+            </div>
+            <div class="addon-draft-hint" id="addOnDraftHint">
+              Click <strong>+ Add Item</strong> to add this entry before
+              closing.
             </div>
           </div>
         </div>
@@ -23977,7 +24403,9 @@
           class="cpa-login-input"
           type="password"
           id="repLoginPass"
-          value="rep-demo-2026"
+          value=""
+          placeholder="Password"
+          autocomplete="current-password"
         />
         <button
           class="cpa-login-btn"
@@ -24031,7 +24459,9 @@
           class="cpa-login-input"
           type="password"
           id="cpaPass"
-          value="cpa-demo-2026"
+          value=""
+          placeholder="Password"
+          autocomplete="current-password"
         />
         <button class="cpa-login-btn" onclick="cpaDoLogin()">
           Log In to Portal
@@ -25332,15 +25762,24 @@
               />
               <div class="pv-hint">Leave blank for none</div>
             </div>
-            <div>
-              <label class="av-label">Add-ons Cost ($)</label>
-              <input
-                id="pvAddOns"
-                class="rc-input"
-                type="number"
-                placeholder="0"
-                oninput="pvRecalc()"
-              />
+            <div></div>
+          </div>
+          <div style="margin-bottom: 4px">
+            <label class="av-label"
+              >Add-Ons
+              <span style="color: var(--muted); font-weight: 400"
+                >(warranty, GPS, etc. — enter each one's cost &amp; sale
+                price)</span
+              ></label
+            >
+            <div id="pvAddOnList"></div>
+            <button type="button" class="pv-addon-add" onclick="pvAddAddOn()">
+              + Add add-on
+            </button>
+            <div id="pvAddOnSummary" class="pv-addon-sum"></div>
+            <div class="pv-hint">
+              Sale price minus cost is profit — e.g. a warranty that costs $500
+              and sells for $1,000 adds $500 profit.
             </div>
           </div>
 
@@ -25387,6 +25826,82 @@
                 oninput="pvRecalc()"
               />
             </div>
+          </div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label"
+                >Net Check
+                <span style="color: var(--muted); font-weight: 400"
+                  >(financed — optional)</span
+                ></label
+              >
+              <input
+                id="pvNetCheck"
+                class="rc-input"
+                type="number"
+                placeholder="e.g. 28000"
+                oninput="pvNetCheckInput()"
+              />
+              <div class="pv-hint">
+                The final funding check from the finance company — already
+                includes any dealer reserve / finance income. If entered, it
+                becomes the amount received for profit (tax &amp; registration
+                still subtracted). Blank = use sale price.
+              </div>
+            </div>
+            <div></div>
+          </div>
+          <div
+            id="pvNetDetails"
+            style="
+              display: none;
+              margin: 2px 0 6px;
+              padding: 11px 12px;
+              background: var(--panel);
+              border: 1px solid var(--border);
+              border-radius: 9px;
+            "
+          >
+            <label class="av-label">Reason / Description</label>
+            <input
+              id="pvNetReason"
+              class="rc-input"
+              type="text"
+              list="pvNetReasonList"
+              placeholder="e.g. Dealer Reserve / Finance Income"
+            />
+            <datalist id="pvNetReasonList">
+              <option value="Dealer Reserve / Finance Income"></option>
+              <option value="Rate Spread Income"></option>
+              <option value="Finance Reserve"></option>
+              <option value="Bank Funding Check"></option>
+            </datalist>
+            <label class="av-label" style="margin-top: 8px; display: block"
+              >Notes</label
+            >
+            <textarea
+              id="pvNetNotes"
+              class="rc-input"
+              placeholder="Any notes about this funding check…"
+              style="min-height: 50px; resize: vertical; font-family: inherit"
+            ></textarea>
+            <button
+              type="button"
+              onclick="pvSaveNetDetails()"
+              style="
+                margin-top: 9px;
+                background: var(--blue);
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                padding: 7px 18px;
+                font-size: 12px;
+                font-weight: 800;
+                cursor: pointer;
+              "
+            >
+              Save
+            </button>
           </div>
 
           <div class="pv-sec" id="pvRepSec">Sales Rep &amp; Commission</div>
@@ -25685,7 +26200,7 @@
               <path
                 d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"
               /></svg
-            >Print / Export
+            >Print Receipt
           </button>
         </div>
       </div>
@@ -25990,7 +26505,11 @@
                     type="text"
                     id="repInviteUser"
                     placeholder="e.g. jrivera"
+                    autocomplete="off"
+                    oninput="repValidateLoginField('username')"
+                    onblur="repValidateLoginField('username', true)"
                   />
+                  <div class="field-error" id="repInviteUserErr"></div>
                 </div>
                 <div class="form-group">
                   <label>Email</label
@@ -25998,7 +26517,9 @@
                     type="email"
                     id="repInviteEmail"
                     placeholder="rep@email.com"
+                    autocomplete="off"
                   />
+                  <div class="field-error" id="repInviteEmailErr"></div>
                 </div>
                 <div class="form-group">
                   <label>Phone Number</label
@@ -26093,7 +26614,7 @@
             style="display: none; color: var(--red); border-color: var(--red)"
             onclick="deleteSalesRep()"
           >
-            Delete Rep
+            Delete / Archive
           </button>
           <div style="display: flex; gap: 10px; margin-left: auto">
             <button class="btn-ghost" onclick="closeRepModal()">Cancel</button>
@@ -26527,7 +27048,63 @@
       </div>
     </div>
 
+    <div class="modal-overlay" id="repArchiveModal" style="display: none">
+      <div class="modal" style="max-width: 480px">
+        <div class="modal-head">
+          <h3 id="repArchiveTitle">Archive Sales Rep</h3>
+          <button class="modal-close" onclick="closeRepArchiveModal()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div
+            id="repArchiveMsg"
+            style="font-size: 13.5px; line-height: 1.6; color: var(--text)"
+          ></div>
+          <ul
+            id="repArchiveLinks"
+            style="
+              margin: 14px 0 0;
+              padding-left: 18px;
+              font-size: 13px;
+              color: var(--muted);
+              line-height: 1.7;
+            "
+          ></ul>
+          <div
+            style="
+              margin-top: 14px;
+              padding: 12px 14px;
+              border-radius: 8px;
+              border: 1px solid var(--border);
+              background: rgba(255, 255, 255, 0.02);
+              font-size: 12.5px;
+              color: var(--muted);
+              line-height: 1.55;
+            "
+          >
+            Archiving keeps deal history intact, disables login, removes the rep
+            from active lists, and pauses unpaid commissions / future payroll for
+            this rep. Paid commissions stay for records.
+          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-ghost" onclick="closeRepArchiveModal()">
+            Cancel</button
+          ><button
+            class="btn-primary"
+            id="repArchiveConfirmBtn"
+            style="box-shadow: none; background: var(--red); border-color: var(--red)"
+            onclick="confirmArchiveSalesRep()"
+          >
+            Archive Rep
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div id="filingPrintArea"></div>
+    <div id="receiptPrintArea"></div>
 
     <div class="modal-overlay" id="employeeFileModal" style="display: none">
       <div class="modal" style="max-width: 520px">
@@ -27249,16 +27826,16 @@
       let cpaUserLabel = "";
 
       function openCpaLogin() {
-        const l = document.getElementById("cpaLogin");
-        if (l) l.classList.add("show");
+        location.href =
+          (window.AVPortal && AVPortal.loginPath("cpa")) || "/cpa/login";
       }
       function closeCpaLogin() {
         const l = document.getElementById("cpaLogin");
         if (l) l.classList.remove("show");
       }
       function cpaDoLogin() {
-        closeCpaLogin();
-        enterCpaMode();
+        location.href =
+          (window.AVPortal && AVPortal.loginPath("cpa")) || "/cpa/login";
       }
       function cpaPrint() {
         window.print();
@@ -28145,6 +28722,153 @@
         document.body.removeChild(a);
         setTimeout(() => URL.revokeObjectURL(url), 500);
       }
+      function exportExpensesCsv() {
+        let rows =
+          window.lastExpRows && window.lastExpRows.length !== undefined
+            ? window.lastExpRows
+            : null;
+        if (!rows) {
+          try {
+            if (typeof renderExpenses === "function") renderExpenses();
+          } catch (e) {}
+          rows =
+            window.lastExpRows ||
+            (typeof _expenses !== "undefined" ? _expenses : []);
+        }
+        const headers = [
+          "Due Date",
+          "Name",
+          "Category",
+          "Bucket",
+          "Amount",
+          "Status",
+          "Type",
+          "Frequency",
+          "Vehicle",
+          "Notes",
+        ];
+        const data = (rows || []).map((e) => {
+          const bucket =
+            typeof expBucketOf === "function"
+              ? expBucketOf(e)
+              : e.category || "";
+          const recurring =
+            typeof isRecurring === "function"
+              ? isRecurring(e)
+              : e.recurring && e.recurring !== "One-Time";
+          const veh = e.vehicleVin
+            ? typeof vehicleLabel === "function"
+              ? vehicleLabel(e.vehicleVin)
+              : e.vehicleVin
+            : "";
+          return [
+            e.dueDate || "",
+            e.name || "",
+            e.category || "",
+            bucket,
+            e.amount ?? "",
+            e.paid ? "Paid" : "Unpaid",
+            recurring ? "Recurring" : "One-time",
+            e.recurring || "One-Time",
+            veh,
+            e.notes || "",
+          ];
+        });
+        downloadCsv("autovault-expenses.csv", headers, data);
+      }
+      function exportTaxCsv() {
+        if (!window.__taxExport) {
+          try {
+            if (typeof renderTaxPage === "function") renderTaxPage();
+          } catch (e) {}
+        }
+        const d = window.__taxExport || { rows: [], period: "" };
+        const headers = [
+          "Sold Date",
+          "Vehicle",
+          "VIN",
+          "Sale Price",
+          "Sales Tax Collected",
+        ];
+        const data = (d.rows || []).map((r) => [
+          r.date || "",
+          r.label || "",
+          r.vin || "",
+          r.sold ?? "",
+          r.tax ?? "",
+        ]);
+        const totalTax = (d.rows || []).reduce(
+          (s, r) => s + (Number(r.tax) || 0),
+          0,
+        );
+        data.push(["", "", "", "TOTAL SALES TAX", totalTax]);
+        const nm =
+          "autovault-sales-tax" +
+          (d.period ? "-" + String(d.period).replace(/\s+/g, "-") : "") +
+          ".csv";
+        downloadCsv(nm, headers, data);
+      }
+      function exportPnlCsv() {
+        if (!window.__pnlExport) {
+          try {
+            if (typeof renderPnlPage === "function") renderPnlPage();
+          } catch (e) {}
+        }
+        const d = window.__pnlExport;
+        if (!d) return;
+        const rows = [];
+        rows.push(["AutoVault — Profit & Loss", d.period || ""]);
+        rows.push([
+          (d.unitsSold || 0) +
+            " vehicle" +
+            (d.unitsSold === 1 ? "" : "s") +
+            " sold",
+        ]);
+        rows.push([]);
+        rows.push(["Section", "Line Item", "Amount"]);
+        (d.sections || []).forEach((sec) => {
+          sec.rows.forEach((r, i) => {
+            rows.push([
+              i === 0 ? sec.label : "",
+              String(r[0]).replace(/&amp;/g, "&"),
+              r[1],
+            ]);
+          });
+          rows.push([]);
+        });
+        rows.push(["Sold Vehicles — Detail"]);
+        rows.push([
+          "Sold Date",
+          "Vehicle",
+          "VIN",
+          "Sale Price",
+          "Total Cost",
+          "Gross Profit",
+          "Commission",
+          "Net Profit",
+        ]);
+        (d.sold || []).forEach((s) => {
+          rows.push([
+            s.soldDate,
+            s.veh,
+            s.vin,
+            s.sale,
+            s.cost,
+            s.gross,
+            s.commission,
+            s.net,
+          ]);
+        });
+        const nm =
+          "autovault-profit-loss" +
+          (d.period ? "-" + String(d.period).replace(/\s+/g, "-") : "") +
+          ".csv";
+        downloadCsv(nm, rows[0], rows.slice(1));
+      }
+      window.exportExpensesCsv = exportExpensesCsv;
+      window.exportTaxCsv = exportTaxCsv;
+      window.exportPnlCsv = exportPnlCsv;
+
       function exportVehiclesCsv() {
         const rows =
           window.lastVehRows && window.lastVehRows.length
@@ -28348,24 +29072,16 @@
       });
       var repUser = null;
       function openRepLogin() {
-        const sel = document.getElementById("repLoginSelect");
-        if (sel)
-          sel.innerHTML = (salesReps || [])
-            .map((r) => `<option>${r.name}</option>`)
-            .join("");
-        const l = document.getElementById("repLogin");
-        if (l) l.classList.add("show");
+        location.href =
+          (window.AVPortal && AVPortal.loginPath("rep")) || "/sales-rep/login";
       }
       function closeRepLogin() {
         const l = document.getElementById("repLogin");
         if (l) l.classList.remove("show");
       }
       function repDoLogin() {
-        repUser =
-          (document.getElementById("repLoginSelect") || {}).value ||
-          (salesReps[0] && salesReps[0].name);
-        closeRepLogin();
-        enterRepMode();
+        location.href =
+          (window.AVPortal && AVPortal.loginPath("rep")) || "/sales-rep/login";
       }
       function setRepPageLoading(pageId, loading) {
         var sec = document.getElementById("page-" + pageId);
@@ -28482,16 +29198,19 @@
             },
           });
 
-          var base = data.redirectDashboardPath || "/sales-rep/dashboard";
+          // Land directly on the unified SPA so the handoff query is not stripped
+          // by /sales-rep/dashboard → /dashboard redirect.
           var url =
-            base +
-            (base.indexOf("?") >= 0 ? "&" : "?") +
-            "impHandoff=" +
+            "/dashboard?portal=sales_rep&impHandoff=" +
             encodeURIComponent(handoffId) +
             "#rep-dashboard";
           var win = window.open(url, "_blank");
           if (!win) {
-            // Popup blocked — clean handoff and ask user to allow popups
+            // Popup blocked — fall back to same-tab navigation
+            try {
+              window.location.assign(url);
+              return;
+            } catch (_) {}
             try {
               localStorage.removeItem("avImpHandoff:" + handoffId);
             } catch (_) {}
@@ -28518,6 +29237,7 @@
           }
         }
       }
+      window.impersonateSalesRep = impersonateSalesRep;
 
       function exitImpersonation() {
         try {
@@ -28971,6 +29691,20 @@
       }
       function repSaveDayNote(ds, val) {
         repDayNotes[ds] = val;
+        if (!window.__repNoteTimers) window.__repNoteTimers = Object.create(null);
+        if (window.__repNoteTimers[ds]) clearTimeout(window.__repNoteTimers[ds]);
+        window.__repNoteTimers[ds] = setTimeout(async function () {
+          try {
+            if (
+              window.AVApi &&
+              typeof AVApi.upsertCalendarDayNote === "function"
+            ) {
+              await AVApi.upsertCalendarDayNote(ds, { body: String(val || "") });
+            }
+          } catch (e) {
+            console.warn("Rep day-note save failed", e);
+          }
+        }, 900);
       }
       function repMySoldIn(mo, yr) {
         const pfx = `${yr}-${String(mo + 1).padStart(2, "0")}`;
@@ -29586,6 +30320,27 @@
         ).getDate();
         const todayStr = today.toISOString().slice(0, 10);
         const prefix = `${repDashYear}-${String(repDashMonth + 1).padStart(2, "0")}`;
+        if (
+          window.AVApi &&
+          typeof AVApi.listDayNotes === "function" &&
+          window.__repNotesMonth !== prefix
+        ) {
+          window.__repNotesMonth = prefix;
+          AVApi.listDayNotes("?from=" + prefix + "-01&to=" + prefix + "-31")
+            .then(function (resp) {
+              var notes = (resp && resp.notes) || [];
+              if (Array.isArray(notes)) {
+                notes.forEach(function (n) {
+                  var d = n.noteDate
+                    ? String(n.noteDate).slice(0, 10)
+                    : n.date;
+                  if (d) repDayNotes[d] = n.body || n.note || "";
+                });
+              }
+              renderRepCal();
+            })
+            .catch(function () {});
+        }
         let cells = "";
         for (let i = 0; i < startDow; i++)
           cells += '<div class="cal-cell empty"></div>';
@@ -29654,6 +30409,110 @@
           if (e) e.classList.toggle("show", !ok);
         }
       }
+      let __vtTimer = null;
+      function clearFieldErrors(scopeSel) {
+        const scope = scopeSel
+          ? document.querySelector(scopeSel) || document
+          : document;
+        scope
+          .querySelectorAll(".av-field-error, .field-shake, .field-error")
+          .forEach((el) => {
+            el.classList.remove("av-field-error", "field-shake", "field-error");
+          });
+        scope.querySelectorAll(".field-error-msg").forEach((n) => n.remove());
+      }
+      function markFieldError(id, msg) {
+        const el = typeof id === "string" ? document.getElementById(id) : id;
+        if (!el) return null;
+        el.classList.add("av-field-error", "field-shake");
+        const parent = el.parentNode;
+        if (parent && msg) {
+          let n = parent.querySelector(".field-error-msg");
+          if (!n) {
+            n = document.createElement("div");
+            n.className = "field-error-msg";
+            parent.appendChild(n);
+          }
+          n.textContent = msg;
+        }
+        const clear = () => {
+          el.classList.remove("av-field-error", "field-shake");
+          const p = el.parentNode;
+          const existing = p && p.querySelector(".field-error-msg");
+          if (existing) existing.remove();
+          el.removeEventListener("input", clear);
+          el.removeEventListener("change", clear);
+        };
+        el.addEventListener("input", clear);
+        el.addEventListener("change", clear);
+        return el;
+      }
+      function showValidationToast(errors) {
+        if (!errors || !errors.length) return;
+        let t = document.getElementById("validationToast");
+        if (!t) {
+          t = document.createElement("div");
+          t.id = "validationToast";
+          t.className = "validation-toast";
+          t.addEventListener("click", function (e) {
+            if (
+              e.target &&
+              e.target.classList &&
+              e.target.classList.contains("vt-x")
+            )
+              t.classList.remove("show");
+          });
+          document.body.appendChild(t);
+        }
+        const labels = errors.map((e) => e.label).filter(Boolean);
+        const title =
+          errors.length === 1
+            ? "One more thing before you continue"
+            : "Please finish " + errors.length + " fields to continue";
+        const body =
+          errors.length === 1
+            ? errors[0].msg ||
+              "Please fill out " + (labels[0] || "this field") + "."
+            : "Highlighted below in red: " + labels.join(", ") + ".";
+        t.innerHTML =
+          '<span class="vt-x" title="Dismiss">×</span><div class="vt-title">' +
+          title +
+          '</div><div class="vt-body">' +
+          body +
+          "</div>";
+        t.classList.add("show");
+        if (__vtTimer) clearTimeout(__vtTimer);
+        __vtTimer = setTimeout(() => {
+          t.classList.remove("show");
+        }, 6000);
+      }
+      function showFieldErrors(scopeSel, errors) {
+        clearFieldErrors(scopeSel);
+        if (!errors || !errors.length) return false;
+        let first = null;
+        errors.forEach((e, i) => {
+          const el = markFieldError(e.id, e.msg);
+          if (i === 0) first = el;
+        });
+        if (first) {
+          try {
+            first.scrollIntoView({ behavior: "smooth", block: "center" });
+          } catch (err) {}
+          setTimeout(() => {
+            try {
+              first.focus({ preventScroll: true });
+            } catch (err) {
+              try {
+                first.focus();
+              } catch (e2) {}
+            }
+          }, 160);
+        }
+        showValidationToast(errors);
+        return true;
+      }
+      window.showValidationToast = showValidationToast;
+      window.showFieldErrors = showFieldErrors;
       function avClearErrors(prefix) {
         document.querySelectorAll('[id^="' + prefix + '"]').forEach((el) => {
           el.classList.remove("av-field-error");
@@ -29797,6 +30656,19 @@
           const tp = document.getElementById("pvTitlePop");
           if (tp) tp.classList.remove("show");
         } catch (e) {}
+        pvAddOnItems = [];
+        try {
+          pvRenderAddOns();
+        } catch (e) {}
+        ["pvNetCheck", "pvNetReason", "pvNetNotes"].forEach((id) => {
+          const el = document.getElementById(id);
+          if (el) el.value = "";
+        });
+        const nd = document.getElementById("pvNetDetails");
+        if (nd) {
+          nd.style.display = "none";
+          nd.dataset.saved = "";
+        }
         m.classList.add("open");
         pvRecalc();
         setTimeout(() => {
@@ -29808,14 +30680,123 @@
         const m = document.getElementById("prevSoldModal");
         if (m) m.classList.remove("open");
       }
+      let pvAddOnItems = [];
+      function pvAddOnsCost() {
+        return (pvAddOnItems || []).reduce(
+          (s, a) => s + (parseFloat(a.cost) || 0),
+          0,
+        );
+      }
+      function pvAddOnsSale() {
+        return (pvAddOnItems || []).reduce(
+          (s, a) => s + (parseFloat(a.price) || 0),
+          0,
+        );
+      }
+      function pvRenderAddOns() {
+        const el = document.getElementById("pvAddOnList");
+        if (!el) return;
+        if (!pvAddOnItems.length) {
+          el.innerHTML =
+            '<div class="pv-addon-empty">No add-ons yet — click "+ Add add-on" to itemize.</div>';
+          pvAddOnSummaryRender();
+          return;
+        }
+        el.innerHTML =
+          '<div class="pv-addon-hdr"><span>Name / Category</span><span>Cost&nbsp;$</span><span>Sale&nbsp;$</span><span></span></div>' +
+          pvAddOnItems
+            .map(
+              (a, i) => `<div class="pv-addon-row">
+      <input type="text" placeholder="e.g. Warranty" value="${String(a.name || "").replace(/"/g, "&quot;")}" oninput="pvAddOnEdit(${i},'name',this.value)">
+      <input type="number" placeholder="0" value="${a.cost || ""}" oninput="pvAddOnEdit(${i},'cost',this.value)">
+      <input type="number" placeholder="0" value="${a.price || ""}" oninput="pvAddOnEdit(${i},'price',this.value)">
+      <button type="button" class="pv-addon-del" onclick="pvRemoveAddOn(${i})" title="Remove">\u2715</button>
+    </div>`,
+            )
+            .join("");
+        pvAddOnSummaryRender();
+      }
+      function pvAddOnSummaryRender() {
+        const sum = document.getElementById("pvAddOnSummary");
+        if (!sum) return;
+        if (!pvAddOnItems.length) {
+          sum.innerHTML = "";
+          return;
+        }
+        const cost = pvAddOnsCost();
+        const sale = pvAddOnsSale();
+        const profit = sale - cost;
+        sum.innerHTML = `Cost ${pvMoney(cost)} · Sale ${pvMoney(sale)} · Add-on profit <b style="color:${profit >= 0 ? "var(--green)" : "var(--red)"}">${pvMoneySigned(profit)}</b>`;
+      }
+      function pvAddAddOn() {
+        pvAddOnItems.push({ name: "", cost: 0, price: 0 });
+        pvRenderAddOns();
+        pvRecalc();
+        setTimeout(() => {
+          const rows = document.querySelectorAll("#pvAddOnList .pv-addon-row");
+          const last = rows[rows.length - 1];
+          if (last) {
+            const inp = last.querySelector("input");
+            if (inp) inp.focus();
+          }
+        }, 30);
+      }
+      function pvRemoveAddOn(i) {
+        pvAddOnItems.splice(i, 1);
+        pvRenderAddOns();
+        pvRecalc();
+      }
+      function pvAddOnEdit(i, field, val) {
+        if (!pvAddOnItems[i]) return;
+        if (field === "name") pvAddOnItems[i].name = val;
+        else
+          pvAddOnItems[i][field] =
+            parseFloat(String(val).replace(/,/g, "")) || 0;
+        pvAddOnSummaryRender();
+        pvRecalc();
+      }
+      function pvNetDetailsSync() {
+        const box = document.getElementById("pvNetDetails");
+        const el = document.getElementById("pvNetCheck");
+        if (!box || !el) return;
+        const raw = (el.value || "").trim();
+        const n = parseFloat(raw);
+        const show = raw !== "" && isFinite(n) && n > 0;
+        if (show) {
+          if (box.dataset.saved !== "1") box.style.display = "";
+        } else {
+          box.style.display = "none";
+          box.dataset.saved = "";
+        }
+      }
+      function pvNetCheckInput() {
+        pvNetDetailsSync();
+        pvRecalc();
+      }
+      function pvSaveNetDetails() {
+        const box = document.getElementById("pvNetDetails");
+        if (box) {
+          box.dataset.saved = "1";
+          box.style.display = "none";
+        }
+      }
+      window.pvAddAddOn = pvAddAddOn;
+      window.pvRemoveAddOn = pvRemoveAddOn;
+      window.pvAddOnEdit = pvAddOnEdit;
+      window.pvNetCheckInput = pvNetCheckInput;
+      window.pvSaveNetDetails = pvSaveNetDetails;
       function pvTotals() {
         const price = pvNum("pvPrice"),
           fees = pvNum("pvFees"),
           repairs = pvNum("pvRepairs"),
           other = pvNum("pvExpenses"),
           flooring = pvNum("pvFlooring"),
-          addOns = pvNum("pvAddOns"),
+          addOnCost = pvAddOnsCost(),
+          addOnSale = pvAddOnsSale(),
           sale = pvNum("pvSalePrice");
+        const salesTax = pvNum("pvSalesTax"),
+          regFees = pvNum("pvRegFees"),
+          netCheck = pvNum("pvNetCheck");
         const buy = pvRaw("pvBuyDate"),
           sell = pvRaw("pvSellDate");
         let days = null;
@@ -29826,17 +30807,28 @@
           );
           days = isFinite(d) ? d : null;
         }
+        const addOns = addOnCost;
         const totalInvestment = price + fees + repairs + other + addOns;
         const totalVehicleCost = totalInvestment + flooring;
         const commRaw = pvRaw("pvCommission");
         const plan = currentDealershipPlan();
+        const repSel = document.getElementById("pvRep");
+        const hasRep = !!(repSel && (repSel.value || "").trim());
         const commission =
           plan !== "growing_dealership"
             ? 0
             : commRaw === ""
-              ? Math.round(price * 0.04)
+              ? hasRep
+                ? Math.round(price * 0.04)
+                : 0
               : pvNum("pvCommission");
-        const netProfit = sale - totalVehicleCost - commission;
+        const usingNC = netCheck > 0;
+        const netRevenue = usingNC ? netCheck - salesTax - regFees : sale;
+        // When financed Net Check is used, add-on sale is already inside the check.
+        const revenueForProfit = usingNC
+          ? netRevenue
+          : sale + addOnSale;
+        const netProfit = revenueForProfit - totalVehicleCost - commission;
         const roi =
           totalVehicleCost > 0 ? (netProfit / totalVehicleCost) * 100 : 0;
         return {
@@ -29846,14 +30838,21 @@
           other,
           flooring,
           addOns,
+          addOnCost,
+          addOnSale,
           sale,
+          salesTax,
+          regFees,
+          netCheck,
+          usingNC,
+          netRevenue,
           days,
           totalInvestment,
           totalVehicleCost,
           commission,
           netProfit,
           roi,
-          autoComm: plan === "growing_dealership" && commRaw === "",
+          autoComm: plan === "growing_dealership" && commRaw === "" && hasRep,
         };
       }
       function pvRecalc() {
@@ -29872,6 +30871,8 @@
     <div class="pvs-row"><span>Days in Inventory</span><span${t.days !== null && t.days < 0 ? ' style="color:var(--red)"' : ""}>${dayTxt}</span></div>
     <div class="pvs-row"><span>Total Investment</span><span>${pvMoney(t.totalInvestment)}</span></div>
     <div class="pvs-row"><span>Total Vehicle Cost</span><span>${pvMoney(t.totalVehicleCost)}</span></div>
+    ${t.usingNC ? `<div class="pvs-row"><span>Net Check</span><span>${pvMoney(t.netCheck)}</span></div>
+    <div class="pvs-row"><span>Net Revenue to Dealer</span><span>${pvMoney(t.netRevenue)}</span></div>` : t.addOnSale > 0 ? `<div class="pvs-row"><span>Add-On Sale</span><span style="color:var(--green)">+ ${pvMoney(t.addOnSale)}</span></div>` : ""}
     ${showComm ? `<div class="pvs-row"><span>Commission${t.autoComm ? " <em>(auto)</em>" : ""}</span><span>${pvMoney(t.commission)}</span></div>` : ""}
     <div class="pvs-row grand"><span>Net Profit</span><span style="color:${t.netProfit >= 0 ? "var(--green)" : "var(--red)"}">${pvMoneySigned(t.netProfit)}</span></div>
     <div class="pvs-row"><span>ROI</span><span style="color:${t.roi >= 0 ? "var(--green)" : "var(--red)"}">${t.roi.toFixed(1)}%</span></div>`;
@@ -29950,22 +30951,60 @@
         const buy = buyCheck.ok ? buyCheck.ymd : "";
         const sell = sellCheck.ok ? sellCheck.ymd : "";
         const t = pvTotals();
-        const errs = [];
-        if (!vin) errs.push("A VIN is required to save this vehicle.");
+        const fieldErrs = [];
+        if (!vin)
+          fieldErrs.push({
+            id: "pvVin",
+            label: "VIN",
+            msg: "A VIN is required to save this vehicle.",
+          });
         else if (
           typeof vehicles !== "undefined" &&
           vehicles.some((v) => (v.vin || "").toUpperCase() === vin)
         )
-          errs.push("That VIN is already in the system.");
-        if (!buyCheck.ok) errs.push(buyCheck.msg);
-        if (!sellCheck.ok) errs.push(sellCheck.msg);
+          fieldErrs.push({
+            id: "pvVin",
+            label: "VIN",
+            msg: "That VIN is already in the system.",
+          });
+        if (!buyCheck.ok)
+          fieldErrs.push({
+            id: "pvBuyDate",
+            label: "Purchase date",
+            msg: buyCheck.msg,
+          });
+        if (!sellCheck.ok)
+          fieldErrs.push({
+            id: "pvSellDate",
+            label: "Sale date",
+            msg: sellCheck.msg,
+          });
         if (buy && sell && new Date(sell) < new Date(buy))
-          errs.push("The sale date can't be before the purchase date.");
-        if (!(t.price > 0)) errs.push("Enter what you paid for this vehicle.");
-        if (!(t.sale > 0)) errs.push("Enter what this vehicle sold for.");
-        if (errs.length) {
-          pvMsg(errs[0], false);
-          if (typeof AVToast !== "undefined") AVToast.warning(errs[0]);
+          fieldErrs.push({
+            id: "pvSellDate",
+            label: "Sale date",
+            msg: "The sale date can't be before the purchase date.",
+          });
+        if (!(t.price > 0))
+          fieldErrs.push({
+            id: "pvPrice",
+            label: "Purchase price",
+            msg: "Enter what you paid for this vehicle.",
+          });
+        if (!(t.sale > 0))
+          fieldErrs.push({
+            id: "pvSalePrice",
+            label: "Sale price",
+            msg: "Enter what this vehicle sold for.",
+          });
+        if (fieldErrs.length) {
+          if (typeof showFieldErrors === "function")
+            showFieldErrors("#prevSoldModal", fieldErrs);
+          else {
+            pvMsg(fieldErrs[0].msg, false);
+            if (typeof AVToast !== "undefined")
+              AVToast.warning(fieldErrs[0].msg);
+          }
           return;
         }
         const pop = document.getElementById("pvTitlePop");
@@ -30018,9 +31057,25 @@
             otherExpenses: t.other,
             flooring: t.flooring,
             addOns: t.addOns,
+            addOnItems: (pvAddOnItems || [])
+              .filter(
+                (a) =>
+                  (parseFloat(a.cost) || 0) > 0 ||
+                  (parseFloat(a.price) || 0) > 0 ||
+                  (a.name || "").trim(),
+              )
+              .map((a) => ({
+                type: (a.name || "").trim() || "Add-On",
+                desc: (a.name || "").trim() || "Add-On",
+                cost: Number(a.cost) || 0,
+                price: Number(a.price) || 0,
+              })),
             salePrice: t.sale,
             salesTax: pvNum("pvSalesTax"),
             regFees: pvNum("pvRegFees"),
+            netCheck: t.usingNC ? t.netCheck : null,
+            netCheckReason: pvRaw("pvNetReason") || "",
+            netCheckNotes: pvRaw("pvNetNotes") || "",
             customer: pvRaw("pvCustomer") || "Previous customer",
             titlePresent: !!titlePresent,
           };
@@ -31061,6 +32116,10 @@
         const hid = document.getElementById(hiddenId);
         if (!hid) return;
         const w = hid.closest(".fastdate");
+        // Accept ISO datetimes from APIs (e.g. 1998-04-24T00:00:00.000Z)
+        if (ymd && /^\d{4}-\d{2}-\d{2}/.test(String(ymd))) {
+          ymd = String(ymd).slice(0, 10);
+        }
         if (!w) {
           hid.value = ymd || "";
           return;
@@ -32492,6 +33551,55 @@
         ]);
         downloadCsv("wholesale-inventory.csv", headers, data);
       }
+      function exportWsPnlCsv() {
+        try {
+          if (typeof renderWsPnl === "function") renderWsPnl();
+        } catch (e) {}
+        const d = window.__wsPnlExport || { period: "", sold: [], totals: {} };
+        const headers = [
+          "Sold Date",
+          "Vehicle",
+          "VIN",
+          "Sale Price",
+          "Purchase",
+          "Flooring",
+          "Net Profit",
+        ];
+        const data = (d.sold || []).map((r) => [
+          r.soldDate || "",
+          r.veh || "",
+          r.vin || "",
+          r.sale ?? "",
+          r.cost ?? "",
+          r.flooring ?? "",
+          r.net ?? "",
+        ]);
+        downloadCsv(
+          "wholesale-pnl-" + (d.period || "export").replace(/\s+/g, "-") + ".csv",
+          headers,
+          data,
+        );
+      }
+      function exportWsExpensesCsv() {
+        const pfx =
+          typeof wsExpMode !== "undefined" && wsExpMode === "year"
+            ? String(wsExpYear)
+            : `${wsExpYear}-${String((wsExpMonth || 0) + 1).padStart(2, "0")}`;
+        const rows = (wsExpenses || []).filter((e) =>
+          (e.date || e.dueDate || "").startsWith(pfx),
+        );
+        const headers = ["Date", "Name", "Category", "Amount", "Notes"];
+        const data = rows.map((e) => [
+          e.date || e.dueDate || "",
+          e.name || "",
+          e.category || "",
+          e.amount ?? "",
+          e.notes || "",
+        ]);
+        downloadCsv("wholesale-expenses.csv", headers, data);
+      }
+      window.exportWsPnlCsv = exportWsPnlCsv;
+      window.exportWsExpensesCsv = exportWsExpensesCsv;
       function renderWsVehicles() {
         const kh = document.getElementById("wsVehKpis");
         const body = document.getElementById("wsVehBody");
@@ -32774,6 +33882,19 @@
         const totalExp = cogs + flooring + exp;
         const net = rev - totalExp;
         const margin = rev > 0 ? Math.round((net / rev) * 100) : 0;
+        window.__wsPnlExport = {
+          period: periodLbl,
+          sold: sold.map((r) => ({
+            soldDate: r.soldDate || "",
+            veh: `${r.year || ""} ${r.make || ""} ${r.model || ""}`.trim(),
+            vin: r.vin || "",
+            sale: Math.round(r.soldPrice || 0),
+            cost: Math.round(r.price || 0),
+            flooring: Math.round(r.floorCost || 0),
+            net: Math.round(r.netProfit || 0),
+          })),
+          totals: { rev, cogs, flooring, exp, net },
+        };
         document.getElementById("wsPnlKpis").innerHTML = [
           {
             l: "Total Revenue",
@@ -33579,19 +34700,27 @@
           (x) => x.id === id,
         );
         if (!e) return;
+        window.__receiptViewId = id;
         const recur =
           typeof isRecurring === "function" && isRecurring(e)
             ? e.recurring || "Recurring"
             : "One-time";
         const view = document.getElementById("receiptView");
-        const rcImg = e.receiptImg
-          ? `<div style="margin:16px 0;text-align:center;"><img src="${e.receiptImg}" style="max-width:100%;max-height:320px;border-radius:8px;border:1px solid var(--border);"></div>`
-          : "";
+        let fileHtml = "";
+        if (e.receiptImg) {
+          if (e.receiptType === "pdf" || /\.pdf($|\?)/i.test(e.receiptImg)) {
+            fileHtml = `<iframe src="${e.receiptImg}" title="Receipt" style="width:100%;height:360px;border:1px solid var(--border);border-radius:10px;background:#fff;"></iframe>`;
+          } else {
+            fileHtml = `<img src="${e.receiptImg}" alt="Receipt" style="width:100%;border-radius:10px;border:1px solid var(--border);display:block;">`;
+          }
+          fileHtml = `<div style="margin-bottom:14px;">${fileHtml}<div style="font-size:11px;color:var(--muted);margin-top:6px;">📎 ${e.receiptName || e.receipt || "Uploaded receipt"}</div></div>`;
+        }
         if (view)
-          view.innerHTML = `<div class="receipt-doc" id="receiptDoc">
+          view.innerHTML =
+            fileHtml +
+            `<div class="receipt-doc" id="receiptDoc">
     <div class="rc-doc-head"><div class="rc-doc-logo">AutoVault</div><div class="rc-doc-tag">Expense Receipt</div></div>
-    <div class="rc-doc-file">📎 ${e.receiptName || "receipt.pdf"}</div>
-    ${rcImg}
+    ${e.receiptImg ? "" : `<div class="rc-doc-file">📎 ${e.receiptName || e.receipt || "No file attached"}</div>`}
     <div class="rc-doc-row"><span>Paid To</span><b>${e.name}</b></div>
     <div class="rc-doc-row"><span>Category</span><b>${e.category}</b></div>
     <div class="rc-doc-row"><span>Date</span><b>${fmtDate(e.dueDate)}</b></div>
@@ -33606,9 +34735,47 @@
       function closeReceipt() {
         const m = document.getElementById("receiptModal");
         if (m) m.classList.remove("open");
+        window.__receiptViewId = null;
       }
       function printReceipt() {
+        const id = window.__receiptViewId;
+        const e = (typeof _expenses !== "undefined" ? _expenses : []).find(
+          (x) => x.id === id,
+        );
+        const area = document.getElementById("receiptPrintArea");
+        const fa = document.getElementById("filingPrintArea");
+        if (fa) fa.innerHTML = "";
+        if (area && e) {
+          const recur =
+            typeof isRecurring === "function" && isRecurring(e)
+              ? e.recurring || "Recurring"
+              : "One-time";
+          let img = "";
+          if (e.receiptImg) {
+            img =
+              e.receiptType === "pdf" || /\.pdf($|\?)/i.test(e.receiptImg)
+                ? `<iframe src="${e.receiptImg}" style="width:100%;height:900px;border:none;"></iframe>`
+                : `<img src="${e.receiptImg}" style="max-width:100%;margin-top:10px;">`;
+          }
+          area.innerHTML = `<div style="font-family:Arial,Helvetica,sans-serif;color:#111;padding:26px;">
+      <div style="font-size:22px;font-weight:800;">AutoVault</div>
+      <div style="color:#666;font-size:13px;margin:2px 0 18px;">Expense Receipt</div>
+      <table style="font-size:14px;border-collapse:collapse;margin-bottom:16px;">
+        <tr><td style="padding:3px 20px 3px 0;color:#666;">Paid To</td><td><b>${e.name || ""}</b></td></tr>
+        <tr><td style="padding:3px 20px 3px 0;color:#666;">Category</td><td>${e.category || ""}</td></tr>
+        <tr><td style="padding:3px 20px 3px 0;color:#666;">Date</td><td>${fmtDate(e.dueDate)}</td></tr>
+        <tr><td style="padding:3px 20px 3px 0;color:#666;">Frequency</td><td>${recur}</td></tr>
+        ${e.notes ? `<tr><td style="padding:3px 20px 3px 0;color:#666;vertical-align:top;">Notes</td><td>${e.notes}</td></tr>` : ""}
+        <tr><td style="padding:3px 20px 3px 0;color:#666;">Amount</td><td><b>${fmt(e.amount)}</b> &middot; ${e.paid ? "PAID" : "UNPAID"}</td></tr>
+      </table>
+      ${e.receiptName || e.receipt ? `<div style="font-size:12px;color:#666;">Attached file: ${e.receiptName || e.receipt}</div>` : ""}
+      ${img}
+    </div>`;
+        }
         window.print();
+        setTimeout(() => {
+          if (area) area.innerHTML = "";
+        }, 1000);
       }
       const avConfig = {
         apiUrl:
@@ -34933,31 +36100,66 @@
           v.flooringOverride !== null && v.flooringOverride !== undefined
             ? Number(v.flooringOverride)
             : autoFlooringCost;
-        const addOns = v.addOns || 0;
         const extraRepPay = v.extraRepPay || 0;
         const repairs = repairsTotal(v);
         const attachedExp =
           typeof attachedExpensesTotal === "function"
             ? attachedExpensesTotal(v)
             : 0;
+        // Prefer itemized add-on costs; fall back to legacy scalar v.addOns when
+        // items exist with prices but no costs (legacy rows).
+        const addOnItemsList = v.addOnItems || [];
+        const addOnCostFromItems = addOnItemsList.reduce(
+          (s, a) => s + (Number(a.cost) || 0),
+          0,
+        );
+        const hasItemizedCosts = addOnItemsList.some(
+          (a) => a.cost != null && Number(a.cost) > 0,
+        );
+        const legacyAddOnScalar = Number(v.addOns) || 0;
+        const addOns = hasItemizedCosts
+          ? addOnCostFromItems
+          : legacyAddOnScalar > 0
+            ? legacyAddOnScalar
+            : addOnCostFromItems;
+        if (
+          !hasItemizedCosts &&
+          legacyAddOnScalar > 0 &&
+          addOnItemsList.some((a) => Number(a.price) > 0) &&
+          !v.__legacyAddOnWarned
+        ) {
+          v.__legacyAddOnWarned = true;
+          if (typeof AVToast !== "undefined" && AVToast.info) {
+            AVToast.info(
+              "Legacy add-on cost used for " +
+                (v.vin || "a vehicle") +
+                " — edit add-ons to set item costs.",
+            );
+          }
+        }
         // Sales tax & registration are collected for the state (pass-through) — NOT dealer cost.
         const totalInvestment =
-          (Number(v.price) || 0) + (Number(v.fees) || 0) + repairs;
+          (Number(v.price) || 0) +
+          (Number(v.fees) || 0) +
+          repairs +
+          addOns;
         const totalVehicleCost = totalInvestment + flooringCost + attachedExp;
+        const hasRep = !!(v.rep && String(v.rep).trim());
         const commRate =
           v.commissionPct != null && v.commissionPct > 0
             ? v.commissionPct / 100
             : 0.04;
         const repForComm = (salesReps || []).find((x) => x.name === v.rep);
-        const autoCommission =
-          (repForComm && repForComm.commissionType === "flat"
-            ? Math.max(0, Math.round(Number(repForComm.commissionFlat) || 0))
-            : Math.round((Number(v.price) || 0) * commRate)) + extraRepPay;
+        const autoCommission = hasRep
+          ? (repForComm && repForComm.commissionType === "flat"
+              ? Math.max(0, Math.round(Number(repForComm.commissionFlat) || 0))
+              : Math.round((Number(v.price) || 0) * commRate)) + extraRepPay
+          : 0;
         const commission =
           v.commissionOverride !== null && v.commissionOverride !== undefined
             ? Number(v.commissionOverride)
             : autoCommission;
-        // Add-on items are revenue (upcharges sold to customer)
+        // Add-on items: price = customer upcharge revenue; cost counted above in COGS
         const addOnRevenue = (v.addOnItems || []).reduce(
           (s, a) => s + (Number(a.price) || 0),
           0,
@@ -36964,6 +38166,11 @@
       let repModalEditingId = null;
       let repApplyAll = false;
       let repModalCommType = "percentage";
+      var __repLoginCheck = {
+        username: { ok: true, msg: "", pending: false },
+        email: { ok: true, msg: "", pending: false },
+        timers: { username: null, email: null },
+      };
 
       function setRepCommType(type, keepValue) {
         repModalCommType = type === "flat" ? "flat" : "percentage";
@@ -36997,6 +38204,38 @@
         repCalcSummary();
       }
 
+      function avToYmd(value) {
+        if (value == null || value === "") return "";
+        if (value instanceof Date && !isNaN(value.getTime())) {
+          return value.toISOString().slice(0, 10);
+        }
+        var s = String(value).trim();
+        if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+        // MM/DD/YYYY typed in UI
+        var m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
+        if (m) {
+          var mm = String(m[1]).padStart(2, "0");
+          var dd = String(m[2]).padStart(2, "0");
+          return m[3] + "-" + mm + "-" + dd;
+        }
+        var d = new Date(s);
+        if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+        return "";
+      }
+      function resolveRepBirthday(rep) {
+        if (!rep) return "";
+        return (
+          avToYmd(rep.birthday) ||
+          avToYmd(rep.birthDate) ||
+          avToYmd(
+            rep._raw &&
+              rep._raw.profile &&
+              (rep._raw.profile.birthDate || rep._raw.profile.birthday),
+          ) ||
+          avToYmd(rep.profile && (rep.profile.birthDate || rep.profile.birthday)) ||
+          ""
+        );
+      }
       function openRepModal(id) {
         repModalEditingId = id || null;
         const rep = id ? salesReps.find((x) => x.id === id) : null;
@@ -37019,7 +38258,13 @@
                 ? rep.commissionPct
                 : "";
           {
-            avSetDate("repModalBirthday", rep.birthday || "");
+            const bdayYmd = resolveRepBirthday(rep);
+            if (bdayYmd && !rep.birthday) rep.birthday = bdayYmd;
+            avEnsureFastDate("repModalBirthday", {
+              minYear: 1920,
+              maxYear: (typeof today !== "undefined" ? today : new Date()).getFullYear(),
+            });
+            avSetDate("repModalBirthday", bdayYmd);
           }
           {
             const u = document.getElementById("repInviteUser");
@@ -37033,6 +38278,24 @@
             const im = document.getElementById("repInviteMsg");
             if (im) im.innerHTML = "";
           }
+          ["repInviteUserErr", "repInviteEmailErr"].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) {
+              el.textContent = "";
+              el.classList.remove("show");
+            }
+          });
+          ["repInviteUser", "repInviteEmail"].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) {
+              el.classList.remove("av-field-error");
+              el.style.borderColor = "";
+            }
+          });
+          __repLoginCheck.username = { ok: true, msg: "", pending: false };
+          __repLoginCheck.email = { ok: true, msg: "", pending: false };
+          const emailInput = document.getElementById("repInviteEmail");
+          if (emailInput) emailInput.disabled = !!rep;
           document.getElementById("repDeleteBtn").style.display = "inline-flex";
         } else {
           nameEl.value = "";
@@ -37052,6 +38315,23 @@
             const im = document.getElementById("repInviteMsg");
             if (im) im.innerHTML = "";
           }
+          ["repInviteUserErr", "repInviteEmailErr"].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) {
+              el.textContent = "";
+              el.classList.remove("show");
+            }
+          });
+          ["repInviteUser", "repInviteEmail"].forEach(function (id) {
+            const el = document.getElementById(id);
+            if (el) {
+              el.classList.remove("av-field-error");
+              el.style.borderColor = "";
+              el.disabled = false;
+            }
+          });
+          __repLoginCheck.username = { ok: true, msg: "", pending: false };
+          __repLoginCheck.email = { ok: true, msg: "", pending: false };
           document.getElementById("repDeleteBtn").style.display = "none";
         }
         document.getElementById("repModalBase").value = rep
@@ -37144,6 +38424,114 @@
         if (el)
           el.innerHTML = `<div class="rc-ok ${good ? "good" : "bad"}" style="margin-top:8px;">${msg}</div>`;
       }
+      function setRepLoginFieldError(field, msg, isError) {
+        var inputId = field === "username" ? "repInviteUser" : "repInviteEmail";
+        var errId = field === "username" ? "repInviteUserErr" : "repInviteEmailErr";
+        var input = document.getElementById(inputId);
+        var err = document.getElementById(errId);
+        if (input) {
+          input.classList.toggle("av-field-error", !!isError);
+          input.style.borderColor = isError ? "var(--red)" : "";
+        }
+        if (err) {
+          err.textContent = msg || "";
+          err.classList.toggle("show", !!msg);
+          if (msg && !isError) err.style.color = "var(--green)";
+          else if (msg) err.style.color = "";
+        }
+        __repLoginCheck[field] = {
+          ok: !isError,
+          msg: msg || "",
+          pending: false,
+        };
+      }
+      function repValidateLoginField(field, immediate) {
+        if (field !== "username") return;
+        var input = document.getElementById("repInviteUser");
+        if (!input) return;
+        var raw = (input.value || "").trim();
+        if (__repLoginCheck.timers.username) {
+          clearTimeout(__repLoginCheck.timers.username);
+          __repLoginCheck.timers.username = null;
+        }
+        if (!raw) {
+          if (immediate) {
+            setRepLoginFieldError("username", "Username is required.", true);
+          } else {
+            setRepLoginFieldError("username", "", false);
+            __repLoginCheck.username.ok = false;
+          }
+          return;
+        }
+        if (raw.length < 2) {
+          setRepLoginFieldError(
+            "username",
+            "Username must be at least 2 characters.",
+            true,
+          );
+          return;
+        }
+        if (!/^[a-zA-Z0-9._-]+$/.test(raw)) {
+          setRepLoginFieldError(
+            "username",
+            "Use letters, numbers, dots, underscores, or hyphens only.",
+            true,
+          );
+          return;
+        }
+        if (
+          !window.AVApi ||
+          typeof AVApi.checkSalesRepAvailability !== "function"
+        ) {
+          setRepLoginFieldError("username", "", false);
+          __repLoginCheck.username.ok = true;
+          return;
+        }
+        __repLoginCheck.username.pending = true;
+        var delay = immediate ? 0 : 400;
+        __repLoginCheck.timers.username = setTimeout(async function () {
+          try {
+            var qs =
+              "?username=" +
+              encodeURIComponent(raw) +
+              (repModalEditingId
+                ? "&excludeUserId=" + encodeURIComponent(repModalEditingId)
+                : "");
+            var resp = await AVApi.checkSalesRepAvailability(qs);
+            var part = resp && resp.username;
+            if (part && part.available === false) {
+              setRepLoginFieldError(
+                "username",
+                part.message || "Already in use.",
+                true,
+              );
+            } else {
+              setRepLoginFieldError(
+                "username",
+                part && part.message ? part.message : "Available.",
+                false,
+              );
+              __repLoginCheck.username.ok = true;
+            }
+          } catch (e) {
+            setRepLoginFieldError(
+              "username",
+              (e && e.message) || "Could not verify availability.",
+              true,
+            );
+          }
+        }, delay);
+      }
+      window.repValidateLoginField = repValidateLoginField;
+      async function waitRepLoginChecks() {
+        var tries = 0;
+        while (__repLoginCheck.username.pending && tries < 25) {
+          await new Promise(function (r) {
+            setTimeout(r, 80);
+          });
+          tries++;
+        }
+      }
       function sendRepInvite(method) {
         if (method === "text") {
           repInviteMsg(
@@ -37225,9 +38613,9 @@
         }
         const bday = bdayCheck.ymd || "";
         const uname =
-          (document.getElementById("repInviteUser") || {}).value || "";
+          ((document.getElementById("repInviteUser") || {}).value || "").trim();
         const uemail =
-          (document.getElementById("repInviteEmail") || {}).value || "";
+          ((document.getElementById("repInviteEmail") || {}).value || "").trim();
         const uphone =
           (document.getElementById("repInvitePhone") || {}).value || "";
         const inviteMethod =
@@ -37235,6 +38623,51 @@
             .value || "email";
         const sendInvite = inviteMethod === "email" && uemail ? true : false;
         const useLive = window.AVReps && window.AVApi;
+
+        if (!repModalEditingId || useLive) {
+          // Always require unique login identity when creating; on edit require username.
+          if (!repModalEditingId) {
+            repValidateLoginField("username", true);
+            await waitRepLoginChecks();
+            if (!uname) {
+              var uEl = document.getElementById("repInviteUser");
+              if (uEl) uEl.focus();
+              repInviteMsg("Enter a username for their login.", false);
+              return;
+            }
+            if (!uemail) {
+              var eEl = document.getElementById("repInviteEmail");
+              if (eEl) eEl.focus();
+              setRepLoginFieldError("email", "Email is required.", true);
+              repInviteMsg("Enter an email for their login.", false);
+              return;
+            }
+            if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(uemail)) {
+              setRepLoginFieldError("email", "Enter a valid email address.", true);
+              repInviteMsg("Enter a valid email address.", false);
+              return;
+            }
+            if (!__repLoginCheck.username.ok) {
+              repInviteMsg(
+                __repLoginCheck.username.msg ||
+                  "Fix username before saving.",
+                false,
+              );
+              return;
+            }
+          } else if (uname) {
+            repValidateLoginField("username", true);
+            await waitRepLoginChecks();
+            if (!__repLoginCheck.username.ok) {
+              repInviteMsg(
+                __repLoginCheck.username.msg || "Username is not available.",
+                false,
+              );
+              return;
+            }
+          }
+        }
+
         const btn = document.querySelector(
           '#repModal .btn-primary, #repModal .btn-primary[onclick*="saveSalesRep"]',
         );
@@ -37351,8 +38784,20 @@
           closeRepModal();
         } catch (err) {
           console.error("[save-rep]", err);
-          if (typeof AVToast !== "undefined")
-            AVToast.error(err.message || "Failed to save rep");
+          var msg = (err && err.message) || "Failed to save rep";
+          var field =
+            (err && err.data && err.data.error && err.data.error.details &&
+              err.data.error.details.field) ||
+            (err && err.data && err.data.details && err.data.details.field) ||
+            null;
+          repInviteMsg(msg, false);
+          if (field === "email" || /email/i.test(msg)) {
+            setRepLoginFieldError("email", msg, true);
+          }
+          if (field === "username" || /username/i.test(msg)) {
+            setRepLoginFieldError("username", msg, true);
+          }
+          if (typeof AVToast !== "undefined") AVToast.error(msg);
         } finally {
           if (btn) {
             btn.disabled = false;
@@ -37363,33 +38808,131 @@
       async function deleteSalesRep() {
         if (!repModalEditingId) return;
         const delRep = salesReps.find((r) => r.id === repModalEditingId);
-        if (delRep && vehicles.some((v) => v.rep === delRep.name)) {
-          AVToast.warning(
-            "This rep has vehicles assigned. Reassign them before deleting.",
-          );
+        if (!delRep || !delRep.id) return;
+        const useLive = window.AVReps && window.AVApi;
+        if (!useLive || typeof AVReps.getArchivePreview !== "function") {
+          if (typeof AVToast !== "undefined")
+            AVToast.error("Archive is unavailable offline");
           return;
         }
-        const useLive = window.AVReps && window.AVApi;
         try {
-          if (useLive) {
-            if (delRep && delRep.id) {
-              if (typeof AVToast !== "undefined")
-                AVToast.info("Deleting rep\u2026");
-              await AVReps.deleteRep(delRep.id);
-            }
-          }
-          salesReps = salesReps.filter((r) => r.id !== repModalEditingId);
-          syncRepList();
-          populateRepFilter(vehicles.map(computeRow), true);
-          renderRepsPage();
-          closeRepModal();
-          if (typeof AVToast !== "undefined") AVToast.success("Rep deleted");
-        } catch (err) {
-          console.error("[delete-rep]", err);
           if (typeof AVToast !== "undefined")
-            AVToast.error(err.message || "Failed to delete rep");
+            AVToast.info("Checking linked records\u2026");
+          const preview = await AVReps.getArchivePreview(delRep.id);
+          window.__pendingRepArchive = {
+            id: delRep.id,
+            name: delRep.name,
+            preview: preview,
+          };
+          openRepArchiveModal(preview, delRep);
+        } catch (err) {
+          console.error("[delete-rep-preview]", err);
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to check linked records");
         }
       }
+      function openRepArchiveModal(preview, delRep) {
+        const links = (preview && preview.links) || {};
+        const name =
+          (preview && preview.salesRep && preview.salesRep.fullName) ||
+          (delRep && delRep.name) ||
+          "this sales rep";
+        const title = document.getElementById("repArchiveTitle");
+        if (title) title.textContent = "Archive Sales Rep";
+        const msg = document.getElementById("repArchiveMsg");
+        if (msg) {
+          msg.innerHTML =
+            (preview && preview.message
+              ? preview.message
+              : "Archive <b>" +
+                name +
+                "</b>? This deactivates login and pauses unpaid commissions.") +
+            (links.total
+              ? ""
+              : " No deals, jackets, or commissions are linked.");
+        }
+        const list = document.getElementById("repArchiveLinks");
+        if (list) {
+          const rows = [];
+          if (links.deals)
+            rows.push("<li><b>" + links.deals + "</b> deal(s)</li>");
+          if (links.jackets)
+            rows.push("<li><b>" + links.jackets + "</b> deal jacket(s)</li>");
+          if (links.customers)
+            rows.push("<li><b>" + links.customers + "</b> customer(s)</li>");
+          if (links.openCommissions)
+            rows.push(
+              "<li><b>" +
+                links.openCommissions +
+                "</b> unpaid commission(s) will be paused</li>",
+            );
+          if (links.paidCommissions)
+            rows.push(
+              "<li><b>" +
+                links.paidCommissions +
+                "</b> paid commission(s) kept for history</li>",
+            );
+          if (links.payrollItems)
+            rows.push(
+              "<li><b>" +
+                links.payrollItems +
+                "</b> prior payroll item(s) kept</li>",
+            );
+          list.innerHTML = rows.join("");
+          list.style.display = rows.length ? "" : "none";
+        }
+        const modal = document.getElementById("repArchiveModal");
+        if (modal) modal.style.display = "flex";
+      }
+      function closeRepArchiveModal() {
+        const modal = document.getElementById("repArchiveModal");
+        if (modal) modal.style.display = "none";
+        window.__pendingRepArchive = null;
+      }
+      async function confirmArchiveSalesRep() {
+        const pending = window.__pendingRepArchive;
+        if (!pending || !pending.id) {
+          closeRepArchiveModal();
+          return;
+        }
+        const btn = document.getElementById("repArchiveConfirmBtn");
+        if (btn) {
+          btn.disabled = true;
+          btn.classList.add("veh-busy");
+        }
+        try {
+          if (typeof AVToast !== "undefined")
+            AVToast.info("Archiving rep\u2026");
+          await AVReps.deleteRep(pending.id);
+          salesReps = salesReps.filter((r) => r.id !== pending.id);
+          if (typeof syncRepList === "function") syncRepList();
+          if (typeof populateRepFilter === "function")
+            populateRepFilter(vehicles.map(computeRow), true);
+          if (typeof renderRepsPage === "function") renderRepsPage();
+          closeRepArchiveModal();
+          closeRepModal();
+          if (currentRepDetailId === pending.id) {
+            currentRepDetailId = null;
+            if (typeof showPage === "function") {
+              const nav = document.querySelector('[data-page="reps"]');
+              showPage("reps", nav);
+            }
+          }
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Sales rep archived");
+        } catch (err) {
+          console.error("[archive-rep]", err);
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to archive rep");
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove("veh-busy");
+          }
+        }
+      }
+      window.closeRepArchiveModal = closeRepArchiveModal;
+      window.confirmArchiveSalesRep = confirmArchiveSalesRep;
 
       // auto-calc commission when a rep is picked on a deal jacket
       function djRepChanged() {
@@ -37591,6 +39134,29 @@
           AVBusy.setBtnLoading(applyBtn, true, "Applying\u2026");
         }
         try {
+          if (
+            window.AVApi &&
+            window.AVFinancePersist &&
+            typeof AVApi.createFlooringPlan === "function"
+          ) {
+            const payload = AVFinancePersist.flooringPlanPayloadFromUi(
+              flooringConfig,
+              effCheck.ymd,
+            );
+            const planId =
+              window.__flooringPlanId || flooringConfig.planId || null;
+            let planResp;
+            if (planId && typeof AVApi.updateFlooringPlan === "function") {
+              planResp = await AVApi.updateFlooringPlan(planId, payload);
+            } else {
+              planResp = await AVApi.createFlooringPlan(payload);
+            }
+            const plan = (planResp && (planResp.plan || planResp)) || null;
+            if (plan && plan.id) {
+              window.__flooringPlanId = plan.id;
+              flooringConfig.planId = plan.id;
+            }
+          }
           if (window.AVVehicles && affectedVins.length) {
             for (const vin of affectedVins) {
               const v = vehicles.find((x) => x.vin === vin);
@@ -37603,6 +39169,13 @@
               }
             }
           }
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Flooring plan applied");
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error(
+              (err && err.message) || "Failed to save flooring plan",
+            );
         } finally {
           if (typeof AVBusy !== "undefined") {
             AVBusy.setBtnLoading(applyBtn, false, "Apply Rate");
@@ -38009,6 +39582,60 @@
         document.getElementById("repairsModal").classList.add("open");
       }
 
+      function repairFormHasDraft() {
+        const desc = document.getElementById("repairDesc").value.trim();
+        const costRaw = document.getElementById("repairCost").value;
+        const cost = Number(costRaw);
+        const hasFile =
+          document.getElementById("repairReceipt").files &&
+          document.getElementById("repairReceipt").files[0];
+        return (
+          editingRepairIndex !== null ||
+          !!desc ||
+          (costRaw !== "" && !Number.isNaN(cost) && cost > 0) ||
+          !!hasFile
+        );
+      }
+
+      function syncRepairDraftUI() {
+        const form = document.querySelector(".add-repair-form");
+        const addBtn = document.getElementById("addRepairBtn");
+        const hint = document.getElementById("repairDraftHint");
+        const dirty = repairFormHasDraft();
+        if (form) form.classList.toggle("is-draft", dirty);
+        if (addBtn) {
+          addBtn.classList.toggle("needs-attention", dirty);
+          if (dirty) {
+            addBtn.classList.remove("btn-ghost");
+            addBtn.classList.add("btn-primary");
+          } else {
+            addBtn.classList.add("btn-ghost");
+            addBtn.classList.remove("btn-primary");
+          }
+        }
+        if (hint) {
+          hint.innerHTML =
+            editingRepairIndex !== null
+              ? "Click <strong>Update Repair</strong> to apply your changes before closing."
+              : "Click <strong>+ Add Repair</strong> to add this entry before closing.";
+        }
+        const doneBtn = document.getElementById("saveRepairsBtn");
+        if (doneBtn) {
+          if (dirty) {
+            doneBtn.classList.remove("btn-primary");
+            doneBtn.classList.add("btn-ghost");
+            doneBtn.title =
+              editingRepairIndex !== null
+                ? "Update the repair first, or click Done to save and close"
+                : "Add the repair first, or click Done to save and close";
+          } else {
+            doneBtn.classList.add("btn-primary");
+            doneBtn.classList.remove("btn-ghost");
+            doneBtn.title = "";
+          }
+        }
+      }
+
       function resetRepairForm() {
         editingRepairIndex = null;
         document.getElementById("repairDesc").value = "";
@@ -38017,6 +39644,7 @@
         document.getElementById("repairReceipt").value = "";
         document.getElementById("repairReceiptName").textContent = "";
         document.getElementById("addRepairBtn").textContent = "+ Add Repair";
+        syncRepairDraftUI();
       }
 
       function editRepairEntry(index) {
@@ -38031,12 +39659,13 @@
           ? `Current: ${r.receipt}`
           : "";
         document.getElementById("addRepairBtn").textContent = "Update Repair";
+        syncRepairDraftUI();
         document.getElementById("repairDesc").focus();
       }
 
       async function addRepairEntry() {
         const v = __findVeh(currentRepairsVin);
-        if (!v) return;
+        if (!v) return false;
         const desc = document.getElementById("repairDesc").value.trim();
         const type = document.getElementById("repairType").value;
         const cost = Number(document.getElementById("repairCost").value) || 0;
@@ -38048,7 +39677,8 @@
             "repairDescErr",
           );
           document.getElementById("repairDesc").focus();
-          return;
+          syncRepairDraftUI();
+          return false;
         }
         avValidateField(
           document.getElementById("repairDesc"),
@@ -38062,7 +39692,8 @@
             "repairCostErr",
           );
           document.getElementById("repairCost").focus();
-          return;
+          syncRepairDraftUI();
+          return false;
         }
         avValidateField(
           document.getElementById("repairCost"),
@@ -38075,16 +39706,38 @@
           editingRepairIndex !== null && v.repairsList[editingRepairIndex]
             ? v.repairsList[editingRepairIndex]
             : null;
-        const receipt =
-          fileInput.files && fileInput.files[0]
-            ? fileInput.files[0].name
-            : existing
-              ? existing.receipt
-              : null;
+        let receipt =
+          existing && existing.receipt ? existing.receipt : null;
+        if (fileInput.files && fileInput.files[0]) {
+          const f = fileInput.files[0];
+          try {
+            if (window.AVApi && typeof AVApi.uploadFile === "function") {
+              const uploaded = await AVApi.uploadFile(f, {
+                sourceEntity: "repair_receipt",
+                sourceEntityId: v.id || undefined,
+                fileName: f.name,
+              });
+              receipt =
+                (uploaded &&
+                  (uploaded.publicUrl ||
+                    uploaded.downloadUrl ||
+                    (uploaded.file && uploaded.file.storagePath))) ||
+                f.name;
+            } else {
+              receipt = f.name;
+            }
+          } catch (upErr) {
+            if (typeof AVToast !== "undefined")
+              AVToast.error(
+                (upErr && upErr.message) || "Receipt upload failed",
+              );
+            return false;
+          }
+        }
 
         if (window.AVVehicles && v.id) {
           const addBtn = document.getElementById("addRepairBtn");
-          if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
+          if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return false;
           try {
             if (typeof AVBusy !== "undefined") {
               AVBusy.inc();
@@ -38105,16 +39758,21 @@
             resetRepairForm();
             renderRepairsList();
             if (typeof AVToast !== "undefined") AVToast.success("Repair saved");
+            return true;
           } catch (err) {
             if (typeof AVToast !== "undefined")
               AVToast.error(err.message || "Failed to save repair");
+            return false;
           } finally {
             if (typeof AVBusy !== "undefined") {
-              AVBusy.setBtnLoading(addBtn, false, "Add Repair");
+              AVBusy.setBtnLoading(
+                addBtn,
+                false,
+                editingRepairIndex !== null ? "Update Repair" : "+ Add Repair",
+              );
               AVBusy.dec();
             }
           }
-          return;
         }
 
         if (existing) {
@@ -38126,6 +39784,7 @@
         renderRepairsList();
         render();
         refreshAllPnl();
+        return true;
       }
 
       async function deleteRepairEntry(index) {
@@ -38156,15 +39815,6 @@
         refreshAllPnl();
       }
 
-      document
-        .getElementById("repairReceipt")
-        .addEventListener("change", function () {
-          document.getElementById("repairReceiptName").textContent = this
-            .files[0]
-            ? this.files[0].name
-            : "";
-        });
-      document.getElementById("addRepairBtn").onclick = addRepairEntry;
       function refreshDealJacketIfOpen() {
         try {
           if (
@@ -38178,24 +39828,76 @@
           }
         } catch (_) {}
       }
-      document.getElementById("saveRepairsBtn").onclick = () => {
+
+      async function finishRepairsModal(opts) {
+        const forceClose = !!(opts && opts.force);
+        const autoAdd = !(opts && opts.skipAutoAdd);
+        if (!forceClose && repairFormHasDraft()) {
+          if (autoAdd) {
+            const ok = await addRepairEntry();
+            if (!ok) {
+              syncRepairDraftUI();
+              const addBtn = document.getElementById("addRepairBtn");
+              if (addBtn) {
+                addBtn.classList.add("needs-attention");
+                addBtn.focus();
+              }
+              if (typeof AVToast !== "undefined") {
+                AVToast.error(
+                  editingRepairIndex !== null
+                    ? "Finish updating the repair (click Update Repair) before closing"
+                    : "Click + Add Repair first, or fill Description and Cost",
+                );
+              }
+              return false;
+            }
+          } else {
+            syncRepairDraftUI();
+            const addBtn = document.getElementById("addRepairBtn");
+            if (addBtn) {
+              addBtn.classList.add("needs-attention");
+              addBtn.focus();
+            }
+            if (typeof AVToast !== "undefined") {
+              AVToast.error(
+                editingRepairIndex !== null
+                  ? "Click Update Repair to save your changes first"
+                  : "Click + Add Repair to save this entry first",
+              );
+            }
+            return false;
+          }
+        }
         document.getElementById("repairsModal").classList.remove("open");
         render();
         refreshAllPnl();
         refreshDealJacketIfOpen();
-      };
-      document.getElementById("closeRepairsModal").onclick = () => {
-        document.getElementById("repairsModal").classList.remove("open");
-        render();
-        refreshAllPnl();
-        refreshDealJacketIfOpen();
-      };
+        return true;
+      }
+
+      document
+        .getElementById("repairReceipt")
+        .addEventListener("change", function () {
+          document.getElementById("repairReceiptName").textContent = this
+            .files[0]
+            ? this.files[0].name
+            : "";
+          syncRepairDraftUI();
+        });
+      ["repairDesc", "repairCost", "repairType"].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("input", syncRepairDraftUI);
+        el.addEventListener("change", syncRepairDraftUI);
+      });
+      document.getElementById("addRepairBtn").onclick = addRepairEntry;
+      document.getElementById("saveRepairsBtn").onclick = () =>
+        finishRepairsModal();
+      document.getElementById("closeRepairsModal").onclick = () =>
+        finishRepairsModal({ skipAutoAdd: true });
       document.getElementById("repairsModal").addEventListener("click", (e) => {
         if (e.target.id === "repairsModal") {
-          document.getElementById("repairsModal").classList.remove("open");
-          render();
-          refreshAllPnl();
-          refreshDealJacketIfOpen();
+          finishRepairsModal({ skipAutoAdd: true });
         }
       });
 
@@ -39153,6 +40855,55 @@
       // ---------- ADD-ON UPCHARGES ----------
       let addOnVin = null;
       var _addOnDirty = false;
+
+      function addOnFormHasDraft() {
+        const desc = (document.getElementById("addOnDesc").value || "").trim();
+        const priceRaw = document.getElementById("addOnPrice").value;
+        const costRaw = (document.getElementById("addOnCost") || {}).value;
+        const price = Number(priceRaw);
+        const cost = Number(costRaw);
+        return (
+          !!desc ||
+          (priceRaw !== "" && !Number.isNaN(price) && price > 0) ||
+          (costRaw !== "" &&
+            costRaw !== undefined &&
+            !Number.isNaN(cost) &&
+            cost > 0)
+        );
+      }
+
+      function syncAddOnDraftUI() {
+        const form = document.querySelector("#addOnModal .add-on-form");
+        const addBtn = document.getElementById("saveAddOnItem");
+        const doneBtn = document.getElementById("cancelAddOnModal");
+        const dirty = addOnFormHasDraft();
+        if (form) form.classList.toggle("is-draft", dirty);
+        if (addBtn) {
+          addBtn.classList.toggle("needs-attention", dirty);
+          if (dirty) {
+            addBtn.classList.add("btn-primary");
+            addBtn.classList.remove("btn-ghost");
+          }
+        }
+        if (doneBtn) {
+          if (dirty) {
+            doneBtn.title =
+              "Add the item first, or click Done to save and close";
+          } else {
+            doneBtn.title = "";
+          }
+        }
+      }
+
+      function resetAddOnForm() {
+        document.getElementById("addOnDesc").value = "";
+        document.getElementById("addOnType").selectedIndex = 0;
+        document.getElementById("addOnPrice").value = "";
+        const costEl = document.getElementById("addOnCost");
+        if (costEl) costEl.value = "";
+        syncAddOnDraftUI();
+      }
+
       function openAddOnModal(vin) {
         _addOnDirty = false;
         addOnVin = vin || currentVdpVin;
@@ -39161,9 +40912,7 @@
         document.getElementById("addOnModalTitle").innerHTML = `
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
     Add-Ons — ${v.year} ${v.make} ${v.model}`;
-        document.getElementById("addOnDesc").value = "";
-        document.getElementById("addOnType").selectedIndex = 0;
-        document.getElementById("addOnPrice").value = "";
+        resetAddOnForm();
         renderAddOnExistingList();
         document.getElementById("addOnModal").classList.add("open");
       }
@@ -39178,7 +40927,9 @@
           el.innerHTML = `<div class="addon-empty">No add-ons yet. Add the first one below.</div>`;
           return;
         }
-        const total = items.reduce((s, a) => s + (Number(a.price) || 0), 0);
+        const sale = items.reduce((s, a) => s + (Number(a.price) || 0), 0);
+        const cost = items.reduce((s, a) => s + (Number(a.cost) || 0), 0);
+        const profit = sale - cost;
         el.innerHTML =
           items
             .map(
@@ -39186,7 +40937,7 @@
     <div class="addon-item">
       <div class="addon-item-info">
         <div class="addon-item-name">${a.desc}</div>
-        <div class="addon-item-type">${a.type}</div>
+        <div class="addon-item-type">${a.type}${a.cost ? " · cost " + fmt(a.cost) : ""}</div>
       </div>
       <div class="addon-item-price">${fmt(a.price)}</div>
       <button class="addon-del" onclick="deleteAddOnItem(${i})" title="Remove">✕</button>
@@ -39194,8 +40945,8 @@
             )
             .join("") +
           `<div style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:12px;font-weight:800;color:var(--muted);border-top:1px dashed var(--border);margin-top:8px;">
-      <span>Total Add-On Revenue</span>
-      <span style="font-family:var(--mono);color:var(--green);">${fmt(total)}</span>
+      <span>Cost ${fmt(cost)} · Upcharge ${fmt(sale)}</span>
+      <span style="font-family:var(--mono);color:${profit >= 0 ? "var(--green)" : "var(--red)"};">Profit ${fmtSigned(profit)}</span>
     </div>`;
       }
 
@@ -39227,28 +40978,42 @@
         addOnRefresh();
       }
 
-      document.getElementById("saveAddOnItem").onclick = function () {
+      function addAddOnEntry() {
         const v = vehicles.find((x) => x.vin === (addOnVin || currentVdpVin));
-        if (!v) return;
+        if (!v) return false;
         const desc = document.getElementById("addOnDesc").value.trim();
         const type = document.getElementById("addOnType").value;
         const price =
           parseFloat(document.getElementById("addOnPrice").value) || 0;
+        const costEl = document.getElementById("addOnCost");
+        const cost = costEl ? parseFloat(costEl.value) || 0 : 0;
         if (!desc || price <= 0) {
           document.getElementById("addOnDesc").focus();
+          syncAddOnDraftUI();
           if (typeof AVToast !== "undefined")
             AVToast.error("Description and price are required");
-          return;
+          return false;
         }
         if (!v.addOnItems) v.addOnItems = [];
-        v.addOnItems.push({ desc, type, price });
+        v.addOnItems.push({ desc, type, price, cost });
         _addOnDirty = true;
-        document.getElementById("addOnDesc").value = "";
-        document.getElementById("addOnPrice").value = "";
-        document.getElementById("addOnType").selectedIndex = 0;
+        resetAddOnForm();
         renderAddOnExistingList();
         addOnRefresh();
+        return true;
+      }
+
+      document.getElementById("saveAddOnItem").onclick = function () {
+        addAddOnEntry();
       };
+      ["addOnDesc", "addOnPrice", "addOnCost", "addOnType"].forEach(function (
+        id,
+      ) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("input", syncAddOnDraftUI);
+        el.addEventListener("change", syncAddOnDraftUI);
+      });
 
       function toggleAddOnForm(disabled) {
         var els = document.querySelectorAll(
@@ -39257,10 +41022,34 @@
         for (var i = 0; i < els.length; i++) els[i].disabled = disabled;
       }
 
-      async function saveAddOnsAndClose() {
+      async function saveAddOnsAndClose(opts) {
+        const skipAutoAdd = !!(opts && opts.skipAutoAdd);
+        if (addOnFormHasDraft()) {
+          if (skipAutoAdd) {
+            syncAddOnDraftUI();
+            const addBtn = document.getElementById("saveAddOnItem");
+            if (addBtn) {
+              addBtn.classList.add("needs-attention");
+              addBtn.focus();
+            }
+            if (typeof AVToast !== "undefined")
+              AVToast.error("Click + Add Item to save this entry first");
+            return false;
+          }
+          const ok = addAddOnEntry();
+          if (!ok) {
+            syncAddOnDraftUI();
+            const addBtn = document.getElementById("saveAddOnItem");
+            if (addBtn) {
+              addBtn.classList.add("needs-attention");
+              addBtn.focus();
+            }
+            return false;
+          }
+        }
         if (!_addOnDirty) {
           document.getElementById("addOnModal").classList.remove("open");
-          return;
+          return true;
         }
         var doneBtn = document.getElementById("cancelAddOnModal");
         var closeBtn = document.getElementById("closeAddOnModal");
@@ -39279,10 +41068,12 @@
           }
           _addOnDirty = false;
           document.getElementById("addOnModal").classList.remove("open");
+          return true;
         } catch (e) {
           console.warn("[addon] persist failed", e);
           if (typeof AVToast !== "undefined")
             AVToast.error("Failed to save add-ons");
+          return false;
         } finally {
           if (doneBtn) {
             doneBtn.disabled = false;
@@ -39293,12 +41084,15 @@
         }
       }
 
-      document.getElementById("cancelAddOnModal").onclick = saveAddOnsAndClose;
-      document.getElementById("closeAddOnModal").onclick = saveAddOnsAndClose;
+      document.getElementById("cancelAddOnModal").onclick = () =>
+        saveAddOnsAndClose();
+      document.getElementById("closeAddOnModal").onclick = () =>
+        saveAddOnsAndClose({ skipAutoAdd: true });
       document
         .getElementById("addOnModal")
         .addEventListener("click", function (e) {
-          if (e.target.id === "addOnModal") saveAddOnsAndClose();
+          if (e.target.id === "addOnModal")
+            saveAddOnsAndClose({ skipAutoAdd: true });
         });
 
       // ---------- FLOORING DETAIL MODAL ----------
@@ -40897,6 +42691,7 @@
             new Date(a.dueDate || a._firstDate || 0) -
             new Date(b.dueDate || b._firstDate || 0),
         );
+        window.lastExpRows = rows;
 
         const tag = document.getElementById("expFilterTag");
         if (tag) {
@@ -44781,6 +46576,21 @@
           v.soldDate || today.toISOString().slice(0, 10),
         );
         document.getElementById("djSoldPrice").value = v.soldPrice || "";
+        const djNc = document.getElementById("djNetCheck");
+        if (djNc)
+          djNc.value =
+            v.netCheck != null && v.netCheck !== "" ? v.netCheck : "";
+        const djNr = document.getElementById("djNetReason");
+        if (djNr) djNr.value = v.netCheckReason || "";
+        const djNn = document.getElementById("djNetNotes");
+        if (djNn) djNn.value = v.netCheckNotes || "";
+        {
+          const nb = document.getElementById("djNetDetails");
+          if (nb) {
+            nb.dataset.saved = "1";
+            nb.style.display = "none";
+          }
+        }
         document.getElementById("djStateTax").value =
           v.customerSalesTax != null ? v.customerSalesTax : "";
         document.getElementById("djRegFee").value =
@@ -44926,7 +46736,9 @@
     <div class="dj-brk-label" style="margin-top:16px;">Collected for State <span style="text-transform:none;font-weight:400;">(pass-through)</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Sales Tax</span><span class="vdp-row-value" id="djBrkTax" style="color:var(--muted);">\u2014</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Registration Fees</span><span class="vdp-row-value" id="djBrkReg" style="color:var(--muted);">\u2014</span></div>
-    <div class="vdp-row" style="border-top:2px solid var(--border);"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Total Amount Collected</span><span class="vdp-row-value" id="djBrkCollected" style="font-weight:800;color:var(--blue);">\u2014</span></div>`;
+    <div class="vdp-row" style="border-top:2px solid var(--border);"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Total Amount Collected</span><span class="vdp-row-value" id="djBrkCollected" style="font-weight:800;color:var(--blue);">\u2014</span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Net Check <span style="color:var(--muted);font-weight:400;">(financed)</span></span><span class="vdp-row-value" id="djBrkNetCheck">\u2014</span></div>
+    <div class="vdp-row" id="djBrkNetRevRow" style="display:none;"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Net Revenue to Dealer</span><span class="vdp-row-value" id="djBrkNetRev" style="font-weight:800;color:var(--green);">\u2014</span></div>`;
       }
       function djEditCost(field) {
         const v = vehicles.find((x) => x.vin === currentDealVin);
@@ -45172,6 +46984,19 @@
         const r = computeRow(v);
         const soldPrice =
           parseFloat(document.getElementById("djSoldPrice").value) || 0;
+        const netCheckEl = document.getElementById("djNetCheck");
+        const netCheckRaw = netCheckEl ? (netCheckEl.value || "").trim() : "";
+        const netCheckNum = netCheckRaw === "" ? null : parseFloat(netCheckRaw);
+        const hasNetCheck =
+          netCheckNum !== null && isFinite(netCheckNum);
+        const netCheckAmt = hasNetCheck ? Number(netCheckNum) || 0 : null;
+        if (v) {
+          v.netCheck = hasNetCheck ? netCheckAmt : null;
+          const nr = document.getElementById("djNetReason");
+          const nn = document.getElementById("djNetNotes");
+          if (nr) v.netCheckReason = nr.value || "";
+          if (nn) v.netCheckNotes = nn.value || "";
+        }
         const addOnRev = (v.addOnItems || []).reduce(
           (s, a) => s + (Number(a.price) || 0),
           0,
@@ -45194,14 +47019,19 @@
           if (document.activeElement !== amtEl)
             amtEl.value = commission > 0 ? commission : "";
         }
-        const vehicleCost = r.totalVehicleCost; // purchase + fees + repairs + flooring + expenses
+        // No rep + no explicitly-typed $ amount → commission is $0
+        const djRepName = (
+          document.getElementById("djRep").value || ""
+        ).trim();
+        const djExplicitAmt =
+          djCommMode === "amt" && (parseFloat(amtEl.value) || 0) > 0;
+        if (!djRepName && !djExplicitAmt) {
+          commission = 0;
+          pct = 0;
+        }
+        const vehicleCost = r.totalVehicleCost; // purchase + fees + repairs + flooring + expenses + add-on cost
         const totalCost = vehicleCost + commission; // all money out (incl commission)
         const collected = soldPrice + addOnRev + stateTax + regFee;
-        const hasNetCheck =
-          v.netCheck !== null &&
-          v.netCheck !== undefined &&
-          v.netCheck !== "";
-        const netCheckAmt = hasNetCheck ? Number(v.netCheck) || 0 : null;
         // Net Check − Sales Tax − Reg Fees = amount applied to profit
         const netCheckApplied = hasNetCheck
           ? Math.max(0, netCheckAmt - stateTax - regFee)
@@ -45305,11 +47135,87 @@
             ? fmt(collected)
             : "\u2014",
         );
+        setColl(
+          "djBrkNetCheck",
+          "net",
+          hasNetCheck ? fmt(netCheckAmt) : "\u2014",
+        );
+        const nrRow = document.getElementById("djBrkNetRevRow");
+        const nrEl = document.getElementById("djBrkNetRev");
+        if (nrRow) nrRow.style.display = hasNetCheck ? "" : "none";
+        if (nrEl && hasNetCheck) {
+          nrEl.textContent = fmtSigned(netCheckApplied);
+          nrEl.style.color =
+            netCheckApplied >= 0 ? "var(--green)" : "var(--red)";
+        }
       }
 
+      function djNetDetailsSync() {
+        const box = document.getElementById("djNetDetails");
+        const el = document.getElementById("djNetCheck");
+        if (!box || !el) return;
+        const raw = (el.value || "").trim();
+        const n = parseFloat(raw);
+        const show = raw !== "" && isFinite(n);
+        if (show) {
+          if (box.dataset.saved !== "1") box.style.display = "";
+        } else {
+          box.style.display = "none";
+          box.dataset.saved = "";
+        }
+      }
+      function djNetCheckInput() {
+        dealRecalc();
+        djNetDetailsSync();
+      }
+      async function djSaveNetDetails() {
+        const box = document.getElementById("djNetDetails");
+        if (box) {
+          box.dataset.saved = "1";
+          box.style.display = "none";
+        }
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v) return;
+        const ncEl = document.getElementById("djNetCheck");
+        const raw = ncEl ? (ncEl.value || "").trim() : "";
+        const amount = raw === "" ? null : parseFloat(raw);
+        const reason = (document.getElementById("djNetReason") || {}).value || "";
+        const notes = (document.getElementById("djNetNotes") || {}).value || "";
+        v.netCheck = amount != null && isFinite(amount) ? amount : null;
+        v.netCheckReason = reason;
+        v.netCheckNotes = notes;
+        try {
+          if (window.AVVehicles && v.id && AVVehicles.persistNetCheck) {
+            await AVVehicles.persistNetCheck(currentDealVin, v.netCheck, {
+              reason,
+              notes,
+            });
+            djShowAutoSaved();
+          } else if (typeof djAutoSave === "function") {
+            djAutoSave();
+          }
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error(err.message || "Failed to save net check");
+        }
+        dealRecalc();
+      }
+      window.djNetCheckInput = djNetCheckInput;
+      window.djSaveNetDetails = djSaveNetDetails;
+
       function djEditColl(kind) {
-        const hostId = kind === "tax" ? "djBrkTax" : "djBrkReg";
-        const srcId = kind === "tax" ? "djStateTax" : "djRegFee";
+        const hostId =
+          kind === "tax"
+            ? "djBrkTax"
+            : kind === "reg"
+              ? "djBrkReg"
+              : "djBrkNetCheck";
+        const srcId =
+          kind === "tax"
+            ? "djStateTax"
+            : kind === "reg"
+              ? "djRegFee"
+              : "djNetCheck";
         const host = document.getElementById(hostId);
         if (!host || host.querySelector("input")) return;
         const cur = Math.round(
@@ -45325,9 +47231,24 @@
         }
       }
       async function djCommitColl(kind, raw) {
-        const hostId = kind === "tax" ? "djBrkTax" : "djBrkReg";
-        const srcId = kind === "tax" ? "djStateTax" : "djRegFee";
-        const label = kind === "tax" ? "Sales Tax" : "Registration Fees";
+        const hostId =
+          kind === "tax"
+            ? "djBrkTax"
+            : kind === "reg"
+              ? "djBrkReg"
+              : "djBrkNetCheck";
+        const srcId =
+          kind === "tax"
+            ? "djStateTax"
+            : kind === "reg"
+              ? "djRegFee"
+              : "djNetCheck";
+        const label =
+          kind === "tax"
+            ? "Sales Tax"
+            : kind === "reg"
+              ? "Registration Fees"
+              : "Net Check";
         const host = document.getElementById(hostId);
         const inp = host ? host.querySelector("input") : null;
         const cancelled = !!(inp && inp.dataset.cancel === "1");
@@ -45340,17 +47261,21 @@
         if (!isFinite(n) || n < 0) n = 0;
         n = Math.round(n * 100) / 100;
         const src = document.getElementById(srcId);
-        if (src) src.value = n > 0 ? n : "";
+        if (src) src.value = n > 0 || kind === "net" ? (n || "") : "";
+        if (kind === "net" && src) src.value = n > 0 ? n : "";
         const v = vehicles.find((x) => x.vin === currentDealVin);
         const prevTax = v ? v.customerSalesTax : null;
         const prevReg = v ? v.customerRegFees : null;
+        const prevNet = v ? v.netCheck : null;
         if (v) {
           if (kind === "tax") {
             v.customerSalesTax = n;
             v.salesTax = n;
-          } else {
+          } else if (kind === "reg") {
             v.customerRegFees = n;
             v.regFees = n;
+          } else {
+            v.netCheck = n > 0 ? n : null;
           }
         }
         if (typeof vdpSetSaving === "function") vdpSetSaving(host, true);
@@ -45366,16 +47291,33 @@
             window.AVVehicles &&
             (v.sold || v.dealSaved || v.hasDealJacket || v.dealJacket)
           ) {
-            const patch =
-              kind === "tax" ? { salesTaxAmount: n } : { licenseFees: n };
-            await vehEditSave(AVVehicles.persistPatch(currentDealVin, patch), {
-              loading: `Saving ${label}\u2026`,
-              loadingMsg: "Updating deal jacket collected amounts",
-              success: `${label} updated`,
-              successTitle: "Saved",
-              error: `Failed to save ${label.toLowerCase()}`,
-              errorTitle: "Save failed",
-            });
+            if (kind === "net") {
+              await vehEditSave(
+                AVVehicles.persistNetCheck(currentDealVin, v.netCheck, {
+                  reason: v.netCheckReason || "",
+                  notes: v.netCheckNotes || "",
+                }),
+                {
+                  loading: "Saving Net Check\u2026",
+                  loadingMsg: "Updating financed remittance",
+                  success: "Net Check updated",
+                  successTitle: "Saved",
+                  error: "Failed to save net check",
+                  errorTitle: "Save failed",
+                },
+              );
+            } else {
+              const patch =
+                kind === "tax" ? { salesTaxAmount: n } : { licenseFees: n };
+              await vehEditSave(AVVehicles.persistPatch(currentDealVin, patch), {
+                loading: `Saving ${label}\u2026`,
+                loadingMsg: "Updating deal jacket collected amounts",
+                success: `${label} updated`,
+                successTitle: "Saved",
+                error: `Failed to save ${label.toLowerCase()}`,
+                errorTitle: "Save failed",
+              });
+            }
             djShowAutoSaved();
           } else if (typeof djAutoSave === "function") {
             if (typeof AVToast !== "undefined" && AVToast.info) {
@@ -45391,10 +47333,15 @@
               v.customerSalesTax = prevTax;
               v.salesTax = prevTax;
               if (src) src.value = prevTax != null && prevTax > 0 ? prevTax : "";
-            } else {
+            } else if (kind === "reg") {
               v.customerRegFees = prevReg;
               v.regFees = prevReg;
               if (src) src.value = prevReg != null && prevReg > 0 ? prevReg : "";
+            } else {
+              v.netCheck = prevNet;
+              if (src)
+                src.value =
+                  prevNet != null && prevNet !== "" ? prevNet : "";
             }
           }
         } finally {
@@ -45404,51 +47351,111 @@
             host.style.opacity = "";
             host.style.pointerEvents = "";
           }
-          if (host) host.innerHTML = "";
           dealRecalc();
-          try {
-            if (typeof render === "function") render();
-          } catch (_) {}
-          try {
-            if (typeof renderTaxPage === "function") renderTaxPage();
-          } catch (_) {}
+          if (kind === "net") djNetDetailsSync();
         }
       }
       window.djEditColl = djEditColl;
       window.djCommitColl = djCommitColl;
 
+      function djAddOnSummaryHTML(items) {
+        const cost = items.reduce((s, a) => s + (parseFloat(a.cost) || 0), 0);
+        const sale = items.reduce((s, a) => s + (parseFloat(a.price) || 0), 0);
+        const profit = sale - cost;
+        return `<span>Cost ${fmt(cost)} &middot; Upcharge ${fmt(sale)}</span><span>Add-on profit <b style="color:${profit >= 0 ? "var(--green)" : "var(--red)"};font-family:var(--mono);">${fmtSigned(profit)}</b></span>`;
+      }
       function renderDealAddOns(vin) {
         const v = vehicles.find((x) => x.vin === vin);
-        const items = (v && v.addOnItems) || [];
         const el = document.getElementById("djAddOnList");
         if (!el) return;
+        const items = (v && v.addOnItems) || [];
         if (items.length === 0) {
-          el.innerHTML = `<div class="addon-empty">No add-ons yet. Click "+ Add Item" for warranties, GPS, paint protection, and more.</div>`;
+          el.innerHTML = `<div class="addon-empty">No add-ons yet. Click "+ Add Add-On" to itemize warranties, GPS, paint protection, and more.</div>`;
           return;
         }
-        const total = items.reduce((s, a) => s + (Number(a.price) || 0), 0);
         el.innerHTML =
+          '<datalist id="djAddOnCatList"><option value="Warranty"></option><option value="Service Contract"></option><option value="GPS Tracking"></option><option value="Paint Protection"></option><option value="Gap Insurance"></option><option value="Accessories"></option></datalist>' +
+          '<div class="dj-addon-hdr"><span>Category</span><span>Description</span><span>Cost&nbsp;$</span><span>Upcharge&nbsp;$</span><span></span></div>' +
           items
             .map(
-              (a, i) => `
-    <div class="addon-item">
-      <div class="addon-item-info"><div class="addon-item-name">${a.desc}</div><div class="addon-item-type">${a.type}</div></div>
-      <div class="addon-item-price">${fmt(a.price)}</div>
-      <button class="addon-del" onclick="deleteDealAddOn(${i})" title="Remove">\u2715</button>
+              (a, i) => `<div class="dj-addon-row">
+      <input type="text" list="djAddOnCatList" placeholder="Category" value="${String(a.type || "").replace(/"/g, "&quot;")}" oninput="djAddOnEdit(${i},'type',this.value)">
+      <input type="text" placeholder="Description" value="${String(a.desc || "").replace(/"/g, "&quot;")}" oninput="djAddOnEdit(${i},'desc',this.value)">
+      <input type="number" placeholder="0" value="${a.cost || ""}" oninput="djAddOnEdit(${i},'cost',this.value)">
+      <input type="number" placeholder="0" value="${a.price || ""}" oninput="djAddOnEdit(${i},'price',this.value)">
+      <button type="button" class="dj-addon-del" onclick="djRemoveAddOn(${i})" title="Remove">\u2715</button>
     </div>`,
             )
             .join("") +
-          `<div style="display:flex;justify-content:space-between;padding:8px 12px 0;font-size:12px;font-weight:800;color:var(--muted);border-top:1px dashed var(--border);margin-top:8px;"><span>Total Add-On Revenue</span><span style="font-family:var(--mono);color:var(--green);">${fmt(total)}</span></div>`;
+          `<div class="dj-addon-sum">${djAddOnSummaryHTML(items)}</div>`;
       }
-      function deleteDealAddOn(i) {
+      function djSyncAddOnCost(v) {
+        if (v)
+          v.addOns = (v.addOnItems || []).reduce(
+            (s, a) => s + (parseFloat(a.cost) || 0),
+            0,
+          );
+      }
+      function djAddAddOn() {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v) return;
+        if (!v.addOnItems) v.addOnItems = [];
+        v.addOnItems.push({ type: "", desc: "", cost: 0, price: 0 });
+        renderDealAddOns(currentDealVin);
+        dealRecalc();
+        setTimeout(() => {
+          const rows = document.querySelectorAll("#djAddOnList .dj-addon-row");
+          const last = rows[rows.length - 1];
+          if (last) {
+            const inp = last.querySelector("input");
+            if (inp) inp.focus();
+          }
+        }, 30);
+      }
+      async function djRemoveAddOn(i) {
         const v = vehicles.find((x) => x.vin === currentDealVin);
         if (!v || !v.addOnItems) return;
         v.addOnItems.splice(i, 1);
+        djSyncAddOnCost(v);
         renderDealAddOns(currentDealVin);
         dealRecalc();
-        render();
-        refreshAllPnl();
+        try {
+          if (window.AVVehicles && v.id && AVVehicles.persistAddOnItems)
+            await AVVehicles.persistAddOnItems(currentDealVin);
+        } catch (_) {}
+        try {
+          render();
+          refreshAllPnl();
+        } catch (e) {}
       }
+      async function djAddOnEdit(i, field, val) {
+        const v = vehicles.find((x) => x.vin === currentDealVin);
+        if (!v || !v.addOnItems || !v.addOnItems[i]) return;
+        if (field === "type" || field === "desc") v.addOnItems[i][field] = val;
+        else
+          v.addOnItems[i][field] =
+            parseFloat(String(val).replace(/,/g, "")) || 0;
+        djSyncAddOnCost(v);
+        const el = document.getElementById("djAddOnList");
+        if (el) {
+          const sum = el.querySelector(".dj-addon-sum");
+          if (sum) sum.innerHTML = djAddOnSummaryHTML(v.addOnItems);
+        }
+        dealRecalc();
+        clearTimeout(djAddOnEdit._t);
+        djAddOnEdit._t = setTimeout(async () => {
+          try {
+            if (window.AVVehicles && v.id && AVVehicles.persistAddOnItems)
+              await AVVehicles.persistAddOnItems(currentDealVin);
+          } catch (_) {}
+        }, 500);
+      }
+      function deleteDealAddOn(i) {
+        djRemoveAddOn(i);
+      }
+      window.djAddAddOn = djAddAddOn;
+      window.djRemoveAddOn = djRemoveAddOn;
+      window.djAddOnEdit = djAddOnEdit;
 
       const DEAL_DOC_SLOTS = [
         { label: "Purchase Agreement", re: /purchase|agreement/i },
@@ -45668,47 +47675,54 @@
           label: "sale date",
           required: true,
         });
-        if (!saleDateCheck.ok) {
-          if (typeof AVToast !== "undefined")
-            AVToast.warning(saleDateCheck.msg || "Enter a valid sale date");
-          return;
-        }
         const soldPrice =
           parseFloat(document.getElementById("djSoldPrice").value) || 0;
-        if (soldPrice <= 0) {
-          avValidateField(document.getElementById("djSoldPrice"), false);
-          document.getElementById("djSoldPrice").focus();
-          return;
-        }
-        avValidateField(document.getElementById("djSoldPrice"), true);
         const customerName = (
           document.getElementById("djCustName").value || ""
         ).trim();
-        if (!customerName) {
-          avValidateField(document.getElementById("djCustName"), false);
-          document.getElementById("djCustName").focus();
-          if (typeof AVToast !== "undefined")
-            AVToast.error("Customer name is required");
-          return;
-        }
-        avValidateField(document.getElementById("djCustName"), true);
         const phone = document.getElementById("djCustCell").value;
-        if (phone && !isValidPhone(phone)) {
-          avValidateField(document.getElementById("djCustCell"), false);
-          document.getElementById("djCustCell").focus();
-          if (typeof AVToast !== "undefined")
-            AVToast.error("Enter a valid 10-digit phone number");
-          return;
-        }
-        avValidateField(document.getElementById("djCustCell"), true);
         const email = document.getElementById("djCustEmail").value;
-        if (!avIsValidEmail(email)) {
-          avValidateField(document.getElementById("djCustEmail"), false);
-          document.getElementById("djCustEmail").focus();
-          if (typeof AVToast !== "undefined")
-            AVToast.error("Enter a valid email address");
+        const fieldErrs = [];
+        if (!saleDateCheck.ok)
+          fieldErrs.push({
+            id: "djSaleDate",
+            label: "Sale date",
+            msg: saleDateCheck.msg || "Enter a valid sale date",
+          });
+        if (soldPrice <= 0)
+          fieldErrs.push({
+            id: "djSoldPrice",
+            label: "Sold price",
+            msg: "Enter the sold price to continue.",
+          });
+        if (!customerName)
+          fieldErrs.push({
+            id: "djCustName",
+            label: "Customer name",
+            msg: "Customer name is required",
+          });
+        if (phone && !isValidPhone(phone))
+          fieldErrs.push({
+            id: "djCustCell",
+            label: "Cell phone",
+            msg: "Enter a valid 10-digit phone number",
+          });
+        if (!avIsValidEmail(email))
+          fieldErrs.push({
+            id: "djCustEmail",
+            label: "Email",
+            msg: "Enter a valid email address",
+          });
+        if (fieldErrs.length) {
+          if (typeof showFieldErrors === "function")
+            showFieldErrors("#page-deal-jacket", fieldErrs);
+          else if (typeof AVToast !== "undefined")
+            AVToast.warning(fieldErrs[0].msg);
           return;
         }
+        avValidateField(document.getElementById("djSoldPrice"), true);
+        avValidateField(document.getElementById("djCustName"), true);
+        avValidateField(document.getElementById("djCustCell"), true);
         avValidateField(document.getElementById("djCustEmail"), true);
         const dealNumber = (
           document.getElementById("djRos").value || ""
@@ -45814,9 +47828,23 @@
           }
           const addOnItems = v.addOnItems || [];
           const additionalExpenses = addOnItems.reduce(
-            (s, a) => s + (Number(a.price) || 0),
+            (s, a) => s + (Number(a.cost) || 0),
             0,
           );
+          const ncEl = document.getElementById("djNetCheck");
+          const ncRaw = ncEl ? (ncEl.value || "").trim() : "";
+          const ncNum = ncRaw === "" ? null : parseFloat(ncRaw);
+          const netCheckReason =
+            (document.getElementById("djNetReason") || {}).value || "";
+          const netCheckNotes =
+            (document.getElementById("djNetNotes") || {}).value || "";
+          if (ncNum != null && isFinite(ncNum)) {
+            v.netCheck = ncNum;
+          } else {
+            v.netCheck = null;
+          }
+          v.netCheckReason = netCheckReason;
+          v.netCheckNotes = netCheckNotes;
           const markResp = await AVVehicles.markSoldViaForm(currentDealVin, {
             soldPrice,
             customerSalesTax,
@@ -45847,7 +47875,11 @@
               ...(v.netCheck !== null &&
               v.netCheck !== undefined &&
               v.netCheck !== ""
-                ? { netCheck: Number(v.netCheck) || 0 }
+                ? {
+                    netCheck: Number(v.netCheck) || 0,
+                    netCheckReason: netCheckReason || undefined,
+                    netCheckNotes: netCheckNotes || undefined,
+                  }
                 : {}),
             },
             titleReceived: titleInFlag,
@@ -46043,6 +48075,29 @@
               v.commissionOverride = commission;
               v.commMode = "pct";
             }
+          }
+          const ncRaw = (g("djNetCheck") || "").trim();
+          const ncNum = ncRaw === "" ? NaN : parseFloat(ncRaw);
+          const reason = g("djNetReason") || "";
+          const notesNc = g("djNetNotes") || "";
+          v.netCheckReason = reason;
+          v.netCheckNotes = notesNc;
+          if (!isNaN(ncNum) && ncNum >= 0) {
+            v.netCheck = ncNum;
+            const fees = {
+              addOnItems: v.addOnItems || [],
+              netCheck: ncNum,
+              netCheckReason: reason || undefined,
+              netCheckNotes: notesNc || undefined,
+            };
+            patch.fees = fees;
+          } else if (ncRaw === "") {
+            v.netCheck = null;
+            patch.fees = {
+              addOnItems: v.addOnItems || [],
+              netCheckReason: reason || undefined,
+              netCheckNotes: notesNc || undefined,
+            };
           }
         }
         return patch;
@@ -46926,6 +48981,70 @@
           0,
         );
 
+        const periodLabel =
+          pnlPeriod.mode === "month"
+            ? `${PNL_MFULL[pnlPeriod.month]} ${pnlPeriod.year}`
+            : `Full Year ${pnlPeriod.year}`;
+        window.__pnlExport = {
+          period: periodLabel,
+          unitsSold: sold.length,
+          sections: [
+            {
+              label: "Revenue",
+              rows: [
+                ["Vehicle Sales", vehicleSales],
+                ["Add-On & Upcharge Revenue", addOnRev],
+                ["Total Revenue", totalRevenue],
+              ],
+            },
+            {
+              label: "Cost of Goods Sold",
+              rows: [
+                ["Vehicle Purchase", cogsPurchase],
+                ["Fees", cogsFees],
+                ["Repairs / Recon", cogsRepairs],
+                ["Flooring", cogsFlooring],
+                ["Vehicle Expenses", cogsAttached],
+                ["Add-on Cost", cogsAddOns],
+                ["Total COGS", totalCOGS],
+              ],
+            },
+            {
+              label: "Gross Profit",
+              rows: [
+                ["Gross Profit", grossProfit],
+                ["Gross Margin", grossMargin.toFixed(1) + "%"],
+              ],
+            },
+            {
+              label: "Operating Expenses",
+              rows: [
+                ["Sales Commissions", commissions],
+                ["Recurring Expenses", recurringTotal],
+                ["Dealership Expenses", dealershipTotal],
+                ["Total Operating Expenses", totalOpEx],
+              ],
+            },
+            {
+              label: "Net Profit",
+              rows: [
+                ["Net Profit", netProfit],
+                ["Net Margin", netMargin.toFixed(1) + "%"],
+              ],
+            },
+          ],
+          sold: sold.map((r) => ({
+            soldDate: r.soldDate || "",
+            veh: `${r.year} ${r.make} ${r.model}`,
+            vin: r.vin || "",
+            sale: Math.round(r.soldPrice || 0),
+            cost: Math.round(r.totalVehicleCost || 0),
+            gross: Math.round(r.grossProfit || 0),
+            commission: Math.round(r.commission || 0),
+            net: Math.round(r.netProfit || 0),
+          })),
+        };
+
         const isEmpty = sold.length === 0;
 
         // KPI cards
@@ -46943,10 +49062,6 @@
         netEl.style.color = netProfit >= 0 ? "var(--green)" : "var(--red)";
         document.getElementById("pnlNetFoot").textContent =
           `${netMargin.toFixed(1)}% net margin`;
-        const periodLabel =
-          pnlPeriod.mode === "month"
-            ? `${PNL_MFULL[pnlPeriod.month]} ${pnlPeriod.year}`
-            : `Full Year ${pnlPeriod.year}`;
         document.getElementById("pnlAsOf").textContent =
           `${periodLabel} \u00b7 ${sold.length} vehicle${sold.length === 1 ? "" : "s"} sold`;
 
@@ -46963,6 +49078,11 @@
           dealershipTotal,
         );
         const opSubtotal = `<div class="pnl-subtotal pnl-clickable" onclick="openPnlExpenses()" title="View every operating expense in this period, including recurring"><span>Total Operating Expenses <span style="font-size:11px;font-weight:700;color:var(--orange);margin-left:8px;">view all →</span></span><span class="v">${fmt(totalOpEx)}</span></div>`;
+        const ncSold = sold.filter((r) => r.hasNetCheck);
+        const netCheckMemo =
+          ncSold.length === 0
+            ? ""
+            : `<br><br><b style="color:var(--text);">Net Check deals (${ncSold.length}):</b> Statement <i>Revenue</i> uses sold price + add-on upcharges for accounting clarity. Per-vehicle Net Profit and CSV detail rows use Net Check − tax − reg − costs − commission. Sum of vehicle net profits: <b>${fmtSigned(sold.reduce((s, r) => s + (r.netProfit || 0), 0))}</b>.`;
 
         if (isEmpty) {
           document.getElementById("pnlStatement").innerHTML = `
@@ -46995,6 +49115,7 @@
       <b style="color:var(--text);">Memo — outside the P&amp;L:</b><br>
       Sales tax &amp; registration collected for the state (pass-through, not income): <b>${fmt(collected)}</b><br>
       Recurring expenses auto-carry into each month's Operating Expenses until edited or deleted. Run-rate: <b>${fmt(recurringMonthly)}/mo</b>
+      ${netCheckMemo}
     </div>`;
         } else {
           document.getElementById("pnlStatement").innerHTML = `
@@ -47025,6 +49146,7 @@
       <b style="color:var(--text);">Memo — outside the P&amp;L:</b><br>
       Sales tax &amp; registration collected for the state (pass-through, not income): <b>${fmt(collected)}</b><br>
       Recurring expenses auto-carry into each month's Operating Expenses until edited or deleted. Run-rate: <b>${fmt(recurringMonthly)}/mo</b>
+      ${netCheckMemo}
     </div>`;
         }
 
@@ -49040,6 +51162,7 @@
           pnlPeriod.mode === "month"
             ? `${PNL_MFULL[pnlPeriod.month]} ${pnlPeriod.year}`
             : `Full Year ${pnlPeriod.year}`;
+        window.__taxExport = { period: periodLabel, rows: rows };
 
         document.getElementById("taxTotal").textContent = fmt(totalTax);
         document.getElementById("taxTotalFoot").textContent =
@@ -49209,7 +51332,7 @@
       function closeTaxConfig() {
         document.getElementById("taxConfigModal").style.display = "none";
       }
-      function saveTaxConfig() {
+      async function saveTaxConfig() {
         taxConfig.frequency = document.getElementById("taxCfgFreq").value;
         const taxDueCheck = avValidateDateField("taxCfgDue", {
           label: "filing due date",
@@ -49221,6 +51344,24 @@
         }
         taxConfig.nextDue = taxDueCheck.ymd;
         taxConfig.notes = document.getElementById("taxCfgNotes").value.trim();
+        try {
+          if (window.AVApi && typeof AVApi.updateTaxSettings === "function") {
+            const freqApi = window.AVFinancePersist
+              ? AVFinancePersist.taxFreqToApi(taxConfig.frequency)
+              : "quarterly";
+            await AVApi.updateTaxSettings({
+              filingFrequency: freqApi,
+              nextDueDate: taxConfig.nextDue || null,
+              notes: taxConfig.notes || null,
+            });
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Tax settings saved");
+          }
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error((err && err.message) || "Failed to save tax settings");
+          return;
+        }
         renderTaxPage();
         if (typeof renderCalendarPage === "function") renderCalendarPage();
         closeTaxConfig();
@@ -49263,63 +51404,139 @@
       function closeFileConfirm() {
         document.getElementById("fileConfirmModal").style.display = "none";
       }
-      function confirmFileSalesTax() {
-        if (pendingFile && pendingFile.kind === "bucket") {
-          const pf = pendingFile;
-          taxFilings.push({
-            id: "fil" + Date.now(),
-            filedOn: today.toISOString().slice(0, 10),
-            dueDate: pf.dueDate,
-            frequency: taxConfig.frequency,
-            periodStart: null,
-            vins: pf.vins,
-            totalTax: pf.totalTax,
-            count: pf.count,
-            periodLabel: pf.label,
+      async function confirmFileSalesTax() {
+        const todayStr = today.toISOString().slice(0, 10);
+        const advanceNextDue = function (due) {
+          const step =
+            { Monthly: 1, Quarterly: 3, "Semi-Annually": 6, Annually: 12 }[
+              taxConfig.frequency
+            ] || 3;
+          const base = new Date(due + "T00:00:00");
+          const baseDay = base.getDate();
+          const target = new Date(
+            base.getFullYear(),
+            base.getMonth() + step,
+            1,
+          );
+          const lastDay = new Date(
+            target.getFullYear(),
+            target.getMonth() + 1,
+            0,
+          ).getDate();
+          return new Date(
+            target.getFullYear(),
+            target.getMonth(),
+            Math.min(baseDay, lastDay),
+          )
+            .toISOString()
+            .slice(0, 10);
+        };
+
+        async function persistFiledPeriod(opts) {
+          const start =
+            opts.periodStart ||
+            opts.dueDate ||
+            todayStr;
+          const end = opts.dueDate || todayStr;
+          const name = window.AVFinancePersist
+            ? AVFinancePersist.encodeFilingName({
+                totalTax: opts.totalTax,
+                count: opts.count,
+                filedOn: todayStr,
+                label: opts.periodLabel || ("Filing due " + end),
+                dueDate: end,
+              })
+            : opts.periodLabel || ("Filing due " + end);
+          if (!window.AVApi || typeof AVApi.createTaxPeriod !== "function") {
+            return {
+              id: "fil" + Date.now(),
+              filedOn: todayStr,
+              dueDate: end,
+              frequency: taxConfig.frequency,
+              periodStart: opts.periodStart || null,
+              vins: opts.vins || [],
+              totalTax: opts.totalTax,
+              count: opts.count,
+              periodLabel: opts.periodLabel,
+            };
+          }
+          const created = await AVApi.createTaxPeriod({
+            name: name,
+            startDate: start,
+            endDate: end,
+            dueDate: end,
+            status: "filed",
           });
-          pendingFile = null;
+          const period = created.period || created;
+          if (period && period.id && typeof AVApi.updateTaxPeriodStatus === "function") {
+            try {
+              await AVApi.updateTaxPeriodStatus(period.id, { status: "filed" });
+            } catch (_) {}
+          }
+          return window.AVFinancePersist
+            ? AVFinancePersist.mapTaxPeriodToFiling(period)
+            : {
+                id: period.id,
+                filedOn: todayStr,
+                dueDate: end,
+                frequency: taxConfig.frequency,
+                totalTax: opts.totalTax,
+                count: opts.count,
+                periodLabel: opts.periodLabel,
+              };
+        }
+
+        try {
+          if (pendingFile && pendingFile.kind === "bucket") {
+            const pf = pendingFile;
+            const filing = await persistFiledPeriod({
+              dueDate: pf.dueDate,
+              vins: pf.vins,
+              totalTax: pf.totalTax,
+              count: pf.count,
+              periodLabel: pf.label,
+            });
+            taxFilings.push(filing);
+            pendingFile = null;
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Filing recorded");
+            renderTaxPage();
+            if (typeof renderCalendarPage === "function") renderCalendarPage();
+            closeFileConfirm();
+            return;
+          }
+          const due = taxConfig.nextDue;
+          if (!due) return;
+          const pv = currentFilingPreview();
+          const filing = await persistFiledPeriod({
+            dueDate: due,
+            periodStart: pv.start,
+            vins: pv.covered.map((v) => v.vin),
+            totalTax: pv.totalTax,
+            count: pv.covered.length,
+            periodLabel: taxConfig.frequency + " filing due " + due,
+          });
+          taxFilings.push(filing);
+          taxConfig.nextDue = advanceNextDue(due);
+          if (window.AVApi && typeof AVApi.updateTaxSettings === "function") {
+            const freqApi = window.AVFinancePersist
+              ? AVFinancePersist.taxFreqToApi(taxConfig.frequency)
+              : "quarterly";
+            await AVApi.updateTaxSettings({
+              filingFrequency: freqApi,
+              nextDueDate: taxConfig.nextDue || null,
+              notes: taxConfig.notes || null,
+            });
+          }
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Filing recorded");
           renderTaxPage();
           if (typeof renderCalendarPage === "function") renderCalendarPage();
           closeFileConfirm();
-          return;
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error((err && err.message) || "Failed to record filing");
         }
-        const due = taxConfig.nextDue;
-        if (!due) return;
-        const pv = currentFilingPreview();
-        const todayStr = today.toISOString().slice(0, 10);
-        const rec = {
-          id: "fil" + Date.now(),
-          filedOn: todayStr,
-          dueDate: due,
-          frequency: taxConfig.frequency,
-          periodStart: pv.start,
-          vins: pv.covered.map((v) => v.vin),
-          totalTax: pv.totalTax,
-          count: pv.covered.length,
-        };
-        taxFilings.push(rec);
-        const step =
-          { Monthly: 1, Quarterly: 3, "Semi-Annually": 6, Annually: 12 }[
-            taxConfig.frequency
-          ] || 3;
-        const base = new Date(due + "T00:00:00");
-        const baseDay = base.getDate();
-        const target = new Date(base.getFullYear(), base.getMonth() + step, 1);
-        const lastDay = new Date(
-          target.getFullYear(),
-          target.getMonth() + 1,
-          0,
-        ).getDate();
-        taxConfig.nextDue = new Date(
-          target.getFullYear(),
-          target.getMonth(),
-          Math.min(baseDay, lastDay),
-        )
-          .toISOString()
-          .slice(0, 10);
-        renderTaxPage();
-        if (typeof renderCalendarPage === "function") renderCalendarPage();
-        closeFileConfirm();
       }
       let currentFilingId = null;
       function openFilingDetail(id) {
@@ -49819,14 +52036,149 @@
       function uploadMonthProof(key, ev) {
         const f = ev.target.files && ev.target.files[0];
         if (!f) return;
-        const r = new FileReader();
-        r.onload = (e) => {
-          payProofs[key] = { proof: e.target.result, proofName: f.name };
-          refreshStubs();
-        };
-        r.readAsDataURL(f);
+        (async function () {
+          try {
+            let proofUrl = null;
+            if (window.AVApi && typeof AVApi.uploadFile === "function") {
+              const uploaded = await AVApi.uploadFile(f, {
+                sourceEntity: "payroll_proof",
+                fileName: f.name,
+              });
+              proofUrl =
+                (uploaded &&
+                  (uploaded.publicUrl ||
+                    uploaded.downloadUrl ||
+                    (uploaded.file && uploaded.file.storagePath))) ||
+                null;
+            }
+            if (!proofUrl) {
+              const dataUrl = await new Promise(function (resolve, reject) {
+                const r = new FileReader();
+                r.onload = function (e) {
+                  resolve(e.target.result);
+                };
+                r.onerror = reject;
+                r.readAsDataURL(f);
+              });
+              proofUrl = dataUrl;
+            }
+            const parts = String(key).split(":");
+            const kind = parts[0];
+            const name = parts[1];
+            const ym = parts[2];
+            const periodStart = ym + "-01";
+            const lastDay = new Date(
+              Number(ym.slice(0, 4)),
+              Number(ym.slice(5, 7)),
+              0,
+            ).getDate();
+            const periodEnd = ym + "-" + String(lastDay).padStart(2, "0");
+            let amount = 0;
+            let staffMemberId = null;
+            let salesRepId = null;
+            if (kind === "rep") {
+              const rec = salesReps.find((r) => r.name === name);
+              salesRepId = rec && rec.id ? rec.id : null;
+              const cars = vehicles
+                .filter(
+                  (v) =>
+                    v.sold &&
+                    v.rep === name &&
+                    (v.soldDate || "").startsWith(ym),
+                )
+                .map(computeRow);
+              const comm = cars.reduce((s, r) => s + r.commission, 0);
+              amount = Math.max((rec && rec.base) || 0, comm) || 0.01;
+            } else {
+              const rec = staff.find((w) => w.name === name);
+              staffMemberId = rec && rec.id ? rec.id : null;
+              amount =
+                (rec &&
+                  (rec.payType === "Salary"
+                    ? rec.monthly || 0
+                    : hourlyMonthlyPay(rec))) ||
+                0.01;
+            }
+            const item = {
+              staffMemberId: staffMemberId,
+              salesRepId: salesRepId,
+              description: "payproof|" + key,
+              amount: Math.max(Number(amount) || 0.01, 0.01),
+              proofPath: proofUrl,
+            };
+            let runId = payProofs[key] && payProofs[key].runId;
+            if (
+              !runId &&
+              window.__payrollRuns &&
+              Array.isArray(window.__payrollRuns)
+            ) {
+              const existing = window.__payrollRuns.find(function (run) {
+                return (
+                  String(run.periodStart || "").slice(0, 7) === ym &&
+                  (run.items || []).some(function (it) {
+                    return (
+                      String(it.description || "") === "payproof|" + key ||
+                      (kind === "rep"
+                        ? it.salesRepId === salesRepId
+                        : it.staffMemberId === staffMemberId)
+                    );
+                  })
+                );
+              });
+              if (existing) runId = existing.id;
+            }
+            if (window.AVApi && typeof AVApi.createPayrollRun === "function") {
+              if (runId && typeof AVApi.updatePayrollRun === "function") {
+                await AVApi.updatePayrollRun(runId, {
+                  items: [item],
+                  notes: "Payment proof " + key,
+                });
+              } else {
+                const created = await AVApi.createPayrollRun({
+                  periodStart: periodStart,
+                  periodEnd: periodEnd,
+                  notes: "Payment proof " + key,
+                  items: [item],
+                });
+                const run = created.payrollRun || created.run || created;
+                runId = run && run.id;
+                if (!window.__payrollRuns) window.__payrollRuns = [];
+                if (run) window.__payrollRuns.unshift(run);
+              }
+            }
+            payProofs[key] = {
+              proof: proofUrl,
+              proofName: f.name,
+              runId: runId,
+            };
+            refreshStubs();
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Payment proof saved");
+          } catch (err) {
+            if (typeof AVToast !== "undefined")
+              AVToast.error(
+                (err && err.message) || "Failed to save payment proof",
+              );
+          }
+        })();
       }
-      function removeMonthProof(key) {
+      async function removeMonthProof(key) {
+        const pr = payProofs[key];
+        try {
+          if (
+            pr &&
+            pr.runId &&
+            window.AVApi &&
+            typeof AVApi.deletePayrollRun === "function"
+          ) {
+            await AVApi.deletePayrollRun(pr.runId);
+            if (window.__payrollRuns) {
+              window.__payrollRuns = window.__payrollRuns.filter(function (r) {
+                return r.id !== pr.runId;
+              });
+            }
+          }
+        } catch (_) {}
         delete payProofs[key];
         refreshStubs();
       }
@@ -49842,7 +52194,7 @@
       function closeProofView() {
         document.getElementById("proofViewModal").style.display = "none";
       }
-      function recordRepPayment() {
+      async function recordRepPayment() {
         const rep = salesReps.find((r) => r.id === currentRepDetailId);
         if (!rep) return;
         const mult = payrollPeriodMult();
@@ -49854,41 +52206,144 @@
         const _base = (rep.base || 0) * mult;
         const _comm = sold.reduce((s, r) => s + r.commission, 0);
         const amount = Math.max(_base, _comm);
+        if (amount <= 0) {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Nothing to record for this period");
+          return;
+        }
         const period =
           pnlPeriod.mode === "month"
             ? `${PNL_MFULL[pnlPeriod.month]} ${pnlPeriod.year}`
             : `Full Year ${pnlPeriod.year}`;
-        payStubs.push({
-          id: "ps" + Date.now(),
-          kind: "rep",
-          name: rep.name,
-          date: today.toISOString().slice(0, 10),
-          amount,
-          method: rep.payMethod || "Direct Deposit",
-          period,
-        });
-        renderRepDetail();
+        const ym =
+          pnlPeriod.mode === "month"
+            ? `${pnlPeriod.year}-${String(pnlPeriod.month + 1).padStart(2, "0")}`
+            : `${pnlPeriod.year}-01`;
+        const periodStart =
+          pnlPeriod.mode === "month" ? ym + "-01" : `${pnlPeriod.year}-01-01`;
+        const periodEnd =
+          pnlPeriod.mode === "month"
+            ? ym +
+              "-" +
+              String(
+                new Date(pnlPeriod.year, pnlPeriod.month + 1, 0).getDate(),
+              ).padStart(2, "0")
+            : `${pnlPeriod.year}-12-31`;
+        try {
+          if (window.AVApi && typeof AVApi.createPayrollRun === "function") {
+            const created = await AVApi.createPayrollRun({
+              periodStart: periodStart,
+              periodEnd: periodEnd,
+              notes: "Rep payment · " + rep.name + " · " + period,
+              items: [
+                {
+                  salesRepId: rep.id || null,
+                  description: "pay|" + rep.name + "|" + period,
+                  amount: amount,
+                },
+              ],
+            });
+            const run = created.payrollRun || created.run || created;
+            payStubs.push(run || {
+              id: "ps" + Date.now(),
+              kind: "rep",
+              name: rep.name,
+              date: today.toISOString().slice(0, 10),
+              amount,
+              method: rep.payMethod || "Direct Deposit",
+              period,
+            });
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Payment recorded");
+          } else {
+            payStubs.push({
+              id: "ps" + Date.now(),
+              kind: "rep",
+              name: rep.name,
+              date: today.toISOString().slice(0, 10),
+              amount,
+              method: rep.payMethod || "Direct Deposit",
+              period,
+            });
+          }
+          renderRepDetail();
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error((err && err.message) || "Failed to record payment");
+        }
       }
-      function recordStaffPayment() {
+      async function recordStaffPayment() {
         const w = staff.find((s) => s.id === currentStaffDetailId);
         if (!w) return;
         const mult = payrollPeriodMult();
         const monthPay =
           w.payType === "Salary" ? w.monthly || 0 : hourlyMonthlyPay(w);
+        const amount = monthPay * mult;
+        if (amount <= 0) {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Nothing to record for this period");
+          return;
+        }
         const period =
           pnlPeriod.mode === "month"
             ? `${PNL_MFULL[pnlPeriod.month]} ${pnlPeriod.year}`
             : `Full Year ${pnlPeriod.year}`;
-        payStubs.push({
-          id: "ps" + Date.now(),
-          kind: "staff",
-          name: w.name,
-          date: today.toISOString().slice(0, 10),
-          amount: monthPay * mult,
-          method: w.payMethod || "Direct Deposit",
-          period,
-        });
-        renderStaffDetail();
+        const ym =
+          pnlPeriod.mode === "month"
+            ? `${pnlPeriod.year}-${String(pnlPeriod.month + 1).padStart(2, "0")}`
+            : `${pnlPeriod.year}-01`;
+        const periodStart =
+          pnlPeriod.mode === "month" ? ym + "-01" : `${pnlPeriod.year}-01-01`;
+        const periodEnd =
+          pnlPeriod.mode === "month"
+            ? ym +
+              "-" +
+              String(
+                new Date(pnlPeriod.year, pnlPeriod.month + 1, 0).getDate(),
+              ).padStart(2, "0")
+            : `${pnlPeriod.year}-12-31`;
+        try {
+          if (window.AVApi && typeof AVApi.createPayrollRun === "function") {
+            const created = await AVApi.createPayrollRun({
+              periodStart: periodStart,
+              periodEnd: periodEnd,
+              notes: "Staff payment · " + w.name + " · " + period,
+              items: [
+                {
+                  staffMemberId: w.id || null,
+                  description: "pay|" + w.name + "|" + period,
+                  amount: amount,
+                },
+              ],
+            });
+            const run = created.payrollRun || created.run || created;
+            payStubs.push(run || {
+              id: "ps" + Date.now(),
+              kind: "staff",
+              name: w.name,
+              date: today.toISOString().slice(0, 10),
+              amount,
+              method: w.payMethod || "Direct Deposit",
+              period,
+            });
+            if (typeof AVToast !== "undefined")
+              AVToast.success("Payment recorded");
+          } else {
+            payStubs.push({
+              id: "ps" + Date.now(),
+              kind: "staff",
+              name: w.name,
+              date: today.toISOString().slice(0, 10),
+              amount: amount,
+              method: w.payMethod || "Direct Deposit",
+              period,
+            });
+          }
+          renderStaffDetail();
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error((err && err.message) || "Failed to record payment");
+        }
       }
 
       // ---------- PAYMENT METHOD BOX (with proof upload) ----------
@@ -51463,7 +53918,7 @@
 
       bootstrapPortalAccess();
     </script>
-    <script src="/crm-bootstrap.js"></script>
+    <script src="/crm-bootstrap.js?v=bday2"></script>
     <script>
       /* crm-bootstrap loads after the main script — kick live CRM + vehicles load */
       (function () {

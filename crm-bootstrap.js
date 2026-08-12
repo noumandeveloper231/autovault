@@ -176,53 +176,151 @@
       }
 
       if (taxSettingsResp) {
-        window.taxConfig = {
-          frequency: taxSettingsResp.frequency || taxSettingsResp.filingFrequency || 'Quarterly',
-          nextDue: taxSettingsResp.nextDue || taxSettingsResp.nextFilingDate || '',
-          notes: taxSettingsResp.notes || ''
-        };
+        var mapped = window.AVFinancePersist
+          ? AVFinancePersist.mapTaxSettingsToUi(taxSettingsResp)
+          : {
+              frequency:
+                taxSettingsResp.frequency ||
+                taxSettingsResp.filingFrequency ||
+                "Quarterly",
+              nextDue:
+                taxSettingsResp.nextDue ||
+                taxSettingsResp.nextDueDate ||
+                taxSettingsResp.nextFilingDate ||
+                "",
+              notes: taxSettingsResp.notes || "",
+            };
+        window.taxConfig = mapped;
+        if (typeof taxConfig !== "undefined") {
+          taxConfig.frequency = mapped.frequency;
+          taxConfig.nextDue = mapped.nextDue;
+          taxConfig.notes = mapped.notes;
+        }
       }
 
       if (taxPeriodsResp) {
         var periods = taxPeriodsResp.periods || taxPeriodsResp.data || [];
-        if (typeof taxFilings !== 'undefined') {
+        if (typeof taxFilings !== "undefined") {
           taxFilings.length = 0;
-          periods.forEach(function(p) {
-            if (p.status === 'filed' || p.status === 'completed') {
-              taxFilings.push({ id: p.id, dueDate: p.dueDate || p.periodEnd, count: p.vehicleCount || 0, totalTax: p.totalTax || 0 });
+          periods.forEach(function (p) {
+            if (p.status === "filed" || p.status === "paid" || p.status === "closed") {
+              var filing = window.AVFinancePersist
+                ? AVFinancePersist.mapTaxPeriodToFiling(p)
+                : {
+                    id: p.id,
+                    dueDate: p.dueDate || p.periodEnd,
+                    filedOn: p.updatedAt || p.endDate,
+                    count: p.dealCount || p.vehicleCount || 0,
+                    totalTax: p.totalTax || 0,
+                  };
+              taxFilings.push(filing);
             }
           });
         }
       }
 
+      // Flooring plan (active)
+      try {
+        var floorResp = await AVApi.listFlooringPlans().catch(function () {
+          return null;
+        });
+        var plans =
+          (floorResp && (floorResp.plans || floorResp.data || floorResp)) || [];
+        if (!Array.isArray(plans)) plans = [];
+        var active =
+          plans.find(function (p) {
+            return p.isActive && !p.deletedAt;
+          }) || plans[0];
+        if (active && window.AVFinancePersist) {
+          var fcfg = AVFinancePersist.flooringUiFromPlan(active);
+          window.__flooringPlanId = active.id;
+          if (typeof flooringConfig !== "undefined") {
+            Object.assign(flooringConfig, fcfg);
+          } else {
+            window.flooringConfig = fcfg;
+          }
+        }
+      } catch (eFloor) {}
+
+      // Payroll proofs from runs
+      try {
+        var payRuns =
+          (payrollResp &&
+            (payrollResp.payrollRuns ||
+              payrollResp.runs ||
+              payrollResp.data)) ||
+          [];
+        window.__payrollRuns = Array.isArray(payRuns) ? payRuns : [];
+        if (typeof payProofs !== "undefined") {
+          payRuns.forEach(function (run) {
+            (run.items || []).forEach(function (it) {
+              if (!it.proofPath) return;
+              var key =
+                it.description ||
+                (it.salesRepId ? "rep" : "staff") +
+                  ":" +
+                  (it.staffMemberId || it.salesRepId || "") +
+                  ":" +
+                  String(run.periodStart || "").slice(0, 7);
+              // Prefer explicit meta in description: "payproof|kind:name:ym"
+              if (String(it.description || "").indexOf("payproof|") === 0) {
+                key = String(it.description).slice("payproof|".length);
+              }
+              payProofs[key] = {
+                proof: it.proofPath,
+                proofName: "proof",
+                runId: run.id,
+                itemId: it.id,
+              };
+            });
+          });
+        }
+        if (typeof payStubs !== "undefined") {
+          payStubs.length = 0;
+          payRuns.forEach(function (run) {
+            payStubs.push(run);
+          });
+        }
+      } catch (ePay) {}
+
       var repList = repsResp.salesReps || repsResp.data || repsResp.users || [];
       if (typeof salesReps !== 'undefined') {
         salesReps.length = 0;
-        repList.forEach(function(r) {
-          var profile = r.profile || {};
-          salesReps.push({
-            id: r.id,
-            name: r.fullName || r.name || '',
-            email: r.email || '',
-            username: r.username || '',
-            phone: r.phone || '',
-            commissionType: profile.commissionType === 'flat' ? 'flat' : 'percentage',
-            commissionPct: profile.commissionType === 'flat' ? 0 : Math.round((profile.commissionRate || 0) * 1000) / 10,
-            commissionFlat: profile.commissionType === 'flat' ? (parseFloat(profile.commissionRate) || 0) : 0,
-            base: parseFloat(profile.baseSalary) || 0,
-            payFreq: profile.payFrequency || 'biweekly',
-            payDay: profile.payDay != null ? profile.payDay : 5,
-            payAnchor: '',
-            birthday: profile.birthDate || '',
-            payMethod: profile.paymentMethod || 'Direct Deposit',
-            payProof: profile.payDocUrl || null,
-            isActive: r.isActive !== false,
-            _raw: r
+        if (window.AVReps && typeof AVReps.mapApiToUi === 'function') {
+          repList.forEach(function (r) {
+            var ui = AVReps.mapApiToUi(r);
+            if (ui) salesReps.push(ui);
           });
-        });
+        } else {
+          repList.forEach(function(r) {
+            var profile = r.profile || {};
+            var bday = profile.birthDate ? String(profile.birthDate).slice(0, 10) : '';
+            if (bday && !/^\d{4}-\d{2}-\d{2}$/.test(bday)) bday = '';
+            salesReps.push({
+              id: r.id,
+              name: r.fullName || r.name || '',
+              email: r.email || '',
+              username: r.username || '',
+              phone: r.phone || '',
+              commissionType: profile.commissionType === 'flat' ? 'flat' : 'percentage',
+              commissionPct: profile.commissionType === 'flat' ? 0 : Math.round((profile.commissionRate || 0) * 1000) / 10,
+              commissionFlat: profile.commissionType === 'flat' ? (parseFloat(profile.commissionRate) || 0) : 0,
+              base: parseFloat(profile.baseSalary) || 0,
+              payFreq: profile.payFrequency || 'biweekly',
+              payDay: profile.payDay != null ? profile.payDay : 5,
+              payAnchor: '',
+              birthday: bday,
+              payMethod: profile.paymentMethod || 'Direct Deposit',
+              payProof: profile.payDocUrl || null,
+              isActive: r.isActive !== false,
+              _raw: r
+            });
+          });
+        }
         if (typeof REP_LIST !== 'undefined') {
           REP_LIST = salesReps.map(function(r) { return r.name; });
         }
+        window.AV_REPS_LIVE = true;
       }
 
       var staffList = staffResp.staff || staffResp.data || staffResp.users || [];
@@ -282,21 +380,7 @@
         });
       }
 
-      var payrollList = payrollResp.payrollRuns || payrollResp.data || [];
-      if (typeof payStubs !== 'undefined') {
-        payStubs.length = 0;
-        payrollList.forEach(function(p) {
-          payStubs.push({
-            id: p.id,
-            kind: p.kind || 'staff',
-            name: p.employeeName || p.name || '',
-            date: p.payDate || p.periodEnd || '',
-            amount: p.netPay || p.amount || 0,
-            method: p.paymentMethod || 'Direct Deposit',
-            period: p.periodLabel || p.period || ''
-          });
-        });
-      }
+      // payStubs / payProofs already hydrated from payroll runs above.
 
       window.AV_LIVE_SUMMARY = summary;
       window.AV_LIVE_MODE = true;

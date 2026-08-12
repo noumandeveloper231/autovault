@@ -6,8 +6,10 @@
   <title>Sales Rep Portal | AutoVault360</title>
   <meta name="robots" content="noindex, nofollow" />
   <script>
-    // Typo path redirect — keep for old bookmarks
-    window.location.replace("/sales-rep/dashboard" + (location.hash || ""));
+    // Typo path redirect — keep for old bookmarks; preserve query (impHandoff).
+    window.location.replace(
+      "/sales-rep/dashboard" + (location.search || "") + (location.hash || "")
+    );
   </script>
 </head>
 <body>

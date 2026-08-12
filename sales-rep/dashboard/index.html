@@ -8,14 +8,21 @@
   <meta name="robots" content="noindex, nofollow" />
   <link rel="canonical" href="/sales-rep/dashboard" />
   <script>
-    if (!location.pathname.toLowerCase().startsWith("/sales-rep/")) {
-      window.location.replace("/sales-rep/dashboard");
-    } else {
-      window.location.replace("/dashboard?portal=sales_rep" + (location.hash || "#rep-dashboard"));
-    }
+    (function () {
+      var search = location.search || "";
+      var hash = location.hash || "#rep-dashboard";
+      var params = new URLSearchParams(search);
+      // Unified SPA lives at /dashboard with portal=sales_rep.
+      // Preserve impHandoff (admin "login as rep") and any other query flags.
+      if (!params.has("portal")) params.set("portal", "sales_rep");
+      var qs = params.toString();
+      var target =
+        "/dashboard" + (qs ? "?" + qs : "?portal=sales_rep") + hash;
+      window.location.replace(target);
+    })();
   </script>
 </head>
 <body>
-  <p>Redirecting to sales-rep dashboard… <a href="/sales-rep/dashboard">Continue</a></p>
+  <p>Redirecting to sales-rep dashboard… <a href="/dashboard?portal=sales_rep#rep-dashboard">Continue</a></p>
 </body>
 </html>

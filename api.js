@@ -549,10 +549,16 @@
     profitLoss: (qs = "") => request(`/api/v1/reports/profit-loss${qs}`),
     listNotifications: () => request("/api/v1/notifications"),
     listSalesReps: (qs = "") => request(`/api/v1/sales-reps${qs}`),
+    checkSalesRepAvailability: (qs = "") =>
+      request(`/api/v1/sales-reps/check-availability${qs}`),
     createSalesRep: (body) =>
       request("/api/v1/sales-reps", { method: "POST", body: JSON.stringify(body) }),
     updateSalesRep: (id, body) =>
       request(`/api/v1/sales-reps/${id}`, { method: "PATCH", body: JSON.stringify(body) }),
+    getSalesRepArchivePreview: (id) =>
+      request(`/api/v1/sales-reps/${id}/archive-preview`),
+    archiveSalesRep: (id) =>
+      request(`/api/v1/sales-reps/${id}/archive`, { method: "POST" }),
     sendRepInvite: (id) =>
       request(`/api/v1/sales-reps/${id}/send-invite`, { method: "POST" }),
     impersonateSalesRep: (id, body = {}) =>
@@ -576,7 +582,42 @@
     convertLead: (id) =>
       request(`/api/v1/customers/${id}/convert`, { method: "POST" }),
     taxSettings: () => request("/api/v1/tax/settings"),
-    taxPeriods: () => request("/api/v1/tax/periods"),
+    updateTaxSettings: (body) =>
+      request("/api/v1/tax/settings", {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    taxPeriods: (qs = "") => request(`/api/v1/tax/periods${qs}`),
+    createTaxPeriod: (body) =>
+      request("/api/v1/tax/periods", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    updateTaxPeriod: (id, body) =>
+      request(`/api/v1/tax/periods/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    updateTaxPeriodStatus: (id, body) =>
+      request(`/api/v1/tax/periods/${id}/status`, {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    deleteTaxPeriod: (id) =>
+      request(`/api/v1/tax/periods/${id}`, { method: "DELETE" }),
+    listFlooringPlans: () => request("/api/v1/flooring-plans"),
+    createFlooringPlan: (body) =>
+      request("/api/v1/flooring-plans", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    updateFlooringPlan: (id, body) =>
+      request(`/api/v1/flooring-plans/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    deleteFlooringPlan: (id) =>
+      request(`/api/v1/flooring-plans/${id}`, { method: "DELETE" }),
     calendarEvents: (qs = "") => request(`/api/v1/calendar/events${qs}`),
     createCalendarEvent: (body) =>
       request("/api/v1/calendar/events", { method: "POST", body: JSON.stringify(body) }),
@@ -592,6 +633,19 @@
       request(`/api/v1/calendar/day-notes/${date}`, { method: "PUT", body: JSON.stringify(body) }),
     dealershipsMe: () => request("/api/v1/dealerships/me"),
     listPayrollRuns: (qs = "") => request(`/api/v1/payroll-runs${qs}`),
+    createPayrollRun: (body) =>
+      request("/api/v1/payroll-runs", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    getPayrollRun: (id) => request(`/api/v1/payroll-runs/${id}`),
+    updatePayrollRun: (id, body) =>
+      request(`/api/v1/payroll-runs/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    deletePayrollRun: (id) =>
+      request(`/api/v1/payroll-runs/${id}`, { method: "DELETE" }),
     // Messages
     conversations: () => request("/api/v1/messages/conversations"),
     createConversation: (body) => request("/api/v1/messages/conversations", { method: "POST", body: JSON.stringify(body) }),

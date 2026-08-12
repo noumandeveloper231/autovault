@@ -17,6 +17,18 @@
    * API commissionRate: percentage = 0–1 fraction; flat = dollar amount.
    * UI commissionPct is 0–100; commissionFlat is dollars.
    */
+  function toYmd(value) {
+    if (value == null || value === "") return "";
+    if (value instanceof Date && !isNaN(value.getTime())) {
+      return value.toISOString().slice(0, 10);
+    }
+    var s = String(value).trim();
+    if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0, 10);
+    var d = new Date(s);
+    if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);
+    return "";
+  }
+
   function mapApiToUi(r) {
     if (!r) return null;
     var profile = r.profile || {};
@@ -36,7 +48,7 @@
       payFreq: profile.payFrequency || "biweekly",
       payDay: profile.payDay != null ? profile.payDay : 5,
       payAnchor: "",
-      birthday: profile.birthDate || "",
+      birthday: toYmd(profile.birthDate),
       payMethod: profile.paymentMethod || "Direct Deposit",
       payProof: profile.payDocUrl || null,
       payProofName: "",
@@ -107,19 +119,21 @@
   async function createRep(fields) {
     var name = String(fields.name || "").trim();
     var email = String(fields.email || "").trim();
+    var username = String(fields.username || "").trim();
     if (!name) throw new Error("Name is required");
+    if (!username) throw new Error("Username is required for rep login");
     if (!email) throw new Error("Email is required for rep login");
 
     var body = Object.assign(
       {
         fullName: name,
         email: email,
-        username: (fields.username || "").trim() || undefined,
+        username: username,
         phone: (fields.phone || "").trim() || undefined,
         baseSalary: parseFloat(fields.base) || 0,
         payFrequency: fields.payFreq || undefined,
         payDay: parseInt(fields.payDay) || undefined,
-        birthDate: fields.birthday || undefined,
+        birthDate: fields.birthday ? toYmd(fields.birthday) || undefined : undefined,
         paymentMethod: fields.payMethod || undefined,
         payDocUrl: fields.payProof || undefined,
         sendInvite: fields.sendInvite !== false,
@@ -154,7 +168,12 @@
     if (fields.base != null) body.baseSalary = parseFloat(fields.base) || 0;
     if (fields.payFreq != null) body.payFrequency = fields.payFreq || undefined;
     if (fields.payDay != null) body.payDay = parseInt(fields.payDay) || undefined;
-    if (fields.birthday != null) body.birthDate = fields.birthday || undefined;
+    // Only send birthDate when the form has a real date. An empty field must not
+    // null-out the DB value (the picker often looks blank after a bad hydrate).
+    if (fields.birthday !== undefined) {
+      var bday = toYmd(fields.birthday);
+      if (bday) body.birthDate = bday;
+    }
     if (fields.payMethod != null) body.paymentMethod = fields.payMethod || undefined;
     if (fields.payProof != null) body.payDocUrl = fields.payProof || null;
     if (Object.keys(body).length === 0) return null;
@@ -162,6 +181,14 @@
     var resp = await AVApi.updateSalesRep(id, body);
     var rep = resp.salesRep || resp;
     var ui = mapApiToUi(rep);
+    if (ui && fields.birthday !== undefined) {
+      var kept = toYmd(fields.birthday);
+      if (kept) ui.birthday = kept;
+      else if (!ui.birthday) {
+        var prev = listFindById(id);
+        if (prev && prev.birthday) ui.birthday = prev.birthday;
+      }
+    }
     var list = getRepsList();
     var idx = list.findIndex(function (x) { return x.id === id; });
     if (idx >= 0) list[idx] = ui;
@@ -170,12 +197,27 @@
     return ui;
   }
 
+  function listFindById(id) {
+    return getRepsList().find(function (x) { return x.id === id; }) || null;
+  }
+
   async function deleteRep(id) {
-    await AVApi.updateSalesRep(id, { isActive: false });
+    if (!global.AVApi || typeof AVApi.archiveSalesRep !== "function") {
+      throw new Error("Archive API unavailable");
+    }
+    var resp = await AVApi.archiveSalesRep(id);
     var list = getRepsList();
     var idx = list.findIndex(function (x) { return x.id === id; });
     if (idx >= 0) list.splice(idx, 1);
     refreshUi();
+    return resp;
+  }
+
+  async function getArchivePreview(id) {
+    if (!global.AVApi || typeof AVApi.getSalesRepArchivePreview !== "function") {
+      throw new Error("Archive preview API unavailable");
+    }
+    return AVApi.getSalesRepArchivePreview(id);
   }
 
   function getRepByName(name) {
@@ -217,6 +259,7 @@
     createRep: createRep,
     updateRep: updateRep,
     deleteRep: deleteRep,
+    getArchivePreview: getArchivePreview,
     sendInvite: sendInvite,
     getRepByName: getRepByName,
     getRepById: getRepById,

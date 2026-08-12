@@ -236,6 +236,20 @@
         const n = Number(raw);
         return Number.isFinite(n) ? n : null;
       })(),
+      netCheckReason: (function () {
+        if (jacket && jacket.fees && jacket.fees.netCheckReason != null)
+          return String(jacket.fees.netCheckReason);
+        if (api.fees && api.fees.netCheckReason != null)
+          return String(api.fees.netCheckReason);
+        return "";
+      })(),
+      netCheckNotes: (function () {
+        if (jacket && jacket.fees && jacket.fees.netCheckNotes != null)
+          return String(jacket.fees.netCheckNotes);
+        if (api.fees && api.fees.netCheckNotes != null)
+          return String(api.fees.netCheckNotes);
+        return "";
+      })(),
       commissionOverride: deal ? num(deal.commissionAmount, null) : null,
       commissionPct: deal && deal.commissionRate ? Math.round(deal.commissionRate * 1000) / 10 : null,
       commMode: deal && deal.commissionType
@@ -470,6 +484,27 @@
   async function persistPatch(vinOrId, patch) {
     const v = findUiVehicle(vinOrId);
     if (!v || !v.id) throw new Error("Vehicle has no API id - reload inventory");
+    const jacket =
+      v._raw && Array.isArray(v._raw.dealJackets) && v._raw.dealJackets[0];
+    // Jacket-owned fees (Net Check / add-ons) must update the deal jacket, not only the vehicle.
+    if (patch && patch.fees && jacket && jacket.id) {
+      const fees = mergeFees(v, patch.fees);
+      const jacketPatch = { fees };
+      if (patch.additionalExpenses != null)
+        jacketPatch.additionalExpenses = patch.additionalExpenses;
+      await AVApi.updateDealJacket(jacket.id, jacketPatch);
+      jacket.fees = fees;
+      if (jacketPatch.additionalExpenses != null)
+        jacket.additionalExpenses = jacketPatch.additionalExpenses;
+      const rest = { ...patch };
+      delete rest.fees;
+      delete rest.additionalExpenses;
+      if (Object.keys(rest).length === 0) {
+        refreshUi();
+        return v;
+      }
+      patch = rest;
+    }
     const { vehicle } = await AVApi.updateVehicle(v.id, patch);
     const expenses = vehicle.expenses || v.repairsList;
     const ui = mapApiToUi(
@@ -504,6 +539,8 @@
     if (v.netCheck !== null && v.netCheck !== undefined) {
       ui.netCheck = Number(v.netCheck);
     }
+    if (v.netCheckReason != null) ui.netCheckReason = v.netCheckReason;
+    if (v.netCheckNotes != null) ui.netCheckNotes = v.netCheckNotes;
     ui.commMode = v.commMode || ui.commMode;
     ui.documents = v.documents || ui.documents;
     ui.djDocs = v.djDocs || [];
@@ -637,10 +674,12 @@
     if (v && v.netCheck !== null && v.netCheck !== undefined && merged.netCheck == null) {
       merged.netCheck = Number(v.netCheck);
     }
+    if (v && v.netCheckReason) merged.netCheckReason = v.netCheckReason;
+    if (v && v.netCheckNotes) merged.netCheckNotes = v.netCheckNotes;
     return merged;
   }
 
-  async function persistNetCheck(vin, value) {
+  async function persistNetCheck(vin, value, meta) {
     const v = findUiVehicle(vin);
     if (!v || !v.id) throw new Error("Vehicle not found");
     const hasValue = value !== null && value !== undefined && value !== "";
@@ -649,10 +688,18 @@
       throw new Error("Invalid net check amount");
     }
     v.netCheck = hasValue ? amount : null;
+    if (meta && typeof meta === "object") {
+      if (meta.reason !== undefined) v.netCheckReason = String(meta.reason || "");
+      if (meta.notes !== undefined) v.netCheckNotes = String(meta.notes || "");
+    }
     const fees = mergeFees(v, {
       netCheck: hasValue ? amount : null,
+      netCheckReason: v.netCheckReason || null,
+      netCheckNotes: v.netCheckNotes || null,
     });
     if (!hasValue) delete fees.netCheck;
+    if (!fees.netCheckReason) delete fees.netCheckReason;
+    if (!fees.netCheckNotes) delete fees.netCheckNotes;
 
     const jacket =
       v._raw && Array.isArray(v._raw.dealJackets) && v._raw.dealJackets[0];
@@ -670,25 +717,40 @@
   async function persistAddOnItems(vin) {
     const v = findUiVehicle(vin);
     if (!v || !v.id) return;
-    const items = v.addOnItems || [];
-    const total = items.reduce(function(s, it) { return s + (parseFloat(it.price) || 0); }, 0);
+    const items = (v.addOnItems || [])
+      .map(function (it) {
+        return {
+          desc: String((it && it.desc) || "").trim(),
+          type: String((it && it.type) || "").trim() || "Add-On",
+          price: Number(it && it.price) || 0,
+          cost: Number(it && it.cost) || 0,
+        };
+      })
+      .filter(function (it) {
+        return it.cost > 0 || it.price > 0 || it.desc;
+      });
+    v.addOnItems = items;
+    // Dealer COGS for add-ons (not customer upcharge total)
+    const costTotal = items.reduce(function (s, it) {
+      return s + (Number(it.cost) || 0);
+    }, 0);
     const fees = mergeFees(v, { addOnItems: items });
     var jacket = v._raw && v._raw.dealJackets && v._raw.dealJackets[0];
     if (jacket && jacket.id) {
       await AVApi.updateDealJacket(jacket.id, {
         fees,
-        additionalExpenses: total,
+        additionalExpenses: costTotal,
       });
       jacket.fees = fees;
-      jacket.additionalExpenses = total;
+      jacket.additionalExpenses = costTotal;
     } else {
       await AVApi.updateVehicle(v.id, {
         fees,
-        additionalExpenses: total,
+        additionalExpenses: costTotal,
       });
     }
-    v.additionalExpenses = total;
-    v.addOns = total;
+    v.additionalExpenses = costTotal;
+    v.addOns = costTotal;
   }
 
   async function persistStatus(vin, uiStatus) {
@@ -744,7 +806,13 @@
     if (sale.commissionAmount != null) body.commissionAmount = sale.commissionAmount;
     if (sale.commissionRate != null) body.commissionRate = sale.commissionRate;
     if (sale.commissionType) body.commissionType = sale.commissionType;
-    if (sale.fees) body.fees = sale.fees;
+    if (sale.fees) {
+      body.fees = sale.fees;
+      if (sale.fees.netCheck != null && sale.fees.netCheck !== "") {
+        body.netCheck = Number(sale.fees.netCheck);
+      }
+    }
+    if (sale.netCheck != null && sale.netCheck !== "") body.netCheck = Number(sale.netCheck);
     if (sale.titleReceived != null) body.titleReceived = !!sale.titleReceived;
     if (sale.titlePresent != null) body.titlePresent = !!sale.titlePresent;
     const resp = await AVApi.markSold(v.id, body);
@@ -787,6 +855,17 @@
       customerName: fields.customer || "Previous customer",
       notes: "Imported as a previously sold vehicle.",
     };
+    if (Array.isArray(fields.addOnItems) && fields.addOnItems.length) {
+      body.addOnItems = fields.addOnItems;
+      body.addOnsCost = fields.addOnItems.reduce(function (s, a) {
+        return s + (Number(a.cost) || 0);
+      }, 0);
+    }
+    if (fields.netCheck !== null && fields.netCheck !== undefined && fields.netCheck !== "") {
+      body.netCheck = Number(fields.netCheck);
+    }
+    if (fields.netCheckReason) body.netCheckReason = String(fields.netCheckReason);
+    if (fields.netCheckNotes) body.netCheckNotes = String(fields.netCheckNotes);
     if (fields.salesRepId) body.salesRepId = fields.salesRepId;
     if (fields.commissionAmount != null && fields.commissionAmount !== "") {
       body.commissionAmount = Number(fields.commissionAmount);
@@ -820,6 +899,11 @@
       totalCost: cost,
       laborCost: cost,
       paymentStatus: "unpaid",
+      ...(entry.receipt
+        ? { receiptStoragePath: String(entry.receipt) }
+        : entry.receipt === null
+          ? { receiptStoragePath: null }
+          : {}),
     };
 
     if (entry.id) {
