@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>VA — Vehicles Inventory</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <title>AutoVault360 CRM</title>
     <link
       rel="icon"
       type="image/png"
@@ -14611,6 +14614,93 @@
       .tour-next:hover{ filter:brightness(1.1); transform:translateY(-1px); }
       .tour-finish-anim{ animation:tourFinishPop .5s ease; }
       @keyframes tourFinishPop{ 0%{ transform:scale(1); } 40%{ transform:scale(1.04); } 100%{ transform:scale(1); } }
+
+  /* Contact Support modal */
+  .cs-intro{ font-size:12.5px; color:var(--muted); line-height:1.55; margin-bottom:16px; }
+  .cs-prio{ display:flex; gap:8px; }
+  .cs-prio-btn{ flex:1; background:var(--panel-2); border:1px solid var(--border); color:var(--muted); font-weight:700; font-size:12.5px; padding:9px 0; border-radius:9px; cursor:pointer; font-family:inherit; }
+  .cs-prio-btn:hover{ border-color:var(--blue); color:var(--text); }
+  .cs-prio-btn.active{ background:rgba(58,160,255,.16); border-color:var(--blue); color:var(--blue); }
+  .cs-prio-btn.active[data-prio="Urgent"]{ background:rgba(255,90,90,.16); border-color:var(--red); color:var(--red); }
+  .cs-error{ font-size:12px; color:var(--red); background:rgba(255,90,90,.1); border:1px solid rgba(255,90,90,.35); border-radius:8px; padding:9px 12px; margin-bottom:12px; }
+  .cs-foot{ font-size:11.5px; color:var(--muted); text-align:center; margin-top:14px; line-height:1.5; }
+  .cs-check{ width:56px; height:56px; margin:0 auto 14px; border-radius:50%; background:rgba(35,209,139,.16); border:1px solid rgba(35,209,139,.4); display:flex; align-items:center; justify-content:center; }
+  .cs-check svg{ width:28px; height:28px; color:var(--green); }
+  .cs-success-title{ font-size:19px; font-weight:800; color:var(--text); }
+  .cs-success-sub{ font-size:12.5px; color:var(--muted); line-height:1.55; margin-top:6px; max-width:340px; margin-left:auto; margin-right:auto; }
+
+  /* Owner: User Messages */
+  .om-toolbar{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:16px; }
+  .om-filters{ display:inline-flex; gap:6px; background:var(--panel-2); border:1px solid var(--border); border-radius:11px; padding:4px; }
+  .om-filter{ background:none; border:none; color:var(--muted); font-weight:700; font-size:12.5px; padding:7px 15px; border-radius:8px; cursor:pointer; font-family:inherit; }
+  .om-filter:hover{ color:var(--text); }
+  .om-filter.active{ background:var(--panel); color:var(--text); box-shadow:0 1px 4px rgba(0,0,0,.3); }
+  .om-count{ font-size:12px; color:var(--muted); font-weight:600; }
+  .om-card{ background:var(--panel); border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:12px; }
+  .om-card.unread{ border-color:rgba(58,160,255,.4); box-shadow:inset 3px 0 0 var(--blue); }
+  .om-card-top{ display:flex; align-items:flex-start; gap:12px; }
+  .om-ava{ width:40px; height:40px; border-radius:11px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:#fff; background:linear-gradient(140deg,#7b61ff,#5b8bff); }
+  .om-meta{ flex:1; min-width:0; }
+  .om-name{ font-size:14px; font-weight:800; color:var(--text); }
+  .om-sub{ font-size:11.5px; color:var(--muted); margin-top:2px; }
+  .om-time{ font-size:11px; color:var(--muted); white-space:nowrap; }
+  .om-chips{ display:flex; gap:7px; flex-wrap:wrap; margin:11px 0 8px; }
+  .om-chip{ font-size:10.5px; font-weight:800; letter-spacing:.3px; padding:3px 9px; border-radius:20px; background:var(--panel-2); border:1px solid var(--border); color:var(--muted); }
+  .om-chip.topic{ color:var(--blue); border-color:rgba(58,160,255,.35); background:rgba(58,160,255,.1); }
+  .om-chip.prio-Urgent{ color:var(--red); border-color:rgba(255,90,90,.4); background:rgba(255,90,90,.12); }
+  .om-chip.prio-Normal{ color:var(--orange); border-color:rgba(255,159,67,.35); background:rgba(255,159,67,.1); }
+  .om-chip.prio-Low{ color:var(--muted); }
+  .om-chip.resolved{ color:var(--green); border-color:rgba(35,209,139,.4); background:rgba(35,209,139,.12); }
+  .om-msg-subject{ font-size:13.5px; font-weight:800; color:var(--text); margin-bottom:4px; }
+  .om-msg-body{ font-size:13px; color:var(--text); line-height:1.55; white-space:pre-wrap; opacity:.92; }
+  .om-actions{ display:flex; gap:9px; margin-top:13px; padding-top:12px; border-top:1px solid var(--border); }
+  .om-btn{ background:var(--panel-2); border:1px solid var(--border); color:var(--text); font-weight:700; font-size:12px; padding:7px 14px; border-radius:8px; cursor:pointer; font-family:inherit; display:inline-flex; align-items:center; gap:6px; }
+  .om-btn:hover{ border-color:var(--blue); color:var(--blue); }
+  .om-btn.resolve{ color:var(--green); }
+  .om-btn.resolve:hover{ border-color:var(--green); }
+  .om-empty{ text-align:center; color:var(--muted); font-size:13px; padding:50px 20px; background:var(--panel); border:1px dashed var(--border); border-radius:14px; }
+
+  /* KPI color corner dots (vehicles + deal jacket) */
+  .kpi{ position:relative; }
+  .vdp-kpi{ position:relative; }
+  .kpi-cbtn{ position:absolute; top:7px; right:7px; width:13px; height:13px; border-radius:50%; border:2px solid var(--panel); background:var(--accent,var(--blue)); box-shadow:0 0 0 1px var(--border); cursor:pointer; opacity:.45; transition:opacity .15s, transform .12s; padding:0; z-index:2; }
+  .kpi:hover .kpi-cbtn, .vdp-kpi:hover .kpi-cbtn{ opacity:.95; }
+  .kpi-cbtn:hover{ opacity:1 !important; transform:scale(1.3); box-shadow:0 0 0 1px var(--accent); }
+  .kpi-cpop{ position:fixed; z-index:6200; display:none; width:206px; background:var(--panel); border:1px solid var(--border); border-radius:13px; padding:13px; box-shadow:0 18px 50px rgba(0,0,0,.55); }
+  .kcp-title{ font-size:11px; font-weight:800; letter-spacing:.4px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
+  .kcp-swatches{ display:grid; grid-template-columns:repeat(6,1fr); gap:7px; }
+  .kcp-sw{ width:24px; height:24px; border-radius:50%; cursor:pointer; border:2px solid transparent; box-shadow:inset 0 0 0 1px rgba(255,255,255,.12); }
+  .kcp-sw.sel{ border-color:#fff; }
+  .kcp-custom{ display:flex; align-items:center; gap:8px; margin-top:12px; }
+  .kcp-custom label{ font-size:11px; color:var(--muted); font-weight:700; }
+  .kcp-custom input[type=color]{ width:34px; height:28px; border:none; background:none; padding:0; cursor:pointer; }
+  .kcp-reset{ margin-left:auto; background:var(--panel-2); border:1px solid var(--border); color:var(--muted); font-size:11px; font-weight:700; padding:6px 10px; border-radius:8px; cursor:pointer; font-family:inherit; }
+  .kcp-reset:hover{ color:var(--text); border-color:var(--blue); }
+
+  /* Deal jacket collapsible commission */
+  .dj-comm-collapse{ margin-top:14px; border:1px solid var(--border); border-radius:12px; background:var(--panel-2); overflow:hidden; }
+  .dj-comm-toggle{ width:100%; display:flex; align-items:center; gap:8px; background:transparent; border:none; color:var(--text); padding:12px 14px; cursor:pointer; font-family:inherit; text-align:left; }
+  .dj-comm-toggle .dct-title{ font-weight:800; font-size:13px; }
+  .dj-comm-toggle .dct-opt{ font-size:10.5px; color:var(--muted); font-weight:700; text-transform:uppercase; letter-spacing:.4px; }
+  .dj-comm-toggle .dct-val{ margin-left:auto; font-size:12px; font-weight:700; color:var(--muted); }
+  .dj-comm-toggle .dct-chev{ color:var(--muted); transition:transform .18s ease; flex-shrink:0; }
+  .dj-comm-collapse.open .dct-chev{ transform:rotate(180deg); }
+  .dj-comm-body{ display:none; padding:0 14px 14px; border-top:1px solid var(--border); }
+  .dj-comm-collapse.open .dj-comm-body{ display:block; padding-top:12px; }
+
+  .dj-dtbox{ margin:10px 0 14px; padding:12px 14px; background:var(--panel-2); border:1px solid var(--border); border-left:3px solid var(--orange); border-radius:12px; }
+  .dj-dtbox-head{ font-size:12.5px; font-weight:800; margin-bottom:4px; }
+  .dj-dtbox-intro{ font-size:11.5px; color:var(--muted); line-height:1.5; margin-bottom:10px; }
+  .dj-dtbox-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .dj-dt-field label{ display:block; font-size:10.5px; font-weight:700; color:var(--muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.3px; }
+  .dj-dt-field.full{ grid-column:1 / -1; }
+  .dj-dt-field input, .dj-dt-field select, .dj-dt-field textarea{
+    width:100%; background:var(--panel); border:1px solid var(--border); color:var(--text);
+    border-radius:9px; padding:8px 10px; font-size:12.5px; font-family:inherit; outline:none;
+  }
+  .dj-dt-field textarea{ min-height:64px; resize:vertical; }
+  @media(max-width:720px){ .dj-dtbox-grid{ grid-template-columns:1fr; } }
+
     </style>
     <script src="/auth-portal.js"></script>
     <script src="/api.js"></script>
@@ -14669,12 +14759,7 @@
       </button>
       <div class="sidebar-logo">
         <div class="logo-lockup">
-          <img
-            class="logo-svg"
-            src="/img/logo-va.png"
-            alt="AutoVault"
-            aria-label="AutoVault VA"
-          />
+          <svg class="logo-svg" viewBox="0 0 120 78" fill="none" role="img" aria-label="AutoVault"><path d="M16 12 L42 64 L68 12" stroke="var(--text)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 64 L78 12 L104 64" stroke="var(--accent,#2C9257)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
       </div>
 
@@ -15221,6 +15306,21 @@
           </svg>
           Calendar
         </div>
+        <div class="nav-item sub" onclick="openContactSupport()">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <circle cx="12" cy="12" r="10" />
+            <circle cx="12" cy="12" r="4" />
+            <path d="M4.93 4.93l4.24 4.24M14.83 14.83l4.24 4.24M14.83 9.17l4.24-4.24M4.93 19.07l4.24-4.24" />
+          </svg>
+          Contact Support
+        </div>
         <div class="nav-item sub" onclick="openCpaLogin()">
           <svg
             width="14"
@@ -15447,6 +15547,33 @@
             <rect x="3" y="16" width="7" height="5" rx="1.5" />
           </svg>
           Users Dashboard
+        </div>
+        <div
+          class="nav-item"
+          data-page="owner-messages"
+          onclick="
+            showPage('owner-messages', this);
+            renderOwnerMessages();
+          "
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+            />
+          </svg>
+          User Messages<span
+            class="nav-badge"
+            id="ownerMsgBadge"
+            style="display: none"
+            >0</span
+          >
         </div>
       </div>
       <div class="nav-group owner-only-group">
@@ -20639,6 +20766,197 @@
           <div id="ownerLiveBody"></div>
         </div>
 
+
+
+    <!-- CONTACT SUPPORT MODAL -->
+    <div class="modal-overlay" id="supportModal">
+      <div class="modal" style="max-width: 560px">
+        <div class="modal-head">
+          <h3>Contact Support</h3>
+          <button class="modal-close" onclick="closeContactSupport()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="supportFormWrap">
+            <div class="cs-intro">
+              Need a hand? Send us a message — our support team
+              <b>and your CRM owner</b> will see it and follow up.
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Your Name</label
+                ><input type="text" id="csName" placeholder="Your name" />
+              </div>
+              <div class="form-group">
+                <label>Topic</label>
+                <select id="csTopic">
+                  <option>Technical issue</option>
+                  <option>Billing &amp; payments</option>
+                  <option>How do I…?</option>
+                  <option>Feature request</option>
+                  <option>Bug report</option>
+                  <option>Account / login</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Subject</label
+              ><input
+                type="text"
+                id="csSubject"
+                placeholder="Brief summary — e.g. Can't mark a vehicle sold"
+              />
+            </div>
+            <div class="form-group">
+              <label>Priority</label>
+              <div class="cs-prio" id="csPrio">
+                <button
+                  type="button"
+                  class="cs-prio-btn active"
+                  data-prio="Low"
+                  onclick="csSetPrio('Low')"
+                >
+                  Low
+                </button>
+                <button
+                  type="button"
+                  class="cs-prio-btn"
+                  data-prio="Normal"
+                  onclick="csSetPrio('Normal')"
+                >
+                  Normal
+                </button>
+                <button
+                  type="button"
+                  class="cs-prio-btn"
+                  data-prio="Urgent"
+                  onclick="csSetPrio('Urgent')"
+                >
+                  Urgent
+                </button>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 8px">
+              <label>Message</label
+              ><textarea
+                id="csMessage"
+                placeholder="Tell us what's going on and how we can help…"
+                style="
+                  width: 100%;
+                  min-height: 112px;
+                  resize: vertical;
+                  background: var(--panel-2);
+                  border: 1px solid var(--border);
+                  color: var(--text);
+                  border-radius: 9px;
+                  padding: 10px 12px;
+                  font-size: 13px;
+                  outline: none;
+                  font-family: inherit;
+                  line-height: 1.5;
+                "
+              ></textarea>
+            </div>
+            <div id="csError" class="cs-error" style="display: none"></div>
+            <button
+              class="btn-primary"
+              id="csSubmitBtn"
+              style="width: 100%; box-shadow: none"
+              onclick="submitContactSupport()"
+            >
+              Send Message
+            </button>
+            <div class="cs-foot">
+              Prefer email or phone? Reach us at
+              <b>support@autovault.com</b> &middot; <b>(800) 555-0199</b>
+            </div>
+          </div>
+          <div
+            id="supportSuccess"
+            style="display: none; text-align: center; padding: 22px 6px 8px"
+          >
+            <div class="cs-check">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.6"
+              >
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+            </div>
+            <div class="cs-success-title">Message sent</div>
+            <div class="cs-success-sub">
+              Our support team and your CRM owner have received your request.
+              We'll follow up soon.
+            </div>
+            <button
+              class="btn-ghost"
+              style="margin-top: 18px"
+              onclick="closeContactSupport()"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI NUMBER COLOR PICKER -->
+    <div class="kpi-cpop" id="kpiColorPop">
+      <div class="kcp-title">Number color</div>
+      <div class="kcp-swatches" id="kcpSwatches"></div>
+      <div class="kcp-custom">
+        <label>Custom</label>
+        <input
+          type="color"
+          id="kcpCustom"
+          value="#4a9dff"
+          oninput="kpiSetColorCustom(this.value)"
+        />
+        <button class="kcp-reset" onclick="kpiResetColor()">Reset</button>
+      </div>
+    </div>
+
+        <div id="page-owner-messages" class="page-section" style="display: none">
+          <div class="page-head">
+            <div class="page-title">USER <b>MESSAGES</b></div>
+            <div class="page-sub">
+              Support requests from your dealership users — everything sent
+              through Contact Support lands here.
+            </div>
+          </div>
+          <div class="om-toolbar">
+            <div class="om-filters">
+              <button
+                class="om-filter active"
+                data-omf="all"
+                onclick="ownerMsgFilter('all')"
+              >
+                All
+              </button>
+              <button
+                class="om-filter"
+                data-omf="new"
+                onclick="ownerMsgFilter('new')"
+              >
+                Unread
+              </button>
+              <button
+                class="om-filter"
+                data-omf="resolved"
+                onclick="ownerMsgFilter('resolved')"
+              >
+                Resolved
+              </button>
+            </div>
+            <div class="om-count" id="ownerMsgCount"></div>
+          </div>
+          <div id="ownerMsgList"></div>
+        </div>
+
         <div id="page-vehicles" class="page-section" style="display: none">
           <!-- PAGE TITLE -->
           <div class="page-head">
@@ -20862,6 +21180,7 @@
                 </div>
                 <div class="kpi-grid">
                   <div class="kpi" style="--accent: var(--blue)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'inventory')" title="Change number color"></button>
                     <div class="kpi-label">Total Inventory</div>
                     <div class="kpi-value" id="kpiTotalInventory">0</div>
                     <div class="kpi-foot" id="kpiTotalInventoryFoot">
@@ -20875,6 +21194,7 @@
                     onclick="toggleTitlesFilter()"
                     title="Click to view vehicles with present titles"
                   >
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'titles')" title="Change number color"></button>
                     <div class="kpi-label">Titles Present</div>
                     <div class="kpi-value" id="kpiTitles">0 of 0</div>
                     <div class="kpi-foot">in-stock vehicles only</div>
@@ -20886,6 +21206,7 @@
                     onclick="toggleUpcomingFloored()"
                     title="Show vehicles floored 30+ days"
                   >
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'flooring')" title="Change number color"></button>
                     <div class="kpi-label">Upcoming Floored</div>
                     <div class="kpi-value" id="kpiUpcomingFloored">0</div>
                     <div class="kpi-foot">
@@ -20899,11 +21220,13 @@
                 <div class="veh-kpi-group-label" id="vehKpiMonthLabel">This Month</div>
                 <div class="kpi-grid">
                   <div class="kpi" style="--accent: var(--green)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'sold')" title="Change number color"></button>
                     <div class="kpi-label" id="kpiSoldMonthLabel">Sold This Month</div>
                     <div class="kpi-value" id="kpiSoldMonth">0</div>
                     <div class="kpi-foot">units moved</div>
                   </div>
                   <div class="kpi" style="--accent: var(--green)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'profit')" title="Change number color"></button>
                     <div class="kpi-label" id="kpiProfitMonthLabel">Profit This Month</div>
                     <div class="kpi-value" id="kpiProfitMonth">$0</div>
                     <div class="kpi-foot" id="kpiProfitMonthFoot">net, sold this month</div>
@@ -20918,31 +21241,37 @@
               </div>
               <div class="kpi-grid">
                 <div class="kpi" style="--accent: var(--orange)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'purchase')" title="Change number color"></button>
                   <div class="kpi-label">Purchase Cost</div>
                   <div class="kpi-value" id="kpiPurchaseCost">$0</div>
                   <div class="kpi-foot">acquisition spend</div>
                 </div>
                 <div class="kpi" style="--accent: var(--purple)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'fees')" title="Change number color"></button>
                   <div class="kpi-label">Total Fees</div>
                   <div class="kpi-value" id="kpiFees">$0</div>
                   <div class="kpi-foot">title / admin / doc</div>
                 </div>
                 <div class="kpi" style="--accent: var(--red)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'repairs')" title="Change number color"></button>
                   <div class="kpi-label">Total Repairs</div>
                   <div class="kpi-value" id="kpiRepairs">$0</div>
                   <div class="kpi-foot">recon + parts</div>
                 </div>
                 <div class="kpi" style="--accent: var(--blue)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'tax')" title="Change number color"></button>
                   <div class="kpi-label">Sales Tax</div>
                   <div class="kpi-value" id="kpiSalesTax">$0</div>
                   <div class="kpi-foot">paid at acquisition</div>
                 </div>
                 <div class="kpi" style="--accent: var(--purple)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'commission')" title="Change number color"></button>
                   <div class="kpi-label">Commission</div>
                   <div class="kpi-value" id="kpiCommission">$0</div>
                   <div class="kpi-foot">owed to reps</div>
                 </div>
                 <div class="kpi" style="--accent: var(--green)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'cost')" title="Change number color"></button>
                   <div class="kpi-label">Total Vehicle Cost</div>
                   <div class="kpi-value" id="kpiTotalCost">$0</div>
                   <div class="kpi-foot">all-in, incl. flooring</div>
@@ -21738,21 +22067,25 @@
           <!-- LIVE DEAL SUMMARY -->
           <div class="vdp-kpi-strip" id="djKpiStrip">
             <div class="vdp-kpi" style="--accent: var(--blue)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'sold')" title="Change number color"></button>
               <div class="vdp-kpi-label">Sold Price</div>
               <div class="vdp-kpi-value" id="djKpiSold">—</div>
               <div class="vdp-kpi-sub">to customer</div>
             </div>
             <div class="vdp-kpi" style="--accent: var(--orange)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'gross')" title="Change number color"></button>
               <div class="vdp-kpi-label">Gross Profit</div>
               <div class="vdp-kpi-value" id="djKpiGross">—</div>
               <div class="vdp-kpi-sub">sold − purchase</div>
             </div>
             <div class="vdp-kpi" style="--accent: var(--purple)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'commission')" title="Change number color"></button>
               <div class="vdp-kpi-label">Commission</div>
               <div class="vdp-kpi-value" id="djKpiComm">—</div>
               <div class="vdp-kpi-sub" id="djKpiCommSub">to rep</div>
             </div>
             <div class="vdp-kpi" style="--accent: var(--green)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'profit')" title="Change number color"></button>
               <div class="vdp-kpi-label">Net Profit</div>
               <div class="vdp-kpi-value" id="djKpiNet">—</div>
               <div class="vdp-kpi-sub">after all costs</div>
@@ -21763,6 +22096,7 @@
               <div class="vdp-kpi-sub">return on cost</div>
             </div>
             <div class="vdp-kpi" style="--accent: var(--red)">
+              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'cost')" title="Change number color"></button>
               <div class="vdp-kpi-label">Vehicle Cost</div>
               <div class="vdp-kpi-value" id="djKpiCost">—</div>
               <div class="vdp-kpi-sub">before commission</div>
@@ -21796,6 +22130,30 @@
                   </div>
                 </div>
                 <div class="dj-section-body">
+
+                <div class="form-group" style="margin-bottom: 14px">
+                  <label>Deal Type / Status</label>
+                  <select id="djDealStatus" onchange="djSetDealStatus(this.value)">
+                    <option value="Sold">Standard Sale</option>
+                    <option value="Arbitration">Arbitration</option>
+                    <option value="Sold Loss">Sold at a Loss</option>
+                    <option value="Wholesale">Wholesale</option>
+                    <option value="Out of State Sale">Out of State Sale</option>
+                  </select>
+                  <div
+                    style="
+                      font-size: 11px;
+                      color: var(--muted);
+                      line-height: 1.5;
+                      margin-top: 5px;
+                    "
+                  >
+                    Choosing Arbitration, Sold Loss, Wholesale, or Out of State
+                    opens its own details box right below.
+                  </div>
+                </div>
+                <div id="djDealTypeBox"></div>
+
                 <div class="form-row">
                   <div class="form-group">
                     <label>Deal Number</label>
@@ -22141,8 +22499,17 @@
                 </div>
               </div>
 
-              <div class="vdp-section" id="djRepSection" style="margin-bottom: 18px">
-                <div class="dj-form-title">Sales Rep &amp; Commission</div>
+              <div class="vdp-section dj-comm-collapse" id="djRepSection" style="margin-bottom: 18px">
+                <div id="djCommWrap" class="dj-comm-collapse">
+                <button type="button" class="dj-comm-toggle" id="djCommToggle" onclick="toggleDjComm()" aria-expanded="false">
+                  <span class="dss-dot" style="background:var(--purple);"></span>
+                  <span class="dct-title">Sales Rep &amp; Commission</span>
+                  <span class="dct-opt">optional</span>
+                  <span class="dct-val" id="djCommHeadVal">No commission · $0</span>
+                  <svg class="dct-chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <div class="dj-comm-body" id="djCommBody">
+                <div style="font-size:11px;color:var(--muted);line-height:1.5;margin:2px 0 12px;">No commission is applied to this deal unless you add a rep here. Pick the rep and a % — or enter a flat $ — to add it.</div>
                 <div class="vdp-sk">
                   <div class="sk-bar" style="width: 100%; height: 38px; margin-bottom: 10px"></div>
                   <div class="sk-row" style="margin-bottom: 10px">
@@ -22201,6 +22568,8 @@
                     text-align: right;
                   "
                 ></div>
+                </div>
+                </div>
                 </div>
               </div>
 
@@ -54119,5 +54488,389 @@
 })();
 
 </script>
+
+<script>
+/* —— KPI colors (preferences API) + Deal type / commission collapse —— */
+(function () {
+  const KPI_PALETTE = ['#4a9dff','#2ed6a4','#2dd4bf','#38bdf8','#a78bfa','#818cf8','#ffb057','#fbbf24','#fb6a83','#f472b6','#a3e635','#eef2f9'];
+  const KPI_DEFAULTS = {
+    inventory: 'var(--blue)', titles: 'var(--green)', flooring: 'var(--orange)',
+    sold: 'var(--green)', profit: 'var(--green)', purchase: 'var(--orange)',
+    fees: 'var(--purple)', repairs: 'var(--red)', tax: 'var(--blue)',
+    commission: 'var(--purple)', cost: 'var(--green)', gross: 'var(--orange)'
+  };
+  let kpiColors = {};
+  let __kpiEditKey = null;
+  let __kpiSaveTimer = null;
+
+  function applyKpiCssVars() {
+    Object.keys(KPI_DEFAULTS).forEach((k) => {
+      const v = kpiColors[k];
+      if (v) document.documentElement.style.setProperty('--c-' + k, v);
+      else document.documentElement.style.removeProperty('--c-' + k);
+    });
+    // Also paint value nodes that use fixed accents
+    const map = {
+      inventory: 'kpiTotalInventory', titles: 'kpiTitles', flooring: 'kpiUpcomingFloored',
+      sold: 'kpiSoldMonth', profit: 'kpiProfitMonth', purchase: 'kpiPurchaseCost',
+      fees: 'kpiFees', repairs: 'kpiRepairs', tax: 'kpiSalesTax',
+      commission: 'kpiCommission', cost: 'kpiTotalCost'
+    };
+    Object.keys(map).forEach((k) => {
+      const el = document.getElementById(map[k]);
+      if (!el) return;
+      if (kpiColors[k]) el.style.color = kpiColors[k];
+      else el.style.color = '';
+    });
+    const djMap = {
+      sold: 'djKpiSold', gross: 'djKpiGross', commission: 'djKpiComm',
+      profit: 'djKpiNet', cost: 'djKpiCost'
+    };
+    Object.keys(djMap).forEach((k) => {
+      const el = document.getElementById(djMap[k]);
+      if (!el) return;
+      if (kpiColors[k]) el.style.color = kpiColors[k];
+      else el.style.color = '';
+    });
+  }
+
+  function persistKpiColors() {
+    try {
+      localStorage.setItem('av_kpi_colors_v2', JSON.stringify(kpiColors));
+    } catch (e) {}
+    clearTimeout(__kpiSaveTimer);
+    __kpiSaveTimer = setTimeout(async () => {
+      if (!window.AVApi || typeof AVApi.updatePreferences !== 'function') return;
+      try {
+        await AVApi.updatePreferences({ kpiColors });
+      } catch (e) {
+        if (typeof AVToast !== 'undefined') {
+          AVToast.error("Couldn't save color — try again.");
+        }
+      }
+    }, 350);
+  }
+
+  async function loadKpiColorsFromApi() {
+    try {
+      const saved = JSON.parse(localStorage.getItem('av_kpi_colors_v2') || '{}');
+      if (saved && typeof saved === 'object') Object.assign(kpiColors, saved);
+    } catch (e) {}
+    applyKpiCssVars();
+    if (!window.AVApi || typeof AVApi.getPreferences !== 'function') return;
+    try {
+      const res = await AVApi.getPreferences();
+      const remote = (res && res.preferences && res.preferences.kpiColors) || (res && res.kpiColors) || {};
+      if (remote && typeof remote === 'object') {
+        kpiColors = { ...kpiColors, ...remote };
+        try { localStorage.setItem('av_kpi_colors_v2', JSON.stringify(kpiColors)); } catch (e) {}
+        applyKpiCssVars();
+      }
+    } catch (e) {}
+  }
+
+  function openKpiColorPop(ev, key) {
+    ev.stopPropagation();
+    __kpiEditKey = key;
+    const pop = document.getElementById('kpiColorPop');
+    if (!pop) return;
+    const cur = (kpiColors[key] || '').toLowerCase();
+    const sw = document.getElementById('kcpSwatches');
+    if (sw) {
+      sw.innerHTML = KPI_PALETTE.map(
+        (c) =>
+          '<div class="kcp-sw' +
+          (cur === c.toLowerCase() ? ' sel' : '') +
+          '" style="background:' +
+          c +
+          ';" onclick="kpiSetColor(\'' +
+          c +
+          '\')" title="' +
+          c +
+          '"></div>',
+      ).join('');
+    }
+    const cust = document.getElementById('kcpCustom');
+    if (cust && /^#/.test(cur)) cust.value = cur;
+    const r = ev.currentTarget.getBoundingClientRect();
+    let left = r.right - 206;
+    let top = r.bottom + 8;
+    left = Math.max(10, Math.min(window.innerWidth - 216, left));
+    if (top > window.innerHeight - 230) top = Math.max(10, r.top - 230);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+    pop.style.display = 'block';
+  }
+  function kpiSetColor(color) {
+    if (!__kpiEditKey) return;
+    kpiColors[__kpiEditKey] = color;
+    applyKpiCssVars();
+    persistKpiColors();
+    closeKpiColorPop();
+  }
+  function kpiSetColorCustom(color) {
+    if (!__kpiEditKey) return;
+    kpiColors[__kpiEditKey] = color;
+    applyKpiCssVars();
+    persistKpiColors();
+    document.querySelectorAll('#kcpSwatches .kcp-sw').forEach((el) => el.classList.remove('sel'));
+  }
+  function kpiResetColor() {
+    if (!__kpiEditKey) return;
+    delete kpiColors[__kpiEditKey];
+    applyKpiCssVars();
+    persistKpiColors();
+    closeKpiColorPop();
+  }
+  function closeKpiColorPop() {
+    const p = document.getElementById('kpiColorPop');
+    if (p) p.style.display = 'none';
+    __kpiEditKey = null;
+  }
+  document.addEventListener('click', function (e) {
+    const p = document.getElementById('kpiColorPop');
+    if (!p || p.style.display === 'none') return;
+    if (p.contains(e.target)) return;
+    if (e.target.classList && e.target.classList.contains('kpi-cbtn')) return;
+    closeKpiColorPop();
+  });
+
+  function toggleDjComm() {
+    const wrap = document.getElementById('djCommWrap') || document.getElementById('djRepSection');
+    if (!wrap) return;
+    const open = wrap.classList.toggle('open');
+    const btn = document.getElementById('djCommToggle');
+    if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  }
+
+  const DEAL_TYPE_BOXES = {
+    Arbitration: {
+      color: 'var(--orange)',
+      title: 'Arbitration Details',
+      intro: 'This vehicle is in arbitration with the auction. Log the claim so you can track the outcome and any money recovered.',
+      fields: [
+        { k: 'arbCase', l: 'Claim / Case #', ph: 'e.g. ARB-10293' },
+        { k: 'arbHouse', l: 'Auction House', ph: 'e.g. Manheim, ADESA' },
+        { k: 'arbReason', l: 'Reason', type: 'select', opts: ['Frame / Structural Damage', 'Odometer Discrepancy', 'Mechanical Failure', 'Title Issue', 'Announced Wrong', 'Flood / Salvage', 'Other'] },
+        { k: 'arbFiled', l: 'Date Filed', type: 'date' },
+        { k: 'arbOutcome', l: 'Outcome', type: 'select', opts: ['Pending', 'Approved — vehicle returned', 'Approved — price adjustment', 'Denied'] },
+        { k: 'arbRecovery', l: 'Amount Recovered ($)', type: 'money' },
+        { k: 'arbNotes', l: 'Notes', type: 'textarea', full: true, ph: 'Details of the dispute and next steps…' },
+      ],
+    },
+    'Sold Loss': {
+      color: 'var(--red)',
+      title: 'Sold at a Loss — Details',
+      intro: 'This vehicle sold below cost. Record why so you can spot patterns and protect margin next time.',
+      fields: [
+        { k: 'lossReason', l: 'Reason for Loss', type: 'select', opts: ['Aged Inventory', 'Mechanical Issue', 'Market Drop', 'Wholesale Dump', 'Damage / Recon Overrun', 'Overpaid at Purchase', 'Other'] },
+        { k: 'lossChannel', l: 'Sold Through', type: 'select', opts: ['Retail', 'Wholesale', 'Auction', 'Dealer Trade'] },
+        { k: 'lossNotes', l: 'Notes', type: 'textarea', full: true, ph: 'What happened, and how to avoid it next time…' },
+      ],
+    },
+    Wholesale: {
+      color: 'var(--purple)',
+      title: 'Wholesale Deal — Details',
+      intro: 'Dealer-to-dealer sale — no retail customer or sales tax. Record the buying dealer for your records.',
+      fields: [
+        { k: 'wsBuyer', l: 'Buying Dealer', ph: 'Dealership name' },
+        { k: 'wsLicense', l: 'Dealer License #', ph: 'e.g. DL-45892' },
+        { k: 'wsChannel', l: 'Channel', type: 'select', opts: ['Direct Dealer', 'Auction', 'Wholesale Platform', 'Broker'] },
+        { k: 'wsMMR', l: 'MMR / Book Value ($)', type: 'money' },
+        { k: 'wsPayment', l: 'Payment Method', type: 'select', opts: ['ACH / Wire', 'Check', 'Floor Plan', 'Cash'] },
+        { k: 'wsNotes', l: 'Notes', type: 'textarea', full: true, ph: 'Any details about the wholesale deal…' },
+      ],
+    },
+    'Out of State Sale': {
+      color: 'var(--blue)',
+      title: 'Out-of-State Sale — Details',
+      intro: 'Buyer is registering in another state. Track the tax handling and how the vehicle is getting there.',
+      fields: [
+        { k: 'osState', l: 'Buyer State', ph: 'e.g. TX' },
+        { k: 'osTax', l: 'Sales Tax Handling', type: 'select', opts: ['Exempt — buyer pays home state', 'Collected for buyer state', 'Collected for our state'] },
+        { k: 'osTransport', l: 'Delivery Method', type: 'select', opts: ['Customer Pickup', 'Shipped / Transport', 'Driven Out', 'Dealer Delivery'] },
+        { k: 'osPermit', l: 'Trip Permit / Temp Tag #', ph: 'e.g. TP-88213' },
+        { k: 'osNotes', l: 'Notes', type: 'textarea', full: true, ph: 'Shipping, paperwork, deadlines…' },
+      ],
+    },
+  };
+
+  function djRenderDealTypeBox(v) {
+    const host = document.getElementById('djDealTypeBox');
+    if (!host) return;
+    const type =
+      v && v.status && DEAL_TYPE_BOXES[v.status]
+        ? v.status
+        : v && v.dealType && DEAL_TYPE_BOXES[v.dealType]
+          ? v.dealType
+          : null;
+    if (!type) {
+      host.style.display = 'none';
+      host.innerHTML = '';
+      return;
+    }
+    host.style.display = '';
+    const cfg = DEAL_TYPE_BOXES[type];
+    const si = (v && v.statusInfo) || {};
+    const esc = (s) =>
+      String(s == null ? '' : s)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/"/g, '&quot;');
+    const fields = cfg.fields
+      .map((f) => {
+        const val = si[f.k] != null ? si[f.k] : '';
+        let input;
+        if (f.type === 'select') {
+          input =
+            '<select onchange="djStatusInfoSet(\'' +
+            f.k +
+            '\',this.value)"><option value="">Select…</option>' +
+            f.opts
+              .map(
+                (o) =>
+                  '<option' +
+                  (String(val) === o ? ' selected' : '') +
+                  '>' +
+                  esc(o) +
+                  '</option>',
+              )
+              .join('') +
+            '</select>';
+        } else if (f.type === 'textarea') {
+          input =
+            '<textarea placeholder="' +
+            esc(f.ph || '') +
+            '" oninput="djStatusInfoSet(\'' +
+            f.k +
+            '\',this.value)">' +
+            esc(val) +
+            '</textarea>';
+        } else {
+          const money = f.type === 'money';
+          const t = f.type === 'date' ? 'date' : 'text';
+          input =
+            '<input type="' +
+            t +
+            '"' +
+            (money ? ' class="av-num" inputmode="decimal"' : '') +
+            ' value="' +
+            esc(val) +
+            '" placeholder="' +
+            esc(f.ph || '') +
+            '" oninput="djStatusInfoSet(\'' +
+            f.k +
+            '\',this.value)">';
+        }
+        return (
+          '<div class="dj-dt-field' +
+          (f.full ? ' full' : '') +
+          '"><label>' +
+          esc(f.l) +
+          '</label>' +
+          input +
+          '</div>'
+        );
+      })
+      .join('');
+    host.innerHTML =
+      '<div class="dj-dtbox" style="border-left-color:' +
+      cfg.color +
+      ';">' +
+      '<div class="dj-dtbox-head" style="color:' +
+      cfg.color +
+      ';">' +
+      cfg.title +
+      '</div>' +
+      '<div class="dj-dtbox-intro">' +
+      cfg.intro +
+      '</div>' +
+      '<div class="dj-dtbox-grid">' +
+      fields +
+      '</div></div>';
+  }
+
+  function djStatusInfoSet(k, val) {
+    try {
+      const vin = window.currentDealVin;
+      const list = window.vehicles || [];
+      const v = list.find((x) => x.vin === vin);
+      if (!v) return;
+      if (!v.statusInfo) v.statusInfo = {};
+      v.statusInfo[k] = val;
+    } catch (e) {}
+  }
+
+  async function djSetDealStatus(val) {
+    try {
+      const vin = window.currentDealVin;
+      const list = window.vehicles || [];
+      const v = list.find((x) => x.vin === vin);
+      if (!v) return;
+      v.status = val === 'Sold' ? 'Sold' : val;
+      v.dealType = val;
+      djRenderDealTypeBox(v);
+      const sel = document.getElementById('djDealStatus');
+      if (sel) sel.value = val;
+      if (
+        val !== 'Sold' &&
+        typeof AVVehicles !== 'undefined' &&
+        AVVehicles.persistStatus
+      ) {
+        try {
+          await AVVehicles.persistStatus(vin, val);
+        } catch (e) {}
+      }
+    } catch (e) {}
+  }
+
+  // Sync deal status UI when jacket opens
+  const _origShowDeal =
+    typeof window.openDealJacket === 'function' ? window.openDealJacket : null;
+  function syncDjDealStatusUi() {
+    try {
+      const vin = window.currentDealVin;
+      const v = (window.vehicles || []).find((x) => x.vin === vin);
+      if (!v) return;
+      const sel = document.getElementById('djDealStatus');
+      const label =
+        v.status && DEAL_TYPE_BOXES[v.status]
+          ? v.status
+          : v.status === 'Sold' || !v.status
+            ? 'Sold'
+            : v.status;
+      if (sel && [...sel.options].some((o) => o.value === label)) sel.value = label;
+      else if (sel) sel.value = 'Sold';
+      djRenderDealTypeBox(v);
+      const amt = document.getElementById('djCommVal');
+      const head = document.getElementById('djCommHeadVal');
+      if (head && amt) {
+        const t = (amt.textContent || '').trim();
+        head.textContent =
+          !t || t === '$0' || t === '—' ? 'No commission · $0' : 'Commission · ' + t;
+      }
+    } catch (e) {}
+  }
+  setInterval(syncDjDealStatusUi, 1200);
+
+  window.openKpiColorPop = openKpiColorPop;
+  window.kpiSetColor = kpiSetColor;
+  window.kpiSetColorCustom = kpiSetColorCustom;
+  window.kpiResetColor = kpiResetColor;
+  window.closeKpiColorPop = closeKpiColorPop;
+  window.toggleDjComm = toggleDjComm;
+  window.djSetDealStatus = djSetDealStatus;
+  window.djStatusInfoSet = djStatusInfoSet;
+  window.djRenderDealTypeBox = djRenderDealTypeBox;
+  window.loadKpiColorsFromApi = loadKpiColorsFromApi;
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', loadKpiColorsFromApi);
+  } else {
+    loadKpiColorsFromApi();
+  }
+})();
+</script>
+
 </body>
 </html>
