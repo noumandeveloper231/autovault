@@ -58,6 +58,7 @@
   const STATUS_API_TO_UI = {
     in_stock: "",
     needs_attention: "Arbitration",
+    arbitration: "Arbitration",
     pending_deal: "Pending Deal",
     sold: "Sold",
     loss: "Sold Loss",
@@ -70,7 +71,7 @@
     Active: "in_stock",
     Sold: "sold",
     "Sold Loss": "loss",
-    Arbitration: "needs_attention",
+    Arbitration: "arbitration",
     Wholesale: "wholesale",
     "Out of State Sale": "out_of_state_sale",
     "Pending Deal": "pending_deal",

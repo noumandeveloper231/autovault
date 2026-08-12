@@ -632,6 +632,25 @@
     upsertCalendarDayNote: (date, body) =>
       request(`/api/v1/calendar/day-notes/${date}`, { method: "PUT", body: JSON.stringify(body) }),
     dealershipsMe: () => request("/api/v1/dealerships/me"),
+    getPreferences: () => request("/api/v1/dealerships/me/preferences"),
+    updatePreferences: (body) =>
+      request("/api/v1/dealerships/me/preferences", {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    createSupportMessage: (body) =>
+      request("/api/v1/support", {
+        method: "POST",
+        body: JSON.stringify(body),
+      }),
+    listSupportMessages: (qs = "") =>
+      request(`/api/v1/platform/support-messages${qs}`, { portal: "owner" }),
+    updateSupportMessage: (id, body) =>
+      request(`/api/v1/platform/support-messages/${id}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+        portal: "owner",
+      }),
     listPayrollRuns: (qs = "") => request(`/api/v1/payroll-runs${qs}`),
     createPayrollRun: (body) =>
       request("/api/v1/payroll-runs", {

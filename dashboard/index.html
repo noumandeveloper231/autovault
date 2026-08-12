@@ -2294,64 +2294,11 @@
         padding-top: 14px;
       }
 
-      .add-repair-form.is-draft {
-        border-top-color: rgba(255, 159, 67, 0.45);
-        background: rgba(255, 159, 67, 0.04);
-        margin-left: -4px;
-        margin-right: -4px;
-        padding-left: 4px;
-        padding-right: 4px;
-        border-radius: 0 0 10px 10px;
-      }
-
-      .add-on-form.is-draft {
-        border-color: rgba(255, 159, 67, 0.45) !important;
-        background: rgba(255, 159, 67, 0.08) !important;
-        box-shadow: 0 0 0 1px rgba(255, 159, 67, 0.2);
-      }
-
       .add-repair-form .form-row-3 {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 10px;
         margin-bottom: 10px;
-      }
-
-      .repair-draft-hint,
-      .addon-draft-hint {
-        display: none;
-        margin-top: 10px;
-        font-size: 11.5px;
-        line-height: 1.45;
-        color: var(--orange);
-        font-weight: 600;
-      }
-
-      .add-repair-form.is-draft .repair-draft-hint,
-      .add-on-form.is-draft .addon-draft-hint {
-        display: block;
-      }
-
-      #addRepairBtn.needs-attention,
-      #saveAddOnItem.needs-attention {
-        animation: repairAddPulse 1.2s ease-in-out infinite;
-      }
-
-      #addRepairBtn.needs-attention.btn-ghost,
-      #saveAddOnItem.needs-attention.btn-ghost {
-        border-color: var(--orange);
-        color: var(--orange);
-        box-shadow: 0 0 0 2px rgba(255, 159, 67, 0.2);
-      }
-
-      @keyframes repairAddPulse {
-        0%,
-        100% {
-          box-shadow: 0 0 0 2px rgba(255, 159, 67, 0.18);
-        }
-        50% {
-          box-shadow: 0 0 0 4px rgba(255, 159, 67, 0.32);
-        }
       }
 
       .file-input-wrap {
@@ -23566,10 +23513,6 @@
                 <span id="repairReceiptName" class="hint"></span>
               </div>
             </div>
-            <div class="repair-draft-hint" id="repairDraftHint">
-              Click <strong>+ Add Repair</strong> to add this entry before
-              closing.
-            </div>
           </div>
         </div>
         <div class="modal-foot">
@@ -23579,7 +23522,7 @@
             id="saveRepairsBtn"
             style="box-shadow: none"
           >
-            Done
+            Save
           </button>
         </div>
       </div>
@@ -23620,7 +23563,6 @@
 
           <!-- Add new item form -->
           <div
-            class="add-on-form"
             style="
               background: var(--panel-2);
               border: 1px solid var(--border);
@@ -23724,10 +23666,6 @@
                   "
                 />
               </div>
-            </div>
-            <div class="addon-draft-hint" id="addOnDraftHint">
-              Click <strong>+ Add Item</strong> to add this entry before
-              closing.
             </div>
           </div>
         </div>
@@ -39582,60 +39520,6 @@
         document.getElementById("repairsModal").classList.add("open");
       }
 
-      function repairFormHasDraft() {
-        const desc = document.getElementById("repairDesc").value.trim();
-        const costRaw = document.getElementById("repairCost").value;
-        const cost = Number(costRaw);
-        const hasFile =
-          document.getElementById("repairReceipt").files &&
-          document.getElementById("repairReceipt").files[0];
-        return (
-          editingRepairIndex !== null ||
-          !!desc ||
-          (costRaw !== "" && !Number.isNaN(cost) && cost > 0) ||
-          !!hasFile
-        );
-      }
-
-      function syncRepairDraftUI() {
-        const form = document.querySelector(".add-repair-form");
-        const addBtn = document.getElementById("addRepairBtn");
-        const hint = document.getElementById("repairDraftHint");
-        const dirty = repairFormHasDraft();
-        if (form) form.classList.toggle("is-draft", dirty);
-        if (addBtn) {
-          addBtn.classList.toggle("needs-attention", dirty);
-          if (dirty) {
-            addBtn.classList.remove("btn-ghost");
-            addBtn.classList.add("btn-primary");
-          } else {
-            addBtn.classList.add("btn-ghost");
-            addBtn.classList.remove("btn-primary");
-          }
-        }
-        if (hint) {
-          hint.innerHTML =
-            editingRepairIndex !== null
-              ? "Click <strong>Update Repair</strong> to apply your changes before closing."
-              : "Click <strong>+ Add Repair</strong> to add this entry before closing.";
-        }
-        const doneBtn = document.getElementById("saveRepairsBtn");
-        if (doneBtn) {
-          if (dirty) {
-            doneBtn.classList.remove("btn-primary");
-            doneBtn.classList.add("btn-ghost");
-            doneBtn.title =
-              editingRepairIndex !== null
-                ? "Update the repair first, or click Done to save and close"
-                : "Add the repair first, or click Done to save and close";
-          } else {
-            doneBtn.classList.add("btn-primary");
-            doneBtn.classList.remove("btn-ghost");
-            doneBtn.title = "";
-          }
-        }
-      }
-
       function resetRepairForm() {
         editingRepairIndex = null;
         document.getElementById("repairDesc").value = "";
@@ -39644,7 +39528,6 @@
         document.getElementById("repairReceipt").value = "";
         document.getElementById("repairReceiptName").textContent = "";
         document.getElementById("addRepairBtn").textContent = "+ Add Repair";
-        syncRepairDraftUI();
       }
 
       function editRepairEntry(index) {
@@ -39659,13 +39542,12 @@
           ? `Current: ${r.receipt}`
           : "";
         document.getElementById("addRepairBtn").textContent = "Update Repair";
-        syncRepairDraftUI();
         document.getElementById("repairDesc").focus();
       }
 
       async function addRepairEntry() {
         const v = __findVeh(currentRepairsVin);
-        if (!v) return false;
+        if (!v) return;
         const desc = document.getElementById("repairDesc").value.trim();
         const type = document.getElementById("repairType").value;
         const cost = Number(document.getElementById("repairCost").value) || 0;
@@ -39677,8 +39559,7 @@
             "repairDescErr",
           );
           document.getElementById("repairDesc").focus();
-          syncRepairDraftUI();
-          return false;
+          return;
         }
         avValidateField(
           document.getElementById("repairDesc"),
@@ -39692,8 +39573,7 @@
             "repairCostErr",
           );
           document.getElementById("repairCost").focus();
-          syncRepairDraftUI();
-          return false;
+          return;
         }
         avValidateField(
           document.getElementById("repairCost"),
@@ -39731,13 +39611,13 @@
               AVToast.error(
                 (upErr && upErr.message) || "Receipt upload failed",
               );
-            return false;
+            return;
           }
         }
 
         if (window.AVVehicles && v.id) {
           const addBtn = document.getElementById("addRepairBtn");
-          if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return false;
+          if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
           try {
             if (typeof AVBusy !== "undefined") {
               AVBusy.inc();
@@ -39758,21 +39638,16 @@
             resetRepairForm();
             renderRepairsList();
             if (typeof AVToast !== "undefined") AVToast.success("Repair saved");
-            return true;
           } catch (err) {
             if (typeof AVToast !== "undefined")
               AVToast.error(err.message || "Failed to save repair");
-            return false;
           } finally {
             if (typeof AVBusy !== "undefined") {
-              AVBusy.setBtnLoading(
-                addBtn,
-                false,
-                editingRepairIndex !== null ? "Update Repair" : "+ Add Repair",
-              );
+              AVBusy.setBtnLoading(addBtn, false, "Add Repair");
               AVBusy.dec();
             }
           }
+          return;
         }
 
         if (existing) {
@@ -39784,7 +39659,6 @@
         renderRepairsList();
         render();
         refreshAllPnl();
-        return true;
       }
 
       async function deleteRepairEntry(index) {
@@ -39815,6 +39689,15 @@
         refreshAllPnl();
       }
 
+      document
+        .getElementById("repairReceipt")
+        .addEventListener("change", function () {
+          document.getElementById("repairReceiptName").textContent = this
+            .files[0]
+            ? this.files[0].name
+            : "";
+        });
+      document.getElementById("addRepairBtn").onclick = addRepairEntry;
       function refreshDealJacketIfOpen() {
         try {
           if (
@@ -39828,76 +39711,24 @@
           }
         } catch (_) {}
       }
-
-      async function finishRepairsModal(opts) {
-        const forceClose = !!(opts && opts.force);
-        const autoAdd = !(opts && opts.skipAutoAdd);
-        if (!forceClose && repairFormHasDraft()) {
-          if (autoAdd) {
-            const ok = await addRepairEntry();
-            if (!ok) {
-              syncRepairDraftUI();
-              const addBtn = document.getElementById("addRepairBtn");
-              if (addBtn) {
-                addBtn.classList.add("needs-attention");
-                addBtn.focus();
-              }
-              if (typeof AVToast !== "undefined") {
-                AVToast.error(
-                  editingRepairIndex !== null
-                    ? "Finish updating the repair (click Update Repair) before closing"
-                    : "Click + Add Repair first, or fill Description and Cost",
-                );
-              }
-              return false;
-            }
-          } else {
-            syncRepairDraftUI();
-            const addBtn = document.getElementById("addRepairBtn");
-            if (addBtn) {
-              addBtn.classList.add("needs-attention");
-              addBtn.focus();
-            }
-            if (typeof AVToast !== "undefined") {
-              AVToast.error(
-                editingRepairIndex !== null
-                  ? "Click Update Repair to save your changes first"
-                  : "Click + Add Repair to save this entry first",
-              );
-            }
-            return false;
-          }
-        }
+      document.getElementById("saveRepairsBtn").onclick = () => {
         document.getElementById("repairsModal").classList.remove("open");
         render();
         refreshAllPnl();
         refreshDealJacketIfOpen();
-        return true;
-      }
-
-      document
-        .getElementById("repairReceipt")
-        .addEventListener("change", function () {
-          document.getElementById("repairReceiptName").textContent = this
-            .files[0]
-            ? this.files[0].name
-            : "";
-          syncRepairDraftUI();
-        });
-      ["repairDesc", "repairCost", "repairType"].forEach(function (id) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener("input", syncRepairDraftUI);
-        el.addEventListener("change", syncRepairDraftUI);
-      });
-      document.getElementById("addRepairBtn").onclick = addRepairEntry;
-      document.getElementById("saveRepairsBtn").onclick = () =>
-        finishRepairsModal();
-      document.getElementById("closeRepairsModal").onclick = () =>
-        finishRepairsModal({ skipAutoAdd: true });
+      };
+      document.getElementById("closeRepairsModal").onclick = () => {
+        document.getElementById("repairsModal").classList.remove("open");
+        render();
+        refreshAllPnl();
+        refreshDealJacketIfOpen();
+      };
       document.getElementById("repairsModal").addEventListener("click", (e) => {
         if (e.target.id === "repairsModal") {
-          finishRepairsModal({ skipAutoAdd: true });
+          document.getElementById("repairsModal").classList.remove("open");
+          render();
+          refreshAllPnl();
+          refreshDealJacketIfOpen();
         }
       });
 
@@ -40855,55 +40686,6 @@
       // ---------- ADD-ON UPCHARGES ----------
       let addOnVin = null;
       var _addOnDirty = false;
-
-      function addOnFormHasDraft() {
-        const desc = (document.getElementById("addOnDesc").value || "").trim();
-        const priceRaw = document.getElementById("addOnPrice").value;
-        const costRaw = (document.getElementById("addOnCost") || {}).value;
-        const price = Number(priceRaw);
-        const cost = Number(costRaw);
-        return (
-          !!desc ||
-          (priceRaw !== "" && !Number.isNaN(price) && price > 0) ||
-          (costRaw !== "" &&
-            costRaw !== undefined &&
-            !Number.isNaN(cost) &&
-            cost > 0)
-        );
-      }
-
-      function syncAddOnDraftUI() {
-        const form = document.querySelector("#addOnModal .add-on-form");
-        const addBtn = document.getElementById("saveAddOnItem");
-        const doneBtn = document.getElementById("cancelAddOnModal");
-        const dirty = addOnFormHasDraft();
-        if (form) form.classList.toggle("is-draft", dirty);
-        if (addBtn) {
-          addBtn.classList.toggle("needs-attention", dirty);
-          if (dirty) {
-            addBtn.classList.add("btn-primary");
-            addBtn.classList.remove("btn-ghost");
-          }
-        }
-        if (doneBtn) {
-          if (dirty) {
-            doneBtn.title =
-              "Add the item first, or click Done to save and close";
-          } else {
-            doneBtn.title = "";
-          }
-        }
-      }
-
-      function resetAddOnForm() {
-        document.getElementById("addOnDesc").value = "";
-        document.getElementById("addOnType").selectedIndex = 0;
-        document.getElementById("addOnPrice").value = "";
-        const costEl = document.getElementById("addOnCost");
-        if (costEl) costEl.value = "";
-        syncAddOnDraftUI();
-      }
-
       function openAddOnModal(vin) {
         _addOnDirty = false;
         addOnVin = vin || currentVdpVin;
@@ -40912,7 +40694,11 @@
         document.getElementById("addOnModalTitle").innerHTML = `
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>
     Add-Ons — ${v.year} ${v.make} ${v.model}`;
-        resetAddOnForm();
+        document.getElementById("addOnDesc").value = "";
+        document.getElementById("addOnType").selectedIndex = 0;
+        document.getElementById("addOnPrice").value = "";
+        const costEl = document.getElementById("addOnCost");
+        if (costEl) costEl.value = "";
         renderAddOnExistingList();
         document.getElementById("addOnModal").classList.add("open");
       }
@@ -40978,9 +40764,9 @@
         addOnRefresh();
       }
 
-      function addAddOnEntry() {
+      document.getElementById("saveAddOnItem").onclick = function () {
         const v = vehicles.find((x) => x.vin === (addOnVin || currentVdpVin));
-        if (!v) return false;
+        if (!v) return;
         const desc = document.getElementById("addOnDesc").value.trim();
         const type = document.getElementById("addOnType").value;
         const price =
@@ -40989,31 +40775,20 @@
         const cost = costEl ? parseFloat(costEl.value) || 0 : 0;
         if (!desc || price <= 0) {
           document.getElementById("addOnDesc").focus();
-          syncAddOnDraftUI();
           if (typeof AVToast !== "undefined")
             AVToast.error("Description and price are required");
-          return false;
+          return;
         }
         if (!v.addOnItems) v.addOnItems = [];
         v.addOnItems.push({ desc, type, price, cost });
         _addOnDirty = true;
-        resetAddOnForm();
+        document.getElementById("addOnDesc").value = "";
+        document.getElementById("addOnPrice").value = "";
+        if (costEl) costEl.value = "";
+        document.getElementById("addOnType").selectedIndex = 0;
         renderAddOnExistingList();
         addOnRefresh();
-        return true;
-      }
-
-      document.getElementById("saveAddOnItem").onclick = function () {
-        addAddOnEntry();
       };
-      ["addOnDesc", "addOnPrice", "addOnCost", "addOnType"].forEach(function (
-        id,
-      ) {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener("input", syncAddOnDraftUI);
-        el.addEventListener("change", syncAddOnDraftUI);
-      });
 
       function toggleAddOnForm(disabled) {
         var els = document.querySelectorAll(
@@ -41022,34 +40797,10 @@
         for (var i = 0; i < els.length; i++) els[i].disabled = disabled;
       }
 
-      async function saveAddOnsAndClose(opts) {
-        const skipAutoAdd = !!(opts && opts.skipAutoAdd);
-        if (addOnFormHasDraft()) {
-          if (skipAutoAdd) {
-            syncAddOnDraftUI();
-            const addBtn = document.getElementById("saveAddOnItem");
-            if (addBtn) {
-              addBtn.classList.add("needs-attention");
-              addBtn.focus();
-            }
-            if (typeof AVToast !== "undefined")
-              AVToast.error("Click + Add Item to save this entry first");
-            return false;
-          }
-          const ok = addAddOnEntry();
-          if (!ok) {
-            syncAddOnDraftUI();
-            const addBtn = document.getElementById("saveAddOnItem");
-            if (addBtn) {
-              addBtn.classList.add("needs-attention");
-              addBtn.focus();
-            }
-            return false;
-          }
-        }
+      async function saveAddOnsAndClose() {
         if (!_addOnDirty) {
           document.getElementById("addOnModal").classList.remove("open");
-          return true;
+          return;
         }
         var doneBtn = document.getElementById("cancelAddOnModal");
         var closeBtn = document.getElementById("closeAddOnModal");
@@ -41068,12 +40819,10 @@
           }
           _addOnDirty = false;
           document.getElementById("addOnModal").classList.remove("open");
-          return true;
         } catch (e) {
           console.warn("[addon] persist failed", e);
           if (typeof AVToast !== "undefined")
             AVToast.error("Failed to save add-ons");
-          return false;
         } finally {
           if (doneBtn) {
             doneBtn.disabled = false;
@@ -41084,15 +40833,12 @@
         }
       }
 
-      document.getElementById("cancelAddOnModal").onclick = () =>
-        saveAddOnsAndClose();
-      document.getElementById("closeAddOnModal").onclick = () =>
-        saveAddOnsAndClose({ skipAutoAdd: true });
+      document.getElementById("cancelAddOnModal").onclick = saveAddOnsAndClose;
+      document.getElementById("closeAddOnModal").onclick = saveAddOnsAndClose;
       document
         .getElementById("addOnModal")
         .addEventListener("click", function (e) {
-          if (e.target.id === "addOnModal")
-            saveAddOnsAndClose({ skipAutoAdd: true });
+          if (e.target.id === "addOnModal") saveAddOnsAndClose();
         });
 
       // ---------- FLOORING DETAIL MODAL ----------
@@ -54061,5 +53807,317 @@
         }
       })();
     </script>
-  </body>
+  
+<script>
+/* —— Contact Support + Owner User Messages (API) —— */
+(function () {
+  let csPriority = "Low";
+  let ownerMsgView = "all";
+  let supportMessages = [];
+
+  function csProfileName() {
+    try {
+      const el = document.querySelector("#profileChip .profile-name");
+      const t = el && el.textContent ? el.textContent.trim() : "";
+      if (t && t !== "Loading…" && t !== "—") return t;
+    } catch (e) {}
+    try {
+      if (window.AVPortal && typeof AVPortal.readSession === "function") {
+        const portal =
+          AVPortal.getRoutePortal && AVPortal.getRoutePortal();
+        const s = AVPortal.readSession(portal);
+        if (s && s.name) return s.name;
+        if (s && s.user && s.user.name) return s.user.name;
+      }
+    } catch (e) {}
+    return "";
+  }
+
+  function openContactSupport() {
+    const nm = document.getElementById("csName");
+    if (nm && !nm.value) nm.value = csProfileName();
+    const fw = document.getElementById("supportFormWrap");
+    const ok = document.getElementById("supportSuccess");
+    if (fw) fw.style.display = "";
+    if (ok) ok.style.display = "none";
+    const err = document.getElementById("csError");
+    if (err) err.style.display = "none";
+    csSetPrio("Low");
+    const modal = document.getElementById("supportModal");
+    if (modal) modal.classList.add("open");
+  }
+  function closeContactSupport() {
+    const modal = document.getElementById("supportModal");
+    if (modal) modal.classList.remove("open");
+  }
+  function csSetPrio(p) {
+    csPriority = p;
+    document.querySelectorAll("#csPrio .cs-prio-btn").forEach((b) =>
+      b.classList.toggle("active", b.dataset.prio === p),
+    );
+  }
+
+  async function submitContactSupport() {
+    const subject = (document.getElementById("csSubject")?.value || "").trim();
+    const message = (document.getElementById("csMessage")?.value || "").trim();
+    const topic = document.getElementById("csTopic")?.value || "Other";
+    const err = document.getElementById("csError");
+    const btn = document.getElementById("csSubmitBtn");
+    if (!subject || !message) {
+      if (err) {
+        err.textContent = "Please add a subject and a message so we can help.";
+        err.style.display = "";
+      }
+      return;
+    }
+    if (err) err.style.display = "none";
+    if (!window.AVApi || typeof AVApi.createSupportMessage !== "function") {
+      if (err) {
+        err.textContent = "Couldn't send right now — try again in a moment.";
+        err.style.display = "";
+      }
+      return;
+    }
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Sending…";
+    }
+    try {
+      await AVApi.createSupportMessage({
+        topic,
+        subject,
+        priority: csPriority || "Normal",
+        message,
+      });
+      const subj = document.getElementById("csSubject");
+      const msg = document.getElementById("csMessage");
+      if (subj) subj.value = "";
+      if (msg) msg.value = "";
+      const fw = document.getElementById("supportFormWrap");
+      const ok = document.getElementById("supportSuccess");
+      if (fw) fw.style.display = "none";
+      if (ok) ok.style.display = "";
+      try {
+        if (document.body.classList.contains("owner-mode")) renderOwnerMessages();
+      } catch (e) {}
+    } catch (e) {
+      const m =
+        (e && e.message) ||
+        "Couldn't send your message — check your connection and try again.";
+      if (err) {
+        err.textContent = m;
+        err.style.display = "";
+      } else if (typeof AVToast !== "undefined") AVToast.error(m);
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = "Send Message";
+      }
+    }
+  }
+
+  function csTimeAgo(iso) {
+    try {
+      const t = new Date(iso).getTime();
+      const diff = Date.now() - t;
+      const mins = Math.round(diff / 60000);
+      if (mins < 1) return "just now";
+      if (mins < 60) return mins + "m ago";
+      const hrs = Math.round(mins / 60);
+      if (hrs < 24) return hrs + "h ago";
+      const days = Math.round(hrs / 24);
+      if (days < 7) return days + "d ago";
+      return new Date(iso).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    } catch (e) {
+      return "";
+    }
+  }
+
+  function ownerMsgFilter(v) {
+    ownerMsgView = v;
+    document
+      .querySelectorAll(".om-filter")
+      .forEach((b) => b.classList.toggle("active", b.dataset.omf === v));
+    renderOwnerMessages();
+  }
+
+  function updateOwnerMsgBadge() {
+    const n = supportMessages.filter((m) => m.status === "new").length;
+    const b = document.getElementById("ownerMsgBadge");
+    if (b) {
+      b.textContent = n;
+      b.style.display = n > 0 ? "" : "none";
+    }
+  }
+
+  async function ownerMsgMarkRead(id) {
+    const m = supportMessages.find((x) => x.id === id);
+    if (!m || m.status !== "new") return;
+    m.status = "read";
+    renderOwnerMessagesList();
+    try {
+      if (window.AVApi && AVApi.updateSupportMessage)
+        await AVApi.updateSupportMessage(id, { status: "read" });
+    } catch (e) {
+      m.status = "new";
+      renderOwnerMessagesList();
+      if (typeof AVToast !== "undefined")
+        AVToast.error((e && e.message) || "Couldn't update message.");
+    }
+  }
+
+  async function ownerMsgResolve(id) {
+    const m = supportMessages.find((x) => x.id === id);
+    if (!m) return;
+    const prev = m.status;
+    m.status = m.status === "resolved" ? "read" : "resolved";
+    renderOwnerMessagesList();
+    try {
+      if (window.AVApi && AVApi.updateSupportMessage)
+        await AVApi.updateSupportMessage(id, { status: m.status });
+    } catch (e) {
+      m.status = prev;
+      renderOwnerMessagesList();
+      if (typeof AVToast !== "undefined")
+        AVToast.error((e && e.message) || "Couldn't update message.");
+    }
+  }
+
+  function ownerMsgEsc(s) {
+    return (s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  function renderOwnerMessagesList() {
+    const host = document.getElementById("ownerMsgList");
+    if (!host) return;
+    updateOwnerMsgBadge();
+    let rows = supportMessages.slice();
+    if (ownerMsgView === "new") rows = rows.filter((m) => m.status === "new");
+    else if (ownerMsgView === "resolved")
+      rows = rows.filter((m) => m.status === "resolved");
+    const cnt = document.getElementById("ownerMsgCount");
+    if (cnt) {
+      const nnew = supportMessages.filter((m) => m.status === "new").length;
+      cnt.textContent =
+        supportMessages.length + " total · " + nnew + " unread";
+    }
+    if (!rows.length) {
+      host.innerHTML = '<div class="om-empty">No messages right now.</div>';
+      return;
+    }
+    host.innerHTML = rows
+      .map((m) => {
+        const initials = (m.name || "?")
+          .split(/\s+/)
+          .map((w) => w[0] || "")
+          .join("")
+          .slice(0, 2)
+          .toUpperCase();
+        const unread = m.status === "new";
+        const resolved = m.status === "resolved";
+        const when = csTimeAgo(m.createdAt || m.time);
+        const dealership = m.dealershipName
+          ? ownerMsgEsc(m.dealershipName) + " · "
+          : "";
+        const idAttr = ownerMsgEsc(m.id);
+        return (
+          '<div class="om-card' +
+          (unread ? " unread" : "") +
+          '">' +
+          '<div class="om-card-top">' +
+          '<div class="om-ava">' +
+          initials +
+          "</div>" +
+          '<div class="om-meta">' +
+          '<div class="om-name">' +
+          ownerMsgEsc(m.name) +
+          (unread
+            ? ' <span style="color:var(--blue);font-size:10px;font-weight:800;vertical-align:middle;">● NEW</span>'
+            : "") +
+          "</div>" +
+          '<div class="om-sub">' +
+          dealership +
+          ownerMsgEsc(m.role || "User") +
+          "</div>" +
+          "</div>" +
+          '<div class="om-time">' +
+          when +
+          "</div>" +
+          "</div>" +
+          '<div class="om-chips">' +
+          '<span class="om-chip topic">' +
+          ownerMsgEsc(m.topic || "Support") +
+          "</span>" +
+          '<span class="om-chip prio-' +
+          ownerMsgEsc(m.priority) +
+          '">' +
+          ownerMsgEsc(m.priority) +
+          " priority</span>" +
+          (resolved
+            ? '<span class="om-chip resolved">✓ Resolved</span>'
+            : "") +
+          "</div>" +
+          '<div class="om-msg-subject">' +
+          ownerMsgEsc(m.subject) +
+          "</div>" +
+          '<div class="om-msg-body">' +
+          ownerMsgEsc(m.message) +
+          "</div>" +
+          '<div class="om-actions">' +
+          (unread
+            ? '<button type="button" class="om-btn" onclick="ownerMsgMarkRead(\'' +
+              idAttr +
+              "')\">Mark read</button>"
+            : "") +
+          '<button type="button" class="om-btn resolve" onclick="ownerMsgResolve(\'' +
+          idAttr +
+          "')\">" +
+          (resolved ? "Reopen" : "✓ Mark resolved") +
+          "</button>" +
+          "</div>" +
+          "</div>"
+        );
+      })
+      .join("");
+  }
+
+  async function renderOwnerMessages() {
+    const host = document.getElementById("ownerMsgList");
+    if (host) host.innerHTML = '<div class="om-empty">Loading messages…</div>';
+    try {
+      if (window.AVApi && typeof AVApi.listSupportMessages === "function") {
+        const res = await AVApi.listSupportMessages("?status=all");
+        supportMessages = (res && res.messages) || [];
+      }
+    } catch (e) {
+      if (host)
+        host.innerHTML =
+          '<div class="om-empty">Couldn\'t load messages — try again.</div>';
+      if (typeof AVToast !== "undefined")
+        AVToast.error((e && e.message) || "Couldn't load messages.");
+      return;
+    }
+    renderOwnerMessagesList();
+  }
+
+  window.openContactSupport = openContactSupport;
+  window.closeContactSupport = closeContactSupport;
+  window.csSetPrio = csSetPrio;
+  window.submitContactSupport = submitContactSupport;
+  window.ownerMsgFilter = ownerMsgFilter;
+  window.ownerMsgMarkRead = ownerMsgMarkRead;
+  window.ownerMsgResolve = ownerMsgResolve;
+  window.renderOwnerMessages = renderOwnerMessages;
+  window.updateOwnerMsgBadge = updateOwnerMsgBadge;
+})();
+
+</script>
+</body>
 </html>
