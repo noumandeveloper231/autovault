@@ -2326,6 +2326,19 @@
         border-top: 1px solid var(--border);
         margin-top: 4px;
         padding-top: 14px;
+        border-radius: 12px;
+        transition:
+          background 0.15s,
+          border-color 0.15s,
+          box-shadow 0.15s;
+      }
+
+      .add-repair-form.has-pending {
+        border: 1px solid rgba(58, 160, 255, 0.38);
+        background: rgba(58, 160, 255, 0.06);
+        padding: 14px 12px 12px;
+        margin-top: 8px;
+        box-shadow: 0 0 0 3px rgba(58, 160, 255, 0.1);
       }
 
       .add-repair-form .form-row-3 {
@@ -2333,6 +2346,55 @@
         grid-template-columns: 1fr 1fr;
         gap: 10px;
         margin-bottom: 10px;
+      }
+
+      .repair-form-hint {
+        font-size: 11.5px;
+        color: var(--muted);
+        line-height: 1.5;
+        margin: 10px 0 0;
+      }
+
+      .repair-form-hint strong {
+        color: var(--text);
+        font-weight: 700;
+      }
+
+      .repair-pending-hint {
+        display: none;
+        margin-top: 10px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--blue);
+        background: rgba(58, 160, 255, 0.12);
+        border: 1px solid rgba(58, 160, 255, 0.28);
+        line-height: 1.45;
+      }
+
+      .repair-pending-hint.show {
+        display: block;
+      }
+
+      #addRepairBtn.needs-action {
+        border-color: var(--blue);
+        color: var(--blue);
+        background: rgba(58, 160, 255, 0.1);
+        box-shadow: 0 0 0 2px rgba(58, 160, 255, 0.16);
+      }
+
+      .repair-foot-hint {
+        font-size: 11.5px;
+        color: var(--muted);
+        line-height: 1.4;
+        max-width: 280px;
+        margin-right: auto;
+      }
+
+      .repair-foot-hint.is-pending {
+        color: var(--blue);
+        font-weight: 600;
       }
 
       .file-input-wrap {
@@ -18208,7 +18270,7 @@
                   id="vdpStatusSelect"
                   onchange="vdpUpdateStatus(this.value)"
                 >
-                  <option value="">Set Status…</option>
+                  <option value="In Stock">In Stock</option>
                   <option value="Mark as Sold">Mark as Sold</option>
                   <option value="Arbitration">Arbitration</option>
                   <option value="Sold Loss">Sold Loss</option>
@@ -23888,8 +23950,8 @@
 
           <div id="repairsList"></div>
 
-          <div class="add-repair-form">
-            <div class="tier-title" style="margin-bottom: 10px">
+          <div class="add-repair-form" id="addRepairForm">
+            <div class="tier-title" id="repairFormTitle" style="margin-bottom: 10px">
               Add Repair Entry
             </div>
             <div class="form-group" style="margin-bottom: 10px">
@@ -23937,17 +23999,39 @@
                 <span id="repairReceiptName" class="hint"></span>
               </div>
             </div>
+            <p class="repair-form-hint" id="repairFormHint">
+              Click <strong>+ Add Repair</strong> to add this line to the list.
+              <strong>Save</strong> closes this window and will also add or
+              update anything still in the form.
+            </p>
+            <div
+              class="repair-pending-hint"
+              id="repairPendingHint"
+              role="status"
+              aria-live="polite"
+            ></div>
           </div>
         </div>
-        <div class="modal-foot">
-          <button class="btn-ghost" id="addRepairBtn">+ Add Repair</button>
-          <button
-            class="btn-primary"
-            id="saveRepairsBtn"
-            style="box-shadow: none"
-          >
-            Save
-          </button>
+        <div
+          class="modal-foot"
+          style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px"
+        >
+          <div class="repair-foot-hint" id="repairFootHint">
+            Use + Add Repair for each entry, then Save.
+          </div>
+          <div style="display: flex; gap: 10px; margin-left: auto">
+            <button class="btn-ghost" id="addRepairBtn" type="button">
+              + Add Repair
+            </button>
+            <button
+              class="btn-primary"
+              id="saveRepairsBtn"
+              type="button"
+              style="box-shadow: none"
+            >
+              Save
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -29747,7 +29831,7 @@
                     r.estimatedSale ||
                     r.baseSale ||
                     Math.round((r.price || 0) * 1.27);
-                  return `<tr><td class="veh-cell"><div class="veh-name">${r.year} ${r.make} ${r.model}</div></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${r.vin || ""}</td><td style="font-weight:700;">${fmt(ask)}</td><td>${r.daysOnLot} days</td><td><span style="color:${r.status && r.status !== "Active" ? "var(--orange)" : "var(--green)"};font-weight:700;">${r.status && r.status !== "Active" ? r.status : "Available"}</span></td><td style="text-align:right;"><button class="print-btn" style="padding:5px 12px;font-size:11.5px;" onclick="repStartDeal('${r.vin}')">Start Deal</button></td></tr>`;
+                  return `<tr><td class="veh-cell"><div class="veh-name">${r.year} ${r.make} ${r.model}</div></td><td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${r.vin || ""}</td><td style="font-weight:700;">${fmt(ask)}</td><td>${r.daysOnLot} days</td><td><span style="color:${r.status && r.status !== "Active" && r.status !== "In Stock" ? "var(--orange)" : "var(--green)"};font-weight:700;">${r.status && r.status !== "Active" && r.status !== "In Stock" ? r.status : "Available"}</span></td><td style="text-align:right;"><button class="print-btn" style="padding:5px 12px;font-size:11.5px;" onclick="repStartDeal('${r.vin}')">Start Deal</button></td></tr>`;
                 })
                 .join("") +
               `</tbody></table></div></div>`
@@ -38053,15 +38137,14 @@
       <td><span class="tbl-date-ed" onclick="tblEditDate(event, this, '${r.vin}')" title="Click to edit purchase date">${fmtDate(r.date)}</span></td>
       <td class="veh-cell" style="cursor:pointer;" onclick="showVehicleDetail('${r.vin}')">
         <div class="veh-name" style="color:var(--blue);text-decoration:none;">${r.year} ${r.make} ${r.model}</div>
-        <div class="veh-trim" style="${r.sold || r.status ? `color:${getStatusColor(r.status || (r.sold ? "Sold" : ""))};font-weight:700;` : ""}">${(() => {
-          const eff = r.status || (r.sold ? "Sold" : "");
+        <div class="veh-trim" style="color:${getStatusColor(normalizeVehicleUiStatus(r))};font-weight:700;">${(() => {
+          const eff = normalizeVehicleUiStatus(r);
           const date = r.statusDate
             ? " — " + fmtDate(r.statusDate)
             : r.sold && r.soldDate
               ? " — " + fmtDate(r.soldDate)
               : "";
-          if (eff) return eff + date;
-          return "Active";
+          return eff + date;
         })()}</div>
       </td>
       <td class="vin">${r.vin}</td>
@@ -38089,19 +38172,10 @@
         <div class="days-status-wrap">
           <span>${r.daysOnLot}d</span>
           ${(() => {
-            const eff = r.status || (r.sold ? "Sold" : "");
-            const markLabel = eff === "Sold" ? "Sold" : "Mark as Sold";
-            const markValue = eff === "Sold" ? "Sold" : "Mark as Sold";
-            const opts = [
-              { value: "", label: "Status ▾" },
-              { value: markValue, label: markLabel },
-              { value: "Arbitration", label: "Arbitration" },
-              { value: "Sold Loss", label: "Sold Loss" },
-              { value: "Wholesale", label: "Wholesale" },
-              { value: "Out of State Sale", label: "Out of State Sale" },
-            ];
+            const eff = normalizeVehicleUiStatus(r);
+            const opts = vehicleStatusSelectOptions(eff);
             const color = getStatusColor(eff);
-            const displayLabel = eff || "Set status";
+            const displayLabel = eff || "In Stock";
             return `<div class="status-wrap">
               <span class="status-text" style="color:${color};">${displayLabel}</span>
               <select class="status-select" onchange="updateStatus('${r.vin}', this.value)" title="Update vehicle status">
@@ -39685,9 +39759,9 @@
       <div>
         <div class="vd-title">${r.year} ${r.make} ${r.model}</div>
         <div class="vd-vin">VIN ${r.vin} · ${r.category}</div>
-        <div style="margin-top:4px;font-size:12px;font-weight:800;color:${getStatusColor(r.status || (r.sold ? "Sold" : ""))}">${r.status || (r.sold ? "Sold" : "Active — Not Sold")}</div>
+        <div style="margin-top:4px;font-size:12px;font-weight:800;color:${getStatusColor(normalizeVehicleUiStatus(r))}">${normalizeVehicleUiStatus(r)}</div>
       </div>
-      ${r.sold ? `<div class="vd-profit-pill"><span>NET PROFIT</span>${fmtSigned(r.netProfit)} · ${r.roi.toFixed(1)}% ROI</div>` : `<div class="vd-profit-pill" style="color:var(--muted);background:rgba(255,255,255,.04);border-color:var(--border);"><span>STATUS</span>Active — Not Sold</div>`}
+      ${r.sold ? `<div class="vd-profit-pill"><span>NET PROFIT</span>${fmtSigned(r.netProfit)} · ${r.roi.toFixed(1)}% ROI</div>` : `<div class="vd-profit-pill" style="color:var(--muted);background:rgba(255,255,255,.04);border-color:var(--border);"><span>STATUS</span>In Stock</div>`}
     </div>
 
     <div class="vd-grid">
@@ -39788,6 +39862,12 @@
         switch (status) {
           case "Sold":
             return "var(--green)";
+          case "In Stock":
+          case "Available":
+          case "Active":
+            return "var(--green)";
+          case "Pending Deal":
+            return "var(--blue)";
           case "Arbitration":
             return "var(--orange)";
           case "Sold Loss":
@@ -39801,13 +39881,84 @@
         }
       }
 
+      function normalizeVehicleUiStatus(v) {
+        if (!v) return "In Stock";
+        const st = v.status || "";
+        if (
+          st === "Sold Loss" ||
+          st === "Wholesale" ||
+          st === "Out of State Sale" ||
+          st === "Arbitration" ||
+          st === "Pending Deal"
+        )
+          return st;
+        if (v.sold || st === "Sold" || st === "Mark as Sold") return "Sold";
+        if (
+          !st ||
+          st === "Active" ||
+          st === "Available" ||
+          st === "In Inventory"
+        )
+          return "In Stock";
+        return st;
+      }
+
+      function vehicleStatusSelectOptions(eff) {
+        const markLabel = eff === "Sold" ? "Sold" : "Mark as Sold";
+        const markValue = eff === "Sold" ? "Sold" : "Mark as Sold";
+        return [
+          { value: "In Stock", label: "In Stock" },
+          { value: markValue, label: markLabel },
+          { value: "Arbitration", label: "Arbitration" },
+          { value: "Sold Loss", label: "Sold Loss" },
+          { value: "Wholesale", label: "Wholesale" },
+          { value: "Out of State Sale", label: "Out of State Sale" },
+        ];
+      }
+
+      function isExitUiStatus(status) {
+        return (
+          status === "Sold" ||
+          status === "Mark as Sold" ||
+          status === "Sold Loss" ||
+          status === "Wholesale" ||
+          status === "Out of State Sale"
+        );
+      }
+
       async function updateStatus(vin, newStatus) {
         const v = vehicles.find((x) => x.vin === vin);
-        if (!v || !newStatus) return;
+        if (!v) return;
+        if (!newStatus) return;
+        if (newStatus === "Available" || newStatus === "In Inventory")
+          newStatus = "In Stock";
         if (newStatus === "Mark as Sold" || newStatus === "Sold") {
           // Prefer deal-jacket / sold form for full sale details
           if (typeof openDealJacket === "function") {
             openDealJacket(vin);
+            return;
+          }
+        }
+        const current = normalizeVehicleUiStatus(v);
+        if (
+          newStatus === "In Stock" &&
+          (v.sold || isExitUiStatus(current)) &&
+          current !== "In Stock"
+        ) {
+          const ok = window.confirm(
+            "Return this vehicle to In Stock? It will leave Sold Vehicles and go back to current inventory. Mark as Sold will be reverted.",
+          );
+          if (!ok) {
+            try {
+              if (typeof render === "function") render();
+            } catch (_) {}
+            try {
+              if (
+                currentVdpVin === vin &&
+                typeof renderVehicleDetailPage === "function"
+              )
+                renderVehicleDetailPage(vin);
+            } catch (_) {}
             return;
           }
         }
@@ -39826,7 +39977,12 @@
           }
           if (row) row.classList.add("is-busy");
           await AVVehicles.persistStatus(vin, newStatus);
-          if (typeof AVToast !== "undefined") AVToast.success("Status updated");
+          if (typeof AVToast !== "undefined")
+            AVToast.success(
+              newStatus === "In Stock"
+                ? "Returned to In Stock"
+                : "Status updated",
+            );
         } catch (err) {
           if (typeof AVToast !== "undefined")
             AVToast.error(err.message || "Failed to update status");
@@ -40060,14 +40216,148 @@
         document.getElementById("repairsModal").classList.add("open");
       }
 
+      function repairFormHasPending() {
+        const desc = (
+          (document.getElementById("repairDesc") || {}).value || ""
+        ).trim();
+        const costEl = document.getElementById("repairCost");
+        const costRaw = costEl ? String(costEl.value || "").trim() : "";
+        const fileInput = document.getElementById("repairReceipt");
+        const hasFile = !!(fileInput && fileInput.files && fileInput.files[0]);
+        return (
+          editingRepairIndex !== null ||
+          desc.length > 0 ||
+          costRaw.length > 0 ||
+          hasFile
+        );
+      }
+
+      function repairFormIsComplete() {
+        const desc = (
+          (document.getElementById("repairDesc") || {}).value || ""
+        ).trim();
+        const cost =
+          Number((document.getElementById("repairCost") || {}).value) || 0;
+        return desc.length > 0 && cost > 0;
+      }
+
+      function syncRepairFormPendingUi() {
+        const pending = repairFormHasPending();
+        const updating = editingRepairIndex !== null;
+        const form = document.getElementById("addRepairForm");
+        const addBtn = document.getElementById("addRepairBtn");
+        const saveBtn = document.getElementById("saveRepairsBtn");
+        const hint = document.getElementById("repairPendingHint");
+        const formHint = document.getElementById("repairFormHint");
+        const title = document.getElementById("repairFormTitle");
+        const footHint = document.getElementById("repairFootHint");
+        if (form) form.classList.toggle("has-pending", pending);
+        if (addBtn && !addBtn.classList.contains("av-btn-loading")) {
+          addBtn.classList.toggle("needs-action", pending);
+          addBtn.textContent = updating ? "Update Repair" : "+ Add Repair";
+        }
+        if (saveBtn && !saveBtn.classList.contains("av-btn-loading")) {
+          saveBtn.textContent = updating
+            ? pending
+              ? "Save & Update"
+              : "Save"
+            : pending
+              ? "Save & Add"
+              : "Save";
+          saveBtn.title = pending
+            ? updating
+              ? "Applies the update, then closes"
+              : "Adds this entry, then closes"
+            : "Close and refresh totals";
+        }
+        if (title) title.textContent = updating ? "Update Repair Entry" : "Add Repair Entry";
+        if (formHint) {
+          formHint.innerHTML = updating
+            ? "Click <strong>Update Repair</strong> to apply your changes. <strong>Save</strong> will also apply them and close this window."
+            : "Click <strong>+ Add Repair</strong> to add this line to the list. <strong>Save</strong> closes this window and will also add or update anything still in the form.";
+        }
+        if (hint) {
+          hint.classList.toggle("show", pending);
+          hint.textContent = updating
+            ? "Unsaved changes — click Update Repair, or Save to update and close."
+            : "Unsaved entry — click + Add Repair, or Save to add it and close.";
+        }
+        if (footHint) {
+          footHint.classList.toggle("is-pending", pending);
+          footHint.textContent = pending
+            ? updating
+              ? "Click Update Repair first, or Save to apply and close."
+              : "Click + Add Repair first, or Save to add this entry and close."
+            : "Use + Add Repair for each entry, then Save.";
+        }
+      }
+
+      function refreshOpenVehicleViews() {
+        try {
+          var vdpVin = window.currentVdpVin;
+          try {
+            if (!vdpVin) vdpVin = currentVdpVin;
+          } catch (_) {}
+          var vdpPage = document.getElementById("page-vehicle-detail");
+          if (
+            vdpPage &&
+            vdpPage.style.display !== "none" &&
+            vdpVin &&
+            typeof renderVehicleDetailPage === "function"
+          ) {
+            renderVehicleDetailPage(vdpVin);
+          }
+        } catch (_) {}
+        try {
+          var djVin = window.currentDealVin;
+          try {
+            if (!djVin) djVin = currentDealVin;
+          } catch (_) {}
+          var djPage = document.getElementById("page-deal-jacket");
+          if (djPage && djPage.style.display !== "none" && djVin) {
+            var v =
+              typeof findDealVehicle === "function"
+                ? findDealVehicle(djVin)
+                : null;
+            if (v) {
+              if (
+                typeof djRenderBreakdown === "function" &&
+                typeof computeRow === "function"
+              ) {
+                djRenderBreakdown(v, computeRow(v));
+              }
+              if (typeof dealRecalc === "function") dealRecalc();
+            }
+          }
+        } catch (_) {}
+      }
+      window.refreshOpenVehicleViews = refreshOpenVehicleViews;
+
+      function refreshAfterRepairChange() {
+        try {
+          if (typeof render === "function") render();
+        } catch (_) {}
+        try {
+          if (typeof refreshAllPnl === "function") refreshAllPnl();
+        } catch (_) {}
+        refreshOpenVehicleViews();
+      }
+
       function resetRepairForm() {
         editingRepairIndex = null;
+        const descEl = document.getElementById("repairDesc");
+        const costEl = document.getElementById("repairCost");
         document.getElementById("repairDesc").value = "";
         document.getElementById("repairType").selectedIndex = 0;
         document.getElementById("repairCost").value = "";
         document.getElementById("repairReceipt").value = "";
         document.getElementById("repairReceiptName").textContent = "";
         document.getElementById("addRepairBtn").textContent = "+ Add Repair";
+        if (typeof avValidateField === "function") {
+          avValidateField(descEl, true, "repairDescErr");
+          avValidateField(costEl, true, "repairCostErr");
+        }
+        syncRepairFormPendingUi();
       }
 
       function editRepairEntry(index) {
@@ -40082,12 +40372,13 @@
           ? `Current: ${r.receipt}`
           : "";
         document.getElementById("addRepairBtn").textContent = "Update Repair";
+        syncRepairFormPendingUi();
         document.getElementById("repairDesc").focus();
       }
 
       async function addRepairEntry() {
         const v = __findVeh(currentRepairsVin);
-        if (!v) return;
+        if (!v) return false;
         const desc = document.getElementById("repairDesc").value.trim();
         const type = document.getElementById("repairType").value;
         const cost = Number(document.getElementById("repairCost").value) || 0;
@@ -40099,7 +40390,10 @@
             "repairDescErr",
           );
           document.getElementById("repairDesc").focus();
-          return;
+          syncRepairFormPendingUi();
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Enter a description, then click + Add Repair or Save.");
+          return false;
         }
         avValidateField(
           document.getElementById("repairDesc"),
@@ -40113,7 +40407,10 @@
             "repairCostErr",
           );
           document.getElementById("repairCost").focus();
-          return;
+          syncRepairFormPendingUi();
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Enter a cost greater than 0, then click + Add Repair or Save.");
+          return false;
         }
         avValidateField(
           document.getElementById("repairCost"),
@@ -40151,13 +40448,14 @@
               AVToast.error(
                 (upErr && upErr.message) || "Receipt upload failed",
               );
-            return;
+            return false;
           }
         }
 
         if (window.AVVehicles && v.id) {
           const addBtn = document.getElementById("addRepairBtn");
-          if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
+          if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return false;
+          let ok = false;
           try {
             if (typeof AVBusy !== "undefined") {
               AVBusy.inc();
@@ -40177,17 +40475,24 @@
             });
             resetRepairForm();
             renderRepairsList();
+            refreshAfterRepairChange();
             if (typeof AVToast !== "undefined") AVToast.success("Repair saved");
+            ok = true;
           } catch (err) {
             if (typeof AVToast !== "undefined")
               AVToast.error(err.message || "Failed to save repair");
           } finally {
             if (typeof AVBusy !== "undefined") {
-              AVBusy.setBtnLoading(addBtn, false, "Add Repair");
+              AVBusy.setBtnLoading(
+                addBtn,
+                false,
+                existing ? "Update Repair" : "+ Add Repair",
+              );
               AVBusy.dec();
             }
+            syncRepairFormPendingUi();
           }
-          return;
+          return ok;
         }
 
         if (existing) {
@@ -40197,8 +40502,8 @@
         }
         resetRepairForm();
         renderRepairsList();
-        render();
-        refreshAllPnl();
+        refreshAfterRepairChange();
+        return true;
       }
 
       async function deleteRepairEntry(index) {
@@ -40212,6 +40517,7 @@
             await AVVehicles.deleteRepair(currentRepairsVin, entry.id);
             if (editingRepairIndex === index) resetRepairForm();
             renderRepairsList();
+            refreshAfterRepairChange();
             if (typeof AVToast !== "undefined")
               AVToast.success("Repair removed");
           } catch (err) {
@@ -40219,14 +40525,36 @@
               AVToast.error(err.message || "Failed to delete repair");
           } finally {
             if (typeof AVBusy !== "undefined") AVBusy.dec();
+            syncRepairFormPendingUi();
           }
           return;
         }
         v.repairsList.splice(index, 1);
         if (editingRepairIndex === index) resetRepairForm();
         renderRepairsList();
-        render();
-        refreshAllPnl();
+        refreshAfterRepairChange();
+      }
+
+      function closeRepairsModalUi() {
+        document.getElementById("repairsModal").classList.remove("open");
+        resetRepairForm();
+        refreshAfterRepairChange();
+      }
+
+      async function saveRepairsModal() {
+        if (repairFormHasPending()) {
+          const ok = await addRepairEntry();
+          if (!ok) return;
+        }
+        closeRepairsModalUi();
+      }
+
+      async function dismissRepairsModal() {
+        if (repairFormIsComplete()) {
+          const ok = await addRepairEntry();
+          if (!ok) return;
+        }
+        closeRepairsModalUi();
       }
 
       document
@@ -40236,44 +40564,40 @@
             .files[0]
             ? this.files[0].name
             : "";
+          syncRepairFormPendingUi();
         });
+      ["repairDesc", "repairCost", "repairType"].forEach(function (id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("input", syncRepairFormPendingUi);
+        el.addEventListener("change", syncRepairFormPendingUi);
+      });
       document.getElementById("addRepairBtn").onclick = addRepairEntry;
       function refreshDealJacketIfOpen() {
-        try {
-          if (
-            !currentDealVin ||
-            typeof renderDealJacket !== "function"
-          )
-            return;
-          const page = document.getElementById("page-deal-jacket");
-          if (page && page.style.display !== "none") {
-            renderDealJacket(currentDealVin);
-          }
-        } catch (_) {}
+        refreshOpenVehicleViews();
       }
-      document.getElementById("saveRepairsBtn").onclick = () => {
-        document.getElementById("repairsModal").classList.remove("open");
-        render();
-        refreshAllPnl();
-        refreshDealJacketIfOpen();
+      document.getElementById("saveRepairsBtn").onclick = function () {
+        saveRepairsModal();
       };
-      document.getElementById("closeRepairsModal").onclick = () => {
-        document.getElementById("repairsModal").classList.remove("open");
-        render();
-        refreshAllPnl();
-        refreshDealJacketIfOpen();
+      document.getElementById("closeRepairsModal").onclick = function () {
+        dismissRepairsModal();
       };
       document.getElementById("repairsModal").addEventListener("click", (e) => {
         if (e.target.id === "repairsModal") {
-          document.getElementById("repairsModal").classList.remove("open");
-          render();
-          refreshAllPnl();
-          refreshDealJacketIfOpen();
+          dismissRepairsModal();
         }
       });
 
       // ---------- VEHICLE DETAIL PAGE ----------
       let currentVdpVin = null;
+      function setCurrentVdpVin(vin) {
+        currentVdpVin = vin || null;
+        try {
+          window.currentVdpVin = currentVdpVin;
+        } catch (_) {}
+      }
+      window.setCurrentVdpVin = setCurrentVdpVin;
+      setCurrentVdpVin(null);
 
       var _vdpSkTimer = null;
       function showVdpSkeleton() {
@@ -40300,7 +40624,7 @@
       }
 
       async function showVehicleDetail(vin) {
-        currentVdpVin = vin;
+        setCurrentVdpVin(vin);
         document
           .querySelectorAll(".nav-item")
           .forEach((n) => n.classList.remove("active"));
@@ -40350,7 +40674,7 @@
           closeDeleteVehicleModal();
           if (typeof AVToast !== "undefined")
             AVToast.success("Vehicle deleted");
-          currentVdpVin = null;
+          setCurrentVdpVin(null);
           showPage("vehicles", document.querySelector("[data-page=vehicles]"));
         } catch (err) {
           if (typeof AVToast !== "undefined")
@@ -40393,7 +40717,7 @@
           ["ROI", roi + "%"],
           ["Sales Rep", r.rep || v.rep || "\u2014"],
           ["Sold Date", r.soldDate ? fmtDate(r.soldDate) : "\u2014"],
-          ["Inventory", r.status || (r.sold ? "Sold" : "Active")],
+          ["Inventory", r.status || (r.sold ? "Sold" : "In Stock")],
         ];
         return items
           .map(
@@ -40856,7 +41180,7 @@
           `VIN: ${r.vin}  ·  ${r.category}  ·  Purchased <span class="vdp-sub-ed" id="vdpEd_date" onclick="vdpEditDate()" title="Click to change the purchase date">${fmtDate(r.date)}</span> ${vdpUndoBtn(v, "date")}`;
 
         // Status badge
-        const eff = r.status || (r.sold ? "Sold" : "Active");
+        const eff = normalizeVehicleUiStatus(v);
         const badge = document.getElementById("vdpStatusBadge");
         badge.textContent = eff;
         badge.style.cssText = `padding:6px 16px;border-radius:8px;font-size:12px;font-weight:800;letter-spacing:.3px;border:1px solid;color:${getStatusColor(eff)};border-color:${getStatusColor(eff)};background:${getStatusColor(eff)}18;`;
@@ -40964,15 +41288,8 @@
 
         // Status dropdown — dynamically include current status so sel.value always matches
         const sel = document.getElementById("vdpStatusSelect");
-        const curStatus = r.status || (r.sold ? "Sold" : "");
-        const vdpStatusOpts = [
-          { value: "", label: "Set Status\u2026" },
-          { value: "Mark as Sold", label: "Mark as Sold" },
-          { value: "Arbitration", label: "Arbitration" },
-          { value: "Sold Loss", label: "Sold Loss" },
-          { value: "Wholesale", label: "Wholesale" },
-          { value: "Out of State Sale", label: "Out of State Sale" },
-        ];
+        const curStatus = normalizeVehicleUiStatus(v);
+        const vdpStatusOpts = vehicleStatusSelectOptions(curStatus);
         if (curStatus && !vdpStatusOpts.find(function (o) { return o.value === curStatus; })) {
           vdpStatusOpts.push({ value: curStatus, label: curStatus });
         }
@@ -40980,8 +41297,8 @@
           return '<option value="' + o.value + '"' + (o.value === curStatus ? ' selected' : '') + '>' + o.label + '</option>';
         }).join("");
         const statusLabel = document.getElementById("vdpStatusLabel");
-        statusLabel.textContent = eff === "Active" ? "" : eff;
-        statusLabel.style.color = getStatusColor(eff);
+        statusLabel.textContent = curStatus;
+        statusLabel.style.color = getStatusColor(curStatus);
 
         // Pre-fill sold form if already sold
         const soldForm = document.getElementById("vdpSoldForm");
@@ -41052,13 +41369,15 @@
 
       async function vdpUpdateStatus(newStatus) {
         const v = vehicles.find((x) => x.vin === currentVdpVin);
-        if (!v || !newStatus) return;
+        if (!v) return;
+        if (newStatus === "Available" || newStatus === "In Inventory")
+          newStatus = "In Stock";
         if (newStatus === "Mark as Sold" || newStatus === "Sold") {
           const alreadySold = v.sold || v.status === "Sold";
           if (alreadySold) {
             document.getElementById("vdpSoldForm").classList.add("open");
             document.getElementById("vdpStatusLabel").textContent =
-              "Mark as Sold";
+              "Sold";
             document.getElementById("vdpStatusLabel").style.color =
               getStatusColor("Sold");
             return;
@@ -41070,7 +41389,8 @@
         if (vdpSel) vdpSel.classList.add("is-busy");
         try {
           await updateStatus(currentVdpVin, newStatus);
-          document.getElementById("vdpSoldForm").classList.remove("open");
+          const soldForm = document.getElementById("vdpSoldForm");
+          if (soldForm) soldForm.classList.remove("open");
         } finally {
           if (vdpSel) vdpSel.classList.remove("is-busy");
         }
@@ -41206,13 +41526,13 @@
           `${rows.length} vehicles`;
         document.getElementById("vdpQuickList").innerHTML = rows
           .map((r) => {
-            const eff = r.status || (r.sold ? "Sold" : "Active");
+            const eff = normalizeVehicleUiStatus(r);
             const profitColor =
               r.netProfit >= 0 ? "var(--green)" : "var(--red)";
             return `<div class="vdp-quick-item ${r.vin === activeVin ? "active" : ""}" onclick="showVehicleDetail('${r.vin}')">
       <div>
         <div class="vdp-quick-name">${r.year} ${r.make} ${r.model}</div>
-        <div class="vdp-quick-meta" style="color:${getStatusColor(eff)};font-weight:${eff !== "Active" ? 700 : 400};">${eff}</div>
+        <div class="vdp-quick-meta" style="color:${getStatusColor(eff)};font-weight:700;">${eff}</div>
       </div>
       <div class="vdp-quick-right">
         <div class="vdp-quick-profit" style="color:${profitColor};">${fmtSigned(r.netProfit)}</div>
@@ -54376,7 +54696,8 @@
           var hashPage = getCurrentPage();
           var hashParam = getPageParam();
           if (hashPage === "vehicle-detail" && hashParam) {
-            currentVdpVin = hashParam;
+            if (typeof setCurrentVdpVin === "function") setCurrentVdpVin(hashParam);
+            else currentVdpVin = hashParam;
             showVdpSkeleton();
             showPage(
               "vehicle-detail",
@@ -54441,7 +54762,8 @@
         var pageId = getCurrentPage();
         var param = getPageParam();
         if (pageId === "vehicle-detail" && param) {
-          currentVdpVin = param;
+          if (typeof setCurrentVdpVin === "function") setCurrentVdpVin(param);
+          else currentVdpVin = param;
         }
         if (pageId === "deal-jacket" && param) {
           currentDealVin = param;
@@ -54520,7 +54842,9 @@
                 } catch (_) {}
               }
               if (curPage === "vehicle-detail" && curParam) {
-                currentVdpVin = curParam;
+                if (typeof setCurrentVdpVin === "function")
+                  setCurrentVdpVin(curParam);
+                else currentVdpVin = curParam;
               }
               var curRenderer = PAGE_RENDERERS[curPage];
               if (curRenderer) curRenderer();

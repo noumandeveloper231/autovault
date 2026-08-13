@@ -56,7 +56,7 @@
 
   /* ?? Status mapping ??????????????????????????????????????????????????? */
   const STATUS_API_TO_UI = {
-    in_stock: "",
+    in_stock: "In Stock",
     needs_attention: "Arbitration",
     arbitration: "Arbitration",
     pending_deal: "Pending Deal",
@@ -69,6 +69,9 @@
   const STATUS_UI_TO_API = {
     "": "in_stock",
     Active: "in_stock",
+    "In Stock": "in_stock",
+    Available: "in_stock",
+    "In Inventory": "in_stock",
     Sold: "sold",
     "Sold Loss": "loss",
     Arbitration: "arbitration",
@@ -133,7 +136,7 @@
 
   /** API vehicle (+ optional expenses) ? UI row used by computeRow/render */
   function mapApiToUi(api, expenses) {
-    const statusUi = STATUS_API_TO_UI[api.status] || "";
+    const statusUi = STATUS_API_TO_UI[api.status] || "In Stock";
     // Any inventory-exit status counts as sold for Vehicles / Sold Vehicles pages.
     const sold = isExitStatus(api.status) || !!api.soldAt;
     const expenseSrc =
@@ -345,7 +348,9 @@
       if (typeof global.syncWsVehicles === "function") global.syncWsVehicles();
     } catch (_) {}
     try {
-      if (
+      if (typeof global.refreshOpenVehicleViews === "function") {
+        global.refreshOpenVehicleViews();
+      } else if (
         global.currentVdpVin &&
         typeof global.renderVehicleDetailPage === "function"
       ) {
@@ -832,18 +837,41 @@
     if (uiStatus === "Sold" || uiStatus === "Mark as Sold") {
       throw new Error("Use Mark Sold with customer and price");
     }
-    const apiStatus = STATUS_UI_TO_API[uiStatus] || "needs_attention";
+    const apiStatus = STATUS_UI_TO_API[uiStatus];
+    if (!apiStatus) throw new Error("Unknown vehicle status");
+    const returningToStock =
+      apiStatus === "in_stock" ||
+      apiStatus === "needs_attention" ||
+      apiStatus === "pending_deal" ||
+      apiStatus === "arbitration";
     const patch = { status: apiStatus };
     if (uiStatus === "Wholesale") {
       patch.isWholesale = true;
+    } else if (returningToStock) {
+      patch.isWholesale = false;
     } else {
       patch.isWholesale = false;
     }
     await AVApi.changeVehicleStatus(v.id, {
       status: apiStatus,
-      note: uiStatus || null,
+      note:
+        apiStatus === "in_stock"
+          ? "Returned to in stock"
+          : uiStatus || null,
     });
     await AVApi.updateVehicle(v.id, patch);
+    if (returningToStock && apiStatus === "in_stock") {
+      v.status = "In Stock";
+      v.sold = false;
+      v.soldDate = null;
+      v.soldPrice = null;
+      if (v._raw) {
+        v._raw.status = "in_stock";
+        v._raw.soldAt = null;
+        v._raw.soldPrice = null;
+      }
+      replaceVehicleInPlace(v);
+    }
     await loadAllVehicles();
   }
 
