@@ -8610,8 +8610,8 @@
 
       #page-vehicles .veh-kpi-row {
         display: flex;
-        gap: 16px;
-        align-items: stretch;
+        gap: 18px;
+        align-items: flex-start;
         flex-wrap: wrap;
       }
 
@@ -8619,13 +8619,12 @@
         min-width: 0;
       }
 
-      /* 3 cards : 2 cards → equal card widths across the top row */
       #page-vehicles .veh-kpi-group.inventory {
-        flex: 3 1 0;
+        flex: 3 1 300px;
       }
 
       #page-vehicles .veh-kpi-group.month {
-        flex: 2 1 0;
+        flex: 2 1 220px;
       }
 
       #page-vehicles .veh-kpi-group.costs {
@@ -8633,12 +8632,15 @@
       }
 
       #page-vehicles .veh-kpi-group-label {
-        font-size: 10px;
+        font-size: 10.5px;
         font-weight: 800;
-        letter-spacing: 1.2px;
+        letter-spacing: 0.7px;
         text-transform: uppercase;
         color: var(--muted);
-        margin: 0 0 8px 2px;
+        margin: 0 0 9px 2px;
+        min-height: 32px;
+        display: flex;
+        align-items: center;
       }
 
       #page-vehicles .inv-label-row {
@@ -8715,7 +8717,7 @@
       }
 
       #page-vehicles .veh-kpi-group.month .kpi-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       }
 
       #page-vehicles .veh-kpi-group.costs .kpi-grid {
@@ -8742,6 +8744,13 @@
       #page-vehicles .veh-kpi-group .kpi-foot {
         font-size: 10px;
         margin-top: 4px;
+      }
+
+      #page-vehicles .veh-kpi-group.costs.kpi-period-loading,
+      #page-vehicles .veh-kpi-group.month.kpi-period-loading {
+        opacity: 0.55;
+        pointer-events: none;
+        transition: opacity 0.18s;
       }
 
       @media (max-width: 1100px) {
@@ -21220,13 +21229,19 @@
                 <div class="veh-kpi-group-label" id="vehKpiMonthLabel">This Month</div>
                 <div class="kpi-grid">
                   <div class="kpi" style="--accent: var(--green)">
-              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'sold')" title="Change number color"></button>
+                    <button class="kpi-cbtn" onclick="openKpiColorPop(event,'sold')" title="Change number color"></button>
                     <div class="kpi-label" id="kpiSoldMonthLabel">Sold This Month</div>
                     <div class="kpi-value" id="kpiSoldMonth">0</div>
-                    <div class="kpi-foot">units moved</div>
+                    <div class="kpi-foot" id="footSoldMonth">units moved</div>
+                  </div>
+                  <div class="kpi" id="kpiSoldValueBox" style="--accent: var(--green); display: none">
+                    <button class="kpi-cbtn" onclick="openKpiColorPop(event,'sold')" title="Change number color"></button>
+                    <div class="kpi-label" id="lblSoldValue">Total Sold Value</div>
+                    <div class="kpi-value" id="kpiSoldValueMonth">$0</div>
+                    <div class="kpi-foot" id="footSoldValue">total sale price</div>
                   </div>
                   <div class="kpi" style="--accent: var(--green)">
-              <button class="kpi-cbtn" onclick="openKpiColorPop(event,'profit')" title="Change number color"></button>
+                    <button class="kpi-cbtn" onclick="openKpiColorPop(event,'profit')" title="Change number color"></button>
                     <div class="kpi-label" id="kpiProfitMonthLabel">Profit This Month</div>
                     <div class="kpi-value" id="kpiProfitMonth">$0</div>
                     <div class="kpi-foot" id="kpiProfitMonthFoot">net, sold this month</div>
@@ -21237,14 +21252,14 @@
 
             <div class="veh-kpi-group costs">
               <div class="veh-kpi-group-label" id="vehCostsLabel">
-                Costs · all vehicles
+                Costs&nbsp;·&nbsp;<span style="color: var(--green)">available inventory</span>
               </div>
               <div class="kpi-grid">
                 <div class="kpi" style="--accent: var(--orange)">
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'purchase')" title="Change number color"></button>
                   <div class="kpi-label">Purchase Cost</div>
                   <div class="kpi-value" id="kpiPurchaseCost">$0</div>
-                  <div class="kpi-foot">acquisition spend</div>
+                  <div class="kpi-foot" id="footPurchaseCost">spent on current stock</div>
                 </div>
                 <div class="kpi" style="--accent: var(--purple)">
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'fees')" title="Change number color"></button>
@@ -21274,7 +21289,7 @@
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'cost')" title="Change number color"></button>
                   <div class="kpi-label">Total Vehicle Cost</div>
                   <div class="kpi-value" id="kpiTotalCost">$0</div>
-                  <div class="kpi-foot">all-in, incl. flooring</div>
+                  <div class="kpi-foot" id="footTotalVehCost">all-in on current stock</div>
                 </div>
               </div>
             </div>
@@ -22622,6 +22637,7 @@
                 <span id="djAutoSaved" class="dj-autosave-msg"></span>
               </div>
               <button
+                type="button"
                 class="btn-primary"
                 id="djSaveBtn"
                 style="
@@ -35698,17 +35714,20 @@
           var vin = currentDealVin || getPageParam();
           if (!vin) return;
           currentDealVin = vin;
+          window.currentDealVin = vin;
           try {
             var savedCtx = sessionStorage.getItem("avDjContext");
             if (savedCtx) djContext = savedCtx;
           } catch (_) {}
           if (typeof renderDealJacket === "function") {
             var v =
-              typeof vehicles !== "undefined"
-                ? vehicles.find(function (x) {
-                    return x && x.vin === vin;
-                  })
-                : null;
+              typeof findDealVehicle === "function"
+                ? findDealVehicle(vin)
+                : typeof vehicles !== "undefined"
+                  ? vehicles.find(function (x) {
+                      return x && (x.vin === vin || x.id === vin);
+                    })
+                  : null;
             if (v) {
               if (
                 !Array.isArray(v.djDocs) &&
@@ -35719,6 +35738,11 @@
             } else if (typeof showDjSkeleton === "function") {
               showDjSkeleton();
             }
+          }
+          if (typeof ensureSalesRepsLoaded === "function") {
+            ensureSalesRepsLoaded().then(function () {
+              if (typeof fillDjRepSelect === "function") fillDjRepSelect();
+            });
           }
         },
         tax: function () {
@@ -36023,6 +36047,14 @@
           if (veh) promises.push(veh);
           if (typeof loadExpensesFromApi === "function" && !_expensesLoaded) {
             promises.push(loadExpensesFromApi());
+          }
+          if (
+            window.AVReps &&
+            (!window.AV_REPS_LIVE ||
+              !Array.isArray(salesReps) ||
+              !salesReps.length)
+          ) {
+            promises.push(AVReps.loadAll().catch(function () {}));
           }
           if (promises.length) return Promise.all(promises);
         },
@@ -37852,6 +37884,7 @@
             "kpiTitles",
             "kpiUpcomingFloored",
             "kpiSoldMonth",
+            "kpiSoldValueMonth",
             "kpiProfitMonth",
             "kpiPurchaseCost",
             "kpiFees",
@@ -38051,12 +38084,12 @@
           }
         }
 
-        renderKPIs(rows, filtered);
+        renderKPIs(rows);
         populateRepFilter(rows);
         renderColumnTotals(vehPeriod.active ? filtered : rows);
       }
 
-      /** Toggle cost KPIs + table between all vehicles and current (unsold) inventory. */
+      /** Table filter only — Cost KPIs stay in-stock (All) or period-sold (Yearly/Monthly). */
       function toggleInvView() {
         window.__invCurrentOnly = !window.__invCurrentOnly;
         const on = !!window.__invCurrentOnly;
@@ -38074,10 +38107,9 @@
         const note = document.getElementById("invViewNote");
         if (note) {
           note.textContent = on
-            ? "Costs below reflect current in-stock inventory only"
+            ? "Showing in-stock vehicles only"
             : "Showing all vehicles (sold + in stock)";
         }
-        // Leaving sold-history browse mode when focusing current inventory.
         if (on && vehPeriod && vehPeriod.active) {
           try {
             if (typeof vehSetMode === "function") vehSetMode("all");
@@ -38086,17 +38118,36 @@
         if (typeof render === "function") render();
       }
 
-      function renderKPIs(rows, filteredRows) {
+      function statsPeriodMatches(stats, period) {
+        const p = stats && stats.period;
+        if (!p || !period || !period.active) return false;
+        if (p.mode !== period.mode) return false;
+        if (Number(p.year) !== Number(period.year)) return false;
+        if (period.mode === "month") {
+          return Number(p.month) === Number(period.month) + 1;
+        }
+        return true;
+      }
+
+      function renderKPIs(rows) {
         const set = (id, val) => {
           const el = document.getElementById(id);
           if (el) el.textContent = val;
         };
+        const setHtml = (id, html) => {
+          const el = document.getElementById(id);
+          if (el) el.innerHTML = html;
+        };
+        const n = (v) => {
+          const x = Number(v);
+          return Number.isFinite(x) ? x : 0;
+        };
         const periodActive = !!(vehPeriod && vehPeriod.active);
         const currentOnly = !!window.__invCurrentOnly && !periodActive;
         const stats = window.__vehicleInventoryStats || null;
+        const list = Array.isArray(rows) ? rows : [];
 
-        // Prefer authoritative backend counts when available.
-        const active = rows.filter((r) => !r.sold && !vehicleIsSold(r));
+        const active = list.filter((r) => !r.sold && !vehicleIsSold(r));
         const totalInv =
           stats && typeof stats.currentInventoryCount === "number"
             ? stats.currentInventoryCount
@@ -38104,57 +38155,126 @@
         const totalTracked =
           stats && typeof stats.totalCount === "number"
             ? stats.totalCount
-            : rows.length;
+            : list.length;
 
-        const periodRows = periodActive ? filteredRows || rows : rows;
-        // Cost figures follow the toggle: current inventory only, or all vehicles.
-        const costRows = periodActive
-          ? periodRows
-          : currentOnly
-            ? active
-            : rows;
+        const soldPeriodRows = periodActive
+          ? list.filter((r) => {
+              if (!vehicleIsSold(r) && !r.sold) return false;
+              const key = r.soldDate || vehicleSoldDateKey(r);
+              return key && typeof vehInPeriod === "function"
+                ? vehInPeriod(key)
+                : false;
+            })
+          : [];
 
-        const purchaseCost = costRows.reduce((s, r) => s + r.price, 0);
-        const fees = costRows.reduce((s, r) => s + r.fees, 0);
-        const repairs = costRows.reduce((s, r) => s + r.repairs, 0);
-        const totalCost = costRows.reduce((s, r) => s + r.totalVehicleCost, 0);
-        const salesTax = costRows.reduce((s, r) => s + r.salesTaxCollected, 0);
-        const commission = costRows.reduce((s, r) => s + r.commission, 0);
-        const flooringTotal = periodActive
-          ? periodRows.reduce((s, r) => s + r.flooringCost, 0)
-          : active.reduce((s, r) => s + r.flooringCost, 0);
+        const liveSoldRows = list.filter((r) => {
+          if (!r.sold && !vehicleIsSold(r)) return false;
+          const key = r.soldDate || vehicleSoldDateKey(r);
+          if (!key) return false;
+          const d = new Date(key);
+          return (
+            d.getMonth() === today.getMonth() &&
+            d.getFullYear() === today.getFullYear()
+          );
+        });
+
+        const usePeriodStats = statsPeriodMatches(stats, vehPeriod);
+        const liveInvCosts = stats && stats.costs && stats.costs.currentInventory;
+        const useLiveCostStats =
+          !periodActive && liveInvCosts && typeof liveInvCosts.purchaseCost === "number";
+
+        let purchaseCost;
+        let fees;
+        let repairs;
+        let totalCost;
+        let salesTax;
+        let commission;
+        let monthCount;
+        let monthProfit;
+        let monthSoldValue;
+
+        if (periodActive && usePeriodStats) {
+          const pc = stats.period.costs || {};
+          purchaseCost = n(pc.purchaseCost);
+          fees = n(pc.fees);
+          repairs = n(pc.repairs);
+          totalCost = n(pc.totalInvested);
+          salesTax = n(pc.salesTax);
+          commission = n(pc.commission);
+          monthCount = n(stats.period.soldCount);
+          monthProfit = n(stats.period.profit);
+          monthSoldValue = n(stats.period.soldValue);
+        } else if (periodActive) {
+          purchaseCost = soldPeriodRows.reduce((s, r) => s + n(r.price), 0);
+          fees = soldPeriodRows.reduce((s, r) => s + n(r.fees), 0);
+          repairs = soldPeriodRows.reduce((s, r) => s + n(r.repairs), 0);
+          totalCost = soldPeriodRows.reduce(
+            (s, r) => s + n(r.totalVehicleCost),
+            0,
+          );
+          salesTax = soldPeriodRows.reduce(
+            (s, r) => s + n(r.salesTaxCollected),
+            0,
+          );
+          commission = soldPeriodRows.reduce((s, r) => s + n(r.commission), 0);
+          monthCount = soldPeriodRows.length;
+          monthProfit = soldPeriodRows.reduce((s, r) => s + n(r.netProfit), 0);
+          monthSoldValue = soldPeriodRows.reduce((s, r) => s + n(r.soldPrice), 0);
+        } else {
+          if (useLiveCostStats) {
+            purchaseCost = n(liveInvCosts.purchaseCost);
+            fees = n(liveInvCosts.fees);
+            repairs = n(liveInvCosts.repairs);
+            totalCost = n(liveInvCosts.totalInvested);
+          } else {
+            purchaseCost = active.reduce((s, r) => s + n(r.price), 0);
+            fees = active.reduce((s, r) => s + n(r.fees), 0);
+            repairs = active.reduce((s, r) => s + n(r.repairs), 0);
+            totalCost = active.reduce((s, r) => s + n(r.totalVehicleCost), 0);
+          }
+          salesTax = active.reduce((s, r) => s + n(r.salesTaxCollected), 0);
+          commission = active.reduce((s, r) => s + n(r.commission), 0);
+          if (stats && stats.soldThisMonth) {
+            monthCount = n(stats.soldThisMonth.count);
+            monthProfit = n(stats.soldThisMonth.profit);
+          } else {
+            monthCount = liveSoldRows.length;
+            monthProfit = liveSoldRows.reduce((s, r) => s + n(r.netProfit), 0);
+          }
+          monthSoldValue = 0;
+        }
+
+        const flooringTotal = active.reduce((s, r) => s + n(r.flooringCost), 0);
         const titlesInHand =
-          stats && typeof stats.titlesPresentCount === "number" && !periodActive
+          stats && typeof stats.titlesPresentCount === "number"
             ? stats.titlesPresentCount
             : active.filter((r) => r && r.titlePresent).length;
-        let soldThisMonthRows;
-        if (periodActive) {
-          soldThisMonthRows = periodRows.filter((r) => r.sold);
-        } else {
-          soldThisMonthRows = rows.filter(
-            (r) =>
-              r.sold &&
-              r.soldDate &&
-              new Date(r.soldDate).getMonth() === today.getMonth() &&
-              new Date(r.soldDate).getFullYear() === today.getFullYear(),
-          );
-        }
-        const soldThisMonth = soldThisMonthRows.length;
-        const profitThisMonth = soldThisMonthRows.reduce(
-          (s, r) => s + (Number(r.netProfit) || 0),
-          0,
-        );
+        const upcomingFloored =
+          stats && typeof stats.upcomingFlooredCount === "number"
+            ? stats.upcomingFlooredCount
+            : list.filter(
+                (r) =>
+                  !r.sold &&
+                  !vehicleIsSold(r) &&
+                  r.floored &&
+                  r.daysOnLot > 30,
+              ).length;
 
-        const periodLbl = periodActive
+        const perLbl = periodActive
+          ? vehPeriod.mode === "month"
+            ? `${PNL_MSHORT[vehPeriod.month]} ${vehPeriod.year}`
+            : `${vehPeriod.year}`
+          : "";
+        const periodFullLbl = periodActive
           ? vehPeriod.mode === "month"
             ? `${PNL_MFULL[vehPeriod.month]} ${vehPeriod.year}`
             : `${vehPeriod.year}`
           : null;
 
-        if (periodActive && periodLbl) {
+        if (periodActive && periodFullLbl) {
           set(
             "vehicleCountLabel",
-            `${soldThisMonth} vehicle${soldThisMonth === 1 ? "" : "s"} sold in ${periodLbl}`,
+            `${monthCount} vehicle${monthCount === 1 ? "" : "s"} sold in ${periodFullLbl}`,
           );
         } else if (currentOnly) {
           set(
@@ -38168,40 +38288,65 @@
           );
         }
 
-        const monthGroupLbl = document.getElementById("vehKpiMonthLabel");
-        if (monthGroupLbl) {
-          monthGroupLbl.textContent = periodLbl || "This Month";
-        }
-        const soldLbl = document.getElementById("kpiSoldMonthLabel");
-        if (soldLbl) {
-          soldLbl.textContent = periodActive ? `Sold in ${periodLbl}` : "Sold This Month";
-        }
-        const profitLbl = document.getElementById("kpiProfitMonthLabel");
-        if (profitLbl) {
-          profitLbl.textContent = periodActive
-            ? `Profit in ${periodLbl}`
-            : "Profit This Month";
-        }
-        const profitFoot = document.getElementById("kpiProfitMonthFoot");
-        if (profitFoot) {
-          profitFoot.textContent = periodActive
-            ? `net, sold in ${periodLbl}`
-            : "net, sold this month";
+        const soldValueBox = document.getElementById("kpiSoldValueBox");
+        if (periodActive) {
+          setHtml(
+            "vehKpiMonthLabel",
+            `<span style="color:var(--blue);">${perLbl}</span> · Sold History`,
+          );
+          set(
+            "kpiSoldMonthLabel",
+            vehPeriod.mode === "month" ? `Sold · ${perLbl}` : `Sold in ${vehPeriod.year}`,
+          );
+          set("footSoldMonth", "units sold");
+          set(
+            "kpiProfitMonthLabel",
+            vehPeriod.mode === "month"
+              ? `Profit · ${perLbl}`
+              : `Profit in ${vehPeriod.year}`,
+          );
+          set("kpiProfitMonthFoot", `net profit, sold ${perLbl}`);
+          set(
+            "lblSoldValue",
+            vehPeriod.mode === "month"
+              ? `Sold Value · ${perLbl}`
+              : `Sold Value · ${vehPeriod.year}`,
+          );
+          set("footSoldValue", `total sale price, ${perLbl}`);
+          set("kpiSoldValueMonth", fmt(monthSoldValue));
+          if (soldValueBox) soldValueBox.style.display = "";
+          setHtml(
+            "vehCostsLabel",
+            `Costs · <span style="color:var(--blue);">${perLbl}</span> sold`,
+          );
+          set("footPurchaseCost", `on cars sold, ${perLbl}`);
+          set("footTotalVehCost", `all-in, cars sold ${perLbl}`);
+        } else {
+          set("vehKpiMonthLabel", "This Month");
+          set("kpiSoldMonthLabel", "Sold This Month");
+          set("footSoldMonth", "units moved");
+          set("kpiProfitMonthLabel", "Profit This Month");
+          set("kpiProfitMonthFoot", "net, sold this month");
+          if (soldValueBox) soldValueBox.style.display = "none";
+          setHtml(
+            "vehCostsLabel",
+            'Costs · <span style="color:var(--green);">available inventory</span>',
+          );
+          set("footPurchaseCost", "spent on current stock");
+          set("footTotalVehCost", "all-in on current stock");
         }
 
         const invValue =
           stats && typeof stats.currentInventoryValue === "number"
             ? stats.currentInventoryValue
-            : active.reduce((s, r) => s + (Number(r.totalVehicleCost) || 0), 0);
+            : active.reduce((s, r) => s + n(r.totalVehicleCost), 0);
         const kpiInv = document.getElementById("kpiTotalInventory");
         if (kpiInv) {
           kpiInv.innerHTML = `${totalInv} car${totalInv === 1 ? "" : "s"} <span class="kpi-slash" style="opacity:.45;margin:0 4px;">/</span> ${fmt(invValue)}`;
         }
         const invFoot = document.getElementById("kpiTotalInventoryFoot");
         if (invFoot) {
-          invFoot.textContent = currentOnly
-            ? "current inventory · unsold only"
-            : "unsold on lot · total value all-in";
+          invFoot.textContent = "in stock · total value all-in";
         }
 
         set("kpiPurchaseCost", fmt(purchaseCost));
@@ -38211,33 +38356,18 @@
         set("kpiSalesTax", fmt(salesTax));
         set("kpiCommission", fmt(commission));
         set("kpiTitles", `${titlesInHand} of ${totalInv}`);
-        set("kpiSoldMonth", soldThisMonth);
-        set("kpiProfitMonth", fmtSigned(profitThisMonth));
+        set("kpiSoldMonth", monthCount);
+        set("kpiProfitMonth", fmtSigned(monthProfit));
         const profitEl = document.getElementById("kpiProfitMonth");
         if (profitEl) {
           profitEl.style.color =
-            profitThisMonth >= 0 ? "var(--green)" : "var(--red)";
+            monthProfit >= 0 ? "var(--green)" : "var(--red)";
         }
-        set(
-          "kpiUpcomingFloored",
-          rows.filter((r) => !r.sold && r.floored && r.daysOnLot > 30).length,
-        );
+        set("kpiUpcomingFloored", upcomingFloored);
         set(
           "totalFlooringCost",
           flooringTotal > 0 ? fmt(flooringTotal) : "$0",
         );
-
-        const costsLabel = document.getElementById("vehCostsLabel");
-        if (costsLabel) {
-          if (periodActive) {
-            costsLabel.textContent = `Costs · ${periodLbl}`;
-          } else if (currentOnly) {
-            costsLabel.innerHTML =
-              'Costs · <span style="color:var(--green);">current inventory</span>';
-          } else {
-            costsLabel.textContent = "Costs · all vehicles";
-          }
-        }
       }
 
       function renderColumnTotals(rows) {
@@ -39243,7 +39373,9 @@
 
       // auto-calc commission when a rep is picked on a deal jacket
       function djRepChanged() {
-        const name = document.getElementById("djRep").value;
+        const sel = document.getElementById("djRep");
+        const name = sel ? sel.value : "";
+        if (sel) sel.dataset.selectedRep = name || "";
         const rep = salesReps.find((x) => x.name === name);
         if (rep && rep.commissionType === "flat") {
           djCommMode = "amt";
@@ -46359,6 +46491,7 @@
 
       // ================= MARK SOLD + DEAL JACKET =================
       let currentDealVin = null;
+      window.currentDealVin = null;
       let _djRosCheckTimer = null;
       let _djRosCheckReq = 0;
 
@@ -46600,8 +46733,148 @@
         }
       }
 
+      let __djRepsLoadPromise = null;
+
+      function djLookupSalesRepId(name) {
+        const n = (name || "").trim();
+        if (!n) return null;
+        if (window.AVReps && typeof AVReps.getRepByName === "function") {
+          const fromApi = AVReps.getRepByName(n);
+          if (fromApi && fromApi.id) return fromApi.id;
+        }
+        const row = (salesReps || []).find(function (x) {
+          return x && x.name === n;
+        });
+        return row && row.id ? row.id : null;
+      }
+
+      function fillDjRepSelect(selectedName) {
+        const sel = document.getElementById("djRep");
+        if (!sel) return;
+        if (selectedName != null && String(selectedName).trim()) {
+          sel.dataset.selectedRep = String(selectedName).trim();
+        }
+        const prev = (
+          sel.value ||
+          sel.dataset.selectedRep ||
+          ""
+        ).trim();
+        const names = [];
+        const seen = {};
+        const source =
+          Array.isArray(salesReps) && salesReps.length
+            ? salesReps.map(function (r) {
+                return r && r.name;
+              })
+            : Array.isArray(REP_LIST)
+              ? REP_LIST
+              : [];
+        source.forEach(function (rp) {
+          if (!rp || seen[rp]) return;
+          seen[rp] = true;
+          names.push(rp);
+        });
+        sel.innerHTML = "";
+        const placeholder = document.createElement("option");
+        placeholder.value = "";
+        placeholder.textContent = "Select rep\u2026";
+        sel.appendChild(placeholder);
+        names.forEach(function (rp) {
+          const opt = document.createElement("option");
+          opt.value = rp;
+          opt.textContent = rp;
+          sel.appendChild(opt);
+        });
+        if (prev && !seen[prev]) {
+          const opt = document.createElement("option");
+          opt.value = prev;
+          opt.textContent = prev;
+          sel.appendChild(opt);
+        }
+        if (prev) {
+          sel.value = prev;
+          sel.dataset.selectedRep = prev;
+        }
+      }
+      window.fillDjRepSelect = fillDjRepSelect;
+
+      async function ensureSalesRepsLoaded() {
+        if (Array.isArray(salesReps) && salesReps.length) {
+          if (typeof syncRepList === "function") syncRepList();
+          return salesReps;
+        }
+        if (!window.AVReps || typeof AVReps.loadAll !== "function") {
+          return salesReps || [];
+        }
+        if (!__djRepsLoadPromise) {
+          __djRepsLoadPromise = AVReps.loadAll().then(
+            function (rows) {
+              return rows;
+            },
+            function (err) {
+              __djRepsLoadPromise = null;
+              throw err;
+            },
+          );
+        }
+        try {
+          await __djRepsLoadPromise;
+        } catch (_) {}
+        if (typeof syncRepList === "function") syncRepList();
+        return salesReps || [];
+      }
+      window.ensureSalesRepsLoaded = ensureSalesRepsLoaded;
+
+      function syncDjCommHead(commission, repName) {
+        const head = document.getElementById("djCommHeadVal");
+        if (!head) return;
+        const amt = Number(commission) || 0;
+        head.textContent =
+          amt > 0
+            ? "Commission \u00b7 " + fmt(amt)
+            : "No commission \u00b7 $0";
+      }
+
+      function djSaveButtonLabel(v) {
+        if (v && (v.dealSaved || v.hasDealJacket || v.dealJacket))
+          return "Save Changes";
+        if (v && v.sold) return "Save Deal Jacket";
+        return "Save Deal & Mark Sold";
+      }
+
+      function djApplySaveBtn(v) {
+        const saveBtn = document.getElementById("djSaveBtn");
+        if (!saveBtn) return;
+        const icon =
+          '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> ';
+        saveBtn.classList.remove("av-btn-loading");
+        saveBtn.disabled = false;
+        saveBtn.style.opacity = "1";
+        saveBtn.innerHTML = icon + djSaveButtonLabel(v);
+      }
+
+      function djWaitUntilIdle(ms) {
+        const limit = ms || 8000;
+        const start = Date.now();
+        return new Promise(function (resolve) {
+          function tick() {
+            if (
+              typeof AVBusy === "undefined" ||
+              !AVBusy.isBusy() ||
+              Date.now() - start >= limit
+            ) {
+              resolve();
+              return;
+            }
+            setTimeout(tick, 50);
+          }
+          tick();
+        });
+      }
+
       function openDealJacket(vin, context) {
         currentDealVin = vin;
+        window.currentDealVin = vin;
         djContext =
           context === "customers"
             ? "customers"
@@ -46642,21 +46915,29 @@
         _hashUpdating = true;
         location.hash = "deal-jacket/" + encodeURIComponent(vin);
         _hashUpdating = false;
-        const vOpen = vehicles.find((x) => x.vin === vin);
+        const vOpen = findDealVehicle(vin);
         if (!vOpen) showDjSkeleton();
         showPageDirect("deal-jacket");
         if (vOpen) {
           bootstrapDjDocs(vOpen);
           renderDealJacket(vin);
         }
+        ensureSalesRepsLoaded().then(function () {
+          fillDjRepSelect(vOpen && vOpen.rep);
+          try {
+            dealRecalc();
+          } catch (_) {}
+        });
       }
 
       function renderDealJacket(vin) {
-        const v = vehicles.find((x) => x.vin === vin);
+        const v = findDealVehicle(vin);
         if (!v) {
           showDjSkeleton();
           return;
         }
+        currentDealVin = v.vin || vin;
+        window.currentDealVin = currentDealVin;
         hideDjSkeleton();
         document.getElementById("djSavedBanner").classList.remove("show");
         const titlePop = document.getElementById("djTitlePop");
@@ -46716,33 +46997,15 @@
         document.getElementById("djCustAddress").value =
           v.customerAddress || "";
         document.getElementById("djNotes").value = v.notes || "";
-        const saveBtn = document.getElementById("djSaveBtn");
-        const hasJacket = !!(v.dealSaved || v.hasDealJacket || v.dealJacket);
-        if (saveBtn) {
-          if (hasJacket) {
-            saveBtn.innerHTML =
-              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Save Changes';
-            saveBtn.disabled = false;
-            saveBtn.style.opacity = "1";
-          } else if (v.sold) {
-            saveBtn.innerHTML =
-              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Save Deal Jacket';
-            saveBtn.disabled = false;
-            saveBtn.style.opacity = "1";
-          } else {
-            saveBtn.innerHTML =
-              '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Save Deal &amp; Mark Sold';
-            saveBtn.disabled = false;
-            saveBtn.style.opacity = "1";
-          }
-        }
-        const repSel = document.getElementById("djRep");
-        repSel.innerHTML =
-          '<option value="">Select rep\u2026</option>' +
-          REP_LIST.map(
-            (rp) =>
-              `<option value="${rp}" ${v.rep === rp ? "selected" : ""}>${rp}</option>`,
-          ).join("");
+        djApplySaveBtn(v);
+        fillDjRepSelect(v.rep || "");
+        ensureSalesRepsLoaded().then(function () {
+          const still = findDealVehicle(vin);
+          fillDjRepSelect((still && still.rep) || v.rep || "");
+          try {
+            dealRecalc();
+          } catch (_) {}
+        });
         djCommMode = v.commMode || "pct";
         const repObj = salesReps.find((x) => x.name === v.rep);
         const rrRate = repRate(v.rep);
@@ -47094,7 +47357,7 @@
       }
 
       function dealRecalc() {
-        const v = vehicles.find((x) => x.vin === currentDealVin);
+        const v = findDealVehicle(currentDealVin);
         if (!v) return;
         const r = computeRow(v);
         const soldPrice =
@@ -47189,6 +47452,7 @@
           : "\u2014";
         document.getElementById("djKpiCost").textContent = fmt(vehicleCost);
         document.getElementById("djCommVal").textContent = fmt(commission);
+        syncDjCommHead(commission, rep);
         const sub = document.getElementById("djCommSub");
         if (sub)
           sub.textContent =
@@ -47473,14 +47737,47 @@
       window.djEditColl = djEditColl;
       window.djCommitColl = djCommitColl;
 
+      function findDealVehicle(vin) {
+        const key = vin || currentDealVin;
+        if (!key || !Array.isArray(vehicles)) return null;
+        return (
+          vehicles.find((x) => x && (x.vin === key || x.id === key)) || null
+        );
+      }
+      function djAddOnMoney(n) {
+        const x = parseFloat(String(n == null ? "" : n).replace(/,/g, ""));
+        return Number.isFinite(x) ? x : 0;
+      }
       function djAddOnSummaryHTML(items) {
-        const cost = items.reduce((s, a) => s + (parseFloat(a.cost) || 0), 0);
-        const sale = items.reduce((s, a) => s + (parseFloat(a.price) || 0), 0);
+        const list = Array.isArray(items) ? items : [];
+        const cost = list.reduce((s, a) => s + djAddOnMoney(a && a.cost), 0);
+        const sale = list.reduce((s, a) => s + djAddOnMoney(a && a.price), 0);
         const profit = sale - cost;
         return `<span>Cost ${fmt(cost)} &middot; Upcharge ${fmt(sale)}</span><span>Add-on profit <b style="color:${profit >= 0 ? "var(--green)" : "var(--red)"};font-family:var(--mono);">${fmtSigned(profit)}</b></span>`;
       }
+      function djAddOnItemsFromDom() {
+        const rows = document.querySelectorAll("#djAddOnList .dj-addon-row");
+        const items = [];
+        rows.forEach((row) => {
+          const inputs = row.querySelectorAll("input");
+          items.push({
+            type: inputs[0] ? inputs[0].value : "",
+            desc: inputs[1] ? inputs[1].value : "",
+            cost: djAddOnMoney(inputs[2] && inputs[2].value),
+            price: djAddOnMoney(inputs[3] && inputs[3].value),
+          });
+        });
+        return items;
+      }
+      function djRefreshAddOnSum(items) {
+        const el = document.getElementById("djAddOnList");
+        if (!el) return;
+        const sum = el.querySelector(".dj-addon-sum");
+        const source = items && items.length ? items : djAddOnItemsFromDom();
+        if (sum) sum.innerHTML = djAddOnSummaryHTML(source);
+      }
       function renderDealAddOns(vin) {
-        const v = vehicles.find((x) => x.vin === vin);
+        const v = findDealVehicle(vin);
         const el = document.getElementById("djAddOnList");
         if (!el) return;
         const items = (v && v.addOnItems) || [];
@@ -47507,12 +47804,12 @@
       function djSyncAddOnCost(v) {
         if (v)
           v.addOns = (v.addOnItems || []).reduce(
-            (s, a) => s + (parseFloat(a.cost) || 0),
+            (s, a) => s + djAddOnMoney(a && a.cost),
             0,
           );
       }
       function djAddAddOn() {
-        const v = vehicles.find((x) => x.vin === currentDealVin);
+        const v = findDealVehicle(currentDealVin);
         if (!v) return;
         if (!v.addOnItems) v.addOnItems = [];
         v.addOnItems.push({ type: "", desc: "", cost: 0, price: 0 });
@@ -47528,7 +47825,7 @@
         }, 30);
       }
       async function djRemoveAddOn(i) {
-        const v = vehicles.find((x) => x.vin === currentDealVin);
+        const v = findDealVehicle(currentDealVin);
         if (!v || !v.addOnItems) return;
         v.addOnItems.splice(i, 1);
         djSyncAddOnCost(v);
@@ -47544,18 +47841,19 @@
         } catch (e) {}
       }
       async function djAddOnEdit(i, field, val) {
-        const v = vehicles.find((x) => x.vin === currentDealVin);
-        if (!v || !v.addOnItems || !v.addOnItems[i]) return;
-        if (field === "type" || field === "desc") v.addOnItems[i][field] = val;
-        else
-          v.addOnItems[i][field] =
-            parseFloat(String(val).replace(/,/g, "")) || 0;
-        djSyncAddOnCost(v);
-        const el = document.getElementById("djAddOnList");
-        if (el) {
-          const sum = el.querySelector(".dj-addon-sum");
-          if (sum) sum.innerHTML = djAddOnSummaryHTML(v.addOnItems);
+        const v = findDealVehicle(currentDealVin);
+        if (!v) {
+          djRefreshAddOnSum();
+          return;
         }
+        if (!Array.isArray(v.addOnItems)) v.addOnItems = [];
+        while (v.addOnItems.length <= i) {
+          v.addOnItems.push({ type: "", desc: "", cost: 0, price: 0 });
+        }
+        if (field === "type" || field === "desc") v.addOnItems[i][field] = val;
+        else v.addOnItems[i][field] = djAddOnMoney(val);
+        djSyncAddOnCost(v);
+        djRefreshAddOnSum(v.addOnItems);
         dealRecalc();
         clearTimeout(djAddOnEdit._t);
         djAddOnEdit._t = setTimeout(async () => {
@@ -47748,41 +48046,55 @@
       }
 
       async function saveDeal() {
-        const v = vehicles.find((x) => x.vin === currentDealVin);
+        const v = findDealVehicle(currentDealVin);
         if (!v) return;
-        // Let any in-flight / debounced autosave finish first so Save Changes
-        // doesn't collide with AVBusy / "save already in progress".
+        const btn = document.getElementById("djSaveBtn");
+        const startLoading = function () {
+          if (typeof AVBusy !== "undefined")
+            AVBusy.setBtnLoading(btn, true, "Saving\u2026");
+          else if (btn) {
+            btn.disabled = true;
+            btn.textContent = "Saving\u2026";
+          }
+        };
+        const stopLoading = function () {
+          if (typeof AVBusy !== "undefined") AVBusy.setBtnLoading(btn, false);
+          djApplySaveBtn(v);
+        };
+        startLoading();
         try {
           await djFlushAutoSave();
         } catch (_) {}
         if (v.dealSaved || v.hasDealJacket || v.dealJacket) {
-          if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
-          const btn = document.getElementById("djSaveBtn");
           try {
-            if (typeof AVBusy !== "undefined") {
-              AVBusy.inc();
-              AVBusy.setBtnLoading(btn, true, "Saving\u2026");
+            await djWaitUntilIdle(8000);
+            if (typeof AVBusy !== "undefined" && AVBusy.isBusy()) {
+              if (typeof AVToast !== "undefined")
+                AVToast.warning("Please wait — a save is already in progress.");
+              return;
             }
-            const jacketId = djGetJacketId(v);
-            if (jacketId && window.AVApi) {
-              await djSyncJacketDocuments(v, jacketId);
-              v.djDocsRemoved = [];
-              await AVVehicles.loadAllVehicles();
-              const refreshed = vehicles.find(
-                (x) => x.vin === currentDealVin,
-              );
-              if (refreshed) bootstrapDjDocs(refreshed);
+            if (typeof AVBusy !== "undefined") AVBusy.inc();
+            try {
+              if (window.AVVehicles && v.id) {
+                const patch = djBuildAutoSavePatch(v);
+                await AVVehicles.persistPatch(v.vin || v.id, patch);
+              }
+              const jacketId = djGetJacketId(v);
+              if (jacketId && window.AVApi) {
+                await djSyncJacketDocuments(v, jacketId);
+                v.djDocsRemoved = [];
+              }
+              renderDealJacket(currentDealVin);
+              if (typeof AVToast !== "undefined")
+                AVToast.success("Changes saved");
+            } finally {
+              if (typeof AVBusy !== "undefined") AVBusy.dec();
             }
-            renderDealJacket(currentDealVin);
-            if (typeof AVToast !== "undefined")
-              AVToast.success("Changes saved");
           } catch (err) {
             if (typeof AVToast !== "undefined")
               AVToast.error(err?.message || "Failed to save changes");
           } finally {
-            if (typeof AVBusy !== "undefined") AVBusy.dec();
-            if (typeof AVBusy !== "undefined")
-              AVBusy.setBtnLoading(btn, false);
+            stopLoading();
           }
           return;
         }
@@ -47829,6 +48141,7 @@
             msg: "Enter a valid email address",
           });
         if (fieldErrs.length) {
+          stopLoading();
           if (typeof showFieldErrors === "function")
             showFieldErrors("#page-deal-jacket", fieldErrs);
           else if (typeof AVToast !== "undefined")
@@ -47845,6 +48158,7 @@
         if (dealNumber) {
           const ok = await checkDjRosAvailability(dealNumber);
           if (ok === false) {
+            stopLoading();
             document.getElementById("djRos").focus();
             if (typeof AVToast !== "undefined")
               AVToast.error(
@@ -47853,10 +48167,14 @@
             return;
           }
         }
-        // Pop the title question; the deal saves once they answer.
+        stopLoading();
         const pop = document.getElementById("djTitlePop");
         if (pop) {
           pop.classList.add("show");
+          if (typeof AVToast !== "undefined")
+            AVToast.warning(
+              "Confirm whether the title is in to finish saving.",
+            );
           setTimeout(() => {
             try {
               pop.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -47868,7 +48186,7 @@
       }
 
       async function finalizeDeal(titleIn) {
-        const v = vehicles.find((x) => x.vin === currentDealVin);
+        const v = findDealVehicle(currentDealVin);
         if (!v) return;
         const soldPrice =
           parseFloat(document.getElementById("djSoldPrice").value) || 0;
@@ -47907,7 +48225,8 @@
         const dealNumber = (
           document.getElementById("djRos").value || ""
         ).trim();
-        const saleRep = document.getElementById("djRep").value || v.rep;
+        const saleRep =
+          (document.getElementById("djRep") || {}).value || v.rep;
         const saleDateFinal = avValidateDateField("djSaleDate", {
           label: "sale date",
           required: true,
@@ -47928,19 +48247,23 @@
         try {
           await djFlushAutoSave();
         } catch (_) {}
-        if (typeof AVBusy !== "undefined" && !AVBusy.guard()) return;
+        await djWaitUntilIdle(8000);
+        if (typeof AVBusy !== "undefined" && AVBusy.isBusy()) {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Please wait — a save is already in progress.");
+          return;
+        }
         const saveBtn = document.getElementById("djSaveBtn");
         const wasAlreadySold = !!v.sold;
         try {
           if (typeof AVBusy !== "undefined") {
             AVBusy.inc();
             AVBusy.setBtnLoading(saveBtn, true, "Saving\u2026");
+          } else if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.textContent = "Saving\u2026";
           }
-          let salesRepId = null;
-          if (saleRep && window.AVReps) {
-            const repObj = AVReps.getRepByName(saleRep);
-            if (repObj && repObj.id) salesRepId = repObj.id;
-          }
+          let salesRepId = djLookupSalesRepId(saleRep);
           const addOnItems = v.addOnItems || [];
           const additionalExpenses = addOnItems.reduce(
             (s, a) => s + (Number(a.cost) || 0),
@@ -48004,24 +48327,13 @@
             const jacketId = markResp.dealJacket.id;
             await djSyncJacketDocuments(v, jacketId);
             v.djDocsRemoved = [];
-            await AVVehicles.loadAllVehicles();
-            const refreshed = vehicles.find((x) => x.vin === currentDealVin);
+            const refreshed = findDealVehicle(currentDealVin);
             if (refreshed) bootstrapDjDocs(refreshed);
           }
-          try {
-            const cur = vehicles.find((x) => x.vin === currentDealVin);
-            if (cur && cur.id && window.AVApi) {
-              await AVApi.updateVehicle(cur.id, {
-                titleReceived: titleInFlag,
-                titlePresent: titleInFlag,
-              });
-            }
-          } catch (titleErr) {
-            console.warn("Title status update failed:", titleErr);
-          }
-          const updated = vehicles.find((x) => x.vin === currentDealVin);
+          const updated = findDealVehicle(currentDealVin);
           if (updated) {
             updated.rep = saleRep || updated.rep;
+            if (salesRepId) updated.salesRepId = salesRepId;
             updated.customer = customerName;
             updated.customerPhone = phone;
             updated.customerEmail = email;
@@ -48071,10 +48383,8 @@
           if (typeof AVToast !== "undefined")
             AVToast.error(err.message || "Failed to save deal");
         } finally {
-          if (typeof AVBusy !== "undefined") {
-            AVBusy.setBtnLoading(saveBtn, false, "Save & Mark Sold");
-            AVBusy.dec();
-          }
+          if (typeof AVBusy !== "undefined") AVBusy.dec();
+          djApplySaveBtn(findDealVehicle(currentDealVin) || v);
         }
       }
 
@@ -48164,8 +48474,18 @@
             patch.saleDate = sd;
             v.soldDate = sd;
           }
-          const rep = g("djRep");
-          if (rep) v.rep = rep;
+          const rep = (g("djRep") || "").trim();
+          v.rep = rep;
+          if (!rep) {
+            patch.salesRepId = null;
+            v.salesRepId = null;
+          } else {
+            const salesRepId = djLookupSalesRepId(rep);
+            if (salesRepId) {
+              patch.salesRepId = salesRepId;
+              v.salesRepId = salesRepId;
+            }
+          }
 
           if (djCommMode === "amt") {
             const ca = parseFloat(g("djCommAmt"));
@@ -48969,6 +49289,7 @@
         const w = document.getElementById("vehCalWrap");
         if (w && vehPeriod.active) w.classList.add("open");
         render();
+        refreshVehPeriodStats();
       }
       function vehPickMonth(i) {
         vehPeriod.active = true;
@@ -48977,6 +49298,7 @@
         const w = document.getElementById("vehCalWrap");
         if (w) w.classList.add("open");
         render();
+        refreshVehPeriodStats();
       }
       function vehChangeYear(d) {
         vehPeriod.year += d;
@@ -48986,6 +49308,65 @@
           if (w) w.classList.add("open");
         }
         render();
+        refreshVehPeriodStats();
+      }
+
+      let __vehStatsReq = 0;
+      function refreshVehPeriodStats() {
+        const req = ++__vehStatsReq;
+        const costsEl = document.querySelector(
+          "#page-vehicles .veh-kpi-group.costs",
+        );
+        const monthEl = document.querySelector(
+          "#page-vehicles .veh-kpi-group.month",
+        );
+        if (costsEl) costsEl.classList.add("kpi-period-loading");
+        if (monthEl) monthEl.classList.add("kpi-period-loading");
+        const av = window.AVVehicles;
+        if (!av || typeof av.refreshInventoryStats !== "function") {
+          if (costsEl) costsEl.classList.remove("kpi-period-loading");
+          if (monthEl) monthEl.classList.remove("kpi-period-loading");
+          return;
+        }
+        const period =
+          vehPeriod && vehPeriod.active
+            ? {
+                mode: vehPeriod.mode,
+                year: vehPeriod.year,
+                month: vehPeriod.month,
+              }
+            : { mode: "all" };
+        av.refreshInventoryStats(period)
+          .then((stats) => {
+            if (req !== __vehStatsReq) return;
+            if (
+              !stats &&
+              vehPeriod &&
+              vehPeriod.active &&
+              typeof AVToast !== "undefined" &&
+              AVToast.error
+            ) {
+              AVToast.error(
+                "Couldn't refresh period totals. Showing loaded vehicles.",
+              );
+            }
+            if (typeof render === "function") render();
+          })
+          .catch((err) => {
+            if (req !== __vehStatsReq) return;
+            if (typeof AVToast !== "undefined" && AVToast.error) {
+              AVToast.error(
+                (err && err.message) ||
+                  "Couldn't refresh period totals. Showing loaded vehicles.",
+              );
+            }
+            if (typeof render === "function") render();
+          })
+          .finally(() => {
+            if (req !== __vehStatsReq) return;
+            if (costsEl) costsEl.classList.remove("kpi-period-loading");
+            if (monthEl) monthEl.classList.remove("kpi-period-loading");
+          });
       }
 
       function renderPnlPage() {
@@ -50325,9 +50706,15 @@
         "Average ROI %": "ROI Promedio %",
         "Total Net Profit": "Ganancia Neta Total",
         "Sold This Month": "Vendidos Este Mes",
+        "Profit This Month": "Ganancia Este Mes",
+        "Sold History": "Historial de Ventas",
+        "Sold Value": "Valor Vendido",
+        "Total Sold Value": "Valor Total Vendido",
+        "available inventory": "inventario disponible",
+        "units sold": "unidades vendidas",
+        "units moved": "unidades movidas",
         Titles: "Títulos",
         "Deals Closed": "Ventas Cerradas",
-        "Total Sold Value": "Valor Total Vendido",
         "Avg ROI": "ROI Prom.",
         "Paid Customers": "Clientes Pagados",
         "Vehicles Floored": "Vehículos Financiados",
@@ -53464,6 +53851,7 @@
         "kpiTitles",
         "kpiUpcomingFloored",
         "kpiSoldMonth",
+        "kpiSoldValueMonth",
         "kpiProfitMonth",
         "kpiPurchaseCost",
         "kpiFees",
@@ -53957,6 +54345,7 @@
             );
           } else if (hashPage === "deal-jacket" && hashParam) {
             currentDealVin = hashParam;
+            window.currentDealVin = hashParam;
             try {
               var savedDjCtx = sessionStorage.getItem("avDjContext");
               if (savedDjCtx) djContext = savedDjCtx;
@@ -54017,6 +54406,7 @@
         }
         if (pageId === "deal-jacket" && param) {
           currentDealVin = param;
+          window.currentDealVin = param;
           try {
             var savedDjCtx2 = sessionStorage.getItem("avDjContext");
             if (savedDjCtx2) djContext = savedDjCtx2;
@@ -54084,6 +54474,7 @@
                 typeof getPageParam === "function" ? getPageParam() : null;
               if (curPage === "deal-jacket" && curParam) {
                 currentDealVin = curParam;
+                window.currentDealVin = curParam;
                 try {
                   var savedCtx = sessionStorage.getItem("avDjContext");
                   if (savedCtx) djContext = savedCtx;
@@ -54253,6 +54644,7 @@
     }
     try {
       await AVApi.createSupportMessage({
+        name: (document.getElementById("csName")?.value || "").trim() || undefined,
         topic,
         subject,
         priority: csPriority || "Normal",
@@ -54522,6 +54914,11 @@
       if (kpiColors[k]) el.style.color = kpiColors[k];
       else el.style.color = '';
     });
+    const soldValEl = document.getElementById('kpiSoldValueMonth');
+    if (soldValEl) {
+      if (kpiColors.sold) soldValEl.style.color = kpiColors.sold;
+      else soldValEl.style.color = '';
+    }
     const djMap = {
       sold: 'djKpiSold', gross: 'djKpiGross', commission: 'djKpiComm',
       profit: 'djKpiNet', cost: 'djKpiCost'
@@ -54830,7 +55227,9 @@
   function syncDjDealStatusUi() {
     try {
       const vin = window.currentDealVin;
-      const v = (window.vehicles || []).find((x) => x.vin === vin);
+      const v = (window.vehicles || []).find(
+        (x) => x && (x.vin === vin || x.id === vin),
+      );
       if (!v) return;
       const sel = document.getElementById('djDealStatus');
       const label =

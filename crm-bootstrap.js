@@ -321,6 +321,9 @@
           REP_LIST = salesReps.map(function(r) { return r.name; });
         }
         window.AV_REPS_LIVE = true;
+        try {
+          if (typeof window.fillDjRepSelect === "function") window.fillDjRepSelect();
+        } catch (_) {}
       }
 
       var staffList = staffResp.staff || staffResp.data || staffResp.users || [];

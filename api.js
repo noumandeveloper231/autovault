@@ -409,8 +409,12 @@
     globalSearch: (qs = "", opts = {}) =>
       request(`/api/v1/search${qs}`, opts),
     listVehicles: (qs = "", opts = {}) => request(`/api/v1/vehicles${qs}`, opts),
-    vehicleInventoryStats: (opts = {}) =>
-      request("/api/v1/vehicles/stats", opts),
+    vehicleInventoryStats: (qsOrOpts = "", opts = {}) => {
+      if (qsOrOpts && typeof qsOrOpts === "object") {
+        return request("/api/v1/vehicles/stats", qsOrOpts);
+      }
+      return request(`/api/v1/vehicles/stats${qsOrOpts || ""}`, opts);
+    },
     getVehicle: (id) => request(`/api/v1/vehicles/${id}`),
     createVehicle: (body) =>
       request("/api/v1/vehicles", { method: "POST", body: JSON.stringify(body) }),

@@ -97,6 +97,9 @@
       var rows = typeof global.computeRow === "function" ? global.vehicles.map(global.computeRow) : global.vehicles;
       global.populateRepFilter(rows, true);
     } } catch (_) {}
+    try {
+      if (typeof global.fillDjRepSelect === "function") global.fillDjRepSelect();
+    } catch (_) {}
   }
 
   async function loadAll() {

@@ -213,7 +213,25 @@
       customerAddress: cust ? customerAddress : (api.customerAddress || null),
       extraRepPay: 0,
       askingPrice: asking,
-      rep: (deal && deal.salesRep) ? deal.salesRep.fullName : (api._uiRep || ""),
+      salesRepId: (deal && deal.salesRepId) || (deal && deal.salesRep && deal.salesRep.id) || (jacket && jacket.salesRepId) || null,
+      rep: (function () {
+        if (deal && deal.salesRep && deal.salesRep.fullName) return deal.salesRep.fullName;
+        if (api._uiRep) return api._uiRep;
+        const sid =
+          (deal && deal.salesRepId) ||
+          (deal && deal.salesRep && deal.salesRep.id) ||
+          (jacket && jacket.salesRepId) ||
+          null;
+        if (sid && global.AVReps && typeof AVReps.getRepById === "function") {
+          const row = AVReps.getRepById(sid);
+          if (row && row.name) return row.name;
+        }
+        if (sid && Array.isArray(global.salesReps)) {
+          const row = global.salesReps.find(function (r) { return r && r.id === sid; });
+          if (row && row.name) return row.name;
+        }
+        return "";
+      })(),
       sold,
       soldDate,
       soldPrice: api.soldPrice != null ? num(api.soldPrice, null) : null,
@@ -452,11 +470,22 @@
     }
   }
 
-  /** Refresh inventory counts without reloading the full vehicle table. */
-  async function refreshInventoryStats() {
+  /** Refresh inventory / period KPI stats without reloading the full vehicle table. */
+  async function refreshInventoryStats(period) {
     try {
       if (!global.AVApi || !AVApi.vehicleInventoryStats) return null;
-      const data = await AVApi.vehicleInventoryStats();
+      let qs = "";
+      if (period && (period.mode === "year" || period.mode === "month")) {
+        const params = new URLSearchParams();
+        params.set("mode", period.mode);
+        if (period.year != null) params.set("year", String(period.year));
+        if (period.mode === "month" && period.month != null) {
+          // vehPeriod.month is 0–11; API expects 1–12.
+          params.set("month", String(Number(period.month) + 1));
+        }
+        qs = `?${params.toString()}`;
+      }
+      const data = await AVApi.vehicleInventoryStats(qs);
       const stats = data && (data.stats || data);
       if (stats && typeof stats.currentInventoryCount === "number") {
         global.__vehicleInventoryStats = stats;
@@ -480,6 +509,34 @@
       if (btn) setBtnLoading(btn, false, btnLabel);
       _decMutations();
     }
+  }
+
+  async function refreshOneVehicle(vinOrId) {
+    const v = findUiVehicle(vinOrId);
+    if (!v || !v.id) throw new Error("Vehicle not found");
+    if (!global.AVApi || typeof AVApi.getVehicle !== "function") {
+      throw new Error("Vehicles API not loaded");
+    }
+    const got = await AVApi.getVehicle(v.id);
+    const vehicle = got.vehicle || got;
+    const expenses = vehicle.expenses || [];
+    const ui = mapApiToUi(
+      vehicle,
+      Array.isArray(expenses) && expenses[0] && expenses[0].id
+        ? expenses
+        : (v.repairsList || []).map((r) => ({
+            id: r.id,
+            description: r.desc,
+            repairType: r.type,
+            totalCost: r.cost,
+            repairDate: r.date,
+          })),
+    );
+    if (v.rep && !ui.rep) ui.rep = v.rep;
+    if (v.salesRepId && !ui.salesRepId) ui.salesRepId = v.salesRepId;
+    replaceVehicleInPlace(ui);
+    refreshUi();
+    return ui;
   }
 
   async function persistPatch(vinOrId, patch) {
@@ -520,7 +577,8 @@
             repairDate: r.date,
           })),
     );
-    ui.rep = v.rep || ui.rep;
+    ui.rep = v.rep || ui.rep || "";
+    if (v.salesRepId && !ui.salesRepId) ui.salesRepId = v.salesRepId;
     ui.customer = v.customer || ui.customer;
     ui.customerPhone = v.customerPhone || ui.customerPhone;
     ui.customerEmail = v.customerEmail || ui.customerEmail;
@@ -718,24 +776,33 @@
   async function persistAddOnItems(vin) {
     const v = findUiVehicle(vin);
     if (!v || !v.id) return;
-    const items = (v.addOnItems || [])
+    const live = Array.isArray(v.addOnItems) ? v.addOnItems : [];
+    // Keep the in-memory rows intact (including in-progress empty rows).
+    // Only the API payload drops blank lines.
+    const payload = live
       .map(function (it) {
         return {
           desc: String((it && it.desc) || "").trim(),
-          type: String((it && it.type) || "").trim() || "Add-On",
+          type: String((it && it.type) || "").trim(),
           price: Number(it && it.price) || 0,
           cost: Number(it && it.cost) || 0,
         };
       })
       .filter(function (it) {
-        return it.cost > 0 || it.price > 0 || it.desc;
+        return it.cost > 0 || it.price > 0 || it.desc || it.type;
+      })
+      .map(function (it) {
+        return {
+          desc: it.desc,
+          type: it.type || "Add-On",
+          price: it.price,
+          cost: it.cost,
+        };
       });
-    v.addOnItems = items;
-    // Dealer COGS for add-ons (not customer upcharge total)
-    const costTotal = items.reduce(function (s, it) {
+    const costTotal = payload.reduce(function (s, it) {
       return s + (Number(it.cost) || 0);
     }, 0);
-    const fees = mergeFees(v, { addOnItems: items });
+    const fees = mergeFees(v, { addOnItems: payload });
     var jacket = v._raw && v._raw.dealJackets && v._raw.dealJackets[0];
     if (jacket && jacket.id) {
       await AVApi.updateDealJacket(jacket.id, {
@@ -824,7 +891,11 @@
       v.addOns = 0;
       try { await AVApi.updateVehicle(v.id, { fees: { addOnItems: [] }, additionalExpenses: 0 }); } catch (_) {}
     }
-    await loadAllVehicles();
+    try {
+      await refreshOneVehicle(v.id);
+    } catch (_) {
+      await loadAllVehicles();
+    }
     return resp;
   }
 
@@ -965,6 +1036,7 @@
     refreshInventoryStats,
     createFromForm,
     persistPatch,
+    refreshOneVehicle,
     persistMoneyField,
     persistNetCheck,
     persistAddOnItems,
