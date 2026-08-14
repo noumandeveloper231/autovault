@@ -453,7 +453,7 @@
   .ws-kicker{font-family:var(--ff-mono);font-size:13px;letter-spacing:.02em;color:var(--accent);margin-top:22px;font-weight:500}
   .ws-visual{position:relative;display:flex;justify-content:center;align-items:center;min-height:580px}
   .ws-aura{position:absolute;left:50%;top:50%;width:360px;height:78%;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(39,67,232,.30),transparent 62%);filter:blur(30px);pointer-events:none;z-index:0;animation:auraPulse 6s ease-in-out infinite}
-  .phone{position:relative;z-index:1;width:280px;border-radius:42px;border:1px solid #232A32;background:linear-gradient(160deg,#1b212a,#0b0e11);padding:11px;box-shadow:0 44px 80px -28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03) inset,0 0 60px -20px rgba(39,67,232,.42);animation:appBob 6s ease-in-out infinite;will-change:transform}
+  .phone{position:relative;z-index:1;width:280px;border-radius:42px;border:1px solid #2a323d;background:linear-gradient(145deg,#4a5564 0%,#2a3340 28%,#161b22 68%,#0b0e11 100%);padding:11px;box-shadow:0 44px 80px -28px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.08) inset,0 1px 0 rgba(255,255,255,.14) inset,0 0 60px -20px rgba(39,67,232,.42);animation:appBob 6s ease-in-out infinite;will-change:transform}
   .phone .island{position:absolute;top:22px;left:50%;transform:translateX(-50%);width:86px;height:24px;background:#000;border-radius:14px;z-index:3}
   .pscreen{border-radius:32px;overflow:hidden;background:var(--ink-2);border:1px solid var(--line-soft);display:flex;flex-direction:column}
   .pstatus{display:flex;justify-content:space-between;align-items:center;padding:14px 22px 8px;font-family:var(--ff-mono);font-size:10px;color:var(--muted)}
@@ -521,7 +521,7 @@
   /* ============ MINI FLOATING PHONES ============ */
   .intro2{display:grid;grid-template-columns:1fr 220px;gap:48px;align-items:center}
   .intro2 .sec-head{max-width:none}
-  .mini-phone{width:210px;justify-self:center;border-radius:30px;border:1px solid #232A32;background:linear-gradient(160deg,#1b212a,#0b0e11);padding:8px;box-shadow:0 30px 60px -24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.03) inset,0 0 46px -18px rgba(39,67,232,.42);animation:appBob 6.5s ease-in-out infinite;will-change:transform;position:relative}
+  .mini-phone{width:210px;justify-self:center;border-radius:30px;border:1px solid #2a323d;background:linear-gradient(145deg,#4a5564 0%,#2a3340 28%,#161b22 68%,#0b0e11 100%);padding:8px;box-shadow:0 30px 60px -24px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.08) inset,0 1px 0 rgba(255,255,255,.14) inset,0 0 46px -18px rgba(39,67,232,.42);animation:appBob 6.5s ease-in-out infinite;will-change:transform;position:relative}
   .mp-island{position:absolute;top:15px;left:50%;transform:translateX(-50%);width:58px;height:16px;background:#000;border-radius:10px;z-index:3}
   .mp-screen{border-radius:23px;overflow:hidden;background:var(--ink-2);border:1px solid var(--line-soft);min-height:378px;display:flex;flex-direction:column}
   .mp-status{display:flex;justify-content:space-between;padding:11px 16px 4px;font-family:var(--ff-mono);font-size:8px;color:var(--muted)}
@@ -569,33 +569,6 @@
   .mp-dots{display:flex;gap:5px;justify-content:center;padding:6px 0 11px}
   .mp-dots i{width:5px;height:5px;border-radius:50%;background:var(--line);display:block;transition:.25s}
   .mp-dots i.on{background:var(--accent);width:14px;border-radius:3px}
-
-  /* Phone mockups stay on dark product chrome in both page themes */
-  .phone, .mini-phone{
-    --ink:#0A0D10;
-    --ink-2:#0C1013;
-    --panel:#12161B;
-    --panel-2:#171C22;
-    --panel-3:#1B2129;
-    --line:#232A32;
-    --line-soft:#1B2128;
-    --text:#EAECEF;
-    --muted:#8B95A1;
-    --faint:#5A636D;
-    --accent:#3A5BF5;
-    --accent-2:#5B7CFF;
-    --accent-soft:rgba(58,91,245,.16);
-    --accent-line:rgba(58,91,245,.38);
-    --up:#12A46B;
-    --up-soft:rgba(18,164,107,.16);
-    --down:#E5484D;
-    color:var(--text);
-  }
-  .pscreen, .mp-screen{
-    background:var(--ink-2);
-    border-color:var(--line-soft);
-    color:var(--text);
-  }
 
   /* ============ JENNA (AI assistant) ============ */
   #jenna{position:relative;overflow-x:clip}
@@ -1212,7 +1185,7 @@
   html.dark .wl-card{background:linear-gradient(180deg,rgba(58,91,245,.14),var(--panel))}
   html.dark .col-card.good{background:linear-gradient(180deg,rgba(58,91,245,.14),var(--panel))}
   html.dark .col-card.bad{border-color:#3a2626;background:linear-gradient(180deg,#17110f,var(--panel))}
-  html.dark .phone,html.dark .mini-phone{background:linear-gradient(160deg,#1b212a,#0b0e11);box-shadow:0 44px 80px -28px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.03) inset,0 0 60px -20px rgba(39,67,232,.42)}
+  html.dark .phone,html.dark .mini-phone{background:linear-gradient(145deg,#4a5564 0%,#2a3340 28%,#161b22 68%,#0b0e11 100%);box-shadow:0 44px 80px -28px rgba(0,0,0,.85),0 0 0 1px rgba(255,255,255,.08) inset,0 1px 0 rgba(255,255,255,.14) inset,0 0 60px -20px rgba(39,67,232,.42)}
   html.dark{scrollbar-color:#2b333d transparent}
   html.dark ::-webkit-scrollbar-thumb{background:#2b333d}
 
