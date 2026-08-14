@@ -2,6 +2,19 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      (function () {
+        try {
+          var s = localStorage.getItem("av-theme");
+          var dark = s ? s === "dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+          var r = document.documentElement;
+          r.classList.toggle("dark", dark);
+          r.classList.toggle("bright", !dark);
+          r.style.colorScheme = dark ? "dark" : "light";
+        } catch (e) {}
+      })();
+    </script>
+    <script src="/theme.js"></script>
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -14,18 +27,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
       :root {
-        --bg: #0a0e16;
-        --panel: #10151f;
-        --panel-2: #141b27;
-        --border: #1f2733;
-        --text: #e7ecf3;
-        --muted: #7c8aa0;
-        --blue: #3aa0ff;
-        --green: #23d18b;
-        --orange: #ff9f43;
-        --purple: #a07bff;
-        --red: #ff5470;
+        --bg: #0a0e17;
+        --panel: #111826;
+        --panel-2: #18212f;
+        --border: #26313f;
+        --text: #eef2f9;
+        --muted: #8a98ad;
+        --blue: #4a9dff;
+        --green: #2ed6a4;
+        --orange: #ffb057;
+        --purple: #a78bfa;
+        --red: #fb6a83;
+        --app-bg: radial-gradient(1300px 860px at 8% -12%, #16203a 0%, #0d1320 42%, var(--bg) 70%), var(--bg);
+        --c-inventory: var(--blue);
+        --c-titles: var(--green);
+        --c-flooring: var(--orange);
+        --c-sold: var(--green);
+        --c-profit: var(--green);
+        --c-purchase: var(--orange);
+        --c-fees: var(--purple);
+        --c-repairs: var(--red);
+        --c-tax: var(--blue);
+        --c-commission: var(--purple);
+        --c-cost: var(--green);
+        --c-gross: var(--orange);
         --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+      }
+      html.bright {
+        --bg: #eceff5;
+        --panel: #ffffff;
+        --panel-2: #f2f4f9;
+        --border: #dfe3ec;
+        --text: #101422;
+        --muted: #586074;
+        --blue: #2264e4;
+        --green: #0f9d63;
+        --orange: #bf6f0a;
+        --purple: #7440d6;
+        --red: #dc3b45;
+        --app-bg: radial-gradient(1200px 720px at 12% -10%, #f4f6fb 0%, #eceff5 48%), #eceff5;
+        --c-inventory: var(--text);
+        --c-titles: var(--text);
+        --c-flooring: var(--text);
+        --c-sold: var(--text);
+        --c-profit: var(--text);
+        --c-purchase: var(--text);
+        --c-fees: var(--text);
+        --c-repairs: var(--text);
+        --c-tax: var(--text);
+        --c-commission: var(--text);
+        --c-cost: var(--text);
+        --c-gross: var(--text);
+        color-scheme: light;
+      }
+      html.bright select {
+        color-scheme: light;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23101422' d='M6 1.8L2.8 5h6.4L6 1.8zm0 8.4L9.2 7H2.8L6 10.2z'/%3E%3C/svg%3E");
+      }
+      html.bright {
+        scrollbar-color: rgba(16, 20, 34, 0.2) transparent;
+      }
+      html.bright::-webkit-scrollbar-thumb {
+        background: rgba(16, 20, 34, 0.2);
+      }
+      html.bright::-webkit-scrollbar-thumb:hover {
+        background: rgba(16, 20, 34, 0.32);
       }
 
       * {
@@ -86,9 +152,7 @@
         margin: 0;
         min-height: 100vh;
         min-height: 100dvh;
-        background:
-          radial-gradient(1200px 800px at 10% -10%, #121a2a 0%, var(--bg) 45%),
-          var(--bg);
+        background: var(--app-bg);
         background-repeat: no-repeat;
         color: var(--text);
         font-family: "Inter", "Segoe UI", system-ui, sans-serif;
@@ -629,6 +693,9 @@
         flex-shrink: 0;
         letter-spacing: 0.02em;
         overflow: hidden;
+      }
+      html.bright .avatar {
+        color: #fff;
       }
       .avatar img {
         width: 100%;
@@ -15949,6 +16016,15 @@
                   <div class="notif-list" id="notifList"></div>
                 </div>
               </div>
+              <button
+                class="qa-btn notif-btn"
+                id="themeToggleBtn"
+                onclick="toggleTheme()"
+                title="Switch to bright mode"
+                style="margin-right: 8px"
+              >
+                <span id="themeToggleIcon"></span>
+              </button>
               <div class="topbar-settings" id="settingsWrap">
                 <button
                   class="qa-btn"
@@ -15972,6 +16048,19 @@
                   </svg>
                 </button>
                 <div class="settings-menu" id="settingsMenu">
+                  <div class="sm-row">
+                    <div class="sm-label">
+                      <span>Bright mode</span><small>Dark / Bright theme</small>
+                    </div>
+                    <button
+                      class="sm-toggle"
+                      id="themeToggle"
+                      onclick="toggleTheme()"
+                      title="Dark / Bright"
+                    >
+                      <span class="knob"></span>
+                    </button>
+                  </div>
                   <div class="sm-row">
                     <div class="sm-label">
                       <span>Language</span><small>English / Español</small>
@@ -50971,6 +51060,28 @@
         openDeactivateEmpModal();
       }
 
+
+      const SUN_ICON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+      const MOON_ICON = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+      function applyThemeUI() {
+        const bright = document.documentElement.classList.contains("bright");
+        const ic = document.getElementById("themeToggleIcon");
+        if (ic) ic.innerHTML = bright ? MOON_ICON : SUN_ICON;
+        const tb = document.getElementById("themeToggleBtn");
+        if (tb) tb.title = bright ? "Switch to dark mode" : "Switch to bright mode";
+        const tog = document.getElementById("themeToggle");
+        if (tog) tog.classList.toggle("on", bright);
+      }
+      function toggleTheme() {
+        if (window.AVTheme) AVTheme.toggle();
+        else document.documentElement.classList.toggle("bright");
+        applyThemeUI();
+      }
+      window.AVThemeOnChange = function () {
+        applyThemeUI();
+      };
+      try { applyThemeUI(); } catch (e) {}
+
       // ---------- SETTINGS: LANGUAGE ----------
       function toggleSettingsMenu() {
         const m = document.getElementById("settingsMenu");
@@ -51195,6 +51306,10 @@
         // settings labels
         Appearance: "Apariencia",
         Language: "Idioma",
+        "Bright mode": "Modo claro",
+        "Dark / Bright theme": "Tema oscuro / claro",
+        "Switch to bright mode": "Cambiar a modo claro",
+        "Switch to dark mode": "Cambiar a modo oscuro",
         "Dark or light theme": "Tema oscuro o claro",
         Settings: "Ajustes",
         "Numbers stay the same; only wording changes.":
@@ -55248,6 +55363,8 @@
 /* —— KPI colors (preferences API) + Deal type / commission collapse —— */
 (function () {
   const KPI_PALETTE = ['#4a9dff','#2ed6a4','#2dd4bf','#38bdf8','#a78bfa','#818cf8','#ffb057','#fbbf24','#fb6a83','#f472b6','#a3e635','#eef2f9'];
+  const KPI_PALETTE_BRIGHT = ['#2264e4','#0f9d63','#0d9488','#0284c7','#7440d6','#4f46e5','#bf6f0a','#ca8a04','#dc3b45','#db2777','#4d7c0f','#101422'];
+  function kpiPalette(){ return document.documentElement.classList.contains('bright') ? KPI_PALETTE_BRIGHT : KPI_PALETTE; }
   const KPI_DEFAULTS = {
     inventory: 'var(--blue)', titles: 'var(--green)', flooring: 'var(--orange)',
     sold: 'var(--green)', profit: 'var(--green)', purchase: 'var(--orange)',
@@ -55337,7 +55454,7 @@
     const cur = (kpiColors[key] || '').toLowerCase();
     const sw = document.getElementById('kcpSwatches');
     if (sw) {
-      sw.innerHTML = KPI_PALETTE.map(
+      sw.innerHTML = kpiPalette().map(
         (c) =>
           '<div class="kcp-sw' +
           (cur === c.toLowerCase() ? ' sel' : '') +
