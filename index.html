@@ -17,21 +17,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>AutoVault — The Dealership Operating System</title>
 <meta name="description" content="AutoVault brings inventory, sales, commissions, payments, taxes, and profit into one platform built for how dealerships actually run. Your first month is on us." />
+<link rel="canonical" href="https://www.autovault360.com/" />
+<meta name="robots" content="index, follow" />
 <meta name="theme-color" content="#E6E8EF" data-theme-light="#E6E8EF" data-theme-dark="#0A0D10" />
-<script src="/theme.js"></script>
+<script src="/theme.js" defer></script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="AutoVault" />
 <meta property="og:title" content="AutoVault — The Dealership Operating System" />
 <meta property="og:description" content="AutoVault brings inventory, sales, commissions, payments, taxes, and profit into one platform built for how dealerships actually run. Your first month is on us." />
 <meta property="og:url" content="https://www.autovault360.com/" />
 <meta property="og:image" content="https://www.autovault360.com/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="AutoVault — The Dealership Operating System" />
 <meta name="twitter:description" content="AutoVault brings inventory, sales, commissions, payments, taxes, and profit into one platform built for how dealerships actually run. Your first month is on us." />
 <meta name="twitter:image" content="https://www.autovault360.com/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Caveat:wght@700&display=swap" rel="stylesheet" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+  {"@type":"Organization","@id":"https://www.autovault360.com/#org","name":"AutoVault","url":"https://www.autovault360.com/","logo":"https://www.autovault360.com/apple-touch-icon.png","email":"support@autovault360.com"},
+  {"@type":"SoftwareApplication","name":"AutoVault","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://www.autovault360.com/","description":"Dealership operating system for inventory, sales, commissions, payments, taxes, and profit.","offers":{"@type":"Offer","price":"99.99","priceCurrency":"USD"},"publisher":{"@id":"https://www.autovault360.com/#org"}},
+  {"@type":"WebSite","name":"AutoVault","url":"https://www.autovault360.com/","publisher":{"@id":"https://www.autovault360.com/#org"}},
+  {"@type":"FAQPage","mainEntity":[
+    {"@type":"Question","name":"Is my data secure?","acceptedAnswer":{"@type":"Answer","text":"Your data is encrypted in transit and at rest, protected by access controls and regular security reviews. Your dealership's data is yours — export or delete it anytime."}},
+    {"@type":"Question","name":"Can my accountant log in?","acceptedAnswer":{"@type":"Answer","text":"Yes. A CPA / accountant login is included, so your accountant can file state taxes and review the numbers without you emailing spreadsheets."}},
+    {"@type":"Question","name":"What happens after my free month?","acceptedAnswer":{"@type":"Answer","text":"You're billed $99.99/mo — no setup fees, no long-term contract. Cancel anytime and you won't be charged again."}},
+    {"@type":"Question","name":"Do I need to install anything?","acceptedAnswer":{"@type":"Answer","text":"No. AutoVault runs in your browser and works on desktop, tablet, and phone."}},
+    {"@type":"Question","name":"Is there a per-vehicle or per-user charge?","acceptedAnswer":{"@type":"Answer","text":"No. Unlimited vehicles, VINs, and users are included — one flat price for your whole dealership."}},
+    {"@type":"Question","name":"Will it fit how my lot actually runs?","acceptedAnswer":{"@type":"Answer","text":"AutoVault was built with dealers for the real workflow — auctions, flooring, titles, commissions, and filings — not a generic CRM bolted onto cars."}}
+  ]}
+]}
+</script>
 <style>
   /* ============ TOKENS ============ */
   :root{
@@ -969,7 +991,10 @@
   .hf svg{width:14px;height:14px;color:var(--accent);flex:0 0 auto}
   .hf-ai{color:var(--accent);border-color:var(--accent-line);background:var(--accent-soft)}
   .hf-ai svg{color:var(--accent)}
+  .skip-link{position:absolute;left:12px;top:-48px;z-index:200;background:var(--accent);color:#fff;padding:10px 14px;border-radius:10px;font-weight:700;font-size:13px}
+  .skip-link:focus{top:12px}
   .hero-copy{max-width:900px;margin:0 auto;text-align:center;order:2}
+  .hero-copy h1{font-size:clamp(28px,4.2vw,46px);margin:12px 0 0;letter-spacing:-.03em}
   .hero-copy .hero-cta,.hero-copy .hero-feats,.hero-copy .hero-trust,.hero-copy .touch-tag{justify-content:center}
   .app-caption{text-align:center;max-width:780px;margin:0 auto}
   .app-caption h3{font-family:var(--ff-display);font-size:21px;font-weight:600}
@@ -1270,6 +1295,7 @@
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">Skip to content</a>
 <div class="backdrop"><div class="grid-lines"></div></div>
 
 <!-- ============ NAV ============ -->
@@ -1309,7 +1335,7 @@
 </div>
 
 <!-- ============ HERO ============ -->
-<section class="hero">
+<section class="hero" id="main">
   <div class="wrap hero-grid">
     <div class="hero-copy">
       <div class="hero-action">
@@ -1329,6 +1355,7 @@
       </div>
 
       <span class="eyebrow">The Dealership Operating System</span>
+      <h1>One live dashboard for every vehicle and every dollar.</h1>
       <div class="hero-split">
         <div class="hero-box">
           <div class="hb-tag">The problem</div>
@@ -2480,7 +2507,7 @@
         <a href="#" class="lg-brand"><span class="lg-mark"></span><span class="lg-name">AutoVault</span></a>
         <div class="lg-mobile-logo"><span class="lg-mark"></span><span class="lg-name">AutoVault</span></div>
         <span class="lg-eyebrow">Dealership Login</span>
-        <h1 class="lg-welcome">Welcome back</h1>
+        <p class="lg-welcome">Welcome back</p>
         <p class="lg-sub">Sign in to your dealership dashboard.</p>
         <form id="lgForm" novalidate>
           <div class="lg-field"><label for="lgUser">Username or email</label><div class="lg-iw"><span class="lg-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-6 8-6s8 2 8 6"/></svg></span><input id="lgUser" type="text" placeholder="you@yourdealership.com" autocomplete="username" /></div></div>

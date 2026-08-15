@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 78" role="img" aria-label="AutoVault">
+  <path d="M16 12 L42 64 L68 12" fill="none" stroke="#0B0B14" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M52 64 L78 12 L104 64" fill="none" stroke="#2743E8" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

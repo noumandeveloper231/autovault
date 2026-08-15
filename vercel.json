@@ -5,121 +5,133 @@
       "destination": "/login",
       "permanent": true
     },
-
     {
       "source": "/wholesale/login/:path*",
       "destination": "/login",
       "permanent": true
     },
-
     {
       "source": "/sales-rep/login",
       "destination": "/login",
       "permanent": true
     },
-
     {
       "source": "/sales-rep/login/:path*",
       "destination": "/login",
       "permanent": true
     },
-
     { "source": "/cpa/login", "destination": "/login", "permanent": true },
-
     {
       "source": "/cpa/login/:path*",
       "destination": "/login",
       "permanent": true
     },
-
     {
       "source": "/terms-of-service",
       "destination": "/terms",
       "permanent": true
     },
-
     {
       "source": "/privacy",
       "destination": "/privacy-policy",
       "permanent": true
+    },
+    {
+      "source": "/autovault-landing_37.html",
+      "destination": "/",
+      "permanent": true
     }
   ],
-
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
-
     { "source": "/thank-you", "destination": "/thank-you/index.html" },
-
     {
       "source": "/forgot-password",
       "destination": "/forgot-password/index.html"
     },
-
     {
       "source": "/reset-password",
       "destination": "/reset-password/index.html"
     },
-
     { "source": "/invite", "destination": "/invite/index.html" },
-
     { "source": "/accept-invitation", "destination": "/invite/index.html" },
-
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
-
     { "source": "/login", "destination": "/login/index.html" },
-
     {
       "source": "/wholesale/dashboard",
       "destination": "/dashboard/index.html"
     },
-
     {
       "source": "/wholesale/dashboard/:path*",
       "destination": "/dashboard/index.html"
     },
-
     {
       "source": "/sales-rep/dashboard",
       "destination": "/dashboard/index.html"
     },
-
     {
       "source": "/sales-rep/dashboard/:path*",
       "destination": "/dashboard/index.html"
     },
-
     { "source": "/cpa/dashboard", "destination": "/dashboard/index.html" },
-
     {
       "source": "/cpa/dashboard/:path*",
       "destination": "/dashboard/index.html"
     },
-
     { "source": "/owner/login", "destination": "/login/index.html" },
-
     { "source": "/owner/login/:path*", "destination": "/login/index.html" },
-
     { "source": "/owner/dashboard", "destination": "/dashboard/index.html" },
-
     {
       "source": "/owner/dashboard/:path*",
       "destination": "/dashboard/index.html"
     },
-
     { "source": "/contact", "destination": "/contact/index.html" },
-
     {
       "source": "/privacy-policy",
       "destination": "/privacy-policy/index.html"
     },
-
     {
       "source": "/privacy-center",
       "destination": "/privacy-center/index.html"
     },
-
     { "source": "/terms", "destination": "/terms/index.html" }
   ],
-
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    },
+    {
+      "source": "/(dashboard|login|invite|accept-invitation|reset-password|forgot-password|thank-you|owner|wholesale|sales-rep|cpa)(.*)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(js|css|svg|png|webp|ico|woff2)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
+    },
+    {
+      "source": "/(robots.txt|sitemap.xml)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
+        }
+      ]
+    }
+  ],
   "cleanUrls": true
 }

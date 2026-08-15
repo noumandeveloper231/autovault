@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="AutoVault">
+  <rect width="1200" height="630" fill="#EEF0F5"/>
+  <rect x="0" y="0" width="8" height="630" fill="#2743E8"/>
+  <circle cx="1080" cy="-40" r="280" fill="#2743E8" opacity="0.08"/>
+  <circle cx="160" cy="700" r="220" fill="#2743E8" opacity="0.06"/>
+  <g transform="translate(88,168)">
+    <path d="M0 8 L52 112 L104 8" fill="none" stroke="#0B0B14" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M72 112 L124 8 L176 112" fill="none" stroke="#2743E8" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="88" y="360" font-family="Arial, Helvetica, sans-serif" font-size="72" font-weight="700" fill="#0B0B14">AutoVault</text>
+  <text x="88" y="424" font-family="Arial, Helvetica, sans-serif" font-size="32" fill="#54566B">The Dealership Operating System</text>
+  <text x="88" y="520" font-family="Arial, Helvetica, sans-serif" font-size="22" fill="#2743E8">Inventory  |  Profit  |  Sales Tax  |  Payroll  |  Jenna AI</text>
+</svg>

@@ -1,13 +1,35 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-av-surface="landing">
 <head>
 <meta charset="UTF-8" />
+<script>
+(function(){
+  try {
+    var s = localStorage.getItem("av-landing-theme");
+    var dark = s === "dark";
+    var r = document.documentElement;
+    r.classList.toggle("dark", dark);
+    r.classList.toggle("bright", !dark);
+    r.style.colorScheme = dark ? "dark" : "light";
+  } catch (e) {}
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Privacy Policy — AutoVault</title>
 <meta name="description" content="AutoVault Privacy Policy — how we collect, use, and protect your information." />
+<link rel="canonical" href="https://www.autovault360.com/privacy-policy" />
+<meta name="robots" content="index, follow" />
+<meta name="theme-color" content="#E6E8EF" data-theme-light="#E6E8EF" data-theme-dark="#0A0D10" />
+<script src="/theme.js"></script>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<meta property="og:title" content="Privacy Policy — AutoVault" />
+<meta property="og:description" content="AutoVault Privacy Policy — how we collect, use, and protect your information." />
+<meta property="og:url" content="https://www.autovault360.com/privacy-policy" />
+<meta property="og:image" content="https://www.autovault360.com/og-image.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="/site-page.css" />
 </head>
 <body>

@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /login
+Disallow: /invite
+Disallow: /accept-invitation
+Disallow: /reset-password
+Disallow: /forgot-password
+Disallow: /thank-you
+Disallow: /owner
+Disallow: /wholesale
+Disallow: /sales-rep
+Disallow: /cpa
+Disallow: /autovault-landing_37.html
+
+Sitemap: https://www.autovault360.com/sitemap.xml
