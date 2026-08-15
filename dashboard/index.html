@@ -9245,33 +9245,28 @@
       #page-vehicles .veh-kpi-board {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
         margin-bottom: 16px;
       }
 
       #page-vehicles .veh-kpi-row {
-        display: flex;
-        gap: 18px;
-        align-items: flex-start;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 4fr 2fr;
+        gap: 10px;
+        align-items: stretch;
       }
 
       #page-vehicles .veh-kpi-group {
         min-width: 0;
+        display: flex;
+        flex-direction: column;
       }
 
-      #page-vehicles .veh-kpi-group.inventory {
-        flex: 0 0 auto;
-        max-width: 100%;
-      }
-
-      #page-vehicles .veh-kpi-group.month {
-        flex: 1 1 240px;
-        min-width: 0;
-      }
-
+      #page-vehicles .veh-kpi-group.inventory,
+      #page-vehicles .veh-kpi-group.month,
       #page-vehicles .veh-kpi-group.costs {
-        flex: 1 1 100%;
+        flex: none;
+        max-width: none;
       }
 
       #page-vehicles .veh-kpi-group-label {
@@ -9280,10 +9275,11 @@
         letter-spacing: 0.7px;
         text-transform: uppercase;
         color: var(--muted);
-        margin: 0 0 9px 2px;
-        min-height: 32px;
+        margin: 0 0 8px 2px;
+        min-height: 16px;
         display: flex;
         align-items: center;
+        line-height: 1.3;
       }
 
       #page-vehicles .inv-label-row {
@@ -9353,42 +9349,61 @@
         grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
         gap: 10px;
         margin-bottom: 0;
+        flex: 1;
+        align-items: stretch;
       }
 
       #page-vehicles .veh-kpi-group.inventory .kpi-grid {
-        grid-template-columns: repeat(3, minmax(150px, 170px));
-        width: max-content;
-        max-width: 100%;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        width: 100%;
       }
 
       #page-vehicles .veh-kpi-group.month .kpi-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+        width: 100%;
       }
 
       #page-vehicles .veh-kpi-group.costs .kpi-grid {
-        grid-template-columns: repeat(6, minmax(0, 1fr));
+        grid-template-columns: repeat(5, minmax(0, 1fr));
       }
 
       #page-vehicles .veh-kpi-group .kpi {
-        padding: 14px 16px;
+        min-width: 0;
+        padding: 12px 14px;
         border-radius: 12px;
         background: var(--panel);
         border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
       }
 
       #page-vehicles .veh-kpi-group .kpi-label {
         font-size: 10px;
-        letter-spacing: 0.8px;
+        letter-spacing: 0.45px;
+        white-space: normal;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        line-height: 1.25;
+        min-height: 2.5em;
+        padding-right: 16px;
+        word-break: break-word;
       }
 
       #page-vehicles .veh-kpi-group .kpi-value {
-        font-size: 20px;
+        font-size: 18px;
         margin-top: 6px;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+        min-width: 0;
       }
 
       #page-vehicles .veh-kpi-group .kpi-foot {
         font-size: 10px;
-        margin-top: 4px;
+        margin-top: auto;
+        padding-top: 4px;
+        line-height: 1.35;
       }
 
       #page-vehicles .kpi-slash {
@@ -9403,18 +9418,21 @@
         transition: opacity 0.18s;
       }
 
-      @media (max-width: 1100px) {
+      @media (max-width: 1200px) {
+        #page-vehicles .veh-kpi-row {
+          grid-template-columns: 1fr;
+          gap: 14px;
+        }
+      }
+
+      @media (max-width: 900px) {
         #page-vehicles .veh-kpi-group.costs .kpi-grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
+          grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
         }
       }
 
       @media (max-width: 720px) {
-        #page-vehicles .veh-kpi-group.inventory .kpi-grid {
-          grid-template-columns: repeat(2, minmax(150px, 170px));
-          width: max-content;
-          max-width: 100%;
-        }
+        #page-vehicles .veh-kpi-group.inventory .kpi-grid,
         #page-vehicles .veh-kpi-group.month .kpi-grid,
         #page-vehicles .veh-kpi-group.costs .kpi-grid {
           grid-template-columns: repeat(2, minmax(0, 1fr));
