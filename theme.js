@@ -1,15 +1,32 @@
 /**
  * Shared AutoVault theme: "light" | "dark".
- * Default follows the OS (prefers-color-scheme) until the user toggles.
- * Storage key: av-theme
+ *
+ * CRM (default): follows the OS until the user toggles. Storage key: av-theme
+ * Landing pages (html[data-av-surface="landing"]): default light, independent
+ * of CRM. Storage key: av-landing-theme
  *
  * Dashboard: light → html.bright  |  dark → :root (no bright)
  * Landing:   light → :root        |  dark → html.dark
  */
 (function (global) {
-  var KEY = "av-theme";
+  var CRM_KEY = "av-theme";
+  var LANDING_KEY = "av-landing-theme";
   var mq =
     global.matchMedia && global.matchMedia("(prefers-color-scheme: dark)");
+
+  function isLanding() {
+    try {
+      return (
+        document.documentElement.getAttribute("data-av-surface") === "landing"
+      );
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function storageKey() {
+    return isLanding() ? LANDING_KEY : CRM_KEY;
+  }
 
   function systemTheme() {
     return mq && mq.matches ? "dark" : "light";
@@ -17,14 +34,17 @@
 
   function stored() {
     try {
-      var v = global.localStorage.getItem(KEY);
+      var v = global.localStorage.getItem(storageKey());
       if (v === "light" || v === "dark") return v;
     } catch (e) {}
     return null;
   }
 
   function resolved() {
-    return stored() || systemTheme();
+    var s = stored();
+    if (s) return s;
+    if (isLanding()) return "light";
+    return systemTheme();
   }
 
   function apply(theme) {
@@ -50,7 +70,7 @@
   function setTheme(theme) {
     if (theme !== "light" && theme !== "dark") return resolved();
     try {
-      global.localStorage.setItem(KEY, theme);
+      global.localStorage.setItem(storageKey(), theme);
     } catch (e) {}
     apply(theme);
     return theme;

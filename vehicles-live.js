@@ -216,6 +216,7 @@
       customerAddress: cust ? customerAddress : (api.customerAddress || null),
       extraRepPay: 0,
       askingPrice: asking,
+      targetPrice: asking,
       salesRepId: (deal && deal.salesRepId) || (deal && deal.salesRep && deal.salesRep.id) || (jacket && jacket.salesRepId) || null,
       rep: (function () {
         if (deal && deal.salesRep && deal.salesRep.fullName) return deal.salesRep.fullName;
@@ -596,6 +597,13 @@
     ui.commissionPct = v.commissionPct != null ? v.commissionPct : ui.commissionPct;
     ui.ros = v.ros || ui.ros;
     ui.soldPrice = v.soldPrice != null ? v.soldPrice : ui.soldPrice;
+    if (v.askingPrice != null && v.askingPrice !== "") {
+      ui.askingPrice = Number(v.askingPrice);
+      ui.targetPrice = Number(v.askingPrice);
+    } else if (v.targetPrice != null && v.targetPrice !== "") {
+      ui.askingPrice = Number(v.targetPrice);
+      ui.targetPrice = Number(v.targetPrice);
+    }
     ui.soldDate = v.soldDate || ui.soldDate;
     ui.notes = v.notes != null ? v.notes : ui.notes;
     ui.addOns = v.addOns != null ? v.addOns : ui.addOns;
@@ -715,6 +723,13 @@
       if (v) v.addOns = value;
       refreshUi();
       return v;
+    } else if (field === "askingPrice" || field === "targetPrice") {
+      patch.askingPrice = value;
+      const v = findUiVehicle(vin);
+      if (v) {
+        v.askingPrice = value;
+        v.targetPrice = value;
+      }
     } else {
       return null;
     }
