@@ -2398,110 +2398,6 @@
         border-radius: 10px;
       }
 
-      /* KPI COLOR PICKER */
-      .kpi-value {
-        cursor: pointer;
-        transition: opacity 0.15s;
-      }
-
-      .kpi-value:hover {
-        opacity: 0.82;
-      }
-
-      .cp-popup {
-        position: fixed;
-        z-index: 300;
-        background: #161d2b;
-        border: 1px solid rgba(255, 255, 255, 0.12);
-        border-radius: 14px;
-        padding: 14px 14px 10px;
-        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.65);
-        width: 216px;
-        display: none;
-      }
-
-      .cp-popup.open {
-        display: block;
-      }
-
-      .cp-title {
-        font-size: 10px;
-        letter-spacing: 1px;
-        font-weight: 700;
-        color: var(--muted);
-        text-transform: uppercase;
-        margin-bottom: 10px;
-      }
-
-      .cp-swatches {
-        display: grid;
-        grid-template-columns: repeat(8, 1fr);
-        gap: 5px;
-        margin-bottom: 8px;
-      }
-
-      .cp-swatch {
-        width: 100%;
-        aspect-ratio: 1;
-        border-radius: 5px;
-        cursor: pointer;
-        border: 2px solid transparent;
-        transition:
-          transform 0.12s,
-          border-color 0.12s;
-      }
-
-      .cp-swatch:hover {
-        transform: scale(1.18);
-      }
-
-      .cp-swatch.selected {
-        border-color: #fff !important;
-      }
-
-      .cp-divider {
-        height: 1px;
-        background: rgba(255, 255, 255, 0.07);
-        margin: 8px 0;
-      }
-
-      .cp-custom-row {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .cp-custom-row label {
-        font-size: 11px;
-        color: var(--muted);
-        font-weight: 600;
-        flex: 1;
-        cursor: pointer;
-      }
-
-      .cp-custom-input {
-        width: 32px;
-        height: 28px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        padding: 2px;
-        background: var(--panel-2);
-      }
-
-      .cp-reset {
-        font-size: 10.5px;
-        color: var(--muted);
-        cursor: pointer;
-        text-decoration: underline;
-        margin-top: 8px;
-        display: inline-block;
-      }
-
-      .cp-reset:hover {
-        color: var(--text);
-      }
-
       .editable-cell {
         cursor: pointer;
         border-bottom: 1px dashed var(--border);
@@ -9355,7 +9251,7 @@
       }
 
       #page-vehicles .veh-kpi-group.inventory .kpi-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
         width: 100%;
       }
 
@@ -9393,11 +9289,30 @@
       }
 
       #page-vehicles .veh-kpi-group .kpi-value {
-        font-size: 18px;
+        font-size: 17px;
         margin-top: 6px;
-        overflow-wrap: anywhere;
-        word-break: break-word;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         min-width: 0;
+        line-height: 1.15;
+      }
+
+      #page-vehicles #kpiTotalInventory {
+        display: flex;
+        align-items: baseline;
+        font-size: clamp(12.5px, 1.05vw, 16px);
+        letter-spacing: -0.03em;
+      }
+
+      #page-vehicles #kpiTotalInventory .kpi-inv-n {
+        flex-shrink: 0;
+      }
+
+      #page-vehicles #kpiTotalInventory .kpi-inv-amt {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       #page-vehicles .veh-kpi-group .kpi-foot {
@@ -9405,11 +9320,13 @@
         margin-top: auto;
         padding-top: 4px;
         line-height: 1.35;
+        flex-shrink: 0;
       }
 
       #page-vehicles .kpi-slash {
         opacity: 0.45;
-        margin: 0 4px;
+        margin: 0 3px;
+        flex-shrink: 0;
       }
 
       #page-vehicles .veh-kpi-group.costs.kpi-period-loading,
@@ -36017,11 +35934,7 @@
         }
       }
       function wsKpiCard(id, label, value, col, foot) {
-        let c = col;
-        try {
-          if (typeof cpColors !== "undefined" && cpColors[id]) c = cpColors[id];
-        } catch (e) {}
-        return `<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value" id="${id}" onclick="openColorPicker('${id}', event)" style="color:${c};cursor:pointer;" title="Click to change color">${value}</div>${foot ? `<div class="kpi-foot">${foot}</div>` : ""}</div>`;
+        return `<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value" id="${id}" style="color:${col};">${value}</div>${foot ? `<div class="kpi-foot">${foot}</div>` : ""}</div>`;
       }
       function openReceipt(id) {
         const e = (typeof _expenses !== "undefined" ? _expenses : []).find(
@@ -39261,7 +39174,7 @@
       <td data-col="repairs"><span class="editable-cell repairs-cell" data-vin="${r.vin}" onclick="openRepairsModal('${r.vin}')" title="Click to view repairs & attached expenses">${fmt(r.repairs + r.attachedExp)}</span></td>
       <td data-col="allin"><b>${fmt(r.allInCost)}</b></td>
       <td data-col="flooring" data-colgrp="flooring"><span class="editable-cell flooring-cell" onclick="openFlooringDetail('${r.vin}')" title="Click to configure flooring">${r.flooringOverride !== null && r.flooringOverride !== undefined ? fmtSigned(-(Number(r.flooringOverride) || 0)) : r.flooringCost > 0 ? fmtSigned(-r.flooringCost) : '<span style="color:var(--muted);font-size:11px;">Set flooring</span>'}</span>${r.flooringPaidOff ? '<div class="fl-paid-tag">Paid off</div>' : ""}</td>
-      <td data-colgrp="floorage" style="color:var(--muted);font-size:12px;">${r.flooringCost > 0 || (r.flooringOverride !== null && r.flooringOverride !== undefined) || flooringConfig.applied ? r.daysOnLot + (r.daysOnLot === 1 ? " Day" : " Days") : "—"}</td>
+      <td data-colgrp="floorage" style="color:var(--muted);font-size:12px;"><span>${r.flooringCost > 0 || (r.flooringOverride !== null && r.flooringOverride !== undefined) || flooringConfig.applied ? r.daysOnLot + (r.daysOnLot === 1 ? " Day" : " Days") : "—"}</span></td>
       <td data-col="totalcost" data-colgrp="allinfloor"><b>${fmt(r.allInPlusFlooring)}</b></td>
       <td data-col="salestax">${r.sold || vehicleIsSold(r) ? fmt(r.salesTaxCollected) : "—"}</td>
       <td><span class="editable-cell" onclick="openRegFeesNotice()" title="Mark vehicle as sold to enable Registration Fees">${r.sold || vehicleIsSold(r) ? fmt(r.regFeesCollected) : "—"}</span></td>
@@ -39592,7 +39505,9 @@
         );
         const kpiInv = document.getElementById("kpiTotalInventory");
         if (kpiInv) {
-          kpiInv.innerHTML = `${totalInv} car${totalInv === 1 ? "" : "s"} <span class="kpi-slash">/</span> ${fmt(invValue)}`;
+          const invLabel = `${totalInv} car${totalInv === 1 ? "" : "s"} / ${fmt(invValue)}`;
+          kpiInv.title = invLabel;
+          kpiInv.innerHTML = `<span class="kpi-inv-n">${totalInv} car${totalInv === 1 ? "" : "s"}</span><span class="kpi-slash">/</span><span class="kpi-inv-amt">${fmt(invValue)}</span>`;
         }
         const invFoot = document.getElementById("kpiTotalInventoryFoot");
         if (invFoot) {
@@ -55860,230 +55775,6 @@
       /* Eager rendering removed — pages now render lazily via showPage() + hash router.
        bootstrapPortalAccess() calls showPage() which triggers the correct renderer. */
 
-      // ---------- KPI COLOR PICKER ----------
-      const KPI_COLOR_IDS = [
-        "kpiTotalInventory",
-        "kpiTitles",
-        "kpiUpcomingFloored",
-        "kpiSoldMonth",
-        "kpiSoldValueMonth",
-        "kpiProfitMonth",
-        "kpiPurchaseCost",
-        "kpiTotalVehicles",
-        "kpiRepairs",
-        "kpiSalesTax",
-        "kpiCommission",
-        "kpiTotalCost",
-        "totalFlooringCost",
-      ];
-
-      // Map each KPI card number to its matching column-total header number
-      const KPI_TO_COL = {
-        kpiPurchaseCost: { headId: "thPurchasePrice", dataCol: "purchase" },
-        kpiRepairs: { headId: "thRepairs", dataCol: "repairs" },
-        totalFlooringCost: { headId: "thFlooring", dataCol: "flooring" },
-        kpiSalesTax: { headId: "thSalesTax", dataCol: "salestax" },
-        kpiTotalCost: { headId: "thAllIn", dataCol: "allin" },
-        kpiCommission: { headId: "thCommission", dataCol: "commission" },
-      };
-
-      // Dynamic style block for column row colors
-      const kpiStyleEl = document.createElement("style");
-      kpiStyleEl.id = "kpiColorStyles";
-      document.head.appendChild(kpiStyleEl);
-
-      function rebuildKpiStyles() {
-        const rules = [];
-        Object.entries(KPI_TO_COL).forEach(([kpiId, map]) => {
-          const color = cpColors[kpiId];
-          if (color && map.dataCol) {
-            rules.push(
-              `#page-vehicles table tbody td[data-col="${map.dataCol}"], #page-vehicles table tbody td[data-col="${map.dataCol}"] span, #page-vehicles table tbody td[data-col="${map.dataCol}"] b { color: ${color} !important; }`,
-            );
-          }
-        });
-        kpiStyleEl.textContent = rules.join("\n");
-      }
-
-      const CP_SWATCHES = [
-        // Neons / brights
-        "#3aa0ff",
-        "#23d18b",
-        "#ff9f43",
-        "#a07bff",
-        "#ff5470",
-        "#f9ca24",
-        "#ff6b81",
-        "#00d2d3",
-        // Mid-tones
-        "#54a0ff",
-        "#5f27cd",
-        "#10ac84",
-        "#ee5a24",
-        "#0abde3",
-        "#c8d6e5",
-        "#ff9ff3",
-        "#feca57",
-        // Softer
-        "#dfe6e9",
-        "#b2bec3",
-        "#74b9ff",
-        "#fdcb6e",
-        "#e17055",
-        "#636e72",
-        "#2d3436",
-        "#ffffff",
-      ];
-
-      const cpColors = {}; // vin → color (keyed by element id)
-
-      function loadKpiColors() {
-        try {
-          const saved = JSON.parse(
-            localStorage.getItem("av_kpi_colors") || "{}",
-          );
-          Object.assign(cpColors, saved);
-        } catch (e) {}
-        applyKpiColors();
-      }
-
-      function saveKpiColors() {
-        try {
-          localStorage.setItem("av_kpi_colors", JSON.stringify(cpColors));
-        } catch (e) {}
-      }
-
-      function applyKpiColors() {
-        KPI_COLOR_IDS.forEach((id) => {
-          const el = document.getElementById(id);
-          if (el && cpColors[id]) {
-            el.style.color = cpColors[id];
-            const map = KPI_TO_COL[id];
-            if (map) {
-              const col = document.getElementById(map.headId);
-              if (col) col.style.color = cpColors[id];
-            }
-          }
-        });
-        rebuildKpiStyles();
-      }
-
-      // Build popup DOM
-      const cpPopup = document.createElement("div");
-      cpPopup.className = "cp-popup";
-      cpPopup.id = "cpPopup";
-      cpPopup.innerHTML = `
-  <div class="cp-title">Number Color</div>
-  <div class="cp-swatches" id="cpSwatches"></div>
-  <div class="cp-divider"></div>
-  <div class="cp-custom-row">
-    <label for="cpCustom">Custom color</label>
-    <input type="color" class="cp-custom-input" id="cpCustom" value="#ffffff">
-  </div>
-  <div class="cp-reset" id="cpReset">Reset to default</div>
-`;
-      document.body.appendChild(cpPopup);
-
-      // Populate swatches
-      const swatchContainer = document.getElementById("cpSwatches");
-      CP_SWATCHES.forEach((hex) => {
-        const s = document.createElement("div");
-        s.className = "cp-swatch";
-        s.style.background = hex;
-        s.dataset.color = hex;
-        s.title = hex;
-        s.onclick = () => applyPickedColor(hex);
-        swatchContainer.appendChild(s);
-      });
-
-      let activeKpiId = null;
-
-      function openColorPicker(id, event) {
-        event.stopPropagation();
-        activeKpiId = id;
-
-        // Position popup near click
-        const rect = event.currentTarget.getBoundingClientRect();
-        const popW = 220,
-          popH = 220;
-        let top = rect.bottom + 8;
-        let left = rect.left;
-        if (left + popW > window.innerWidth)
-          left = window.innerWidth - popW - 12;
-        if (top + popH > window.innerHeight) top = rect.top - popH - 8;
-        cpPopup.style.top = top + "px";
-        cpPopup.style.left = left + "px";
-        cpPopup.classList.add("open");
-
-        // Mark current color as selected
-        const current = cpColors[id] || "";
-        document.querySelectorAll(".cp-swatch").forEach((s) => {
-          s.classList.toggle(
-            "selected",
-            s.dataset.color.toLowerCase() === current.toLowerCase(),
-          );
-        });
-        document.getElementById("cpCustom").value =
-          current.startsWith("#") && current.length === 7 ? current : "#3aa0ff";
-      }
-
-      function applyPickedColor(color) {
-        if (!activeKpiId) return;
-        cpColors[activeKpiId] = color;
-        const el = document.getElementById(activeKpiId);
-        if (el) el.style.color = color;
-        const map = KPI_TO_COL[activeKpiId];
-        if (map) {
-          const col = document.getElementById(map.headId);
-          if (col) col.style.color = color;
-        }
-        rebuildKpiStyles();
-        document.querySelectorAll(".cp-swatch").forEach((s) => {
-          s.classList.toggle(
-            "selected",
-            s.dataset.color.toLowerCase() === color.toLowerCase(),
-          );
-        });
-        saveKpiColors();
-      }
-
-      document
-        .getElementById("cpCustom")
-        .addEventListener("input", function () {
-          applyPickedColor(this.value);
-        });
-
-      document.getElementById("cpReset").onclick = () => {
-        if (!activeKpiId) return;
-        delete cpColors[activeKpiId];
-        const el = document.getElementById(activeKpiId);
-        if (el) el.style.color = "";
-        const map = KPI_TO_COL[activeKpiId];
-        if (map) {
-          const col = document.getElementById(map.headId);
-          if (col) col.style.color = "";
-        }
-        rebuildKpiStyles();
-        document
-          .querySelectorAll(".cp-swatch")
-          .forEach((s) => s.classList.remove("selected"));
-        saveKpiColors();
-        cpPopup.classList.remove("open");
-      };
-
-      // Close on outside click
-      document.addEventListener("click", (e) => {
-        if (!cpPopup.contains(e.target)) cpPopup.classList.remove("open");
-      });
-
-      // Attach click handlers to all KPI values
-      KPI_COLOR_IDS.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) el.addEventListener("click", (e) => openColorPicker(id, e));
-      });
-
-      // Load saved colors on start
-      loadKpiColors();
     </script>
 
     <div id="dashTip" class="dash-tip"></div>
