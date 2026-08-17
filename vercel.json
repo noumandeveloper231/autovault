@@ -40,6 +40,26 @@
       "source": "/autovault-landing_37.html",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/wholesale/dashboard",
+      "destination": "/dashboard?portal=wholesale",
+      "permanent": false
+    },
+    {
+      "source": "/wholesale/dashboard/:path*",
+      "destination": "/dashboard?portal=wholesale",
+      "permanent": false
+    },
+    {
+      "source": "/sales-rep/dashboard",
+      "destination": "/dashboard?portal=sales_rep",
+      "permanent": false
+    },
+    {
+      "source": "/sales-rep/dashboard/:path*",
+      "destination": "/dashboard?portal=sales_rep",
+      "permanent": false
     }
   ],
   "rewrites": [
@@ -57,22 +77,6 @@
     { "source": "/accept-invitation", "destination": "/invite/index.html" },
     { "source": "/dashboard", "destination": "/dashboard/index.html" },
     { "source": "/login", "destination": "/login/index.html" },
-    {
-      "source": "/wholesale/dashboard",
-      "destination": "/dashboard/index.html"
-    },
-    {
-      "source": "/wholesale/dashboard/:path*",
-      "destination": "/dashboard/index.html"
-    },
-    {
-      "source": "/sales-rep/dashboard",
-      "destination": "/dashboard/index.html"
-    },
-    {
-      "source": "/sales-rep/dashboard/:path*",
-      "destination": "/dashboard/index.html"
-    },
     { "source": "/cpa/dashboard", "destination": "/dashboard/index.html" },
     {
       "source": "/cpa/dashboard/:path*",

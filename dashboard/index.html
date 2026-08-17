@@ -28890,7 +28890,7 @@
         }
         // growing_dealership (default)
         return {
-          sub: "Growing Dealerships — full setup including payroll and sales rep commissions.",
+          sub: "Fully Loaded — full setup including payroll and sales rep commissions.",
           note: "<b>Vehicles and commissions are critical.</b> Once inventory, past sales, flooring, payroll, and rep commissions are in, deals calculate correctly end to end.",
           steps: [
             {
@@ -36196,7 +36196,7 @@
       function ownerPlanLabel(plan) {
         if (plan === "wholesaler") return "Wholesalers";
         if (plan === "independent_dealer") return "Independent Dealers";
-        if (plan === "growing_dealership") return "Growing Dealerships";
+        if (plan === "growing_dealership") return "Fully Loaded";
         return plan || "—";
       }
       function mapRegistrationToOwnerUser(reg) {
@@ -38263,7 +38263,7 @@
         if (plan === "wholesaler") {
           if (typeof AVToast !== "undefined")
             AVToast.warning(
-              "CPA login is available on Independent Dealers and Growing Dealerships plans.",
+              "CPA login is available on the Fully Loaded plan.",
             );
           return;
         }

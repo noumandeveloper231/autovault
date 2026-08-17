@@ -6,8 +6,8 @@
       : "https://api.autovault360.com");
 
   const DASHBOARD_BY_PORTAL = {
-    wholesale: "/wholesale/dashboard",
-    sales_rep: "/sales-rep/dashboard",
+    wholesale: "/dashboard?portal=wholesale",
+    sales_rep: "/dashboard?portal=sales_rep",
     owner: "/owner/dashboard",
     cpa: "/cpa/dashboard",
     admin: "/dashboard",

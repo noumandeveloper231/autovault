@@ -535,7 +535,12 @@
     var plansRes = await AVApi.listBillingPlans().catch(function () {
       return { plans: [] };
     });
-    state.plans = (plansRes && plansRes.plans) || [];
+    var all = (plansRes && plansRes.plans) || [];
+    // Temp: only Fully Loaded is sold. Keep the current plan visible if an
+    // older account is still on Wholesalers / Independent Dealers.
+    state.plans = all.filter(function (p) {
+      return p.slug === "growing_dealership" || p.isCurrent;
+    });
     return state.plans;
   }
 

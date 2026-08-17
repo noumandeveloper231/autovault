@@ -6,13 +6,15 @@
   <title>Sales Rep Portal | AutoVault360</title>
   <meta name="robots" content="noindex, nofollow" />
   <script>
-    // Typo path redirect — keep for old bookmarks; preserve query (impHandoff).
+    // Typo path — send to Fully Loaded SPA. Preserve query (impHandoff).
+    var params = new URLSearchParams(location.search || "");
+    if (!params.has("portal")) params.set("portal", "sales_rep");
     window.location.replace(
-      "/sales-rep/dashboard" + (location.search || "") + (location.hash || "")
+      "/dashboard?" + params.toString() + (location.hash || "")
     );
   </script>
 </head>
 <body>
-  <p>Redirecting… <a href="/sales-rep/dashboard">Continue</a></p>
+  <p>Redirecting… <a href="/dashboard?portal=sales_rep">Continue</a></p>
 </body>
 </html>
