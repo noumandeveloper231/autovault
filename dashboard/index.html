@@ -39340,7 +39340,7 @@
       <td data-col="fees"><span class="editable-cell" data-vin="${r.vin}" data-field="fees" onclick="startEditCell(this)" title="Click to edit">${fmt(r.fees)}</span></td>
       <td data-col="repairs"><span class="editable-cell repairs-cell" data-vin="${r.vin}" onclick="openRepairsModal('${r.vin}')" title="Click to view repairs & attached expenses">${fmt(r.repairs + r.attachedExp)}</span></td>
       <td data-col="allin"><b>${fmt(r.allInCost)}</b></td>
-      <td data-col="flooring" data-colgrp="flooring"><span class="editable-cell flooring-cell" onclick="openFlooringDetail('${r.vin}')" title="Click to configure flooring">${r.flooringOverride !== null && r.flooringOverride !== undefined ? fmtSigned(-(Number(r.flooringOverride) || 0)) : r.flooringCost > 0 ? fmtSigned(-r.flooringCost) : '<span style="color:var(--muted);font-size:11px;">Set flooring</span>'}</span>${r.flooringPaidOff ? '<div class="fl-paid-tag">Paid off</div>' : ""}</td>
+      <td data-col="flooring" data-colgrp="flooring"><span class="editable-cell flooring-cell" onclick="openFlooringDetail('${r.vin}')" title="Click to configure flooring">${r.flooringOverride !== null && r.flooringOverride !== undefined ? fmt(Number(r.flooringOverride) || 0) : r.flooringCost > 0 ? fmt(r.flooringCost) : '<span style="color:var(--muted);font-size:11px;">Set flooring</span>'}</span>${r.flooringPaidOff ? '<div class="fl-paid-tag">Paid off</div>' : ""}</td>
       <td data-colgrp="floorage" style="color:var(--muted);font-size:12px;"><span>${r.flooringCost > 0 || (r.flooringOverride !== null && r.flooringOverride !== undefined) || flooringConfig.applied ? r.daysOnLot + (r.daysOnLot === 1 ? " Day" : " Days") : "—"}</span></td>
       <td data-col="totalcost" data-colgrp="allinfloor"><b>${fmt(r.allInPlusFlooring)}</b></td>
       <td data-col="salestax">${r.sold || vehicleIsSold(r) ? fmt(r.salesTaxCollected) : "—"}</td>
@@ -39714,10 +39714,7 @@
             monthProfit >= 0 ? "var(--c-profit)" : "var(--red)";
         }
         set("kpiUpcomingFloored", upcomingFloored);
-        const flTxt =
-          flooringConfig.applied && flooringTotal > 0
-            ? fmtSigned(-flooringTotal)
-            : "$0.00";
+        const flTxt = flooringTotal > 0 ? fmt(flooringTotal) : "$0.00";
         set("totalFlooringCost", flTxt);
         const flState = document.getElementById("flBarState");
         if (flState) {
@@ -39778,7 +39775,7 @@
         set("thAllIn", fmt(totalAllIn));
         set(
           "thFlooring",
-          totalFlooring > 0 ? fmtSigned(-totalFlooring) : "—",
+          totalFlooring > 0 ? fmt(totalFlooring) : "—",
         );
         set("thSalesTax", fmt(totalSalesTax));
         set("thRegFees", fmt(totalRegFees));
@@ -40835,7 +40832,7 @@
           })
           .join("");
         const totalEl = document.getElementById("flooringPreviewTotal");
-        if (totalEl) totalEl.textContent = `Total: ${fmtSigned(-totalCost)}`;
+        if (totalEl) totalEl.textContent = `Total: ${fmt(totalCost)}`;
       }
 
       function toggleFlooringVin(vin, checked) {
