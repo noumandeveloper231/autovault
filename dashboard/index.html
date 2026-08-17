@@ -15415,6 +15415,10 @@
         max-width:230px;
         vertical-align:top;
       }
+      /* Stored signatures are white ink on transparent. Invert on light theme. */
+      html.bright .terms-sigwrap img{
+        filter: invert(1);
+      }
       .tr-sig .terms-sigwrap img{
         display:block;
         max-width:230px;
@@ -28625,6 +28629,37 @@
       /* ===================== TERMS & ACKNOWLEDGMENT GATE ===================== */
       const AV_TERMS_VERSION = '1.0';
       let _termsCtx = null, _termsDrawing = false, _termsIp = 'Unavailable';
+      function termsSigStrokeColor() {
+        var c = getComputedStyle(document.documentElement).getPropertyValue('--text').trim();
+        return c || (document.documentElement.classList.contains('bright') ? '#101422' : '#ffffff');
+      }
+      function termsApplySigInk() {
+        if (_termsCtx) _termsCtx.strokeStyle = termsSigStrokeColor();
+      }
+      function termsSignatureDataUrl(canvas) {
+        if (!canvas) return '';
+        try {
+          if (!document.documentElement.classList.contains('bright')) {
+            return canvas.toDataURL('image/png');
+          }
+          var ctx = canvas.getContext('2d');
+          var img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          var d = img.data;
+          for (var i = 0; i < d.length; i += 4) {
+            if (d[i + 3] < 8) continue;
+            d[i] = 255 - d[i];
+            d[i + 1] = 255 - d[i + 1];
+            d[i + 2] = 255 - d[i + 2];
+          }
+          var off = document.createElement('canvas');
+          off.width = canvas.width;
+          off.height = canvas.height;
+          off.getContext('2d').putImageData(img, 0, 0);
+          return off.toDataURL('image/png');
+        } catch (e) {
+          try { return canvas.toDataURL('image/png'); } catch (e2) { return ''; }
+        }
+      }
       function termsSetupPad() {
         var c = document.getElementById('termsSigPad');
         if (!c) return;
@@ -28634,7 +28669,8 @@
         c.width = w * ratio; c.height = h * ratio;
         var ctx = c.getContext('2d');
         ctx.scale(ratio, ratio);
-        ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2.2; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+        ctx.strokeStyle = termsSigStrokeColor();
         _termsCtx = ctx;
         wrap.classList.remove('signed');
         var pos = function(e) { var r = c.getBoundingClientRect(); var t = e.touches ? e.touches[0] : e; return { x: t.clientX - r.left, y: t.clientY - r.top }; };
@@ -28704,7 +28740,7 @@
       async function termsAccept() {
         var c = document.getElementById('termsSigPad');
         var sig = '';
-        try { sig = c ? c.toDataURL('image/png') : ''; } catch (e) { sig = ''; }
+        try { sig = termsSignatureDataUrl(c); } catch (e) { sig = ''; }
         var now = new Date();
         var rec = {
           termsAccepted: true,
@@ -52947,6 +52983,7 @@
       }
       window.AVThemeOnChange = function () {
         applyThemeUI();
+        try { termsApplySigInk(); } catch (e) {}
       };
       try { applyThemeUI(); } catch (e) {}
 
