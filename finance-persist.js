@@ -133,14 +133,14 @@
       };
     }
     return {
-      buyFee: Number(plan.buyFee) || 150,
+      buyFee: Number(plan.buyFee) || 0,
       tiers: [
-        { max: 30, rate: 25 },
-        { max: 60, rate: 35 },
-        { max: 90, rate: 45 },
-        { max: Infinity, rate: 55 },
+        { max: 30, rate: 0 },
+        { max: 60, rate: 0 },
+        { max: 90, rate: 0 },
+        { max: Infinity, rate: 0 },
       ],
-      applied: !!plan.isActive,
+      applied: false,
       scope: "all",
       payoffDays: Number(plan.gracePeriodDays) || 90,
       gracePeriod: 0,

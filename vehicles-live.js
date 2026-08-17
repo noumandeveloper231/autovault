@@ -290,12 +290,11 @@
       statusDate: null,
       repairsList: effectiveRepairs,
       reconditioningCost: reconCost,
-      /* Explicit override (including $0) when fees.flooringManual is set.
-         Positive flooringFees alone also counts as a legacy manual override. */
+      /* Explicit override (including $0) only when the dealer set flooring
+         on this vehicle. Stored fees alone do not invent a flooring cost. */
       flooringOverride: (function () {
         const manual = !!(api.fees && api.fees.flooringManual);
         if (manual) return flooringFees != null ? Number(flooringFees) || 0 : 0;
-        if (flooringFees != null && flooringFees > 0) return flooringFees;
         return null;
       })(),
       isWholesale: !!api.isWholesale,
@@ -680,9 +679,10 @@
       const v = findUiVehicle(vin);
       const prevFees = mergeFees(v, {});
       if (value === null || value === undefined) {
-        // Reset to auto-calculated flooring
         patch.flooringFees = 0;
         patch.fees = { ...prevFees, flooringManual: false };
+        patch.flooringStartDate = null;
+        patch.flooringPlanId = null;
       } else {
         const amount = Number(value);
         patch.flooringFees = Number.isFinite(amount) ? amount : 0;

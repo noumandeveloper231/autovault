@@ -227,10 +227,9 @@
         var plans =
           (floorResp && (floorResp.plans || floorResp.data || floorResp)) || [];
         if (!Array.isArray(plans)) plans = [];
-        var active =
-          plans.find(function (p) {
-            return p.isActive && !p.deletedAt;
-          }) || plans[0];
+        var active = plans.find(function (p) {
+          return p.isActive && !p.deletedAt;
+        });
         if (active && window.AVFinancePersist) {
           var fcfg = AVFinancePersist.flooringUiFromPlan(active);
           window.__flooringPlanId = active.id;
@@ -238,6 +237,9 @@
             Object.assign(flooringConfig, fcfg);
           } else {
             window.flooringConfig = fcfg;
+          }
+          if (typeof syncAddVehicleFlooringToggle === "function") {
+            syncAddVehicleFlooringToggle();
           }
         }
       } catch (eFloor) {}

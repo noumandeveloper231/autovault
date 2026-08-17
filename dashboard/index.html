@@ -943,7 +943,8 @@
       #deleteLeadModal,
       #convertLeadModal,
       #deleteExpenseModal,
-      #deactivateEmpModal {
+      #deactivateEmpModal,
+      #removeFlooringConfirmModal {
         z-index: 210;
       }
 
@@ -1034,6 +1035,40 @@
 
       .flooring-banner .fb-label svg {
         color: var(--blue);
+        flex-shrink: 0;
+      }
+
+      .fl-undo-bar {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: -10px 0 18px;
+        padding: 12px 16px;
+        background: rgba(251, 176, 87, 0.12);
+        border: 1px solid rgba(251, 176, 87, 0.4);
+        border-radius: 12px;
+      }
+
+      .fl-undo-bar.is-visible {
+        display: flex;
+      }
+
+      .fl-undo-bar .flu-copy {
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.45;
+        min-width: 0;
+      }
+
+      .fl-undo-bar .flu-copy b {
+        font-variant-numeric: tabular-nums;
+      }
+
+      .fl-undo-bar .flu-actions {
+        display: flex;
+        gap: 8px;
         flex-shrink: 0;
       }
 
@@ -8306,45 +8341,50 @@
         user-select: none;
       }
 
+      .hs-wrap {
+        position: relative;
+        padding: 0 40px;
+      }
+
       .hs-arrow {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
-        background: var(--panel-2);
+        background: var(--panel);
         border: 1px solid var(--border);
         color: var(--text);
-        font-size: 20px;
+        font-size: 18px;
         line-height: 1;
         cursor: pointer;
         z-index: 6;
         display: flex;
         align-items: center;
         justify-content: center;
-        opacity: 0;
-        transition: opacity 0.15s;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+        opacity: 1;
+        transition: opacity 0.15s, border-color 0.15s, color 0.15s;
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.16);
         padding: 0;
       }
 
-      .table-card:hover .hs-arrow {
-        opacity: 0.92;
+      .hs-arrow.is-disabled {
+        opacity: 0.28;
+        pointer-events: none;
       }
 
       .hs-arrow:hover {
         border-color: var(--blue);
         color: var(--blue);
-        opacity: 1;
       }
 
       .hs-arrow.left {
-        left: 8px;
+        left: 4px;
       }
 
       .hs-arrow.right {
-        right: 8px;
+        right: 4px;
       }
 
       .tax-group {
@@ -14276,6 +14316,15 @@
         margin-bottom: 16px;
       }
 
+      .av-flooring.is-disabled {
+        opacity: 0.72;
+      }
+
+      .av-flooring.is-disabled .av-switch {
+        pointer-events: none;
+        opacity: 0.45;
+      }
+
       .av-fl-title {
         font-size: 13px;
         font-weight: 700;
@@ -19779,6 +19828,13 @@
           </div>
           <div class="veh-view-seg" id="svViewSeg" style="margin-bottom: 16px">
             <button
+              class="vv-btn active"
+              data-tab="all"
+              onclick="svSetTab('all')"
+            >
+              All Vehicles
+            </button>
+            <button
               class="vv-btn"
               data-tab="profit"
               onclick="svSetTab('profit')"
@@ -19791,13 +19847,6 @@
               onclick="svSetTab('loss')"
             >
               Loss
-            </button>
-            <button
-              class="vv-btn active"
-              data-tab="all"
-              onclick="svSetTab('all')"
-            >
-              All Vehicles
             </button>
           </div>
           <div class="sv-cal" id="svCalWrap">
@@ -21984,6 +22033,28 @@
                   View Flooring Cost
                 </button>
               </div>
+            </div>
+          </div>
+
+          <div id="flooringUndoBar" class="fl-undo-bar" role="status">
+            <div class="flu-copy">
+              Flooring was removed from all vehicles.
+              You can undo for <b id="flooringUndoTimer">3h 0m</b>.
+              Applying a new flooring rate cancels undo.
+            </div>
+            <div class="flu-actions">
+              <button type="button" class="btn-ghost" onclick="dismissFlooringUndo()">
+                Dismiss
+              </button>
+              <button
+                type="button"
+                class="btn-primary"
+                id="flooringUndoBtn"
+                style="box-shadow: none"
+                onclick="undoRemoveFlooringAll()"
+              >
+                Undo Removal
+              </button>
             </div>
           </div>
 
@@ -24495,34 +24566,13 @@
               background: rgba(251, 106, 131, 0.08);
               border: 1px solid rgba(251, 106, 131, 0.32);
               border-radius: 10px;
+              font-size: 11.5px;
+              color: var(--text);
+              line-height: 1.55;
             "
           >
-            <div
-              style="
-                font-size: 11.5px;
-                color: var(--text);
-                line-height: 1.55;
-                margin-bottom: 10px;
-              "
-            >
-              <b style="color: var(--red)"
-                >Flooring is already applied to your active inventory.</b
-              >
-              It's saved — no need to add it again. Turned it on by mistake?
-              Remove it from every vehicle here.
-            </div>
-            <button
-              type="button"
-              class="btn-ghost"
-              id="removeFlooringAll"
-              style="
-                border-color: rgba(251, 106, 131, 0.5);
-                color: var(--red);
-                white-space: nowrap;
-              "
-            >
-              Remove Flooring From All Vehicles
-            </button>
+            <b style="color: var(--red)">Flooring is currently on your inventory.</b>
+            Use <b>Remove Flooring From All Vehicles</b> below to clear it from every unit.
           </div>
 
           <!-- SCOPE -->
@@ -24638,10 +24688,104 @@
           </div>
         </div>
         <div class="modal-foot">
+          <button
+            type="button"
+            class="btn-ghost"
+            id="removeFlooringAll"
+            style="
+              margin-right: auto;
+              color: var(--red);
+              border-color: rgba(251, 106, 131, 0.5);
+              white-space: nowrap;
+            "
+          >
+            Remove Flooring From All Vehicles
+          </button>
           <button class="btn-ghost" id="cancelFlooringModal">Cancel</button>
           <button class="btn-danger" id="applyFlooringRate">
             Apply Flooring Rate
           </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal-overlay"
+      id="removeFlooringConfirmModal"
+      onclick="if (event.target === this) closeRemoveFlooringConfirm();"
+    >
+      <div class="modal" style="max-width: 440px">
+        <div class="modal-head">
+          <h3>
+            <svg
+              width="17"
+              height="17"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--red)"
+              stroke-width="2"
+            >
+              <path
+                d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              />
+              <line x1="12" y1="9" x2="12" y2="13" />
+              <line x1="12" y1="17" x2="12.01" y2="17" />
+            </svg>
+            Remove Flooring From All Vehicles
+          </h3>
+          <button class="modal-close" onclick="closeRemoveFlooringConfirm()">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="ec-msg">
+            This will <b>clear flooring cost on every vehicle</b> in this
+            dealership.
+          </div>
+          <div
+            style="
+              margin-top: 14px;
+              padding: 12px 14px;
+              background: rgba(251, 106, 131, 0.1);
+              border: 1px solid rgba(251, 106, 131, 0.35);
+              border-radius: 10px;
+              font-size: 12.5px;
+              color: var(--text);
+              line-height: 1.55;
+            "
+          >
+            <b style="color: var(--red)">Warning — flooring will be cleared on every vehicle.</b>
+            <ul style="margin: 8px 0 0; padding-left: 18px">
+              <li>Flooring cost on all vehicles will be set to none ($0).</li>
+              <li>The floor plan will be turned off for this dealership.</li>
+              <li>Vehicle profit, all-in cost, and P&amp;L numbers will change.</li>
+              <li id="removeFlooringCountLine">
+                This applies to your full inventory, including sold units.
+              </li>
+            </ul>
+          </div>
+          <div class="ec-sub">
+            You will have <b>3 hours</b> to undo this, unless you apply a new
+            flooring rate. After that, the previous costs cannot be restored
+            automatically.
+          </div>
+          <div style="display: flex; gap: 10px; margin-top: 18px">
+            <button
+              class="btn-ghost"
+              style="flex: 1"
+              onclick="closeRemoveFlooringConfirm()"
+            >
+              Keep Flooring
+            </button>
+            <button
+              class="btn-danger"
+              id="confirmRemoveFlooringBtn"
+              style="flex: 1; box-shadow: none"
+              onclick="confirmRemoveFlooringAll()"
+            >
+              Yes, Remove All
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -27350,11 +27494,11 @@
             <div>
               <div class="av-fl-title">Add Flooring Rate</div>
               <div class="av-fl-sub" id="avFlSub">
-                Applies your saved flooring rate automatically.
+                No flooring plan is set. Configure it in Flooring Cost first — it will not be added automatically.
               </div>
             </div>
             <label class="av-switch"
-              ><input type="checkbox" id="avFlooring" checked /><span
+              ><input type="checkbox" id="avFlooring" /><span
                 class="av-switch-slider"
               ></span
             ></label>
@@ -31814,24 +31958,13 @@
         } catch (e) {}
         {
           const fl = document.getElementById("avFlooring");
-          if (fl) fl.checked = true;
+          if (fl) fl.checked = false;
+          if (typeof syncAddVehicleFlooringToggle === "function") {
+            syncAddVehicleFlooringToggle();
+          }
         }
         document.getElementById("avDecoded").innerHTML = "";
         document.getElementById("avMsg").innerHTML = "";
-        try {
-          const s = document.getElementById("avFlSub");
-          if (s && typeof flooringConfig !== "undefined") {
-            s.textContent =
-              "Uses your saved rate: $" +
-              (flooringConfig.buyFee || 0) +
-              " buy fee, from $" +
-              ((flooringConfig.tiers &&
-                flooringConfig.tiers[0] &&
-                flooringConfig.tiers[0].rate) ||
-                0) +
-              "/day.";
-          }
-        } catch (e) {}
         m.classList.add("open");
         setTimeout(() => {
           const v = document.getElementById("avVin");
@@ -32465,6 +32598,9 @@
         {
           const fl = document.getElementById("avFlooring");
           if (fl) fl.checked = !!v.floored;
+          if (typeof syncAddVehicleFlooringToggle === "function") {
+            syncAddVehicleFlooringToggle(!!v.floored);
+          }
         }
         try {
           const tp = document.getElementById("avTitlePop");
@@ -37317,12 +37453,12 @@
       }
 
       let flooringConfig = {
-        buyFee: 150,
+        buyFee: 0,
         tiers: [
-          { max: 30, rate: 25 },
-          { max: 60, rate: 35 },
-          { max: 90, rate: 45 },
-          { max: Infinity, rate: 55 },
+          { max: 30, rate: 0 },
+          { max: 60, rate: 0 },
+          { max: 90, rate: 0 },
+          { max: Infinity, rate: 0 },
         ],
         applied: false,
         scope: "all",
@@ -37335,10 +37471,47 @@
         if (c) c.classList.toggle("active-filter", onlyUpcomingFloored);
         render();
       }
+      function flooringPlanIsActive() {
+        return !!(flooringConfig && flooringConfig.applied);
+      }
+      function syncAddVehicleFlooringToggle(preferChecked) {
+        const fl = document.getElementById("avFlooring");
+        const sub = document.getElementById("avFlSub");
+        const wrap = fl && fl.closest(".av-flooring");
+        const hasPlan = flooringPlanIsActive();
+        if (fl) {
+          fl.disabled = !hasPlan;
+          if (hasPlan) {
+            fl.checked =
+              preferChecked === undefined
+                ? flooringConfig.scope !== "selected"
+                : !!preferChecked;
+          } else {
+            fl.checked = false;
+          }
+        }
+        if (wrap) wrap.classList.toggle("is-disabled", !hasPlan);
+        if (sub) {
+          if (!hasPlan) {
+            sub.textContent =
+              "No flooring plan is set. Configure it in Flooring Cost first — it will not be added automatically.";
+          } else {
+            const fee = flooringConfig.buyFee || 0;
+            const rate =
+              (flooringConfig.tiers &&
+                flooringConfig.tiers[0] &&
+                flooringConfig.tiers[0].rate) ||
+              0;
+            sub.textContent =
+              "Uses your saved rate: $" + fee + " buy fee, from $" + rate + "/day.";
+          }
+        }
+      }
       function vehicleFloored(v) {
+        if (!flooringPlanIsActive()) return false;
         return (
           v.floored === true ||
-          (v.floored !== false && !!flooringConfig.applied)
+          (v.floored !== false && flooringConfig.scope !== "selected")
         );
       }
 
@@ -40821,6 +40994,11 @@
           }
           if (typeof AVToast !== "undefined")
             AVToast.success("Flooring plan applied");
+          if (typeof clearFlooringUndo === "function") {
+            clearFlooringUndo(
+              "A new flooring rate was applied, so undo is no longer available.",
+            );
+          }
         } catch (err) {
           if (typeof AVToast !== "undefined")
             AVToast.error(
@@ -40833,68 +41011,366 @@
           }
         }
         flooringModal.classList.remove("open");
+        if (typeof syncAddVehicleFlooringToggle === "function") {
+          syncAddVehicleFlooringToggle();
+        }
         render();
       };
 
       {
         const rmBtn = document.getElementById("removeFlooringAll");
         if (rmBtn)
-          rmBtn.onclick = async () => {
-            flooringConfig.applied = false;
-            const unsold = vehicles.filter((v) => !v.sold && !vehicleIsSold(v));
-            unsold.forEach((v) => {
-              if (v.flooringPaidOff) return;
-              v.floored = false;
-              delete v.flooringOverride;
-            });
-            const cb = document.getElementById("flooringAutoAll");
-            if (cb) {
-              cb.checked = false;
-              try {
-                syncFlooringAuto();
-              } catch (e) {}
-            }
-            const rb = document.getElementById("flooringRetractBox");
-            if (rb) rb.style.display = "none";
-            try {
-              if (
-                window.AVApi &&
-                window.AVFinancePersist &&
-                typeof AVApi.updateFlooringPlan === "function"
-              ) {
-                const planId =
-                  window.__flooringPlanId || flooringConfig.planId || null;
-                if (planId) {
-                  const payload = AVFinancePersist.flooringPlanPayloadFromUi(
-                    flooringConfig,
-                    today.toISOString().slice(0, 10),
-                  );
-                  await AVApi.updateFlooringPlan(planId, payload);
-                }
-              }
-              if (window.AVVehicles) {
-                for (const v of unsold) {
-                  if (v.flooringPaidOff || !v.id) continue;
-                  try {
-                    await AVVehicles.persistMoneyField(v.vin, "flooring", null);
-                  } catch (_) {}
-                }
-              }
-              if (typeof AVToast !== "undefined")
-                AVToast.success("Flooring removed from all vehicles");
-            } catch (err) {
-              if (typeof AVToast !== "undefined")
-                AVToast.error(
-                  (err && err.message) || "Failed to remove flooring",
-                );
-            }
-            try {
-              updateFlooringPreview();
-            } catch (e) {}
-            flooringModal.classList.remove("open");
-            render();
+          rmBtn.onclick = function () {
+            openRemoveFlooringConfirm();
           };
       }
+      var FL_UNDO_MS = 3 * 60 * 60 * 1000;
+      var __flUndoTimer = null;
+      function flooringUndoStorageKey() {
+        var id =
+          (window.crmOwner &&
+            (crmOwner.dealershipId ||
+              crmOwner.dealershipName ||
+              crmOwner.id)) ||
+          "local";
+        return "av_flooring_undo_v1:" + String(id);
+      }
+      function readFlooringUndo() {
+        try {
+          var raw = localStorage.getItem(flooringUndoStorageKey());
+          if (!raw) return null;
+          var data = JSON.parse(raw);
+          if (!data || !data.expiresAt || Date.now() > data.expiresAt) {
+            localStorage.removeItem(flooringUndoStorageKey());
+            return null;
+          }
+          return data;
+        } catch (e) {
+          return null;
+        }
+      }
+      function writeFlooringUndo(data) {
+        try {
+          localStorage.setItem(flooringUndoStorageKey(), JSON.stringify(data));
+        } catch (e) {}
+      }
+      function formatUndoRemain(ms) {
+        if (ms <= 0) return "0m";
+        var s = Math.floor(ms / 1000);
+        var h = Math.floor(s / 3600);
+        var m = Math.floor((s % 3600) / 60);
+        var sec = s % 60;
+        if (h > 0) return h + "h " + m + "m";
+        if (m > 0) return m + "m " + sec + "s";
+        return sec + "s";
+      }
+      function paintFlooringUndoBar() {
+        var bar = document.getElementById("flooringUndoBar");
+        var timerEl = document.getElementById("flooringUndoTimer");
+        var data = readFlooringUndo();
+        if (!bar) return;
+        if (!data) {
+          bar.classList.remove("is-visible");
+          if (__flUndoTimer) {
+            clearInterval(__flUndoTimer);
+            __flUndoTimer = null;
+          }
+          return;
+        }
+        bar.classList.remove("is-dismissed");
+        bar.classList.add("is-visible");
+        var remain = data.expiresAt - Date.now();
+        if (timerEl) timerEl.textContent = formatUndoRemain(remain);
+        if (!__flUndoTimer) {
+          __flUndoTimer = setInterval(function () {
+            var cur = readFlooringUndo();
+            var tEl = document.getElementById("flooringUndoTimer");
+            if (!cur) {
+              paintFlooringUndoBar();
+              return;
+            }
+            if (tEl) tEl.textContent = formatUndoRemain(cur.expiresAt - Date.now());
+          }, 1000);
+        }
+      }
+      function clearFlooringUndo(msg) {
+        var had = !!readFlooringUndo();
+        try {
+          localStorage.removeItem(flooringUndoStorageKey());
+        } catch (e) {}
+        paintFlooringUndoBar();
+        if (had && msg && typeof AVToast !== "undefined") AVToast.info(msg);
+      }
+      function dismissFlooringUndo() {
+        var bar = document.getElementById("flooringUndoBar");
+        if (bar) bar.classList.remove("is-visible");
+      }
+      function snapshotFlooringForUndo() {
+        var cfg = {
+          buyFee: flooringConfig.buyFee || 0,
+          gracePeriod: flooringConfig.gracePeriod || 0,
+          payoffDays: flooringConfig.payoffDays || 90,
+          applied: !!flooringConfig.applied,
+          scope: flooringConfig.scope || "all",
+          planId: flooringConfig.planId || window.__flooringPlanId || null,
+          tiers: (flooringConfig.tiers || []).map(function (t) {
+            return {
+              max: t.max === Infinity ? null : t.max,
+              rate: Number(t.rate) || 0,
+            };
+          }),
+        };
+        var vehiclesSnap = (vehicles || []).map(function (v) {
+          return {
+            vin: v.vin,
+            id: v.id || null,
+            floored: !!v.floored,
+            flooringOverride:
+              v.flooringOverride !== null && v.flooringOverride !== undefined
+                ? Number(v.flooringOverride)
+                : null,
+            flooringPaidOff: !!v.flooringPaidOff,
+            flooringPaidDate: v.flooringPaidDate || null,
+            flooringPaidAmount:
+              v.flooringPaidAmount != null ? Number(v.flooringPaidAmount) : null,
+            flooringStartDate:
+              (v._raw && v._raw.flooringStartDate) || null,
+            flooringPlanId: (v._raw && v._raw.flooringPlanId) || null,
+            flooringManual: !!(v._raw && v._raw.fees && v._raw.fees.flooringManual),
+            flooringFees:
+              v._raw && v._raw.flooringFees != null
+                ? Number(v._raw.flooringFees)
+                : null,
+          };
+        });
+        writeFlooringUndo({
+          expiresAt: Date.now() + FL_UNDO_MS,
+          config: cfg,
+          vehicles: vehiclesSnap,
+        });
+        paintFlooringUndoBar();
+      }
+      function closeRemoveFlooringConfirm() {
+        const m = document.getElementById("removeFlooringConfirmModal");
+        if (m) m.classList.remove("open");
+      }
+      function openRemoveFlooringConfirm() {
+        const list = vehicles || [];
+        const withCost = list.filter(function (v) {
+          return (
+            v.floored ||
+            (v.flooringOverride !== null && v.flooringOverride !== undefined) ||
+            (Number(v.flooringCost) || 0) > 0
+          );
+        }).length;
+        const line = document.getElementById("removeFlooringCountLine");
+        if (line) {
+          line.textContent =
+            withCost > 0
+              ? withCost +
+                " vehicle" +
+                (withCost === 1 ? "" : "s") +
+                " currently show flooring cost. This applies to your full inventory, including sold units."
+              : "This applies to your full inventory, including sold units.";
+        }
+        const m = document.getElementById("removeFlooringConfirmModal");
+        if (m) m.classList.add("open");
+      }
+      async function confirmRemoveFlooringAll() {
+        snapshotFlooringForUndo();
+        flooringConfig.applied = false;
+        const all = (vehicles || []).slice();
+        all.forEach((v) => {
+          v.floored = false;
+          delete v.flooringOverride;
+          v.flooringPaidOff = false;
+          if (v._raw) {
+            v._raw.flooringStartDate = null;
+            v._raw.flooringPlanId = null;
+            if (v._raw.fees) v._raw.fees.flooringManual = false;
+          }
+        });
+        const cb = document.getElementById("flooringAutoAll");
+        if (cb) {
+          cb.checked = false;
+          try {
+            syncFlooringAuto();
+          } catch (e) {}
+        }
+        const rb = document.getElementById("flooringRetractBox");
+        if (rb) rb.style.display = "none";
+        const confirmBtn = document.getElementById("confirmRemoveFlooringBtn");
+        if (typeof AVBusy !== "undefined") {
+          AVBusy.inc();
+          if (confirmBtn) AVBusy.setBtnLoading(confirmBtn, true, "Removing\u2026");
+        }
+        try {
+          if (
+            window.AVApi &&
+            window.AVFinancePersist &&
+            typeof AVApi.updateFlooringPlan === "function"
+          ) {
+            const planId =
+              window.__flooringPlanId || flooringConfig.planId || null;
+            if (planId) {
+              const payload = AVFinancePersist.flooringPlanPayloadFromUi(
+                flooringConfig,
+                today.toISOString().slice(0, 10),
+              );
+              await AVApi.updateFlooringPlan(planId, payload);
+            }
+          }
+          if (window.AVVehicles) {
+            for (const v of all) {
+              if (!v.id && !v.vin) continue;
+              try {
+                await AVVehicles.persistMoneyField(v.vin, "flooring", null);
+              } catch (_) {}
+            }
+          }
+          if (typeof AVToast !== "undefined")
+            AVToast.success(
+              "Flooring cost removed. You can undo for 3 hours unless a new rate is applied.",
+            );
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error(
+              (err && err.message) || "Failed to remove flooring",
+            );
+        } finally {
+          if (typeof AVBusy !== "undefined") {
+            if (confirmBtn)
+              AVBusy.setBtnLoading(confirmBtn, false, "Yes, Remove All");
+            AVBusy.dec();
+          }
+        }
+        closeRemoveFlooringConfirm();
+        try {
+          updateFlooringPreview();
+        } catch (e) {}
+        const flModal = document.getElementById("flooringModal");
+        if (flModal) flModal.classList.remove("open");
+        if (typeof syncAddVehicleFlooringToggle === "function") {
+          syncAddVehicleFlooringToggle();
+        }
+        paintFlooringUndoBar();
+        render();
+      }
+      async function undoRemoveFlooringAll() {
+        var data = readFlooringUndo();
+        if (!data) {
+          if (typeof AVToast !== "undefined")
+            AVToast.info("Undo is no longer available.");
+          paintFlooringUndoBar();
+          return;
+        }
+        var btn = document.getElementById("flooringUndoBtn");
+        if (typeof AVBusy !== "undefined") {
+          AVBusy.inc();
+          if (btn) AVBusy.setBtnLoading(btn, true, "Restoring\u2026");
+        }
+        try {
+          if (data.config) {
+            flooringConfig.buyFee = data.config.buyFee || 0;
+            flooringConfig.gracePeriod = data.config.gracePeriod || 0;
+            flooringConfig.payoffDays = data.config.payoffDays || 90;
+            flooringConfig.applied = !!data.config.applied;
+            flooringConfig.scope = data.config.scope || "all";
+            flooringConfig.planId = data.config.planId || flooringConfig.planId;
+            flooringConfig.tiers = (data.config.tiers || []).map(function (t) {
+              return {
+                max: t.max == null ? Infinity : t.max,
+                rate: Number(t.rate) || 0,
+              };
+            });
+            if (data.config.planId) window.__flooringPlanId = data.config.planId;
+          }
+          if (
+            window.AVApi &&
+            window.AVFinancePersist &&
+            typeof AVApi.updateFlooringPlan === "function"
+          ) {
+            var planId =
+              window.__flooringPlanId || flooringConfig.planId || null;
+            if (planId) {
+              var payload = AVFinancePersist.flooringPlanPayloadFromUi(
+                flooringConfig,
+                today.toISOString().slice(0, 10),
+              );
+              await AVApi.updateFlooringPlan(planId, payload);
+            }
+          }
+          var snaps = data.vehicles || [];
+          for (var i = 0; i < snaps.length; i++) {
+            var snap = snaps[i];
+            var v = (vehicles || []).find(function (x) {
+              return x.vin === snap.vin || (snap.id && x.id === snap.id);
+            });
+            if (!v) continue;
+            v.floored = !!snap.floored;
+            v.flooringPaidOff = !!snap.flooringPaidOff;
+            v.flooringPaidDate = snap.flooringPaidDate || null;
+            v.flooringPaidAmount = snap.flooringPaidAmount;
+            if (snap.flooringOverride !== null && snap.flooringOverride !== undefined) {
+              v.flooringOverride = snap.flooringOverride;
+            } else {
+              delete v.flooringOverride;
+            }
+            if (v._raw) {
+              v._raw.flooringStartDate = snap.flooringStartDate;
+              v._raw.flooringPlanId = snap.flooringPlanId;
+              if (!v._raw.fees) v._raw.fees = {};
+              v._raw.fees.flooringManual = !!snap.flooringManual;
+            }
+            if (!window.AVVehicles) continue;
+            try {
+              if (snap.flooringManual || snap.flooringOverride != null) {
+                await AVVehicles.persistMoneyField(
+                  v.vin,
+                  "flooring",
+                  snap.flooringOverride != null
+                    ? snap.flooringOverride
+                    : snap.flooringFees,
+                );
+              } else if (snap.floored || snap.flooringStartDate) {
+                await AVVehicles.persistPatch(v.vin, {
+                  flooringStartDate: snap.flooringStartDate,
+                  flooringPlanId: snap.flooringPlanId,
+                  flooringFees: snap.flooringFees || 0,
+                });
+              }
+            } catch (_) {}
+          }
+          try {
+            localStorage.removeItem(flooringUndoStorageKey());
+          } catch (e) {}
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Flooring costs restored.");
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error((err && err.message) || "Failed to undo flooring removal");
+        } finally {
+          if (typeof AVBusy !== "undefined") {
+            if (btn) AVBusy.setBtnLoading(btn, false, "Undo Removal");
+            AVBusy.dec();
+          }
+        }
+        paintFlooringUndoBar();
+        if (typeof syncAddVehicleFlooringToggle === "function") {
+          syncAddVehicleFlooringToggle();
+        }
+        try {
+          updateFlooringPreview();
+        } catch (e) {}
+        render();
+      }
+      window.openRemoveFlooringConfirm = openRemoveFlooringConfirm;
+      window.closeRemoveFlooringConfirm = closeRemoveFlooringConfirm;
+      window.confirmRemoveFlooringAll = confirmRemoveFlooringAll;
+      window.undoRemoveFlooringAll = undoRemoveFlooringAll;
+      window.dismissFlooringUndo = dismissFlooringUndo;
+      window.clearFlooringUndo = clearFlooringUndo;
+      paintFlooringUndoBar();
 
       // ---------- VEHICLE DETAIL MODAL ----------
       function openVehicleDetail(vin) {
@@ -55819,35 +56295,82 @@
     <script>
       (function () {
         const SEL = ".table-scroll, .filing-detail-scroll";
+        function syncHsArrows(sc, wrap) {
+          const left = wrap.querySelector(":scope > .hs-arrow.left");
+          const right = wrap.querySelector(":scope > .hs-arrow.right");
+          if (!left || !right) return;
+          const max = Math.max(0, sc.scrollWidth - sc.clientWidth);
+          const x = sc.scrollLeft;
+          left.classList.toggle("is-disabled", x <= 6);
+          right.classList.toggle("is-disabled", x >= max - 6);
+        }
+        function ensureHsWrap(card) {
+          const parent = card.parentElement;
+          if (parent && parent.classList.contains("hs-wrap")) return parent;
+          const wrap = document.createElement("div");
+          wrap.className = "hs-wrap";
+          parent.insertBefore(wrap, card);
+          wrap.appendChild(card);
+          return wrap;
+        }
+        function unwrapHs(card) {
+          const wrap = card.parentElement;
+          if (!wrap || !wrap.classList.contains("hs-wrap")) return;
+          wrap.parentNode.insertBefore(card, wrap);
+          wrap.remove();
+        }
         function decorateScrollers() {
           document.querySelectorAll(".table-scroll").forEach(function (sc) {
             const overflow = sc.scrollWidth > sc.clientWidth + 4;
             sc.classList.toggle("hs-scrollable", overflow);
             const card = sc.closest(".table-card");
             if (!card) return;
-            const hasArrows = !!card.querySelector(".hs-arrow");
-            if (overflow && !hasArrows) {
-              card.style.position = "relative";
-              const mk = function (cls, txt, dir) {
-                const b = document.createElement("button");
-                b.className = "hs-arrow " + cls;
-                b.type = "button";
-                b.textContent = txt;
-                b.addEventListener("click", function (ev) {
-                  ev.stopPropagation();
-                  sc.scrollBy({
-                    left: dir * (Math.round(sc.clientWidth * 0.7) || 300),
-                    behavior: "smooth",
+            if (overflow) {
+              const wrap = ensureHsWrap(card);
+              card.querySelectorAll(":scope > .hs-arrow").forEach(function (a) {
+                wrap.appendChild(a);
+              });
+              if (!wrap.querySelector(":scope > .hs-arrow")) {
+                const mk = function (cls, txt, dir) {
+                  const b = document.createElement("button");
+                  b.className = "hs-arrow " + cls;
+                  b.type = "button";
+                  b.textContent = txt;
+                  b.addEventListener("click", function (ev) {
+                    ev.stopPropagation();
+                    sc.scrollBy({
+                      left: dir * (Math.round(sc.clientWidth * 0.7) || 300),
+                      behavior: "smooth",
+                    });
                   });
+                  return b;
+                };
+                wrap.appendChild(mk("left", "\u2039", -1));
+                wrap.appendChild(mk("right", "\u203a", 1));
+              }
+              if (!sc.dataset.hsBound) {
+                sc.dataset.hsBound = "1";
+                sc.addEventListener(
+                  "scroll",
+                  function () {
+                    const w = card.parentElement;
+                    if (w && w.classList.contains("hs-wrap")) syncHsArrows(sc, w);
+                  },
+                  { passive: true },
+                );
+              }
+              syncHsArrows(sc, wrap);
+            } else {
+              const wrap = card.parentElement;
+              if (wrap && wrap.classList.contains("hs-wrap")) {
+                wrap.querySelectorAll(":scope > .hs-arrow").forEach(function (a) {
+                  a.remove();
                 });
-                return b;
-              };
-              card.appendChild(mk("left", "\u2039", -1));
-              card.appendChild(mk("right", "\u203a", 1));
-            } else if (!overflow && hasArrows) {
-              card.querySelectorAll(".hs-arrow").forEach(function (a) {
+              }
+              card.querySelectorAll(":scope > .hs-arrow").forEach(function (a) {
                 a.remove();
               });
+              unwrapHs(card);
             }
           });
         }
