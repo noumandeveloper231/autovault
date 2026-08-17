@@ -21999,6 +21999,18 @@
               <div class="fb-btns">
                 <button
                   type="button"
+                  class="btn-ghost"
+                  id="removeFlooringAll"
+                  style="
+                    color: var(--red);
+                    border-color: rgba(251, 106, 131, 0.5);
+                    white-space: nowrap;
+                  "
+                >
+                  Remove Flooring From All Vehicles
+                </button>
+                <button
+                  type="button"
                   class="btn-primary"
                   id="flooringUndoCompactBtn"
                   style="display: none; box-shadow: none; white-space: nowrap"
@@ -24698,29 +24710,6 @@
           </div>
         </div>
         <div class="modal-foot">
-          <button
-            type="button"
-            class="btn-ghost"
-            id="removeFlooringAll"
-            style="
-              margin-right: auto;
-              color: var(--red);
-              border-color: rgba(251, 106, 131, 0.5);
-              white-space: nowrap;
-            "
-          >
-            Remove Flooring From All Vehicles
-          </button>
-          <button
-            type="button"
-            class="btn-primary"
-            id="flooringUndoModalBtn"
-            style="display: none; box-shadow: none; white-space: nowrap"
-            onclick="undoRemoveFlooringAll()"
-          >
-            Undo Removal
-            <span id="flooringUndoModalTimer" style="opacity: 0.85"></span>
-          </button>
           <button class="btn-ghost" id="cancelFlooringModal">Cancel</button>
           <button class="btn-danger" id="applyFlooringRate">
             Apply Flooring Rate
@@ -37595,21 +37584,6 @@
           : legacyAddOnScalar > 0
             ? legacyAddOnScalar
             : addOnCostFromItems;
-        if (
-          !hasItemizedCosts &&
-          legacyAddOnScalar > 0 &&
-          addOnItemsList.some((a) => Number(a.price) > 0) &&
-          !v.__legacyAddOnWarned
-        ) {
-          v.__legacyAddOnWarned = true;
-          if (typeof AVToast !== "undefined" && AVToast.info) {
-            AVToast.info(
-              "Legacy add-on cost used for " +
-                (v.vin || "a vehicle") +
-                " — edit add-ons to set item costs.",
-            );
-          }
-        }
         // Sales tax & registration are collected for the state (pass-through) — NOT dealer cost.
         const totalInvestment =
           (Number(v.price) || 0) +
@@ -41123,14 +41097,17 @@
       function syncFlooringUndoButtons(data) {
         var compact = document.getElementById("flooringUndoCompactBtn");
         var compactTimer = document.getElementById("flooringUndoCompactTimer");
-        var modalBtn = document.getElementById("flooringUndoModalBtn");
-        var modalTimer = document.getElementById("flooringUndoModalTimer");
         var remain = data ? formatUndoRemain(data.expiresAt - Date.now()) : "";
-        var showAlt = !!(data && isFlooringUndoDismissed());
-        if (compact) compact.style.display = showAlt ? "" : "none";
+        if (compact) compact.style.display = data ? "" : "none";
         if (compactTimer) compactTimer.textContent = remain ? "(" + remain + ")" : "";
-        if (modalBtn) modalBtn.style.display = data ? "" : "none";
-        if (modalTimer) modalTimer.textContent = remain ? "(" + remain + ")" : "";
+        if (data) {
+          var wrap = document.getElementById("flBarWrap");
+          if (wrap && !wrap.classList.contains("open")) {
+            wrap.classList.add("open");
+            var toggle = wrap.querySelector(".veh-cal-toggle");
+            if (toggle) toggle.setAttribute("aria-expanded", "true");
+          }
+        }
       }
       function paintFlooringUndoBar() {
         var bar = document.getElementById("flooringUndoBar");
