@@ -279,6 +279,12 @@
         ? (deal.commissionType === "manual" || deal.commissionType === "flat" ? "amt" : "pct")
         : null,
       floored: !!(api.flooringPlanId || api.flooringStartDate || (flooringFees != null && flooringFees > 0) || !!(api.fees && api.fees.flooringManual)),
+      flooringPaidOff: !!(api.fees && api.fees.flooringPaidOff),
+      flooringPaidDate: (api.fees && api.fees.flooringPaidDate) || null,
+      flooringPaidAmount:
+        api.fees && api.fees.flooringPaidAmount != null
+          ? num(api.fees.flooringPaidAmount, null)
+          : null,
       titlePresent: api.titlePresent !== false && api.titleReceived !== false,
       titleIn:
         api.titlePresent !== false && api.titleReceived !== false

@@ -41035,15 +41035,34 @@
           "local";
         return "av_flooring_undo_v1:" + String(id);
       }
+      function undoExpiresAt(value) {
+        if (value == null) return 0;
+        if (typeof value === "number") return value;
+        var t = new Date(value).getTime();
+        return Number.isFinite(t) ? t : 0;
+      }
+      function undoFromApi(resp) {
+        var undo = resp && resp.undo;
+        if (!undo || !undo.expiresAt) return null;
+        var expiresAt = undoExpiresAt(undo.expiresAt);
+        if (!expiresAt || Date.now() > expiresAt) return null;
+        return {
+          expiresAt: expiresAt,
+          config: undo.config || null,
+          vehicles: Array.isArray(undo.vehicles) ? undo.vehicles : [],
+          vehicleCount: undo.vehicleCount || 0,
+        };
+      }
       function readFlooringUndo() {
         try {
           var raw = localStorage.getItem(flooringUndoStorageKey());
           if (!raw) return null;
           var data = JSON.parse(raw);
-          if (!data || !data.expiresAt || Date.now() > data.expiresAt) {
+          if (!data || !data.expiresAt || Date.now() > undoExpiresAt(data.expiresAt)) {
             localStorage.removeItem(flooringUndoStorageKey());
             return null;
           }
+          data.expiresAt = undoExpiresAt(data.expiresAt);
           return data;
         } catch (e) {
           return null;
@@ -41093,62 +41112,127 @@
           }, 1000);
         }
       }
+      async function refreshFlooringUndoBar() {
+        if (window.AVApi && typeof AVApi.getFlooringUndo === "function") {
+          try {
+            var resp = await AVApi.getFlooringUndo();
+            var fromApi = undoFromApi(resp);
+            if (fromApi) {
+              var cached = readFlooringUndo() || {};
+              writeFlooringUndo({
+                expiresAt: fromApi.expiresAt,
+                config: fromApi.config || cached.config || null,
+                vehicles: fromApi.vehicles && fromApi.vehicles.length
+                  ? fromApi.vehicles
+                  : cached.vehicles || [],
+              });
+            } else {
+              try {
+                localStorage.removeItem(flooringUndoStorageKey());
+              } catch (e) {}
+            }
+          } catch (e) {}
+        }
+        paintFlooringUndoBar();
+      }
       function clearFlooringUndo(msg) {
         var had = !!readFlooringUndo();
         try {
           localStorage.removeItem(flooringUndoStorageKey());
         } catch (e) {}
         paintFlooringUndoBar();
+        if (window.AVApi && typeof AVApi.clearFlooringUndo === "function") {
+          AVApi.clearFlooringUndo().catch(function () {});
+        }
         if (had && msg && typeof AVToast !== "undefined") AVToast.info(msg);
       }
       function dismissFlooringUndo() {
         var bar = document.getElementById("flooringUndoBar");
         if (bar) bar.classList.remove("is-visible");
       }
-      function snapshotFlooringForUndo() {
-        var cfg = {
-          buyFee: flooringConfig.buyFee || 0,
-          gracePeriod: flooringConfig.gracePeriod || 0,
-          payoffDays: flooringConfig.payoffDays || 90,
-          applied: !!flooringConfig.applied,
-          scope: flooringConfig.scope || "all",
-          planId: flooringConfig.planId || window.__flooringPlanId || null,
-          tiers: (flooringConfig.tiers || []).map(function (t) {
+      function buildFlooringUndoPayload() {
+        return {
+          config: {
+            buyFee: flooringConfig.buyFee || 0,
+            gracePeriod: flooringConfig.gracePeriod || 0,
+            payoffDays: flooringConfig.payoffDays || 90,
+            applied: !!flooringConfig.applied,
+            scope: flooringConfig.scope || "all",
+            planId: flooringConfig.planId || window.__flooringPlanId || null,
+            tiers: (flooringConfig.tiers || []).map(function (t) {
+              return {
+                max: t.max === Infinity ? null : t.max,
+                rate: Number(t.rate) || 0,
+              };
+            }),
+          },
+          vehicles: (vehicles || []).map(function (v) {
             return {
-              max: t.max === Infinity ? null : t.max,
-              rate: Number(t.rate) || 0,
+              vin: v.vin,
+              id: v.id || null,
+              floored: !!v.floored,
+              flooringOverride:
+                v.flooringOverride !== null && v.flooringOverride !== undefined
+                  ? Number(v.flooringOverride)
+                  : null,
+              flooringPaidOff: !!v.flooringPaidOff,
+              flooringPaidDate: v.flooringPaidDate || null,
+              flooringPaidAmount:
+                v.flooringPaidAmount != null ? Number(v.flooringPaidAmount) : null,
+              flooringStartDate:
+                (v._raw && v._raw.flooringStartDate) || null,
+              flooringPlanId: (v._raw && v._raw.flooringPlanId) || null,
+              flooringManual: !!(v._raw && v._raw.fees && v._raw.fees.flooringManual),
+              flooringFees:
+                v._raw && v._raw.flooringFees != null
+                  ? Number(v._raw.flooringFees)
+                  : null,
             };
           }),
         };
-        var vehiclesSnap = (vehicles || []).map(function (v) {
-          return {
-            vin: v.vin,
-            id: v.id || null,
-            floored: !!v.floored,
-            flooringOverride:
-              v.flooringOverride !== null && v.flooringOverride !== undefined
-                ? Number(v.flooringOverride)
-                : null,
-            flooringPaidOff: !!v.flooringPaidOff,
-            flooringPaidDate: v.flooringPaidDate || null,
-            flooringPaidAmount:
-              v.flooringPaidAmount != null ? Number(v.flooringPaidAmount) : null,
-            flooringStartDate:
-              (v._raw && v._raw.flooringStartDate) || null,
-            flooringPlanId: (v._raw && v._raw.flooringPlanId) || null,
-            flooringManual: !!(v._raw && v._raw.fees && v._raw.fees.flooringManual),
-            flooringFees:
-              v._raw && v._raw.flooringFees != null
-                ? Number(v._raw.flooringFees)
-                : null,
-          };
-        });
+      }
+      async function snapshotFlooringForUndo() {
+        var payload = buildFlooringUndoPayload();
         writeFlooringUndo({
           expiresAt: Date.now() + FL_UNDO_MS,
-          config: cfg,
-          vehicles: vehiclesSnap,
+          config: payload.config,
+          vehicles: payload.vehicles,
         });
         paintFlooringUndoBar();
+        if (window.AVApi && typeof AVApi.saveFlooringUndo === "function") {
+          var resp = await AVApi.saveFlooringUndo(payload);
+          var fromApi = undoFromApi(resp);
+          if (fromApi) {
+            writeFlooringUndo({
+              expiresAt: fromApi.expiresAt,
+              config: payload.config,
+              vehicles: payload.vehicles,
+            });
+            paintFlooringUndoBar();
+          }
+        }
+      }
+      async function reloadFlooringAfterUndo() {
+        if (window.AVApi && typeof AVApi.listFlooringPlans === "function") {
+          try {
+            var floorResp = await AVApi.listFlooringPlans();
+            var plans =
+              (floorResp && (floorResp.plans || floorResp.data || floorResp)) ||
+              [];
+            if (!Array.isArray(plans)) plans = [];
+            var active = plans.find(function (p) {
+              return p.isActive && !p.deletedAt;
+            });
+            if (active && window.AVFinancePersist) {
+              var fcfg = AVFinancePersist.flooringUiFromPlan(active);
+              window.__flooringPlanId = active.id;
+              Object.assign(flooringConfig, fcfg);
+            }
+          } catch (e) {}
+        }
+        if (window.AVVehicles && typeof AVVehicles.loadAllVehicles === "function") {
+          await AVVehicles.loadAllVehicles();
+        }
       }
       function closeRemoveFlooringConfirm() {
         const m = document.getElementById("removeFlooringConfirmModal");
@@ -41177,34 +41261,34 @@
         if (m) m.classList.add("open");
       }
       async function confirmRemoveFlooringAll() {
-        snapshotFlooringForUndo();
-        flooringConfig.applied = false;
-        const all = (vehicles || []).slice();
-        all.forEach((v) => {
-          v.floored = false;
-          delete v.flooringOverride;
-          v.flooringPaidOff = false;
-          if (v._raw) {
-            v._raw.flooringStartDate = null;
-            v._raw.flooringPlanId = null;
-            if (v._raw.fees) v._raw.fees.flooringManual = false;
-          }
-        });
-        const cb = document.getElementById("flooringAutoAll");
-        if (cb) {
-          cb.checked = false;
-          try {
-            syncFlooringAuto();
-          } catch (e) {}
-        }
-        const rb = document.getElementById("flooringRetractBox");
-        if (rb) rb.style.display = "none";
         const confirmBtn = document.getElementById("confirmRemoveFlooringBtn");
         if (typeof AVBusy !== "undefined") {
           AVBusy.inc();
           if (confirmBtn) AVBusy.setBtnLoading(confirmBtn, true, "Removing\u2026");
         }
         try {
+          await snapshotFlooringForUndo();
+          flooringConfig.applied = false;
+          const all = (vehicles || []).slice();
+          all.forEach((v) => {
+            v.floored = false;
+            delete v.flooringOverride;
+            v.flooringPaidOff = false;
+            if (v._raw) {
+              v._raw.flooringStartDate = null;
+              v._raw.flooringPlanId = null;
+              if (v._raw.fees) v._raw.fees.flooringManual = false;
+            }
+          });
+          const cb = document.getElementById("flooringAutoAll");
+          if (cb) {
+            cb.checked = false;
+            try {
+              syncFlooringAuto();
+            } catch (e) {}
+          }
+          const rb = document.getElementById("flooringRetractBox");
+          if (rb) rb.style.display = "none";
           if (
             window.AVApi &&
             window.AVFinancePersist &&
@@ -41258,92 +41342,66 @@
       }
       async function undoRemoveFlooringAll() {
         var data = readFlooringUndo();
-        if (!data) {
-          if (typeof AVToast !== "undefined")
-            AVToast.info("Undo is no longer available.");
-          paintFlooringUndoBar();
-          return;
-        }
         var btn = document.getElementById("flooringUndoBtn");
         if (typeof AVBusy !== "undefined") {
           AVBusy.inc();
           if (btn) AVBusy.setBtnLoading(btn, true, "Restoring\u2026");
         }
         try {
-          if (data.config) {
-            flooringConfig.buyFee = data.config.buyFee || 0;
-            flooringConfig.gracePeriod = data.config.gracePeriod || 0;
-            flooringConfig.payoffDays = data.config.payoffDays || 90;
-            flooringConfig.applied = !!data.config.applied;
-            flooringConfig.scope = data.config.scope || "all";
-            flooringConfig.planId = data.config.planId || flooringConfig.planId;
-            flooringConfig.tiers = (data.config.tiers || []).map(function (t) {
-              return {
-                max: t.max == null ? Infinity : t.max,
-                rate: Number(t.rate) || 0,
-              };
-            });
-            if (data.config.planId) window.__flooringPlanId = data.config.planId;
-          }
-          if (
-            window.AVApi &&
-            window.AVFinancePersist &&
-            typeof AVApi.updateFlooringPlan === "function"
-          ) {
-            var planId =
-              window.__flooringPlanId || flooringConfig.planId || null;
-            if (planId) {
-              var payload = AVFinancePersist.flooringPlanPayloadFromUi(
-                flooringConfig,
-                today.toISOString().slice(0, 10),
-              );
-              await AVApi.updateFlooringPlan(planId, payload);
-            }
-          }
-          var snaps = data.vehicles || [];
-          for (var i = 0; i < snaps.length; i++) {
-            var snap = snaps[i];
-            var v = (vehicles || []).find(function (x) {
-              return x.vin === snap.vin || (snap.id && x.id === snap.id);
-            });
-            if (!v) continue;
-            v.floored = !!snap.floored;
-            v.flooringPaidOff = !!snap.flooringPaidOff;
-            v.flooringPaidDate = snap.flooringPaidDate || null;
-            v.flooringPaidAmount = snap.flooringPaidAmount;
-            if (snap.flooringOverride !== null && snap.flooringOverride !== undefined) {
-              v.flooringOverride = snap.flooringOverride;
-            } else {
-              delete v.flooringOverride;
-            }
-            if (v._raw) {
-              v._raw.flooringStartDate = snap.flooringStartDate;
-              v._raw.flooringPlanId = snap.flooringPlanId;
-              if (!v._raw.fees) v._raw.fees = {};
-              v._raw.fees.flooringManual = !!snap.flooringManual;
-            }
-            if (!window.AVVehicles) continue;
+          if (window.AVApi && typeof AVApi.restoreFlooringUndo === "function") {
+            await AVApi.restoreFlooringUndo();
             try {
-              if (snap.flooringManual || snap.flooringOverride != null) {
-                await AVVehicles.persistMoneyField(
-                  v.vin,
-                  "flooring",
-                  snap.flooringOverride != null
-                    ? snap.flooringOverride
-                    : snap.flooringFees,
-                );
-              } else if (snap.floored || snap.flooringStartDate) {
-                await AVVehicles.persistPatch(v.vin, {
-                  flooringStartDate: snap.flooringStartDate,
-                  flooringPlanId: snap.flooringPlanId,
-                  flooringFees: snap.flooringFees || 0,
-                });
+              localStorage.removeItem(flooringUndoStorageKey());
+            } catch (e) {}
+            await reloadFlooringAfterUndo();
+          } else if (data) {
+            if (data.config) {
+              flooringConfig.buyFee = data.config.buyFee || 0;
+              flooringConfig.gracePeriod = data.config.gracePeriod || 0;
+              flooringConfig.payoffDays = data.config.payoffDays || 90;
+              flooringConfig.applied = !!data.config.applied;
+              flooringConfig.scope = data.config.scope || "all";
+              flooringConfig.planId = data.config.planId || flooringConfig.planId;
+              flooringConfig.tiers = (data.config.tiers || []).map(function (t) {
+                return {
+                  max: t.max == null ? Infinity : t.max,
+                  rate: Number(t.rate) || 0,
+                };
+              });
+              if (data.config.planId) window.__flooringPlanId = data.config.planId;
+            }
+            var snaps = data.vehicles || [];
+            for (var i = 0; i < snaps.length; i++) {
+              var snap = snaps[i];
+              var v = (vehicles || []).find(function (x) {
+                return x.vin === snap.vin || (snap.id && x.id === snap.id);
+              });
+              if (!v) continue;
+              v.floored = !!snap.floored;
+              v.flooringPaidOff = !!snap.flooringPaidOff;
+              v.flooringPaidDate = snap.flooringPaidDate || null;
+              v.flooringPaidAmount = snap.flooringPaidAmount;
+              if (snap.flooringOverride !== null && snap.flooringOverride !== undefined) {
+                v.flooringOverride = snap.flooringOverride;
+              } else {
+                delete v.flooringOverride;
               }
-            } catch (_) {}
+              if (v._raw) {
+                v._raw.flooringStartDate = snap.flooringStartDate;
+                v._raw.flooringPlanId = snap.flooringPlanId;
+                if (!v._raw.fees) v._raw.fees = {};
+                v._raw.fees.flooringManual = !!snap.flooringManual;
+              }
+            }
+            try {
+              localStorage.removeItem(flooringUndoStorageKey());
+            } catch (e) {}
+          } else {
+            if (typeof AVToast !== "undefined")
+              AVToast.info("Undo is no longer available.");
+            paintFlooringUndoBar();
+            return;
           }
-          try {
-            localStorage.removeItem(flooringUndoStorageKey());
-          } catch (e) {}
           if (typeof AVToast !== "undefined")
             AVToast.success("Flooring costs restored.");
         } catch (err) {
@@ -41371,6 +41429,7 @@
       window.dismissFlooringUndo = dismissFlooringUndo;
       window.clearFlooringUndo = clearFlooringUndo;
       paintFlooringUndoBar();
+      refreshFlooringUndoBar();
 
       // ---------- VEHICLE DETAIL MODAL ----------
       function openVehicleDetail(vin) {

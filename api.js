@@ -622,6 +622,16 @@
       }),
     deleteFlooringPlan: (id) =>
       request(`/api/v1/flooring-plans/${id}`, { method: "DELETE" }),
+    getFlooringUndo: () => request("/api/v1/flooring/undo"),
+    saveFlooringUndo: (body = {}) =>
+      request("/api/v1/flooring/undo", {
+        method: "PUT",
+        body: JSON.stringify(body),
+      }),
+    restoreFlooringUndo: () =>
+      request("/api/v1/flooring/undo", { method: "POST" }),
+    clearFlooringUndo: () =>
+      request("/api/v1/flooring/undo", { method: "DELETE" }),
     calendarEvents: (qs = "") => request(`/api/v1/calendar/events${qs}`),
     createCalendarEvent: (body) =>
       request("/api/v1/calendar/events", { method: "POST", body: JSON.stringify(body) }),
