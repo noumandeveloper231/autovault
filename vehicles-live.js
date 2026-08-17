@@ -767,6 +767,33 @@
     return persistPatch(vin, patch);
   }
 
+  async function attachFlooringPlan(vin, opts) {
+    opts = opts || {};
+    const v = findUiVehicle(vin);
+    if (!v || !v.id) throw new Error("Vehicle has no API id - reload inventory");
+    const prevFees = mergeFees(v, {});
+    const dateStr = v.date ? String(v.date).slice(0, 10) : "";
+    const startIso = /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+      ? new Date(dateStr + "T12:00:00").toISOString()
+      : new Date().toISOString();
+    const amount = Number(opts.cost);
+    const patch = {
+      flooringPlanId: opts.planId || null,
+      flooringFees: Number.isFinite(amount) ? amount : 0,
+      fees: {
+        ...prevFees,
+        flooringManual: false,
+        flooringDetail: prevFees.flooringDetail || null,
+      },
+    };
+    if (!(v._raw && v._raw.flooringStartDate)) {
+      patch.flooringStartDate = startIso;
+    }
+    v.floored = true;
+    v.flooringOverride = null;
+    return persistPatch(vin, patch);
+  }
+
   function mergeFees(v, extra) {
     const vehicleFees =
       v && v._raw && v._raw.fees && typeof v._raw.fees === "object"
@@ -1112,6 +1139,7 @@
     persistPatch,
     refreshOneVehicle,
     persistMoneyField,
+    attachFlooringPlan,
     persistNetCheck,
     persistAddOnItems,
     persistStatus,

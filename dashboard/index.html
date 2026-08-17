@@ -24473,7 +24473,7 @@
               <input
                 type="number"
                 id="buyFee"
-                value="150"
+                value="0"
                 min="0"
                 step="0.01"
                 oninput="updateFlooringPreview()"
@@ -24508,7 +24508,7 @@
               ><input
                 type="number"
                 id="tier1"
-                value="25"
+                value="0"
                 min="0"
                 step="0.01"
                 oninput="updateFlooringPreview()"
@@ -24519,7 +24519,7 @@
               ><input
                 type="number"
                 id="tier2"
-                value="35"
+                value="0"
                 min="0"
                 step="0.01"
                 oninput="updateFlooringPreview()"
@@ -24530,7 +24530,7 @@
               ><input
                 type="number"
                 id="tier3"
-                value="45"
+                value="0"
                 min="0"
                 step="0.01"
                 oninput="updateFlooringPreview()"
@@ -24541,7 +24541,7 @@
               ><input
                 type="number"
                 id="tier4"
-                value="55"
+                value="0"
                 min="0"
                 step="0.01"
                 oninput="updateFlooringPreview()"
@@ -37567,9 +37567,8 @@
       function calcFlooringCost(daysOnLot, cfg) {
         const grace = cfg.gracePeriod || 0;
         const billableDays = Math.max(0, daysOnLot - grace);
-        if (billableDays === 0) return 0;
-        let remaining = billableDays;
         let cost = cfg.buyFee || 0;
+        let remaining = billableDays;
         let prevMax = 0;
         for (const tier of cfg.tiers) {
           const bandDays = Math.min(remaining, tier.max - prevMax);
@@ -40891,13 +40890,32 @@
         updateFlooringPreview();
       }
 
+      function fillFlooringFormFromConfig() {
+        var buy = document.getElementById("buyFee");
+        var grace = document.getElementById("gracePeriod");
+        var payoff = document.getElementById("payoffDays");
+        var t1 = document.getElementById("tier1");
+        var t2 = document.getElementById("tier2");
+        var t3 = document.getElementById("tier3");
+        var t4 = document.getElementById("tier4");
+        var tiers = flooringConfig.tiers || [];
+        if (buy) buy.value = flooringConfig.buyFee || 0;
+        if (grace) grace.value = flooringConfig.gracePeriod || 0;
+        if (payoff) payoff.value = flooringConfig.payoffDays || 90;
+        if (t1) t1.value = (tiers[0] && tiers[0].rate) || 0;
+        if (t2) t2.value = (tiers[1] && tiers[1].rate) || 0;
+        if (t3) t3.value = (tiers[2] && tiers[2].rate) || 0;
+        if (t4) t4.value = (tiers[3] && tiers[3].rate) || 0;
+      }
+
       const flooringModal = document.getElementById("flooringModal");
       document.getElementById("openFlooringModal").onclick = () => {
         avSetDate("effectiveDate", today.toISOString().split("T")[0]);
-        document.getElementById("payoffDays").value =
-          flooringConfig.payoffDays || 90;
+        fillFlooringFormFromConfig();
+        // First visit: leave auto ON so Apply floors inventory. After a plan
+        // exists, reflect whether flooring is currently active.
         document.getElementById("flooringAutoAll").checked =
-          !!flooringConfig.applied;
+          flooringConfig.applied || !flooringConfig.planId;
         syncFlooringAuto();
         flooringConfig.scope = "all";
         flooringSelectedVins = new Set(
@@ -40959,18 +40977,9 @@
           return;
         }
         const autoAll = document.getElementById("flooringAutoAll");
-        const enable = autoAll ? autoAll.checked : true;
-        if (enable && flooringConfig.applied) {
-          if (typeof AVToast !== "undefined")
-            AVToast.info(
-              "Flooring is already applied. Remove it first to avoid duplicating costs.",
-            );
-          const rb = document.getElementById("flooringRetractBox");
-          if (rb) rb.style.display = "";
-          return;
-        }
+        const autoNew = autoAll ? !!autoAll.checked : true;
         flooringConfig = { ...cfg };
-        flooringConfig.applied = enable;
+        flooringConfig.applied = true;
         const activeVehicles = vehicles.filter((v) => !v.sold);
         const affectedVins = [];
         activeVehicles.forEach((v) => {
@@ -40978,7 +40987,7 @@
           const shouldApply =
             flooringConfig.scope === "all" || flooringSelectedVins.has(v.vin);
           if (shouldApply) {
-            v.floored = enable;
+            v.floored = true;
             delete v.flooringOverride;
             affectedVins.push(v.vin);
           }
@@ -41012,20 +41021,35 @@
               flooringConfig.planId = plan.id;
             }
           }
+          const planId =
+            window.__flooringPlanId || flooringConfig.planId || null;
           if (window.AVVehicles && affectedVins.length) {
             for (const vin of affectedVins) {
               const v = vehicles.find((x) => x.vin === vin);
-              if (v && v.id && enable) {
-                const days = daysBetween(new Date(v.date), today);
-                const cost = calcFlooringCost(days, flooringConfig);
-                try {
+              if (!v || !v.id) continue;
+              const days = daysBetween(new Date(v.date), today);
+              const cost = calcFlooringCost(days, flooringConfig);
+              try {
+                if (typeof AVVehicles.attachFlooringPlan === "function") {
+                  await AVVehicles.attachFlooringPlan(vin, {
+                    planId: planId,
+                    cost: cost,
+                  });
+                } else {
                   await AVVehicles.persistMoneyField(vin, "flooring", cost);
-                } catch (_) {}
-              }
+                }
+              } catch (_) {}
             }
           }
           if (typeof AVToast !== "undefined")
-            AVToast.success("Flooring plan applied");
+            AVToast.success(
+              affectedVins.length
+                ? "Flooring rate applied to " +
+                    affectedVins.length +
+                    " vehicle" +
+                    (affectedVins.length === 1 ? "" : "s")
+                : "Flooring plan saved",
+            );
           if (typeof clearFlooringUndo === "function") {
             clearFlooringUndo(
               "A new flooring rate was applied, so undo is no longer available.",
@@ -41038,13 +41062,13 @@
             );
         } finally {
           if (typeof AVBusy !== "undefined") {
-            AVBusy.setBtnLoading(applyBtn, false, "Apply Rate");
+            AVBusy.setBtnLoading(applyBtn, false, "Apply Flooring Rate");
             AVBusy.dec();
           }
         }
         flooringModal.classList.remove("open");
         if (typeof syncAddVehicleFlooringToggle === "function") {
-          syncAddVehicleFlooringToggle();
+          syncAddVehicleFlooringToggle(autoNew);
         }
         render();
       };
