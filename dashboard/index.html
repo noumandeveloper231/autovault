@@ -43913,9 +43913,15 @@
           AVBusy.setBtnLoading(saveBtn, true, "Saving\u2026");
         }
         try {
-          if (window.AVVehicles && v.vin) {
-            await AVVehicles.persistMoneyField(v.vin, "flooring", finalCost);
+          if (!window.AVVehicles || !v.vin) {
+            throw new Error("Inventory is not connected. Reload and try again.");
           }
+          await AVVehicles.persistMoneyField(v.vin, "flooring", finalCost);
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Flooring cost saved.");
+          document.getElementById("flooringDetailModal").classList.remove("open");
+          render();
+          refreshAllPnl();
         } catch (err) {
           if (typeof AVToast !== "undefined")
             AVToast.error("Failed to save flooring: " + (err.message || err));
@@ -43925,9 +43931,6 @@
             AVBusy.dec();
           }
         }
-        document.getElementById("flooringDetailModal").classList.remove("open");
-        render();
-        refreshAllPnl();
       };
 
       document.getElementById("cancelFlooringDetail").onclick = () =>

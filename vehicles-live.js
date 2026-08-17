@@ -299,10 +299,17 @@
       /* Explicit override (including $0) only when the dealer set flooring
          on this vehicle. Stored fees alone do not invent a flooring cost. */
       flooringOverride: (function () {
-        const manual = !!(api.fees && api.fees.flooringManual);
-        if (manual) return flooringFees != null ? Number(flooringFees) || 0 : 0;
+        const vehicleManual = !!(api.fees && api.fees.flooringManual);
+        const jacketManual = !!(jacket && jacket.fees && jacket.fees.flooringManual);
+        if (vehicleManual || jacketManual) {
+          return flooringFees != null ? Number(flooringFees) || 0 : 0;
+        }
         return null;
       })(),
+      flooringDetail:
+        (api.fees && api.fees.flooringDetail) ||
+        (jacket && jacket.fees && jacket.fees.flooringDetail) ||
+        undefined,
       isWholesale: !!api.isWholesale,
       documents: (jacket && Array.isArray(jacket.documents))
         ? jacket.documents.map(d => ({ id: d.id, name: d.documentName, img: d.fileUrl, ts: d.uploadedAt }))
@@ -555,8 +562,18 @@
     if (!v || !v.id) throw new Error("Vehicle has no API id - reload inventory");
     const jacket =
       v._raw && Array.isArray(v._raw.dealJackets) && v._raw.dealJackets[0];
+    const flooringOnVehicle = !!(
+      patch &&
+      (Object.prototype.hasOwnProperty.call(patch, "flooringFees") ||
+        Object.prototype.hasOwnProperty.call(patch, "flooringStartDate") ||
+        Object.prototype.hasOwnProperty.call(patch, "flooringPlanId") ||
+        (patch.fees &&
+          (patch.fees.flooringManual !== undefined ||
+            patch.fees.flooringDetail !== undefined)))
+    );
     // Jacket-owned fees (Net Check / add-ons) must update the deal jacket, not only the vehicle.
-    if (patch && patch.fees && jacket && jacket.id) {
+    // Flooring cost lives on the vehicle — never divert that patch to the jacket alone.
+    if (patch && patch.fees && jacket && jacket.id && !flooringOnVehicle) {
       const fees = mergeFees(v, patch.fees);
       const jacketPatch = { fees };
       if (patch.additionalExpenses != null)
@@ -686,20 +703,28 @@
       const prevFees = mergeFees(v, {});
       if (value === null || value === undefined) {
         patch.flooringFees = 0;
-        patch.fees = { ...prevFees, flooringManual: false };
+        patch.fees = {
+          ...prevFees,
+          flooringManual: false,
+          flooringDetail: null,
+        };
         patch.flooringStartDate = null;
         patch.flooringPlanId = null;
       } else {
         const amount = Number(value);
         patch.flooringFees = Number.isFinite(amount) ? amount : 0;
-        // Persist explicit override — including $0 — so auto-calc does not win
-        patch.fees = { ...prevFees, flooringManual: true };
+        patch.fees = {
+          ...prevFees,
+          flooringManual: true,
+          flooringDetail: (v && v.flooringDetail) || prevFees.flooringDetail || null,
+        };
         if (patch.flooringFees > 0) {
+          const dateStr = v && v.date ? String(v.date).slice(0, 10) : "";
+          const startIso = /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+            ? new Date(dateStr + "T12:00:00").toISOString()
+            : new Date().toISOString();
           if (v && !v._raw?.flooringStartDate) {
-            patch.flooringStartDate = (v.date
-              ? new Date(v.date + "T12:00:00")
-              : new Date()
-            ).toISOString();
+            patch.flooringStartDate = startIso;
           }
         }
       }
