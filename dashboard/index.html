@@ -21998,6 +21998,16 @@
               </div>
               <div class="fb-btns">
                 <button
+                  type="button"
+                  class="btn-primary"
+                  id="flooringUndoCompactBtn"
+                  style="display: none; box-shadow: none; white-space: nowrap"
+                  onclick="undoRemoveFlooringAll()"
+                >
+                  Undo Removal
+                  <span id="flooringUndoCompactTimer" style="opacity: 0.85"></span>
+                </button>
+                <button
                   class="btn-ghost"
                   id="openFlooringModal"
                   style="white-space: nowrap"
@@ -24700,6 +24710,16 @@
             "
           >
             Remove Flooring From All Vehicles
+          </button>
+          <button
+            type="button"
+            class="btn-primary"
+            id="flooringUndoModalBtn"
+            style="display: none; box-shadow: none; white-space: nowrap"
+            onclick="undoRemoveFlooringAll()"
+          >
+            Undo Removal
+            <span id="flooringUndoModalTimer" style="opacity: 0.85"></span>
           </button>
           <button class="btn-ghost" id="cancelFlooringModal">Cancel</button>
           <button class="btn-danger" id="applyFlooringRate">
@@ -40879,6 +40899,7 @@
         updateFlooringPreview();
         const rb = document.getElementById("flooringRetractBox");
         if (rb) rb.style.display = flooringConfig.applied ? "" : "none";
+        paintFlooringUndoBar();
         flooringModal.classList.add("open");
       };
       document.getElementById("closeFlooringModal").onclick = () =>
@@ -41083,23 +41104,58 @@
         if (m > 0) return m + "m " + sec + "s";
         return sec + "s";
       }
+      function flooringUndoDismissKey() {
+        return flooringUndoStorageKey() + ":dismissed";
+      }
+      function isFlooringUndoDismissed() {
+        try {
+          return sessionStorage.getItem(flooringUndoDismissKey()) === "1";
+        } catch (e) {
+          return false;
+        }
+      }
+      function setFlooringUndoDismissed(on) {
+        try {
+          if (on) sessionStorage.setItem(flooringUndoDismissKey(), "1");
+          else sessionStorage.removeItem(flooringUndoDismissKey());
+        } catch (e) {}
+      }
+      function syncFlooringUndoButtons(data) {
+        var compact = document.getElementById("flooringUndoCompactBtn");
+        var compactTimer = document.getElementById("flooringUndoCompactTimer");
+        var modalBtn = document.getElementById("flooringUndoModalBtn");
+        var modalTimer = document.getElementById("flooringUndoModalTimer");
+        var remain = data ? formatUndoRemain(data.expiresAt - Date.now()) : "";
+        var showAlt = !!(data && isFlooringUndoDismissed());
+        if (compact) compact.style.display = showAlt ? "" : "none";
+        if (compactTimer) compactTimer.textContent = remain ? "(" + remain + ")" : "";
+        if (modalBtn) modalBtn.style.display = data ? "" : "none";
+        if (modalTimer) modalTimer.textContent = remain ? "(" + remain + ")" : "";
+      }
       function paintFlooringUndoBar() {
         var bar = document.getElementById("flooringUndoBar");
         var timerEl = document.getElementById("flooringUndoTimer");
         var data = readFlooringUndo();
-        if (!bar) return;
         if (!data) {
-          bar.classList.remove("is-visible");
+          setFlooringUndoDismissed(false);
+          if (bar) bar.classList.remove("is-visible");
+          syncFlooringUndoButtons(null);
           if (__flUndoTimer) {
             clearInterval(__flUndoTimer);
             __flUndoTimer = null;
           }
           return;
         }
-        bar.classList.remove("is-dismissed");
-        bar.classList.add("is-visible");
+        if (bar) {
+          if (isFlooringUndoDismissed()) bar.classList.remove("is-visible");
+          else {
+            bar.classList.remove("is-dismissed");
+            bar.classList.add("is-visible");
+          }
+        }
         var remain = data.expiresAt - Date.now();
         if (timerEl) timerEl.textContent = formatUndoRemain(remain);
+        syncFlooringUndoButtons(data);
         if (!__flUndoTimer) {
           __flUndoTimer = setInterval(function () {
             var cur = readFlooringUndo();
@@ -41109,6 +41165,7 @@
               return;
             }
             if (tEl) tEl.textContent = formatUndoRemain(cur.expiresAt - Date.now());
+            syncFlooringUndoButtons(cur);
           }, 1000);
         }
       }
@@ -41147,8 +41204,8 @@
         if (had && msg && typeof AVToast !== "undefined") AVToast.info(msg);
       }
       function dismissFlooringUndo() {
-        var bar = document.getElementById("flooringUndoBar");
-        if (bar) bar.classList.remove("is-visible");
+        setFlooringUndoDismissed(true);
+        paintFlooringUndoBar();
       }
       function buildFlooringUndoPayload() {
         return {
@@ -41193,6 +41250,7 @@
       }
       async function snapshotFlooringForUndo() {
         var payload = buildFlooringUndoPayload();
+        setFlooringUndoDismissed(false);
         writeFlooringUndo({
           expiresAt: Date.now() + FL_UNDO_MS,
           config: payload.config,
