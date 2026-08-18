@@ -78,7 +78,6 @@
     }
   ],
   "rewrites": [
-    { "handle": "filesystem" },
     { "source": "/cpa/dashboard", "destination": "/dashboard" },
     { "source": "/cpa/dashboard/:path*", "destination": "/dashboard" },
     { "source": "/owner/login", "destination": "/login" },
