@@ -624,6 +624,33 @@
         color: var(--purple);
       }
 
+      .qa-split{position:relative;display:inline-flex;align-items:stretch;}
+      .qa-split>.qa-btn{border-top-right-radius:0;border-bottom-right-radius:0;border-right:none;}
+      .qa-caret{display:flex;align-items:center;justify-content:center;background:var(--panel);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:0 8px;border-top-right-radius:9px;border-bottom-right-radius:9px;cursor:pointer;transition:all .15s;}
+      .qa-caret:hover{border-color:var(--blue);color:var(--blue);}
+      .qa-split.accent-purple>.qa-btn{border-right:none;}
+      .qa-split.accent-purple .qa-caret:hover{border-color:var(--purple);color:var(--purple);}
+      .qa-menu{position:absolute;top:calc(100% + 6px);left:0;min-width:210px;background:var(--panel);border:1px solid var(--border);border-radius:10px;box-shadow:0 12px 34px rgba(0,0,0,.4);padding:5px;z-index:120;display:none;}
+      .qa-menu.open{display:block;}
+      .qa-menu button{display:block;width:100%;text-align:left;background:none;border:none;color:var(--text);font-family:inherit;font-size:12.5px;font-weight:700;padding:9px 11px;border-radius:7px;cursor:pointer;white-space:nowrap;}
+      .qa-menu button:hover{background:var(--panel-2);color:var(--blue);}
+      .qa-menu .qam-sub{display:block;font-size:10.5px;font-weight:500;color:var(--muted);margin-top:2px;white-space:nowrap;}
+
+      .av-novin-bar{display:flex;justify-content:flex-end;margin-bottom:12px;}
+      .av-novin-toggle{background:var(--panel-2);border:1px solid var(--border);color:var(--muted);font-family:inherit;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .13s;}
+      .av-novin-toggle:hover{border-color:var(--blue);color:var(--blue);}
+      .av-novin-toggle.active{background:rgba(74,157,255,.14);border-color:var(--blue);color:var(--blue);}
+
+      .tax-freq-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:2px;}
+      .tax-freq-opt{padding:11px 12px;border:1.5px solid var(--border);background:var(--panel);color:var(--text);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:all .13s;font-family:inherit;text-align:center;}
+      .tax-freq-opt:hover{border-color:var(--blue);color:var(--blue);}
+      .tax-freq-opt.active{border-color:var(--blue);background:rgba(74,157,255,.12);color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue);}
+      .tax-freq-opt.tax-freq-wide{grid-column:1 / -1;}
+      .tax-autosave-hint{font-size:11px;color:var(--muted);margin-top:8px;display:flex;align-items:center;gap:6px;}
+      .tax-autosave-hint svg{flex-shrink:0;}
+      .tax-custom-panel{margin-top:11px;padding:12px 13px;border:1px dashed var(--border);border-radius:10px;background:var(--panel-2);}
+      .tax-custom-panel .tcp-lbl{font-size:11.5px;color:var(--muted);margin-bottom:8px;line-height:1.5;}
+
       .profile-wrap {
         position: relative;
         margin-left: 6px;
@@ -992,8 +1019,7 @@
       }
 
       .page-sub {
-        font-size: 12.5px;
-        color: var(--muted);
+        display: none !important;
       }
 
       /* FLOORING SUMMARY (RED) */
@@ -27106,7 +27132,9 @@
           <button class="modal-close" onclick="closeAddVeh()">&times;</button>
         </div>
         <div class="modal-body">
-          <button type="button" class="av-scan-cta" onclick="avScan()">
+          <div class="av-novin-bar"><button type="button" class="av-novin-toggle" id="avNoVinToggle" onclick="avToggleNoVin()">Add without VIN number</button></div>
+          <div id="avVinSection">
+          <button type="button" class="av-scan-cta" id="avScanCta" onclick="avScan()">
             <svg
               viewBox="0 0 24 24"
               fill="none"
@@ -27120,7 +27148,7 @@
             </svg>
             Scan VIN number
           </button>
-          <label class="av-label">Or paste / type the VIN</label>
+          <label class="av-label" id="avVinLabel">Or paste / type the VIN</label>
           <div class="av-vin-row">
             <input
               id="avVin"
@@ -27136,7 +27164,7 @@
               "
               autocomplete="off"
             />
-            <button class="av-scan-btn" onclick="avScan()" title="Scan VIN">
+            <button class="av-scan-btn" id="avScanIconBtn" onclick="avScan()" title="Scan VIN">
               <svg
                 width="20"
                 height="20"
@@ -27153,6 +27181,7 @@
             </button>
           </div>
           <div id="avDecoded" class="av-decoded"></div>
+          </div><!-- /avVinSection -->
           <div class="av-grid3">
             <div>
               <label class="av-label">Year</label
@@ -27264,6 +27293,25 @@
               />
             </div>
           </div>
+          <div style="margin-bottom:12px;">
+            <label class="av-label">Purchase Location</label>
+            <input id="avLocation" class="rc-input" type="text" list="auctionList" placeholder="Manheim, ADESA, dealer trade, private\u2026" autocomplete="off">
+            <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4;">Where you bought it &mdash; pick an auction or type your own.</div>
+          </div>
+          <datalist id="auctionList">
+            <option value="Manheim"></option>
+            <option value="ADESA"></option>
+            <option value="Copart"></option>
+            <option value="IAA (Insurance Auto Auctions)"></option>
+            <option value="ACV Auctions"></option>
+            <option value="America's Auto Auction"></option>
+            <option value="Carvana / Online"></option>
+            <option value="Dealer Trade"></option>
+            <option value="Customer Trade-In"></option>
+            <option value="Private Party"></option>
+            <option value="Off-Lease / Rental"></option>
+            <option value="Repossession"></option>
+          </datalist>
           <div class="av-flooring">
             <div>
               <div class="av-fl-title">Add Flooring Rate</div>
@@ -27306,6 +27354,14 @@
               <button class="atp-no" onclick="finalizeAddVehicle(false)">
                 No, not yet
               </button>
+            </div>
+          </div>
+          <div class="av-title-pop" id="avNoVinPop">
+            <div class="atp-q">Save this vehicle without a VIN?</div>
+            <div class="atp-sub">No VIN was entered. We'll assign a temporary stock tag so you can track it now &mdash; you can add the real VIN later from its deal jacket.</div>
+            <div class="atp-btns">
+              <button class="atp-yes" onclick="avConfirmNoVin(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Yes, save without VIN</button>
+              <button class="atp-no" onclick="avConfirmNoVin(false)">No, I'll add it</button>
             </div>
           </div>
           <div id="avMsg" style="margin-top: 12px"></div>
@@ -28021,71 +28077,38 @@
       </div>
     </div>
 
-    <div class="modal-overlay" id="taxConfigModal" style="display: none">
-      <div class="modal" style="max-width: 460px">
+    <div class="modal-overlay" id="taxConfigModal" style="display:none;">
+      <div class="modal" style="max-width:470px;">
         <div class="modal-head">
           <h3>Sales Tax Filing Schedule</h3>
-          <button class="modal-close" onclick="closeTaxConfig()">
-            &times;
-          </button>
+          <button class="modal-close" onclick="closeTaxConfig()">&times;</button>
         </div>
         <div class="modal-body">
+          <div class="form-group"><label>Filing Frequency</label>
+            <div class="tax-freq-opts" id="taxFreqOpts">
+              <button type="button" class="tax-freq-opt" data-freq="Monthly" onclick="pickTaxFreq('Monthly')">Monthly</button>
+              <button type="button" class="tax-freq-opt" data-freq="Quarterly" onclick="pickTaxFreq('Quarterly')">Quarterly</button>
+              <button type="button" class="tax-freq-opt" data-freq="Semi-Annually" onclick="pickTaxFreq('Semi-Annually')">Semi-Annually</button>
+              <button type="button" class="tax-freq-opt" data-freq="Annually" onclick="pickTaxFreq('Annually')">Annually</button>
+              <button type="button" class="tax-freq-opt tax-freq-wide" data-freq="Custom" onclick="pickTaxFreq('Custom')">Custom Range</button>
+            </div>
+            <div class="tax-autosave-hint"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 13l4 4L19 7"/></svg> Tap a frequency &mdash; it saves and updates the whole year automatically.</div>
+          </div>
+          <div class="tax-custom-panel" id="taxCustomPanel" style="display:none;">
+            <div class="tcp-lbl">Enter your own filing period. The dashboard will track sales tax collected between these dates.</div>
+            <div class="form-row">
+              <div class="form-group"><label>From</label><input type="date" id="taxCustomStart" onchange="applyTaxCustom()"></div>
+              <div class="form-group"><label>To</label><input type="date" id="taxCustomEnd" onchange="applyTaxCustom()"></div>
+            </div>
+          </div>
+          <div style="font-size:11.5px;color:var(--muted);margin:9px 0 10px;line-height:1.55;">Filing frequency varies by state &mdash; some states have no sales tax at all. Whatever you pick, the dashboard splits your whole year into those periods, tracks each one, and reminds you when the next filing is due. Sales tax per sale is entered on each vehicle&rsquo;s deal.</div>
           <div class="form-row">
-            <div class="form-group">
-              <label>Filing Frequency</label>
-              <select id="taxCfgFreq">
-                <option>Monthly</option>
-                <option>Quarterly</option>
-                <option>Semi-Annually</option>
-                <option>Annually</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Next Filing Due Date</label
-              ><input type="date" id="taxCfgDue" />
-            </div>
-          </div>
-          <div
-            style="
-              font-size: 11.5px;
-              color: var(--muted);
-              margin: 2px 0 10px;
-              line-height: 1.55;
-            "
-          >
-            Filing frequency and due dates vary by state &mdash; some states
-            have no sales tax at all. Set yours here so the dashboard reminds
-            you when your next filing is due. The sales tax for each sale is
-            entered per vehicle on its deal, since rates change by location/ZIP.
-          </div>
-          <div class="form-group">
-            <label>Notes (optional)</label
-            ><input
-              type="text"
-              id="taxCfgNotes"
-              placeholder="e.g. CDTFA account #, portal login reminder"
-            />
+            <div class="form-group"><label>Next Filing Due Date</label><input type="date" id="taxCfgDue" onchange="saveTaxConfigLive()"></div>
+            <div class="form-group"><label>Notes (optional)</label><input type="text" id="taxCfgNotes" onchange="saveTaxConfigLive()" placeholder="e.g. CDTFA account #"></div>
           </div>
         </div>
         <div class="modal-foot">
-          <button class="btn-ghost" onclick="closeTaxConfig()">Cancel</button>
-          <button
-            class="btn-primary"
-            style="box-shadow: none"
-            onclick="saveTaxConfig()"
-          >
-            <svg
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.2"
-            >
-              <path d="M5 13l4 4L19 7" />
-            </svg>
-            Save Schedule
-          </button>
+          <button class="btn-primary" style="box-shadow:none;" onclick="closeTaxConfig()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Done</button>
         </div>
       </div>
     </div>
@@ -29802,24 +29825,27 @@
           const keys = Object.keys(byMonth).sort().reverse();
           let rh = "",
             totNet = 0,
-            totCars = 0;
+            totCars = 0,
+            totSpend = 0;
           keys.forEach((k) => {
             const rows = byMonth[k].sort((a, b) =>
               (a.soldDate || "").localeCompare(b.soldDate || ""),
             );
             const net = rows.reduce((s, r) => s + r.netProfit, 0);
+            const spend = rows.reduce((s, r) => s + (r.price || 0), 0);
             totNet += net;
             totCars += rows.length;
+            totSpend += spend;
             let label = "No sold date";
             if (k !== "0000-00") {
               const p = k.split("-");
               label = `${SV_MFULL[+p[1] - 1]} ${p[0]}`;
             }
-            rh += `<tr class="sv-month-row"><td colspan="7"><span class="sv-mr-name">${label}</span><span class="sv-mr-meta">${rows.length} car${rows.length === 1 ? "" : "s"} \u00b7 <b style="color:${net >= 0 ? "var(--green)" : "var(--red)"}">${dashMoney(net)}</b> net</span></td></tr>`;
+            rh += `<tr class="sv-month-row"><td colspan="7"><span class="sv-mr-name">${label}</span><span class="sv-mr-meta">${rows.length} car${rows.length === 1 ? "" : "s"} \u00b7 <b style="color:var(--c-purchase)">${dashMoney(spend)}</b> spent \u00b7 <b style="color:${net >= 0 ? "var(--green)" : "var(--red)"}">${dashMoney(net)}</b> net</span></td></tr>`;
             rh += rows.map(svRowHtml).join("");
           });
           body.innerHTML = rh
-            ? `<div class="sv-year-lbl">All sold vehicles \u00b7 <span style="color:var(--text);">${totCars} sold</span> \u00b7 <b style="color:${totNet >= 0 ? "var(--green)" : "var(--red)"};">${dashMoney(totNet)}</b> net</div><div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${SV_THEAD}<tbody>${rh}</tbody></table></div></div>`
+            ? `<div class="sv-year-lbl">All sold vehicles \u00b7 ${svYear} \u00b7 <span style="color:var(--text);">${totCars} sold</span> \u00b7 <b style="color:var(--c-purchase);">${dashMoney(totSpend)}</b> spent \u00b7 <b style="color:${totNet >= 0 ? "var(--green)" : "var(--red)"};">${dashMoney(totNet)}</b> net</div><div class="table-card"><div class="table-scroll"><table class="dash-sold-table">${SV_THEAD}<tbody>${rh}</tbody></table></div></div>`
             : `<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No sold vehicles yet.</div>`;
         } else {
           if (calWrap) calWrap.style.display = "";
@@ -31734,7 +31760,30 @@
           return new Date().toISOString().slice(0, 10);
         }
       }
-      function openAddVeh() {
+      let avNoVinMode = false;
+      function avSetNoVin(on) {
+        avNoVinMode = !!on;
+        const sec = document.getElementById("avVinSection"); if (sec) sec.style.display = on ? "none" : "";
+        const btn = document.getElementById("avNoVinToggle");
+        if (btn) { btn.classList.toggle("active", !!on); btn.textContent = on ? "Add with VIN number" : "Add without VIN number"; }
+        setTimeout(() => { const el = document.getElementById(on ? "avYear" : "avVin"); if (el) { try { el.focus(); } catch(e) {} } }, 60);
+      }
+      function avToggleNoVin() { avSetNoVin(!avNoVinMode); }
+      function avConfirmNoVin(yes) {
+        const np = document.getElementById("avNoVinPop"); if (np) np.classList.remove("show");
+        if (!yes) { const v = document.getElementById("avVin"); if (v) v.focus(); return; }
+        const vinEl = document.getElementById("avVin"); if (vinEl) vinEl.value = avNextStockTag();
+        avProceedToTitle();
+      }
+      function avNextStockTag() {
+        let n = 0;
+        (vehicles || []).forEach(v => { const m = /^NO-VIN-(\d+)$/i.exec((v.vin || "").trim()); if (m) { n = Math.max(n, parseInt(m[1]) || 0); } });
+        return "NO-VIN-" + (n + 1);
+      }
+      function avProceedToTitle() {
+        const tp = document.getElementById("avTitlePop"); if (tp) tp.classList.add("show");
+      }
+      function openAddVeh(manual) {
         editingVehicleVin = null;
         const m = document.getElementById("addVehModal");
         if (!m) return;
@@ -31748,6 +31797,7 @@
           "avModel",
           "avPrice",
           "avFees",
+          "avLocation",
         ].forEach((id) => {
           const el = document.getElementById(id);
           if (el) el.value = "";
@@ -31761,7 +31811,10 @@
         try {
           const tp = document.getElementById("avTitlePop");
           if (tp) tp.classList.remove("show");
+          const np = document.getElementById("avNoVinPop");
+          if (np) np.classList.remove("show");
         } catch (e) {}
+        avSetNoVin(false);
         {
           const fl = document.getElementById("avFlooring");
           if (fl) fl.checked = false;
@@ -31815,9 +31868,18 @@
         if (typeof fmtSigned === "function") return fmtSigned(n);
         return (n >= 0 ? "+" : "-") + "$" + Math.round(Math.abs(n)).toLocaleString();
       }
-      function openPrevSold() {
+      function openPrevSold(manual) {
         const m = document.getElementById("prevSoldModal");
         if (!m) return;
+        try {
+          const dec = document.getElementById("pvDecoded");
+          if (dec) {
+            dec.dataset.manual = manual ? "1" : "";
+            if (manual) dec.style.display = "none"; else dec.style.display = "";
+          }
+          const vl = document.getElementById("pvVin");
+          if (vl) vl.placeholder = manual ? "VIN (type it in)" : "17-digit VIN\u2026";
+        } catch(e) {}
         const plan = currentDealershipPlan();
         const showRep = plan === "growing_dealership";
         const repSec = document.getElementById("pvRepSec");
@@ -32424,6 +32486,22 @@
         const m = document.getElementById("addVehModal");
         if (m) m.classList.remove("open");
         editingVehicleVin = null;
+        avNoVinMode = false;
+        const np = document.getElementById("avNoVinPop"); if (np) np.classList.remove("show");
+        const tp = document.getElementById("avTitlePop"); if (tp) tp.classList.remove("show");
+      }
+      function toggleAddMenu(e, menuId) {
+        if (e) { e.stopPropagation(); }
+        const m = document.getElementById(menuId); if (!m) return;
+        const willOpen = !m.classList.contains("open");
+        document.querySelectorAll(".qa-menu.open").forEach(x => x.classList.remove("open"));
+        if (willOpen) m.classList.add("open");
+      }
+      function avSetManual(manual) {
+        const cta = document.getElementById("avScanCta"); if (cta) cta.style.display = manual ? "none" : "";
+        const ib = document.getElementById("avScanIconBtn"); if (ib) ib.style.display = manual ? "none" : "";
+        const lb = document.getElementById("avVinLabel"); if (lb) lb.textContent = manual ? "VIN" : "Or paste / type the VIN";
+        const dec = document.getElementById("avDecoded"); if (dec) dec.style.display = manual ? "none" : "";
       }
       function decodeVin(vin) {
         vin = (vin || "").toUpperCase().replace(/\s/g, "");
@@ -33432,15 +33510,9 @@
         const vin = (document.getElementById("avVin").value || "")
           .trim()
           .toUpperCase();
-        if (!vin) {
-          avMsg("Scan or paste a VIN first.", false);
-          document.getElementById("avVin").focus();
-          return;
-        }
-        if (vin.length !== 17) {
-          avMsg("VIN must be exactly 17 characters.", false);
-          document.getElementById("avVin").focus();
-          return;
+        const errs = [];
+        if (vin && vin.length !== 17) {
+          errs.push({ id: "avVin", label: "VIN", msg: "VIN must be exactly 17 characters." });
         }
         const isEditing = !!editingVehicleVin;
         const isWs =
@@ -33448,11 +33520,22 @@
           (window.AVPortal && AVPortal.getRoutePortal()) === "wholesale";
         const inventory = isWs ? wsVehicles || [] : vehicles || [];
         if (
+          vin &&
           !isEditing &&
           inventory.some((v) => (v.vin || "").toUpperCase() === vin)
         ) {
-          avMsg("That VIN is already in inventory.", false);
-          return;
+          errs.push({ id: "avVin", label: "VIN", msg: "That VIN is already in inventory." });
+        }
+        // No VIN entered — if they chose "Add without VIN number", assign a stock tag straight away; otherwise confirm.
+        if (!vin) {
+          if (avNoVinMode) {
+            const el = document.getElementById("avVin"); if (el) el.value = avNextStockTag();
+            avProceedToTitle();
+            return;
+          }
+          const np = document.getElementById("avNoVinPop");
+          const tp = document.getElementById("avTitlePop"); if (tp) tp.classList.remove("show");
+          if (np) { np.classList.add("show"); setTimeout(() => { try { np.scrollIntoView({ behavior: "smooth", block: "center" }); } catch(e) {} }, 40); return; }
         }
         const dCheck = fdValidateHidden("avDate", "purchase date");
         const price =
@@ -33491,6 +33574,8 @@
       async function finalizeAddVehicle(titlePresent) {
         const pop = document.getElementById("avTitlePop");
         if (pop) pop.classList.remove("show");
+        const np = document.getElementById("avNoVinPop");
+        if (np) np.classList.remove("show");
         const vin = (document.getElementById("avVin").value || "")
           .trim()
           .toUpperCase();
@@ -33591,6 +33676,7 @@
                 "avModel",
                 "avPrice",
                 "avFees",
+                "avLocation",
               ].forEach((id) => {
                 const el = document.getElementById(id);
                 if (el) el.value = "";
@@ -33618,6 +33704,7 @@
               flooringStartDate: floored
                 ? new Date(purchaseDate + "T12:00:00").toISOString()
                 : null,
+              purchaseLocation: (document.getElementById("avLocation") || {}).value || "",
             };
             await AVVehicles.persistPatch(editingVehicleVin, patch);
             try {
@@ -33641,6 +33728,7 @@
               date: purchaseDate,
               floored,
               titlePresent: titlePresentFlag,
+              purchaseLocation: (document.getElementById("avLocation") || {}).value || "",
             });
             try {
               if (typeof updateNotifBadge === "function") updateNotifBadge();
@@ -33658,6 +33746,7 @@
               "avModel",
               "avPrice",
               "avFees",
+              "avLocation",
             ].forEach((id) => {
               const el = document.getElementById(id);
               if (el) el.value = "";
@@ -53601,7 +53690,7 @@
       }
 
       // ---------- SALES TAX ----------
-      let taxConfig = { frequency: "", nextDue: "", notes: "" };
+      let taxConfig = { frequency: "", nextDue: "", notes: "", customStart: "", customEnd: "" };
       let taxFilings = [];
       function saleTaxOf(v) {
         if (v.customerSalesTax != null && v.customerSalesTax !== "")
@@ -53616,6 +53705,17 @@
       }
       function taxBuckets() {
         const f = taxConfig.frequency;
+        if (f === "Custom") {
+          if (taxConfig.customStart && taxConfig.customEnd) {
+            const s = new Date(taxConfig.customStart + "T00:00:00"), e = new Date(taxConfig.customEnd + "T00:00:00");
+            const set = new Set(); let d = new Date(s.getFullYear(), s.getMonth(), 1), guard = 0;
+            while (d <= e && guard < 24) { set.add(d.getMonth()); d = new Date(d.getFullYear(), d.getMonth() + 1, 1); guard++; }
+            const months = [...set].sort((a, b) => a - b);
+            const sub = `${s.toLocaleDateString("en-US", { month: "short", day: "numeric" })} \u2013 ${e.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`;
+            return [{ label: "Custom Period", sub, months }];
+          }
+          return [{ label: "Custom Period", sub: "set a range below", months: [] }];
+        }
         if (f === "Monthly")
           return PNL_MFULL.map((n, i) => ({ label: n, sub: "", months: [i] }));
         if (f === "Semi-Annually")
@@ -53648,6 +53748,13 @@
       }
       function currentFilingPeriodMonths() {
         if (!taxConfig.nextDue) return null;
+        if (taxConfig.frequency === "Custom") {
+          if (!taxConfig.customStart || !taxConfig.customEnd) return null;
+          const s = new Date(taxConfig.customStart + "T00:00:00"), e = new Date(taxConfig.customEnd + "T00:00:00");
+          const months = []; let d = new Date(s.getFullYear(), s.getMonth(), 1), g = 0;
+          while (d <= e && g < 24) { months.push({ y: d.getFullYear(), m: d.getMonth() }); d = new Date(d.getFullYear(), d.getMonth() + 1, 1); g++; }
+          return { months, dueDate: taxConfig.nextDue || taxConfig.customEnd };
+        }
         const step =
           { Monthly: 1, Quarterly: 3, "Semi-Annually": 6, Annually: 12 }[
             taxConfig.frequency
@@ -54097,7 +54204,11 @@
           : `<tr><td colspan="6"><div class="doc-empty" style="padding:30px;text-align:center;">No sales in this period.</div></td></tr>`;
       }
       function openTaxConfig() {
-        document.getElementById("taxCfgFreq").value = taxConfig.frequency;
+        const freqAdj = {Monthly:"Monthly", Quarterly:"Quarterly", "Semi-Annually":"Semi-Annual", Annually:"Annual", Custom:"Custom"}[taxConfig.frequency] || "Quarterly";
+        updateTaxFreqActive();
+        const cs = document.getElementById("taxCustomStart"); if (cs) cs.value = taxConfig.customStart || "";
+        const ce = document.getElementById("taxCustomEnd"); if (ce) ce.value = taxConfig.customEnd || "";
+        const cp = document.getElementById("taxCustomPanel"); if (cp) cp.style.display = (taxConfig.frequency === "Custom") ? "" : "none";
         avSetDate("taxCfgDue", taxConfig.nextDue || "");
         document.getElementById("taxCfgNotes").value = taxConfig.notes || "";
         document.getElementById("taxConfigModal").style.display = "flex";
@@ -54105,18 +54216,34 @@
       function closeTaxConfig() {
         document.getElementById("taxConfigModal").style.display = "none";
       }
-      async function saveTaxConfig() {
-        taxConfig.frequency = document.getElementById("taxCfgFreq").value;
+      function updateTaxFreqActive() {
+        document.querySelectorAll("#taxFreqOpts .tax-freq-opt").forEach(b => b.classList.toggle("active", b.dataset.freq === taxConfig.frequency));
+      }
+      function taxRerender() {
+        if (typeof renderTaxPage === "function") renderTaxPage();
+        if (typeof renderCalendarPage === "function") renderCalendarPage();
+      }
+      function pickTaxFreq(freq) {
+        taxConfig.frequency = freq;
+        const cp = document.getElementById("taxCustomPanel"); if (cp) cp.style.display = (freq === "Custom") ? "" : "none";
+        updateTaxFreqActive();
+        if (freq === "Custom") { applyTaxCustom(); const cs = document.getElementById("taxCustomStart"); if (cs && !cs.value) { setTimeout(() => { try { cs.focus(); } catch(e) {} }, 60); } }
+        else { taxRerender(); }
+      }
+      function applyTaxCustom() {
+        const cs = document.getElementById("taxCustomStart"), ce = document.getElementById("taxCustomEnd");
+        taxConfig.customStart = cs ? cs.value : ""; taxConfig.customEnd = ce ? ce.value : "";
+        taxConfig.frequency = "Custom";
+        updateTaxFreqActive();
+        taxRerender();
+      }
+      async function saveTaxConfigLive() {
         const taxDueCheck = avValidateDateField("taxCfgDue", {
           label: "filing due date",
           required: false,
         });
-        if (!taxDueCheck.ok) {
-          if (typeof AVToast !== "undefined") AVToast.warning(taxDueCheck.msg);
-          return;
-        }
-        taxConfig.nextDue = taxDueCheck.ymd;
-        taxConfig.notes = document.getElementById("taxCfgNotes").value.trim();
+        taxConfig.nextDue = taxDueCheck.ok ? taxDueCheck.ymd : taxConfig.nextDue;
+        taxConfig.notes = (document.getElementById("taxCfgNotes").value || "").trim();
         try {
           if (window.AVApi && typeof AVApi.updateTaxSettings === "function") {
             const freqApi = window.AVFinancePersist
@@ -54127,16 +54254,15 @@
               nextDueDate: taxConfig.nextDue || null,
               notes: taxConfig.notes || null,
             });
-            if (typeof AVToast !== "undefined")
-              AVToast.success("Tax settings saved");
           }
         } catch (err) {
           if (typeof AVToast !== "undefined")
             AVToast.error((err && err.message) || "Failed to save tax settings");
-          return;
         }
-        renderTaxPage();
-        if (typeof renderCalendarPage === "function") renderCalendarPage();
+        taxRerender();
+      }
+      function saveTaxConfig() {
+        saveTaxConfigLive();
         closeTaxConfig();
       }
       function currentFilingPreview() {
@@ -57162,6 +57288,7 @@
     __kpiEditKey = null;
   }
   document.addEventListener('click', function (e) {
+    document.querySelectorAll('.qa-menu.open').forEach(x => x.classList.remove('open'));
     const p = document.getElementById('kpiColorPop');
     if (!p || p.style.display === 'none') return;
     if (p.contains(e.target)) return;
