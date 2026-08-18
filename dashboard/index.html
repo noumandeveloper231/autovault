@@ -1189,6 +1189,9 @@
         text-transform: uppercase;
         font-weight: 700;
         white-space: nowrap;
+        padding-right: 18px;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
 
       .kpi .kpi-value {
@@ -9359,13 +9362,10 @@
       #page-vehicles .veh-kpi-group .kpi-label {
         font-size: 9.5px;
         letter-spacing: 1px;
+        padding-right: 18px;
         white-space: nowrap;
         overflow: hidden;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        line-height: 1.25;
-        word-break: break-word;
+        text-overflow: ellipsis;
       }
 
       #page-vehicles .veh-kpi-group .kpi-value {
@@ -22198,7 +22198,7 @@
               <div class="kpi-grid">
                 <div class="kpi" style="--accent: var(--c-purchase)">
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'purchase')" title="Change number color"></button>
-                  <div class="kpi-label">Cost of Available Inventory</div>
+                  <div class="kpi-label" title="Cost of available inventory">Inventory Cost</div>
                   <div class="kpi-value" id="kpiPurchaseCost">$0</div>
                   <div class="kpi-foot" id="footPurchaseCost">spent on current stock</div>
                 </div>
@@ -22243,7 +22243,7 @@
               <div
                 class="veh-view-seg"
                 id="vehViewSeg"
-                title="Choose which vehicles the spreadsheet shows — column totals add up whatever is selected here"
+                title="Choose which vehicles the spreadsheet shows"
               >
                 <button
                   class="vv-btn active"
@@ -22267,14 +22267,6 @@
                   Sold
                 </button>
               </div>
-              <span
-                id="vehViewHint"
-                style="
-                  font-size: 11px;
-                  color: var(--muted);
-                  font-weight: 600;
-                "
-              ></span>
               <select id="sortBy" class="sortby-sleek">
                 <option value="">Sort: Default</option>
                 <option value="days_desc">Days in Inventory</option>
@@ -39185,20 +39177,7 @@
             );
             seg.classList.toggle("dimmed", !!vehPeriod.active);
           }
-          const hint = document.getElementById("vehViewHint");
-          if (hint) {
-            if (vehPeriod.active) {
-              const per =
-                vehPeriod.mode === "month"
-                  ? `${PNL_MSHORT[vehPeriod.month]} ${vehPeriod.year}`
-                  : `${vehPeriod.year}`;
-              hint.innerHTML = `Totals add up <b>vehicles sold in ${per}</b>`;
-            } else if (vehView === "all") {
-              hint.innerHTML = "Totals add up <b>all</b> vehicles";
-            } else {
-              hint.innerHTML = `Totals add up the <b>${vehView}</b> vehicles`;
-            }
-          }
+
         }
         try {
           renderVehCalendars();
