@@ -54242,7 +54242,7 @@
         updateTaxFreqActive();
         taxRerender();
       }
-      function saveTaxConfigLive() {
+      async function saveTaxConfigLive() {
         const taxDueCheck = avValidateDateField("taxCfgDue", {
           label: "filing due date",
           required: false,
