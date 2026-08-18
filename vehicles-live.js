@@ -292,6 +292,7 @@
           : api.titlePresent === false || api.titleReceived === false
             ? false
             : undefined,
+      purchaseLocation: api.sellerAuction || "",
       status: statusUi,
       statusDate: null,
       repairsList: effectiveRepairs,
@@ -673,6 +674,7 @@
       status: "in_stock",
       flooringStartDate: fields.floored ? acqIso : null,
       notes: fields.notes || null,
+      sellerAuction: fields.purchaseLocation || null,
     };
     const { vehicle } = await AVApi.createVehicle(body);
     const ui = mapApiToUi(vehicle, []);
