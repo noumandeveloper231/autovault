@@ -33704,7 +33704,7 @@
               flooringStartDate: floored
                 ? new Date(purchaseDate + "T12:00:00").toISOString()
                 : null,
-              purchaseLocation: (document.getElementById("avLocation") || {}).value || "",
+              sellerAuction: (document.getElementById("avLocation") || {}).value || "",
             };
             await AVVehicles.persistPatch(editingVehicleVin, patch);
             try {
@@ -33728,7 +33728,7 @@
               date: purchaseDate,
               floored,
               titlePresent: titlePresentFlag,
-              purchaseLocation: (document.getElementById("avLocation") || {}).value || "",
+              sellerAuction: (document.getElementById("avLocation") || {}).value || "",
             });
             try {
               if (typeof updateNotifBadge === "function") updateNotifBadge();
