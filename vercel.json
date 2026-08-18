@@ -1,4 +1,9 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "",
+  "installCommand": "",
+  "framework": null,
+  "outputDirectory": ".",
   "redirects": [
     {
       "source": "/wholesale/login",
@@ -60,45 +65,26 @@
       "source": "/sales-rep/dashboard/:path*",
       "destination": "/dashboard?portal=sales_rep",
       "permanent": false
+    },
+    {
+      "source": "/accept-invitation",
+      "destination": "/invite",
+      "permanent": true
+    },
+    {
+      "source": "/accept-invitation/:path*",
+      "destination": "/invite",
+      "permanent": true
     }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/index.html" },
-    { "source": "/thank-you", "destination": "/thank-you/index.html" },
-    {
-      "source": "/forgot-password",
-      "destination": "/forgot-password/index.html"
-    },
-    {
-      "source": "/reset-password",
-      "destination": "/reset-password/index.html"
-    },
-    { "source": "/invite", "destination": "/invite/index.html" },
-    { "source": "/accept-invitation", "destination": "/invite/index.html" },
-    { "source": "/dashboard", "destination": "/dashboard/index.html" },
-    { "source": "/login", "destination": "/login/index.html" },
-    { "source": "/cpa/dashboard", "destination": "/dashboard/index.html" },
-    {
-      "source": "/cpa/dashboard/:path*",
-      "destination": "/dashboard/index.html"
-    },
-    { "source": "/owner/login", "destination": "/login/index.html" },
-    { "source": "/owner/login/:path*", "destination": "/login/index.html" },
-    { "source": "/owner/dashboard", "destination": "/dashboard/index.html" },
-    {
-      "source": "/owner/dashboard/:path*",
-      "destination": "/dashboard/index.html"
-    },
-    { "source": "/contact", "destination": "/contact/index.html" },
-    {
-      "source": "/privacy-policy",
-      "destination": "/privacy-policy/index.html"
-    },
-    {
-      "source": "/privacy-center",
-      "destination": "/privacy-center/index.html"
-    },
-    { "source": "/terms", "destination": "/terms/index.html" }
+    { "handle": "filesystem" },
+    { "source": "/cpa/dashboard", "destination": "/dashboard" },
+    { "source": "/cpa/dashboard/:path*", "destination": "/dashboard" },
+    { "source": "/owner/login", "destination": "/login" },
+    { "source": "/owner/login/:path*", "destination": "/login" },
+    { "source": "/owner/dashboard", "destination": "/dashboard" },
+    { "source": "/owner/dashboard/:path*", "destination": "/dashboard" }
   ],
   "headers": [
     {
@@ -137,5 +123,6 @@
       ]
     }
   ],
-  "cleanUrls": true
+  "cleanUrls": true,
+  "trailingSlash": false
 }
