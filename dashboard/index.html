@@ -5190,7 +5190,7 @@
       }
 
       #page-deal-jacket .form-group {
-        margin-bottom: 8px;
+        margin-bottom: 12px;
       }
 
       #page-deal-jacket .form-group input,
@@ -7710,6 +7710,18 @@
         color: var(--muted);
         font-weight: 700;
       }
+      .dj-addon-toggle{ display:inline-flex; align-items:center; gap:5px; cursor:pointer; border-radius:6px; padding:1px 5px; margin:-1px -5px; }
+      .dj-addon-toggle:hover{ background:rgba(35,209,139,.12); }
+      .dj-addon-toggle .dat-chev{ transition:transform .18s ease; opacity:.8; }
+      .dj-addon-toggle.open .dat-chev{ transform:rotate(180deg); }
+      .dj-addon-drop{ margin:2px 0 6px; padding:11px 13px; background:var(--panel-2); border:1px solid var(--border); border-radius:10px; }
+      .dad-head{ font-size:10px; letter-spacing:.7px; text-transform:uppercase; color:var(--muted); font-weight:800; margin-bottom:8px; }
+      .dad-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding:5px 0; border-bottom:1px solid var(--border); }
+      .dad-row:last-of-type{ border-bottom:none; }
+      .dad-name{ font-size:12.5px; color:var(--text); font-weight:600; }
+      .dad-up{ font-family:var(--mono); font-size:12.5px; font-weight:800; color:var(--green); white-space:nowrap; }
+      .dad-note{ font-size:11px; color:var(--muted); line-height:1.5; margin-top:9px; padding-top:9px; border-top:1px dashed var(--border); }
+      .dad-note.check{ color:var(--blue); }
 
       .filing-detail-scroll {
         max-height: 56vh;
@@ -9193,8 +9205,8 @@
       #page-vehicles .veh-kpi-row {
         display: grid;
         grid-template-columns: 4fr 2fr;
-        gap: 10px;
-        align-items: stretch;
+        gap: 18px;
+        align-items: flex-start;
       }
 
       #page-vehicles .veh-kpi-group {
@@ -9216,8 +9228,8 @@
         letter-spacing: 0.7px;
         text-transform: uppercase;
         color: var(--muted);
-        margin: 0 0 8px 2px;
-        min-height: 16px;
+        margin: 0 0 9px 2px;
+        min-height: 32px;
         display: flex;
         align-items: center;
         line-height: 1.3;
@@ -9295,7 +9307,7 @@
       }
 
       #page-vehicles .veh-kpi-group.inventory .kpi-grid {
-        grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         width: 100%;
       }
 
@@ -9310,7 +9322,7 @@
 
       #page-vehicles .veh-kpi-group .kpi {
         min-width: 0;
-        padding: 12px 14px;
+        padding: 10px 14px;
         border-radius: 12px;
         background: var(--panel);
         border: 1px solid var(--border);
@@ -9319,22 +9331,20 @@
       }
 
       #page-vehicles .veh-kpi-group .kpi-label {
-        font-size: 10px;
-        letter-spacing: 0.45px;
-        white-space: normal;
+        font-size: 9.5px;
+        letter-spacing: 1px;
+        white-space: nowrap;
         overflow: hidden;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         line-height: 1.25;
-        min-height: 2.5em;
-        padding-right: 16px;
         word-break: break-word;
       }
 
       #page-vehicles .veh-kpi-group .kpi-value {
         font-size: 17px;
-        margin-top: 6px;
+        margin-top: 3px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -9360,9 +9370,8 @@
       }
 
       #page-vehicles .veh-kpi-group .kpi-foot {
-        font-size: 10px;
-        margin-top: auto;
-        padding-top: 4px;
+        font-size: 9.5px;
+        margin-top: 2px;
         line-height: 1.35;
         flex-shrink: 0;
       }
@@ -10028,8 +10037,8 @@
         width: 64px;
         height: 3px;
         border-radius: 2px;
-        background: linear-gradient(90deg, rgba(255, 255, 255, 0.7), #1c7a46);
-        box-shadow: 0 0 9px rgba(28, 122, 70, 0.5);
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0.7), #2743E8);
+        box-shadow: 0 0 9px rgba(39, 67, 232, 0.5);
       }
 
       .jenna-greeting {
@@ -15650,18 +15659,18 @@
   .dj-comm-body{ display:none; margin-top:14px; }
   .dj-comm-collapse.open .dj-comm-body{ display:block; }
 
-  .dj-dtbox{ margin:10px 0 14px; padding:12px 14px; background:var(--panel-2); border:1px solid var(--border); border-left:3px solid var(--orange); border-radius:12px; }
-  .dj-dtbox-head{ font-size:12.5px; font-weight:800; margin-bottom:4px; }
-  .dj-dtbox-intro{ font-size:11.5px; color:var(--muted); line-height:1.5; margin-bottom:10px; }
+  .dj-dtbox{ border:1px solid var(--border); border-left-width:3px; border-radius:11px; padding:13px 15px; margin-bottom:16px; background:var(--panel-2); }
+  .dj-dtbox-head{ font-size:12px; font-weight:800; letter-spacing:.3px; text-transform:uppercase; margin-bottom:5px; }
+  .dj-dtbox-intro{ font-size:11.5px; color:var(--muted); line-height:1.5; margin-bottom:12px; }
   .dj-dtbox-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-  .dj-dt-field label{ display:block; font-size:10.5px; font-weight:700; color:var(--muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.3px; }
+  .dj-dt-field label{ display:block; font-size:11px; font-weight:700; color:var(--muted); margin-bottom:5px; }
   .dj-dt-field.full{ grid-column:1 / -1; }
   .dj-dt-field input, .dj-dt-field select, .dj-dt-field textarea{
     width:100%; background:var(--panel); border:1px solid var(--border); color:var(--text);
-    border-radius:9px; padding:8px 10px; font-size:12.5px; font-family:inherit; outline:none;
+    border-radius:8px; padding:8px 10px; font-size:12.5px; font-family:inherit; outline:none;
   }
-  .dj-dt-field textarea{ min-height:64px; resize:vertical; }
-  @media(max-width:720px){ .dj-dtbox-grid{ grid-template-columns:1fr; } }
+  .dj-dt-field textarea{ min-height:52px; resize:vertical; line-height:1.5; }
+  @media(max-width:800px){ .dj-dtbox-grid{ grid-template-columns:1fr; } }
 
     </style>
     <script src="/auth-portal.js"></script>
@@ -15721,7 +15730,7 @@
       </button>
       <div class="sidebar-logo">
         <div class="logo-lockup">
-          <svg class="logo-svg" viewBox="0 0 120 78" fill="none" role="img" aria-label="AutoVault"><path d="M16 12 L42 64 L68 12" stroke="var(--text)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 64 L78 12 L104 64" stroke="var(--accent,#2C9257)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="logo-svg" viewBox="0 0 120 78" fill="none" role="img" aria-label="AutoVault"><path d="M16 12 L42 64 L68 12" stroke="var(--text)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 64 L78 12 L104 64" stroke="#2743E8" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
       </div>
 
@@ -22096,18 +22105,10 @@
                 <div class="kpi-grid">
                   <div class="kpi" style="--accent: var(--c-inventory)">
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'inventory')" title="Change number color"></button>
-                    <div class="kpi-label">Total Available Inventory</div>
+                    <div class="kpi-label">Total Inventory</div>
                     <div class="kpi-value" id="kpiTotalInventory">0</div>
                     <div class="kpi-foot" id="kpiTotalInventoryFoot">
                       vehicles on lot
-                    </div>
-                  </div>
-                  <div class="kpi" style="--accent: var(--c-inventory)">
-                    <button class="kpi-cbtn" onclick="openKpiColorPop(event,'inventory')" title="Change number color"></button>
-                    <div class="kpi-label">Total Vehicles Count</div>
-                    <div class="kpi-value" id="kpiTotalVehicles">0</div>
-                    <div class="kpi-foot" id="kpiTotalVehiclesFoot">
-                      currently visible
                     </div>
                   </div>
                   <div
@@ -23654,93 +23655,19 @@
           >
             <div>
               <div class="page-title">DOCUMENTS <b>DEAL JACKETS</b></div>
-              <div class="page-sub" id="djlSub">
-                <span class="dash-inline-spin">Loading deals…</span>
-              </div>
+              <div class="page-sub" id="djlSub" style="display:none;">— closed deals</div>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
-              <input
-                type="search"
-                id="djlSearch"
-                class="module-search-input"
-                placeholder="Search jackets, VIN, customer, ROS…"
-                autocomplete="off"
-                oninput="renderDealJacketsList()"
-                style="
-                  background: var(--panel);
-                  border: 1px solid var(--border);
-                  color: var(--text);
-                  border-radius: 8px;
-                  padding: 9px 12px;
-                  font-size: 12.5px;
-                  min-width: 220px;
-                  outline: none;
-                "
-              />
-              <button
-                class="grid-toggle-btn"
-                id="djTitlesBtn"
-                onclick="toggleDjlTitles()"
-              >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path
-                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-                  />
-                  <path d="M14 2v6h6M9 15l2 2 4-4" />
-                </svg>
-                <span id="djTitlesBtnLabel">Titles In / Not In</span>
-              </button>
-              <button
-                class="grid-toggle-btn"
-                id="djMonthBtn"
-                onclick="toggleDjMonth()"
-              >
-                <svg
-                  width="13"
-                  height="13"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <path d="M16 2v4M8 2v4M3 10h18" />
-                </svg>
-                Deals by Month
-              </button>
-            </div>
-          </div>
-          <div class="fin-calendar pnl-actions">
-            <div class="pnl-cal-year">
-              <button onclick="pnlChangeYear(-1)" title="Previous year">
-                ‹
-              </button>
-              <span class="fin-cal-year-val">2026</span>
-              <button onclick="pnlChangeYear(1)" title="Next year">›</button>
-            </div>
-            <div class="fin-months"></div>
-            <div class="pnl-cal-modes">
-              <button
-                class="pnl-mode"
-                data-mode="month"
-                onclick="pnlSetMode('month')"
-              >
-                Monthly
-              </button>
-              <button
-                class="pnl-mode"
-                data-mode="year"
-                onclick="pnlSetMode('year')"
-              >
-                Yearly
-              </button>
+              <button class="grid-toggle-btn" onclick="openMarkSold()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> New Deal / Mark Sold</button>
+              <button class="grid-toggle-btn" id="djTitlesBtn" onclick="toggleDjlTitles()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15l2 2 4-4"/></svg> <span id="djTitlesBtnLabel">Titles In / Not In</span></button>
+              <div class="veh-view-seg" id="djSeg" title="Show all deal jackets, or filter to a single month">
+                <button class="vv-btn active" data-djview="all" onclick="djSetView('all')">All Deal Jackets</button>
+                <button class="vv-btn" data-djview="month" onclick="djSetView('month')">Deal Jackets by Month</button>
+              </div>
+              <div id="djMonthControls" style="display:none;align-items:center;gap:8px;">
+                <select id="djMonthSelect" class="sortby-sleek" style="width:118px;" onchange="djPickMonth(this.value)"></select>
+                <div class="dp-yearwrap" style="display:inline-flex;align-items:center;gap:4px;"><button class="dp-nav" onclick="djChangeYear(-1)" title="Previous year">&lsaquo;</button><span class="dp-year" id="djYearVal">2026</span><button class="dp-nav" onclick="djChangeYear(1)" title="Next year">&rsaquo;</button></div>
+              </div>
             </div>
           </div>
           <!-- TITLE TRACKING (toggled) -->
@@ -23767,65 +23694,13 @@
             </div>
           </div>
           <div class="kpi-grid">
-            <div class="kpi" style="--accent: var(--green)">
-              <div class="kpi-label">Deals Closed</div>
-              <div class="kpi-value" id="djlCount">
-                <span
-                  class="dash-val-skel lg sk-bar"
-                  style="width: 48px"
-                ></span>
-              </div>
-              <div class="kpi-foot">sold vehicles</div>
-            </div>
-            <div class="kpi" style="--accent: var(--blue)">
-              <div class="kpi-label">Total Sold Value</div>
-              <div class="kpi-value" id="djlSoldValue">
-                <span
-                  class="dash-val-skel lg sk-bar"
-                  style="width: 72px"
-                ></span>
-              </div>
-              <div class="kpi-foot">gross sales</div>
-            </div>
-            <div class="kpi" style="--accent: var(--orange)">
-              <div class="kpi-label">Net Profit</div>
-              <div class="kpi-value" id="djlNet">
-                <span
-                  class="dash-val-skel lg sk-bar"
-                  style="width: 72px"
-                ></span>
-              </div>
-              <div class="kpi-foot">after all costs</div>
-            </div>
-            <div class="kpi" style="--accent: var(--purple)">
-              <div class="kpi-label">Avg ROI</div>
-              <div class="kpi-value" id="djlRoi">
-                <span
-                  class="dash-val-skel lg sk-bar"
-                  style="width: 48px"
-                ></span>
-              </div>
-              <div class="kpi-foot">across deals</div>
-            </div>
+            <div class="kpi" style="--accent:var(--green)"><div class="kpi-label">Deals Closed</div><div class="kpi-value" id="djlCount">0</div><div class="kpi-foot">sold vehicles</div></div>
+            <div class="kpi" style="--accent:var(--blue)"><div class="kpi-label">Total Sold Value</div><div class="kpi-value" id="djlSoldValue">$0</div><div class="kpi-foot">gross sales</div></div>
+            <div class="kpi" style="--accent:var(--orange)"><div class="kpi-label">Net Profit</div><div class="kpi-value" id="djlNet">$0</div><div class="kpi-foot">after all costs</div></div>
+            <div class="kpi" style="--accent:var(--purple)"><div class="kpi-label">Avg ROI</div><div class="kpi-value" id="djlRoi">0%</div><div class="kpi-foot">across deals</div></div>
           </div>
           <div class="action-row">
-            <button class="btn-primary" onclick="openMarkSold()">
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M12 5v14M5 12h14" />
-              </svg>
-              New Deal / Mark Sold
-            </button>
-            <div class="hint">
-              Every closed deal is filed here with its paperwork and customer
-              record.
-            </div>
+            <div class="hint">Every closed deal is filed here with its paperwork and customer record.</div>
           </div>
           <div class="table-card">
             <div class="table-scroll">
@@ -23840,128 +23715,10 @@
                     <th><span class="th-label">ROI</span></th>
                     <th><span class="th-label">Rep</span></th>
                     <th><span class="th-label">Sold Date</span></th>
-                    <th><span class="th-label">Deal Jacket</span></th>
                     <th><span class="th-label">Docs</span></th>
                   </tr>
                 </thead>
-                <tbody id="djlBody">
-                  <tr class="page-sk-row">
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 72%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 55%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 40%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 48%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 52%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 35%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 50%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 55%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 30%"></div>
-                    </td>
-                  </tr>
-                  <tr class="page-sk-row">
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 65%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 60%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 35%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 52%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 45%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 40%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 48%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 50%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 28%"></div>
-                    </td>
-                  </tr>
-                  <tr class="page-sk-row">
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 78%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 48%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 42%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 55%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 50%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 32%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 55%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 58%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 34%"></div>
-                    </td>
-                  </tr>
-                  <tr class="page-sk-row">
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 58%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 62%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 38%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 46%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 54%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 36%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 44%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 52%"></div>
-                    </td>
-                    <td>
-                      <div class="sk-bar sk-text" style="width: 26%"></div>
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody id="djlBody"></tbody>
               </table>
             </div>
           </div>
@@ -33938,6 +33695,29 @@
       }
       let djByMonth = false,
         taxByMonth = false;
+      let djView = 'all',
+        djMonth = null,
+        djYear = null;
+      function djSetView(v) {
+        djView = v;
+        if (typeof renderDealJacketsList === 'function') renderDealJacketsList();
+      }
+      function djPickMonth(i) {
+        djMonth = +i;
+        djView = 'month';
+        if (typeof renderDealJacketsList === 'function') renderDealJacketsList();
+      }
+      function djChangeYear(d) {
+        djYear += d;
+        djView = 'month';
+        if (typeof renderDealJacketsList === 'function') renderDealJacketsList();
+      }
+      function inDjView(dateStr) {
+        if (djView !== 'month') return true;
+        var p =
+          typeof pnlDateParts === 'function' ? pnlDateParts(dateStr) : null;
+        return !!p && p.y === djYear && p.m === djMonth;
+      }
       function monthGroupRows(rows, dateKey, rowFn, colspan, metaFn) {
         const byMonth = {};
         rows.forEach((r) => {
@@ -39220,7 +39000,6 @@
             "kpiSoldValueMonth",
             "kpiProfitMonth",
             "kpiPurchaseCost",
-            "kpiTotalVehicles",
             "kpiRepairs",
             "kpiSalesTax",
             "kpiCommission",
@@ -39744,7 +39523,6 @@
             box.classList.toggle("titles-missing", tf === "missing");
           }
         }
-        set("kpiTotalVehicles", list.length);
         set("kpiSoldMonth", monthCount);
         set("kpiProfitMonth", fmtSigned(monthProfit));
         const profitEl = document.getElementById("kpiProfitMonth");
@@ -51199,86 +50977,61 @@
       }
 
       function renderDealJacketsList() {
-        const page = document.getElementById("page-deal-jackets");
-        if (page) page.classList.toggle("page-data-loading", !!vehiclesLoading);
-        if (vehiclesLoading) {
-          const body = document.getElementById("djlBody");
-          if (body)
-            body.innerHTML = skTbody(
-              9,
-              5,
-              [72, 55, 40, 48, 52, 35, 50, 55, 30],
-            );
-          const sub = document.getElementById("djlSub");
-          if (sub)
-            sub.innerHTML =
-              '<span class="dash-inline-spin">Loading deals\u2026</span>';
-          ["djlCount", "djlSoldValue", "djlNet", "djlRoi"].forEach(
-            function (id) {
-              var el = document.getElementById(id);
-              if (!el) return;
-              var kpi = el.closest(".kpi");
-              if (kpi) kpi.classList.add("is-loading");
-              el.innerHTML = skVal(
-                id === "djlCount" || id === "djlRoi" ? 48 : 72,
-              );
-            },
-          );
-          return;
+        if (djYear === null) {
+          const t = new Date(today);
+          djMonth = t.getMonth();
+          djYear = t.getFullYear();
         }
-        document
-          .querySelectorAll("#page-deal-jackets .kpi.is-loading")
-          .forEach(function (el) {
-            el.classList.remove("is-loading");
-          });
-        if (typeof renderFinCalendars === "function") renderFinCalendars();
         try {
           renderDjTitleBoxes();
         } catch (e) {}
-        const rowsAll = vehicles
+        {
+          var seg = document.getElementById("djSeg");
+          if (seg)
+            seg
+              .querySelectorAll(".vv-btn")
+              .forEach(function (b) {
+                b.classList.toggle(
+                  "active",
+                  b.dataset.djview === djView,
+                );
+              });
+          var mc = document.getElementById("djMonthControls");
+          if (mc)
+            mc.style.display = djView === "month" ? "flex" : "none";
+          var yv = document.getElementById("djYearVal");
+          if (yv) yv.textContent = djYear;
+          var ms = document.getElementById("djMonthSelect");
+          if (ms) {
+            if (!ms.options.length)
+              ms.innerHTML = PNL_MFULL.map(
+                (m, i) =>
+                  '<option value="' + i + '">' + m + "</option>",
+              ).join("");
+            ms.value = String(djMonth);
+          }
+        }
+        const rows = vehicles
           .map(computeRow)
           .filter(
-            (r) =>
-              r.sold &&
-              (typeof inPnlPeriod !== "function" || inPnlPeriod(r.soldDate)),
+            (r) => r.sold && inDjView(r.soldDate),
           );
-        const djlQ = (
-          (document.getElementById("djlSearch") || {}).value || ""
-        )
-          .trim()
-          .toLowerCase();
-        const rows = djlQ
-          ? rowsAll.filter((r) => {
-              const src = vehicles.find((v) => v.vin === r.vin);
-              const text =
-                `${r.year} ${r.make} ${r.model} ${r.vin} ${r.customer || ""} ${r.ros || ""} ${r.rep || ""} ${r.jacketNumber || ""} ${(src && src.jacketNumber) || ""} ${(src && src.ros) || ""}`.toLowerCase();
-              return text.includes(djlQ);
-            })
-          : rowsAll;
-        const withJacket = rows.filter((r) => {
-          const src = vehicles.find((v) => v.vin === r.vin);
-          return !!(src && (src.dealSaved || src.hasDealJacket || src.dealJacket));
-        });
-        const needsJacket = rows.filter((r) => {
-          const src = vehicles.find((v) => v.vin === r.vin);
-          return !(src && (src.dealSaved || src.hasDealJacket || src.dealJacket));
-        });
-        document.getElementById("djlSub").textContent = djlQ
-          ? `\u2014 showing ${rows.length} of ${rowsAll.length} deals`
-          : `\u2014 ${withJacket.length} jackets · ${needsJacket.length} pending`;
-        const soldValue = rowsAll.reduce(
-          (s, r) => s + (Number(r.soldPrice) || 0),
+        document.getElementById("djlSub").textContent =
+          djView === "month"
+            ? `\u2014 ${rows.length} closed in ${PNL_MSHORT[djMonth]} ${djYear}`
+            : `\u2014 ${rows.length} closed deals`;
+        const soldValue = rows.reduce(
+          (s, r) => s + (r.soldPrice || r.estimatedSale || 0),
           0,
         );
-        const net = rowsAll.reduce(
-          (s, r) => s + (r.netProfit == null ? 0 : Number(r.netProfit) || 0),
+        const net = rows.reduce(
+          (s, r) => s + r.netProfit,
           0,
         );
-        const roiRows = rowsAll.filter((r) => r.roi != null);
-        const avgRoi = roiRows.length
-          ? roiRows.reduce((s, r) => s + r.roi, 0) / roiRows.length
+        const avgRoi = rows.length
+          ? rows.reduce((s, r) => s + r.roi, 0) / rows.length
           : 0;
-        document.getElementById("djlCount").textContent = rowsAll.length;
+        document.getElementById("djlCount").textContent = rows.length;
         document.getElementById("djlSoldValue").textContent = fmt(soldValue);
         document.getElementById("djlNet").textContent = fmtSigned(net);
         document.getElementById("djlRoi").textContent =
@@ -51287,16 +51040,8 @@
           (a, b) => new Date(b.soldDate || 0) - new Date(a.soldDate || 0),
         );
         const _djRf = (r) => {
-          const src = vehicles.find((v) => v.vin === r.vin);
-          const docs = src && src.documents ? src.documents.length : 0;
-          const hasJacket = !!(
-            src &&
-            (src.dealSaved || src.hasDealJacket || src.dealJacket)
-          );
-          const jacketCell = hasJacket
-            ? `<span style="color:var(--green);font-weight:800;">Yes</span>`
-            : `<span style="color:var(--orange);font-weight:800;">No</span> <button class="print-btn" style="padding:3px 8px;font-size:11px;margin-left:6px;" onclick="event.stopPropagation();openDealJacket('${r.vin}','sold')">Create</button>`;
-          return `<tr data-gs-key="jacket:${r.vin}" style="cursor:pointer;" onclick="openDealJacket('${r.vin}','sold')">
+          const docs = (vehicles.find((v) => v.vin === r.vin).documents || []).length;
+          return `<tr style="cursor:pointer;" onclick="openDealJacket('${r.vin}')">
       <td><div class="exp-name">${r.year} ${r.make} ${r.model}</div><div class="exp-sub" style="opacity:.6;">${r.vin}</div></td>
       <td>${r.customer || "\u2014"}</td>
       <td>${r.ros || "\u2014"}</td>
@@ -51305,26 +51050,25 @@
       <td>${Math.round(r.roi)}%</td>
       <td>${r.rep || "\u2014"}</td>
       <td>${r.soldDate ? fmtDate(r.soldDate) : "\u2014"}</td>
-      <td>${jacketCell}</td>
       <td>${docs ? docs + " \uD83D\uDCCE" : "\u2014"}</td>
     </tr>`;
         };
         document.getElementById("djlBody").innerHTML = rows.length
-          ? djByMonth
+          ? djView === "all"
             ? monthGroupRows(
                 _djS,
                 "soldDate",
                 _djRf,
-                10,
+                9,
                 (g) =>
                   g.length +
                   " deal" +
                   (g.length === 1 ? "" : "s") +
-                  " · " +
+                  " \u00b7 " +
                   fmtSigned(g.reduce((s, r) => s + r.netProfit, 0)),
               )
             : _djS.map(_djRf).join("")
-          : `<tr><td colspan="10"><div class="doc-empty">No deals closed yet. Click "New Deal / Mark Sold" to create one.</div></td></tr>`;
+          : `<tr><td colspan="9"><div class="doc-empty">${djView === "month" ? "No deals closed in " + PNL_MFULL[djMonth] + " " + djYear + "." : "No deals closed yet. Click \u201cNew Deal / Mark Sold\u201d to create one."}</div></td></tr>`;
       }
 
       function currentDailyRate(daysOnLot, cfg) {
