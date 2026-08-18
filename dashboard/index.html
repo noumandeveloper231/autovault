@@ -25691,9 +25691,7 @@
         </button>
       </div>
     </div>
-    <!-- FLOATING CALCULATOR END -->
-
-    <!-- ===================== JENNA AI ASSISTANT ===================== -->
+    
     <div class="jenna-fab" id="jennaFab" title="Ask Jenna — drag to move">
       <span class="jenna-badge">Jenna</span>
       <svg
@@ -32453,6 +32451,8 @@
         document.getElementById("avModel").value = v.model || "";
         document.getElementById("avPrice").value = v.price || "";
         document.getElementById("avFees").value = v.fees || "";
+        const avLoc = document.getElementById("avLocation");
+        if (avLoc) avLoc.value = v.purchaseLocation || v._raw?.sellerAuction || "";
         try {
           setFastDate(
             "avDate",
@@ -33510,6 +33510,17 @@
         const vin = (document.getElementById("avVin").value || "")
           .trim()
           .toUpperCase();
+        // No VIN entered — if they chose "Add without VIN number", assign a stock tag straight away; otherwise confirm.
+        if (!vin) {
+          if (avNoVinMode) {
+            const el = document.getElementById("avVin"); if (el) el.value = avNextStockTag();
+            avProceedToTitle();
+            return;
+          }
+          const np = document.getElementById("avNoVinPop");
+          const tp = document.getElementById("avTitlePop"); if (tp) tp.classList.remove("show");
+          if (np) { np.classList.add("show"); setTimeout(() => { try { np.scrollIntoView({ behavior: "smooth", block: "center" }); } catch(e) {} }, 40); return; }
+        }
         const errs = [];
         if (vin && vin.length !== 17) {
           errs.push({ id: "avVin", label: "VIN", msg: "VIN must be exactly 17 characters." });
@@ -33526,16 +33537,10 @@
         ) {
           errs.push({ id: "avVin", label: "VIN", msg: "That VIN is already in inventory." });
         }
-        // No VIN entered — if they chose "Add without VIN number", assign a stock tag straight away; otherwise confirm.
-        if (!vin) {
-          if (avNoVinMode) {
-            const el = document.getElementById("avVin"); if (el) el.value = avNextStockTag();
-            avProceedToTitle();
-            return;
-          }
-          const np = document.getElementById("avNoVinPop");
-          const tp = document.getElementById("avTitlePop"); if (tp) tp.classList.remove("show");
-          if (np) { np.classList.add("show"); setTimeout(() => { try { np.scrollIntoView({ behavior: "smooth", block: "center" }); } catch(e) {} }, 40); return; }
+        if (errs.length) {
+          showFieldErrors("#addVehModal", errs);
+          if (typeof AVToast !== "undefined") AVToast.warning(errs[0].msg);
+          return;
         }
         const dCheck = fdValidateHidden("avDate", "purchase date");
         const price =
@@ -54237,7 +54242,7 @@
         updateTaxFreqActive();
         taxRerender();
       }
-      async function saveTaxConfigLive() {
+      function saveTaxConfigLive() {
         const taxDueCheck = avValidateDateField("taxCfgDue", {
           label: "filing due date",
           required: false,
@@ -54249,10 +54254,11 @@
             const freqApi = window.AVFinancePersist
               ? AVFinancePersist.taxFreqToApi(taxConfig.frequency)
               : "quarterly";
+            const notesPayload = taxConfig.notes || null;
             await AVApi.updateTaxSettings({
               filingFrequency: freqApi,
               nextDueDate: taxConfig.nextDue || null,
-              notes: taxConfig.notes || null,
+              notes: notesPayload,
             });
           }
         } catch (err) {
