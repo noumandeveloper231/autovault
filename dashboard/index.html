@@ -636,7 +636,7 @@
       .qa-menu button:hover{background:var(--panel-2);color:var(--blue);}
       .qa-menu .qam-sub{display:block;font-size:10.5px;font-weight:500;color:var(--muted);margin-top:2px;white-space:nowrap;}
 
-      .av-novin-bar{display:flex;justify-content:flex-end;margin-bottom:12px;}
+      .av-novin-bar{display:flex;justify-content:flex-start;margin:8px 0 12px;}
       .av-novin-toggle{background:var(--panel-2);border:1px solid var(--border);color:var(--muted);font-family:inherit;font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;transition:all .13s;}
       .av-novin-toggle:hover{border-color:var(--blue);color:var(--blue);}
       .av-novin-toggle.active{background:rgba(74,157,255,.14);border-color:var(--blue);color:var(--blue);}
@@ -26726,7 +26726,6 @@
             KPI as if it had been sold here.
           </div>
 
-          <div class="av-novin-bar"><button type="button" class="av-novin-toggle" id="pvNoVinToggle" onclick="pvToggleNoVin()">Add without VIN number</button></div>
           <div class="pv-sec">Vehicle</div>
           <div id="pvVinSection">
           <div class="av-vin-row" style="margin-bottom: 10px">
@@ -26741,6 +26740,7 @@
           </div>
           <div id="pvDecoded" class="av-decoded"></div>
           </div><!-- /pvVinSection -->
+          <div class="av-novin-bar"><button type="button" class="av-novin-toggle" id="pvNoVinToggle" onclick="pvToggleNoVin()">Add without VIN number</button></div>
           <div class="av-grid3">
             <div>
               <label class="av-label">Year</label>
@@ -27141,7 +27141,6 @@
           <button class="modal-close" onclick="closeAddVeh()">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="av-novin-bar"><button type="button" class="av-novin-toggle" id="avNoVinToggle" onclick="avToggleNoVin()">Add without VIN number</button></div>
           <div id="avVinSection">
           <button type="button" class="av-scan-cta" id="avScanCta" onclick="avScan()">
             <svg
@@ -27191,6 +27190,7 @@
           </div>
           <div id="avDecoded" class="av-decoded"></div>
           </div><!-- /avVinSection -->
+          <div class="av-novin-bar"><button type="button" class="av-novin-toggle" id="avNoVinToggle" onclick="avToggleNoVin()">Add without VIN number</button></div>
           <div class="av-grid3">
             <div>
               <label class="av-label">Year</label
