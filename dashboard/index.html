@@ -26719,17 +26719,21 @@
             KPI as if it had been sold here.
           </div>
 
+          <div class="av-novin-bar"><button type="button" class="av-novin-toggle" id="pvNoVinToggle" onclick="pvToggleNoVin()">Add without VIN number</button></div>
           <div class="pv-sec">Vehicle</div>
+          <div id="pvVinSection">
           <div class="av-vin-row" style="margin-bottom: 10px">
             <input
               id="pvVin"
               class="av-vin-input"
               placeholder="17-digit VIN…"
+              maxlength="17"
               oninput="pvVinInput()"
               autocomplete="off"
             />
           </div>
           <div id="pvDecoded" class="av-decoded"></div>
+          </div><!-- /pvVinSection -->
           <div class="av-grid3">
             <div>
               <label class="av-label">Year</label>
@@ -27108,6 +27112,14 @@
               <button class="atp-no" onclick="finalizePrevSold(false)">
                 No, not yet
               </button>
+            </div>
+          </div>
+          <div class="av-title-pop" id="pvNoVinPop">
+            <div class="atp-q">Save this vehicle without a VIN?</div>
+            <div class="atp-sub">No VIN was entered. We'll assign a temporary stock tag so you can track it now &mdash; you can add the real VIN later from its deal jacket.</div>
+            <div class="atp-btns">
+              <button class="atp-yes" onclick="pvConfirmNoVin(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Yes, save without VIN</button>
+              <button class="atp-no" onclick="pvConfirmNoVin(false)">No, I'll add it</button>
             </div>
           </div>
           <div id="pvMsg" style="margin-top: 12px"></div>
@@ -31770,6 +31782,9 @@
         (vehicles || []).forEach(v => { const m = /^NO-VIN-(\d+)$/i.exec((v.vin || "").trim()); if (m) { n = Math.max(n, parseInt(m[1]) || 0); } });
         return "NO-VIN-" + (n + 1);
       }
+      function avIsPlaceholderVin(vin) {
+        return /^NO-VIN-\d+$/i.test(String(vin || "").trim());
+      }
       function avProceedToTitle() {
         const tp = document.getElementById("avTitlePop"); if (tp) tp.classList.add("show");
       }
@@ -31858,6 +31873,46 @@
         if (typeof fmtSigned === "function") return fmtSigned(n);
         return (n >= 0 ? "+" : "-") + "$" + Math.round(Math.abs(n)).toLocaleString();
       }
+      let pvNoVinMode = false;
+      let _pvVinLast = "";
+      function pvSetNoVin(on, opts) {
+        const silent = !!(opts && opts.silent);
+        pvNoVinMode = !!on;
+        const sec = document.getElementById("pvVinSection");
+        if (sec) sec.style.display = on ? "none" : "";
+        const btn = document.getElementById("pvNoVinToggle");
+        if (btn) {
+          btn.classList.toggle("active", !!on);
+          btn.textContent = on ? "Add with VIN number" : "Add without VIN number";
+        }
+        if (on && !(opts && opts.keepVin)) {
+          const vinEl = document.getElementById("pvVin");
+          if (vinEl && !avIsPlaceholderVin(vinEl.value)) vinEl.value = "";
+          const dec = document.getElementById("pvDecoded");
+          if (dec) dec.innerHTML = "";
+          _pvVinLast = "";
+        }
+        if (silent) return;
+        setTimeout(() => {
+          const el = document.getElementById(on ? "pvYear" : "pvVin");
+          if (el) {
+            try { el.focus(); } catch (e) {}
+          }
+        }, 60);
+      }
+      function pvToggleNoVin() { pvSetNoVin(!pvNoVinMode); }
+      function pvConfirmNoVin(yes) {
+        const np = document.getElementById("pvNoVinPop");
+        if (np) np.classList.remove("show");
+        if (!yes) {
+          const v = document.getElementById("pvVin");
+          if (v) v.focus();
+          return;
+        }
+        const vinEl = document.getElementById("pvVin");
+        if (vinEl) vinEl.value = avNextStockTag();
+        prevSoldSave();
+      }
       function openPrevSold(manual) {
         const m = document.getElementById("prevSoldModal");
         if (!m) return;
@@ -31895,7 +31950,10 @@
         try {
           const tp = document.getElementById("pvTitlePop");
           if (tp) tp.classList.remove("show");
+          const np = document.getElementById("pvNoVinPop");
+          if (np) np.classList.remove("show");
         } catch (e) {}
+        pvSetNoVin(false);
         pvAddOnItems = [];
         try {
           pvRenderAddOns();
@@ -31919,6 +31977,11 @@
       function closePrevSold() {
         const m = document.getElementById("prevSoldModal");
         if (m) m.classList.remove("open");
+        pvNoVinMode = false;
+        const np = document.getElementById("pvNoVinPop");
+        if (np) np.classList.remove("show");
+        const tp = document.getElementById("pvTitlePop");
+        if (tp) tp.classList.remove("show");
       }
       let pvAddOnItems = [];
       function pvAddOnsCost() {
@@ -32129,10 +32192,15 @@
         if (typeof openDealJacket === "function") openDealJacket(vin, "sold");
         else if (typeof showVehicleDetail === "function") showVehicleDetail(vin);
       }
-      let _pvVinLast = "";
       let _pvVinReq = 0;
       function pvVinInput() {
         const raw = (document.getElementById("pvVin") || {}).value || "";
+        if (pvNoVinMode || avIsPlaceholderVin(raw)) {
+          const inp = document.getElementById("pvVin");
+          const keep = raw.toUpperCase().slice(0, 17);
+          if (inp && inp.value !== keep) inp.value = keep;
+          return;
+        }
         const vin = raw
           .toUpperCase()
           .replace(/[^A-HJ-NPR-Z0-9]/g, "")
@@ -32185,20 +32253,42 @@
           });
       }
       function prevSoldSave() {
-        const vin = pvRaw("pvVin").toUpperCase();
+        let vin = pvRaw("pvVin").toUpperCase();
+        if (!vin) {
+          if (pvNoVinMode) {
+            const el = document.getElementById("pvVin");
+            if (el) el.value = avNextStockTag();
+            vin = pvRaw("pvVin").toUpperCase();
+          } else {
+            const np = document.getElementById("pvNoVinPop");
+            const tp = document.getElementById("pvTitlePop");
+            if (tp) tp.classList.remove("show");
+            if (np) {
+              np.classList.add("show");
+              setTimeout(() => {
+                try {
+                  np.scrollIntoView({ behavior: "smooth", block: "center" });
+                } catch (e) {}
+              }, 40);
+              return;
+            }
+          }
+        }
         const buyCheck = fdValidateHidden("pvBuyDate", "purchase date");
         const sellCheck = fdValidateHidden("pvSellDate", "sale date");
         const buy = buyCheck.ok ? buyCheck.ymd : "";
         const sell = sellCheck.ok ? sellCheck.ymd : "";
         const t = pvTotals();
         const fieldErrs = [];
-        if (!vin)
+        const placeholder = avIsPlaceholderVin(vin);
+        if (vin && !placeholder && vin.length !== 17)
           fieldErrs.push({
             id: "pvVin",
             label: "VIN",
-            msg: "A VIN is required to save this vehicle.",
+            msg: "VIN must be exactly 17 characters.",
           });
         else if (
+          vin &&
           typeof vehicles !== "undefined" &&
           vehicles.some((v) => (v.vin || "").toUpperCase() === vin)
         )
@@ -32207,6 +32297,27 @@
             label: "VIN",
             msg: "That VIN is already in the system.",
           });
+        if (pvNoVinMode || placeholder) {
+          const year = parseInt(pvRaw("pvYear"), 10);
+          if (!year || year < 1900 || year > 2100)
+            fieldErrs.push({
+              id: "pvYear",
+              label: "Year",
+              msg: "Enter the vehicle year.",
+            });
+          if (!pvRaw("pvMake"))
+            fieldErrs.push({
+              id: "pvMake",
+              label: "Make",
+              msg: "Enter the make.",
+            });
+          if (!pvRaw("pvModel"))
+            fieldErrs.push({
+              id: "pvModel",
+              label: "Model",
+              msg: "Enter the model.",
+            });
+        }
         if (!buyCheck.ok)
           fieldErrs.push({
             id: "pvBuyDate",
@@ -32249,6 +32360,8 @@
         }
         const pop = document.getElementById("pvTitlePop");
         if (pop) {
+          const np = document.getElementById("pvNoVinPop");
+          if (np) np.classList.remove("show");
           pop.classList.add("show");
           setTimeout(() => {
             try {
@@ -32262,6 +32375,8 @@
       async function finalizePrevSold(titlePresent) {
         const pop = document.getElementById("pvTitlePop");
         if (pop) pop.classList.remove("show");
+        const np = document.getElementById("pvNoVinPop");
+        if (np) np.classList.remove("show");
         const vin = pvRaw("pvVin").toUpperCase();
         const buyCheck = fdValidateHidden("pvBuyDate", "purchase date");
         const sellCheck = fdValidateHidden("pvSellDate", "sale date");
@@ -32286,6 +32401,7 @@
           const plan = currentDealershipPlan();
           const fields = {
             vin,
+            withoutVin: pvNoVinMode || avIsPlaceholderVin(vin),
             year: parseInt(pvRaw("pvYear"), 10) || undefined,
             make: pvRaw("pvMake") || undefined,
             model: pvRaw("pvModel") || undefined,
@@ -32395,6 +32511,7 @@
           const d = document.getElementById("pvDecoded");
           if (d) d.innerHTML = "";
           _pvVinLast = "";
+          pvSetNoVin(false, { silent: true });
           pvRecalc();
           try {
             const box = document.querySelector("#prevSoldModal .modal");
@@ -32420,6 +32537,7 @@
       function pvAddAnother() {
         const el = document.getElementById("pvMsg");
         if (el) el.innerHTML = "";
+        pvSetNoVin(false);
         try {
           const box = document.querySelector("#prevSoldModal .modal");
           if (box) box.scrollTo({ top: 0, behavior: "smooth" });
@@ -32623,6 +32741,12 @@
         _avVinReq = 0;
       function avVinInput() {
         const raw = (document.getElementById("avVin") || {}).value || "";
+        if (avNoVinMode || avIsPlaceholderVin(raw)) {
+          const inp = document.getElementById("avVin");
+          const keep = raw.toUpperCase().slice(0, 17);
+          if (inp && inp.value !== keep) inp.value = keep;
+          return;
+        }
         const vin = raw
           .toUpperCase()
           .replace(/[^A-HJ-NPR-Z0-9]/g, "")
@@ -33514,7 +33638,7 @@
           if (np) { np.classList.add("show"); setTimeout(() => { try { np.scrollIntoView({ behavior: "smooth", block: "center" }); } catch(e) {} }, 40); return; }
         }
         const errs = [];
-        if (vin && vin.length !== 17) {
+        if (vin && !avIsPlaceholderVin(vin) && vin.length !== 17) {
           errs.push({ id: "avVin", label: "VIN", msg: "VIN must be exactly 17 characters." });
         }
         const isEditing = !!editingVehicleVin;

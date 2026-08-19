@@ -1007,6 +1007,7 @@
     const sell = fields.sellDate;
     const body = {
       vin: String(fields.vin || "").toUpperCase().trim(),
+      withoutVin: !!fields.withoutVin || /^NO-VIN-\d+$/i.test(String(fields.vin || "")),
       year: Number(fields.year) || undefined,
       make: fields.make || undefined,
       model: fields.model || undefined,
@@ -1044,6 +1045,10 @@
     if (fields.salesRepId) body.salesRepId = fields.salesRepId;
     if (fields.commissionAmount != null && fields.commissionAmount !== "") {
       body.commissionAmount = Number(fields.commissionAmount);
+    }
+    if (!body.vin) {
+      delete body.vin;
+      body.withoutVin = true;
     }
     const resp = await AVApi.importPreviousSold(body);
     await loadAllVehicles();
