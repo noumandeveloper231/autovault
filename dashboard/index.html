@@ -28588,7 +28588,7 @@
               return "";
             }
           })();
-        return role === "platform_owner" || role === "platform_secondary_owner";
+        return role === "platform_owner";
       }
       function termsNeedsSigning() {
         /* Platform owners run the site — not dealership onboarding. */
@@ -38032,7 +38032,6 @@
         cpa: "CPA",
         wholesale_dealer: "Wholesale Dealer",
         platform_owner: "Main Owner",
-        platform_secondary_owner: "Secondary Owner",
       };
       function applyCrmOwnerData(data) {
         if (!data) return;
@@ -38051,6 +38050,10 @@
               : crmOwner.imageUrl || null,
           birthday: data.birthday || data.birthDate || crmOwner.birthday || "",
           email: data.email || crmOwner.email || "",
+          isMainOwner:
+            data.isMainOwner != null
+              ? !!data.isMainOwner
+              : crmOwner.isMainOwner,
           introCompleted:
             data.introCompleted != null
               ? !!data.introCompleted
@@ -38100,6 +38103,7 @@
             name: sess.name || sess.email || "",
             email: sess.email || "",
             role: sess.role || "",
+            isMainOwner: !!sess.isMainOwner,
           });
         } catch (e) {}
       }
@@ -38113,6 +38117,7 @@
           birthday: u.birthDate || u.birthday || "",
           email: u.email || "",
           imageUrl: u.imageUrl || null,
+          isMainOwner: !!u.isMainOwner,
           introCompleted: u.introCompleted || false,
           termsAccepted: u.termsAccepted || false,
           termsVersion: u.termsVersion || null,
@@ -38152,13 +38157,16 @@
         var roleKey = owner.role || "";
         var roleLabel =
           PROFILE_ROLE_LABELS[roleKey] || roleKey || "User";
+        if (roleKey === "platform_owner" && owner.isMainOwner === false) {
+          roleLabel = "Secondary Owner";
+        }
         if (owner.dealershipName) {
           roleLabel = roleLabel + " · " + owner.dealershipName;
         }
         var ownerLoginNav = document.querySelector('.nav-item.sub[onclick="enterOwner()"]');
         if (ownerLoginNav) {
           ownerLoginNav.style.display =
-            roleKey === "platform_owner" || roleKey === "platform_secondary_owner"
+            roleKey === "platform_owner"
               ? ""
               : "none";
         }
@@ -38211,17 +38219,18 @@
           }
         } catch (_) {}
         var role = (window.crmOwner && window.crmOwner.role) || "";
-        return role === "platform_owner" || role === "platform_secondary_owner";
+        return role === "platform_owner";
       }
       function isMainOwnerSession() {
-        var role = (window.crmOwner && window.crmOwner.role) || "";
-        if (role === "platform_owner") return true;
+        var owner = window.crmOwner || crmOwner || {};
+        if (owner.isMainOwner === true) return true;
+        if (owner.isMainOwner === false) return false;
         try {
           var sess =
             window.AVPortal && typeof AVPortal.readSession === "function"
               ? AVPortal.readSession("owner")
               : null;
-          return (sess && sess.role) === "platform_owner";
+          return !!(sess && sess.role === "platform_owner" && sess.isMainOwner);
         } catch (_) {
           return false;
         }
@@ -38280,7 +38289,7 @@
                   email: owner.email,
                   role: owner.role,
                   roleLabel: roleLabel,
-                  isMainOwner: owner.role === "platform_owner",
+                  isMainOwner: owner.isMainOwner !== false,
                   isYou: true,
                 },
               ];
@@ -56770,18 +56779,17 @@
           if (wsNav) wsNav.style.display = plan === "wholesaler" ? "" : "none";
           var cpaBtn = document.getElementById("addCpaLoginBtn") || document.querySelector(".admin-cpa-btn");
           var addOwnerBtn = document.getElementById("addAdminUserBtn");
-          var isOwnerPortal = routePortal === "owner" || claims.role === "platform_owner" || claims.role === "platform_secondary_owner";
+          var isOwnerPortal = routePortal === "owner" || claims.role === "platform_owner";
           if (cpaBtn) cpaBtn.style.display = isOwnerPortal || plan === "wholesaler" ? "none" : "";
           if (addOwnerBtn) {
             addOwnerBtn.style.display =
-              isOwnerPortal && claims.role === "platform_owner" ? "" : "none";
+              isOwnerPortal && !!claims.isMainOwner ? "" : "none";
           }
           if (
             routePortal === "wholesale" &&
             plan &&
             plan !== "wholesaler" &&
-            claims.role !== "platform_owner" &&
-            claims.role !== "platform_secondary_owner"
+            claims.role !== "platform_owner"
           ) {
             if (window.AVPortal && typeof AVPortal.hideAppShell === "function") {
               AVPortal.hideAppShell();
