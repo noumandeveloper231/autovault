@@ -769,6 +769,19 @@
       request("/api/v1/platform/metrics", { portal: "owner" }),
     platformDealerships: (qs = "") =>
       request(`/api/v1/platform/dealerships${qs}`, { portal: "owner" }),
+    listPlatformOwners: () =>
+      request("/api/v1/platform/owners", { portal: "owner" }),
+    createSecondaryOwner: (body) =>
+      request("/api/v1/platform/owners", {
+        method: "POST",
+        body: JSON.stringify(body),
+        portal: "owner",
+      }),
+    removeSecondaryOwner: (id) =>
+      request(`/api/v1/platform/owners/${encodeURIComponent(id)}`, {
+        method: "DELETE",
+        portal: "owner",
+      }),
     listAuditLogs: (qs = "") => request(`/api/v1/audit-logs${qs}`),
     listFiles: (qs = "") => request(`/api/v1/files${qs}`),
     deleteFile: (id, { purge = true } = {}) =>

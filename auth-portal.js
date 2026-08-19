@@ -197,7 +197,7 @@
     if (!claims) return null;
     if (claims.portal) return normalizePortal(claims.portal);
     const role = String(claims.role || "").toLowerCase();
-    if (role === "platform_owner") return "owner";
+    if (role === "platform_owner" || role === "platform_secondary_owner") return "owner";
     if (role === "wholesale_dealer") return "wholesale";
     if (role === "sales_rep") return "sales_rep";
     if (role === "cpa") return "cpa";

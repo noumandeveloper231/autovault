@@ -15269,6 +15269,11 @@
         display: none !important;
       }
 
+      body.owner-mode #addCpaLoginBtn,
+      body.owner-mode .admin-cpa-btn {
+        display: none !important;
+      }
+
       .usr-badge {
         font-size: 10.5px;
         font-weight: 800;
@@ -16747,7 +16752,7 @@
                   </svg>
                   Log Out
                 </button>
-                <button class="admin-add-btn" onclick="openAddAdmin()">
+                <button class="admin-add-btn" id="addAdminUserBtn" onclick="openAddAdmin()" style="display: none">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
@@ -16756,10 +16761,11 @@
                   >
                     <path d="M12 5v14M5 12h14" />
                   </svg>
-                  Add admin user
+                  Add Secondary Owner
                 </button>
                 <button
                   class="admin-add-btn admin-cpa-btn"
+                  id="addCpaLoginBtn"
                   onclick="openAddCpa()"
                 >
                   <svg
@@ -26494,7 +26500,7 @@
     >
       <div class="modal" style="max-width: 400px">
         <div class="modal-head">
-          <h3>Add Admin User</h3>
+          <h3>Add Secondary Owner</h3>
           <button class="modal-close" onclick="closeAddAdmin()">&times;</button>
         </div>
         <div class="modal-body">
@@ -26527,17 +26533,18 @@
             />
           </div>
           <div class="am-role-note">
-            New admins are added as
-            <b style="color: var(--purple)">Editors</b> &mdash; they can view
-            and edit records, while the owner stays in control of managing
-            users.
+            Adds a <b style="color: var(--purple)">Secondary Owner</b> with
+            access to the owner dashboard. They will receive an email with a
+            temporary password and must change it on first login. Maximum
+            3 owners. Only the main owner can add or remove Secondary Owners.
           </div>
           <button
             class="btn-primary"
+            id="saveAdminUserBtn"
             style="width: 100%; box-shadow: none; margin-top: 14px"
             onclick="saveAdminUser()"
           >
-            Add as Editor
+            Send invite
           </button>
         </div>
       </div>
@@ -28581,7 +28588,7 @@
               return "";
             }
           })();
-        return role === "platform_owner";
+        return role === "platform_owner" || role === "platform_secondary_owner";
       }
       function termsNeedsSigning() {
         /* Platform owners run the site — not dealership onboarding. */
@@ -36331,6 +36338,8 @@
               AVToast.error(err.message || "Failed to load owner users");
           });
         window.scrollTo(0, 0);
+        if (typeof syncAccessMenuButtons === "function") syncAccessMenuButtons();
+        if (typeof loadPlatformOwners === "function") loadPlatformOwners();
       }
       function exitOwner() {
         if (window.AVPortal && typeof AVPortal.logout === "function") {
@@ -38012,7 +38021,9 @@
 
       // ---------- USERS & ACCESS (admin dropdown) ----------
       var adminEditors = []; // sales-rep names appointed as editor-admins
-      var extraAdmins = []; // [{name,email}] newly added admin users (always editors)
+      var extraAdmins = []; // unused — dealership admin invites removed
+      var platformOwners = [];
+      var platformOwnersMeta = { canAdd: false, isMainOwner: false, maxOwners: 3 };
       var cpaLogins = []; // [{id,name,email,pending}] CPA / accountant logins
       var PROFILE_ROLE_LABELS = {
         owner: "Dealer Admin",
@@ -38020,7 +38031,8 @@
         sales_rep: "Sales Rep",
         cpa: "CPA",
         wholesale_dealer: "Wholesale Dealer",
-        platform_owner: "Platform Admin",
+        platform_owner: "Main Owner",
+        platform_secondary_owner: "Secondary Owner",
       };
       function applyCrmOwnerData(data) {
         if (!data) return;
@@ -38145,8 +38157,12 @@
         }
         var ownerLoginNav = document.querySelector('.nav-item.sub[onclick="enterOwner()"]');
         if (ownerLoginNav) {
-          ownerLoginNav.style.display = roleKey === "platform_owner" ? "" : "none";
+          ownerLoginNav.style.display =
+            roleKey === "platform_owner" || roleKey === "platform_secondary_owner"
+              ? ""
+              : "none";
         }
+        syncAccessMenuButtons();
         var av = chip.querySelector(".avatar");
         if (av) {
           if (owner.imageUrl) {
@@ -38184,13 +38200,61 @@
         const s = ((p[0] || "")[0] || "") + ((p[1] || "")[0] || "");
         return (s || (name || "?").slice(0, 2)).toUpperCase();
       }
+      function isOwnerPortalSession() {
+        try {
+          if (
+            window.AVPortal &&
+            typeof AVPortal.getRoutePortal === "function" &&
+            AVPortal.getRoutePortal() === "owner"
+          ) {
+            return true;
+          }
+        } catch (_) {}
+        var role = (window.crmOwner && window.crmOwner.role) || "";
+        return role === "platform_owner" || role === "platform_secondary_owner";
+      }
+      function isMainOwnerSession() {
+        var role = (window.crmOwner && window.crmOwner.role) || "";
+        if (role === "platform_owner") return true;
+        try {
+          var sess =
+            window.AVPortal && typeof AVPortal.readSession === "function"
+              ? AVPortal.readSession("owner")
+              : null;
+          return (sess && sess.role) === "platform_owner";
+        } catch (_) {
+          return false;
+        }
+      }
+      function syncAccessMenuButtons() {
+        var addBtn = document.getElementById("addAdminUserBtn");
+        var cpaBtn = document.getElementById("addCpaLoginBtn");
+        var ownerPortal = isOwnerPortalSession();
+        var mainOwner = isMainOwnerSession();
+        var atCap =
+          Array.isArray(platformOwners) &&
+          platformOwners.length >= (platformOwnersMeta.maxOwners || 3);
+        if (addBtn) {
+          addBtn.style.display =
+            ownerPortal && mainOwner && !atCap ? "" : "none";
+        }
+        if (cpaBtn) {
+          if (ownerPortal) {
+            cpaBtn.style.display = "none";
+          }
+        }
+      }
       function toggleAdminMenu() {
         const w = document.getElementById("profileWrap");
         if (!w) return;
         const open = w.classList.toggle("open");
         if (open) {
           renderAdminMenu();
-          loadCpaLogins();
+          if (isOwnerPortalSession()) {
+            loadPlatformOwners();
+          } else {
+            loadCpaLogins();
+          }
         }
       }
       function closeAdminMenu() {
@@ -38203,16 +38267,40 @@
         const owner = window.crmOwner || crmOwner || {};
         const roleLabel =
           PROFILE_ROLE_LABELS[owner.role] || owner.role || "Dealer Admin";
+        const ownerPortal = isOwnerPortalSession();
+        const mainOwner = isMainOwnerSession();
         let html = "";
-        html += `<div class="am-row"><div class="am-av owner">${amInitials(owner.name)}</div><div class="am-info"><div class="am-name">${msgEsc(owner.name || "You")}</div><div class="am-role owner">${msgEsc(roleLabel)}${owner.dealershipName ? " · " + msgEsc(owner.dealershipName) : ""}${owner.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(owner.email) + "</span>" : ""}</div></div><span class="am-tag-owner">You</span></div>`;
-        extraAdmins.forEach((u, i) => {
-          html += `<div class="am-row"><div class="am-av editor">${amInitials(u.name)}</div><div class="am-info"><div class="am-name">${msgEsc(u.name)}</div><div class="am-role editor">Admin \u00b7 Editor</div></div><button class="am-act revoke" onclick="removeExtraAdmin(${i})">Remove</button></div>`;
-        });
-        (salesReps || []).forEach((r, idx) => {
-          const isEd = adminEditors.indexOf(r.name) >= 0;
-          html += `<div class="am-row"><div class="am-av ${isEd ? "editor" : ""}">${amInitials(r.name)}</div><div class="am-info"><div class="am-name">${msgEsc(r.name)}</div><div class="am-role ${isEd ? "editor" : ""}">${isEd ? "Admin \u00b7 Editor" : "Sales Rep"}</div></div><button class="am-act ${isEd ? "revoke" : ""}" onclick="toggleRepEditor(${idx})">${isEd ? "Remove editor" : "Make editor"}</button></div>`;
-        });
-        if (cpaLogins.length) {
+        if (ownerPortal) {
+          const rows = platformOwners.length
+            ? platformOwners
+            : [
+                {
+                  id: owner.id,
+                  fullName: owner.name,
+                  email: owner.email,
+                  role: owner.role,
+                  roleLabel: roleLabel,
+                  isMainOwner: owner.role === "platform_owner",
+                  isYou: true,
+                },
+              ];
+          rows.forEach((u) => {
+            const isYou = !!(u.isYou || (owner.id && u.id === owner.id));
+            const label = u.roleLabel || PROFILE_ROLE_LABELS[u.role] || u.role;
+            const canRemove = mainOwner && !u.isMainOwner && !isYou;
+            html += `<div class="am-row"><div class="am-av ${u.isMainOwner ? "owner" : "editor"}">${amInitials(u.fullName || u.name || u.email)}</div><div class="am-info"><div class="am-name">${msgEsc(u.fullName || u.name || "Owner")}</div><div class="am-role ${u.isMainOwner ? "owner" : "editor"}">${msgEsc(label)}${u.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(u.email) + "</span>" : ""}</div></div>${isYou ? '<span class="am-tag-owner">You</span>' : canRemove ? `<button class="am-act revoke" onclick="removePlatformOwner('${u.id}')">Remove</button>` : ""}</div>`;
+          });
+        } else {
+          html += `<div class="am-row"><div class="am-av owner">${amInitials(owner.name)}</div><div class="am-info"><div class="am-name">${msgEsc(owner.name || "You")}</div><div class="am-role owner">${msgEsc(roleLabel)}${owner.dealershipName ? " · " + msgEsc(owner.dealershipName) : ""}${owner.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(owner.email) + "</span>" : ""}</div></div><span class="am-tag-owner">You</span></div>`;
+          extraAdmins.forEach((u, i) => {
+            html += `<div class="am-row"><div class="am-av editor">${amInitials(u.name)}</div><div class="am-info"><div class="am-name">${msgEsc(u.name)}</div><div class="am-role editor">Admin \u00b7 Editor</div></div><button class="am-act revoke" onclick="removeExtraAdmin(${i})">Remove</button></div>`;
+          });
+          (salesReps || []).forEach((r, idx) => {
+            const isEd = adminEditors.indexOf(r.name) >= 0;
+            html += `<div class="am-row"><div class="am-av ${isEd ? "editor" : ""}">${amInitials(r.name)}</div><div class="am-info"><div class="am-name">${msgEsc(r.name)}</div><div class="am-role ${isEd ? "editor" : ""}">${isEd ? "Admin \u00b7 Editor" : "Sales Rep"}</div></div><button class="am-act ${isEd ? "revoke" : ""}" onclick="toggleRepEditor(${idx})">${isEd ? "Remove editor" : "Make editor"}</button></div>`;
+          });
+        }
+        if (!ownerPortal && cpaLogins.length) {
           html += `<div class="am-divider" style="border-top:1px solid var(--border);margin:8px 0;"></div>`;
           cpaLogins.forEach((u) => {
             const pending = !!u.pending;
@@ -38234,7 +38322,32 @@
         html += `<div class="am-row" style="cursor:pointer;" onclick="openAuditLog()"><div class="am-av" style="background:var(--border);font-size:13px;">&#128196;</div><div class="am-info"><div class="am-name">Audit Log</div><div class="am-role">View recent activity</div></div></div>`;
         list.innerHTML = html;
       }
+      async function loadPlatformOwners() {
+        if (!window.AVApi || typeof AVApi.listPlatformOwners !== "function") return;
+        try {
+          const res = await AVApi.listPlatformOwners();
+          platformOwners = (res && res.owners) || [];
+          platformOwnersMeta = {
+            canAdd: !!(res && res.canAdd),
+            isMainOwner: !!(res && res.isMainOwner),
+            maxOwners: (res && res.maxOwners) || 3,
+          };
+          syncAccessMenuButtons();
+          if (
+            document.getElementById("profileWrap") &&
+            document.getElementById("profileWrap").classList.contains("open")
+          ) {
+            renderAdminMenu();
+          }
+        } catch (err) {
+          console.warn("[platform-owners]", err);
+        }
+      }
       async function loadCpaLogins() {
+        if (isOwnerPortalSession()) {
+          syncAccessMenuButtons();
+          return;
+        }
         if (!window.AVApi) return;
         try {
           const usersRes = await AVApi.listUsers("?role=cpa&limit=50");
@@ -38284,6 +38397,7 @@
         }
       }
       function openAddCpa() {
+        if (isOwnerPortalSession()) return;
         const plan = currentDealershipPlan();
         if (plan === "wholesaler") {
           if (typeof AVToast !== "undefined")
@@ -38836,11 +38950,32 @@
         }
       }
 
+      async function removePlatformOwner(id) {
+        if (!id || !window.AVApi || typeof AVApi.removeSecondaryOwner !== "function") return;
+        try {
+          await AVApi.removeSecondaryOwner(id);
+          if (typeof AVToast !== "undefined") AVToast.success("Secondary Owner removed");
+          await loadPlatformOwners();
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error((err && err.message) || "Could not remove owner");
+        }
+      }
       function removeExtraAdmin(i) {
         extraAdmins.splice(i, 1);
         renderAdminMenu();
       }
       function openAddAdmin() {
+        if (!isMainOwnerSession()) {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Only the main owner can add Secondary Owners.");
+          return;
+        }
+        if (platformOwners.length >= (platformOwnersMeta.maxOwners || 3)) {
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Maximum of 3 owners reached.");
+          return;
+        }
         closeAdminMenu();
         const m = document.getElementById("addAdminModal");
         if (m) m.classList.add("open");
@@ -39005,10 +39140,11 @@
             });
             if (result && (result.accessToken || result.token || result.refreshToken)) {
               var portal =
-                (localStorage.getItem("avAuthPortal") ||
-                  (window.AVPortal && AVPortal.getRoutePortal
-                    ? AVPortal.getRoutePortal()
-                    : "admin")) || "admin";
+                (window.AVPortal && AVPortal.getRoutePortal
+                  ? AVPortal.getRoutePortal()
+                  : null) ||
+                localStorage.getItem("avAuthPortal") ||
+                "admin";
               AVApi.setSession({
                 token: result.accessToken || result.token,
                 refreshToken: result.refreshToken,
@@ -39109,21 +39245,55 @@
             '<div style="padding:20px;color:var(--red);">Failed to load audit log.</div>';
         }
       }
-      function saveAdminUser() {
+      async function saveAdminUser() {
         const name = (document.getElementById("adminName").value || "").trim();
         const email = (
           document.getElementById("adminEmail").value || ""
-        ).trim();
+        )
+          .trim()
+          .toLowerCase();
         if (!name) {
           document.getElementById("adminName").focus();
           return;
         }
-        extraAdmins.push({ name, email });
-        closeAddAdmin();
-        document.getElementById("adminName").value = "";
-        document.getElementById("adminEmail").value = "";
-        reopenAdminMenuDeferred();
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+          document.getElementById("adminEmail").focus();
+          if (typeof AVToast !== "undefined")
+            AVToast.warning("Enter a valid email address");
+          return;
+        }
+        if (!window.AVApi || typeof AVApi.createSecondaryOwner !== "function") {
+          if (typeof AVToast !== "undefined")
+            AVToast.error("Owner API not loaded");
+          return;
+        }
+        const btn = document.getElementById("saveAdminUserBtn");
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "Sending…";
+        }
+        try {
+          await AVApi.createSecondaryOwner({ fullName: name, email });
+          closeAddAdmin();
+          document.getElementById("adminName").value = "";
+          document.getElementById("adminEmail").value = "";
+          if (typeof AVToast !== "undefined")
+            AVToast.success("Invitation sent with a temporary password");
+          await loadPlatformOwners();
+          reopenAdminMenuDeferred();
+        } catch (err) {
+          if (typeof AVToast !== "undefined")
+            AVToast.error((err && err.message) || "Could not add Secondary Owner");
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = "Send invite";
+          }
+        }
       }
+      window.removePlatformOwner = removePlatformOwner;
+      window.saveAdminUser = saveAdminUser;
+      window.openAddAdmin = openAddAdmin;
       document.addEventListener("click", function (e) {
         const w = document.getElementById("profileWrap");
         if (w && w.classList.contains("open") && !w.contains(e.target))
@@ -46533,7 +46703,7 @@
           "create.*deal jacket":
             "From a vehicle, choose <b>Create Deal Jacket</b> to bundle contract, title, and funding docs in one folder.",
           "invite.*(user|employee)":
-            "Profile menu → <b>Users &amp; Access</b> → <b>Add admin user</b> to invite a teammate by email.",
+            "Profile menu → <b>Users &amp; Access</b> → <b>Add Secondary Owner</b> (main owner only).",
           "change.*password":
             "Head to account settings to update your password.",
           "change.*subscription|switch.*package":
@@ -56598,13 +56768,20 @@
           }
           var wsNav = document.getElementById("adminWholesaleCrmNav");
           if (wsNav) wsNav.style.display = plan === "wholesaler" ? "" : "none";
-          var cpaBtn = document.querySelector(".admin-cpa-btn");
-          if (cpaBtn) cpaBtn.style.display = plan === "wholesaler" ? "none" : "";
+          var cpaBtn = document.getElementById("addCpaLoginBtn") || document.querySelector(".admin-cpa-btn");
+          var addOwnerBtn = document.getElementById("addAdminUserBtn");
+          var isOwnerPortal = routePortal === "owner" || claims.role === "platform_owner" || claims.role === "platform_secondary_owner";
+          if (cpaBtn) cpaBtn.style.display = isOwnerPortal || plan === "wholesaler" ? "none" : "";
+          if (addOwnerBtn) {
+            addOwnerBtn.style.display =
+              isOwnerPortal && claims.role === "platform_owner" ? "" : "none";
+          }
           if (
             routePortal === "wholesale" &&
             plan &&
             plan !== "wholesaler" &&
-            claims.role !== "platform_owner"
+            claims.role !== "platform_owner" &&
+            claims.role !== "platform_secondary_owner"
           ) {
             if (window.AVPortal && typeof AVPortal.hideAppShell === "function") {
               AVPortal.hideAppShell();

@@ -160,6 +160,11 @@
   // ── Initialization ──────────────────────────────────────────────────
 
   global.initMessaging = async function () {
+    try {
+      if (global.AVPortal && typeof AVPortal.getRoutePortal === "function" && AVPortal.getRoutePortal() === "owner") {
+        return;
+      }
+    } catch (_) {}
     if (state.initDone) {
       if (state.loadingConversations) {
         renderConvoSkeleton();
