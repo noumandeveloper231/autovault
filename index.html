@@ -36,6 +36,16 @@
 <meta name="twitter:title" content="AutoVault — The Dealership Operating System" />
 <meta name="twitter:description" content="AutoVault brings inventory, sales, commissions, payments, taxes, and profit into one platform built for how dealerships actually run. Your first month is on us." />
 <meta name="twitter:image" content="https://www.autovault360.com/og-image.png" />
+<script src="/auth-portal.js"></script>
+<script>
+(function(){
+  try {
+    if (window.AVPortal && (AVPortal.hasStoredAuth("admin") || AVPortal.hasStoredAuth("owner"))) {
+      document.documentElement.classList.add("av-logged-in");
+    }
+  } catch (e) {}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Caveat:wght@700&display=swap" rel="stylesheet" />
@@ -140,6 +150,49 @@
   .nav-links{display:contents}
   .nav-primary{grid-column:2;display:flex;align-items:center;justify-content:center;gap:28px;flex-wrap:nowrap}
   .nav-cta{grid-column:3;justify-self:end;display:flex;align-items:center;gap:12px;flex-wrap:nowrap;z-index:2}
+  .nav-guest{display:flex;align-items:center;gap:12px}
+  .nav-session{display:none;align-items:center}
+  html.av-logged-in .nav-guest{display:none!important}
+  html.av-logged-in .nav-session{display:flex}
+  .profile-wrap{position:relative;flex-shrink:0}
+  .profile{
+    display:flex;align-items:center;gap:10px;padding:6px 12px;
+    background:none;border:1px solid transparent;cursor:pointer;border-radius:11px;
+    font-family:inherit;color:inherit;
+  }
+  .profile:hover,.profile-wrap.open .profile{background:var(--panel-2);border-color:var(--line)}
+  .profile:focus{outline:none}
+  .profile-meta{text-align:left;min-width:0}
+  .profile-caret{width:15px;height:15px;color:var(--muted);flex-shrink:0;transition:transform .18s}
+  .profile-wrap.open .profile-caret{transform:rotate(180deg)}
+  .avatar{
+    width:34px;height:34px;border-radius:50%;
+    background:linear-gradient(135deg,#2ec4a7,#3A5BF5);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700;font-size:13px;color:#03121c;flex-shrink:0;letter-spacing:.02em;overflow:hidden;
+  }
+  .profile-name{font-size:13px;font-weight:700;line-height:1.1;white-space:nowrap;color:var(--text)}
+  .profile-role{font-size:11px;color:var(--muted);line-height:1.2;white-space:nowrap}
+  .landing-menu{
+    position:absolute;top:calc(100% + 8px);right:0;width:240px;
+    background:var(--panel);border:1px solid var(--line);border-radius:14px;
+    box-shadow:0 18px 46px rgba(24,30,74,.18);padding:10px;display:none;z-index:130;
+  }
+  .profile-wrap.open .landing-menu{display:block}
+  .lp-dash-btn{
+    width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 14px;border-radius:10px;border:1px solid var(--accent-line);
+    background:var(--accent-soft);color:var(--accent);font-family:inherit;font-size:13px;font-weight:700;
+    text-decoration:none;cursor:pointer;
+  }
+  .lp-dash-btn:hover{background:rgba(39,67,232,.16);color:var(--accent-2)}
+  .admin-logout-btn{
+    width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+    margin-top:8px;padding:11px 14px;border-radius:10px;border:1px dashed var(--down);
+    background:none;color:var(--down);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;
+  }
+  .admin-logout-btn:hover{background:rgba(229,72,77,.08)}
+  .admin-logout-btn svg{width:15px;height:15px;flex-shrink:0}
   .nav-links a{font-size:14px;color:var(--muted);font-weight:500;transition:color .18s;white-space:nowrap}
   .nav-links a:hover{color:var(--text)}
   .btn{
@@ -1289,6 +1342,10 @@
     .nav-links.mobile-open .btn{
       width:100%;
     }
+    .nav-links.mobile-open .nav-guest{flex-direction:column;align-items:stretch;width:100%;gap:8px}
+    .nav-links.mobile-open .nav-session,.nav-links.mobile-open .profile-wrap{width:100%}
+    .nav-links.mobile-open .profile{width:100%}
+    .nav-links.mobile-open .landing-menu{position:static;width:100%;margin-top:8px;box-shadow:none}
     .nav-tools .theme-toggle{width:42px;height:42px;border-radius:10px}
   }
 
@@ -1316,8 +1373,33 @@
       <div class="nav-cta">
         <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Switch theme" aria-label="Toggle theme"></button>
         <a href="#" class="lang-btn" id="langBtn">Español</a>
-        <a href="/login" class="btn btn-login">Log In</a>
-        <a href="#waitlist" class="btn btn-primary">Get Started</a>
+        <span class="nav-guest">
+          <a href="/login" class="btn btn-login">Log In</a>
+          <a href="#waitlist" class="btn btn-primary">Get Started</a>
+        </span>
+        <div class="nav-session" id="navSession">
+          <div class="profile-wrap" id="landingProfileWrap">
+            <button type="button" class="profile" id="landingProfileChip" aria-haspopup="true" aria-expanded="false" title="Account">
+              <div class="avatar" id="lpAvatar">AV</div>
+              <div class="profile-meta">
+                <div class="profile-name" id="lpName">Dashboard</div>
+                <div class="profile-role" id="lpRole">Signed in</div>
+              </div>
+              <svg class="profile-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+            <div class="landing-menu" id="landingProfileMenu">
+              <a class="lp-dash-btn" id="lpDashLink" href="/dashboard">Open Dashboard</a>
+              <button type="button" class="admin-logout-btn" id="lpLogout">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                </svg>
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </nav>
     <div class="nav-tools">
@@ -2620,6 +2702,13 @@
   (function(){
     const DICT={"Privacy Center": "Centro de privacidad", "Team": "Equipo", "Wholesale": "Mayoristas", "Profit Tracker": "Rastreador de ganancias", "About": "Nosotros", "Contact": "Contacto", "Log In": "Iniciar sesión", "Get Started": "Comenzar", "Get started free": "Empieza gratis", "✦ Welcome to": "✦ Bienvenido a", "— the dealership operating system": "— el sistema operativo para concesionarios", "Your": "Tu", "first month is free": "primer mes es gratis", "Run your entire dealership from one login": "Dirige todo tu concesionario desde un solo inicio de sesión", "Inventory · Sales Tax · Payroll · P&L · Jenna AI": "Inventario · Impuesto · Nómina · Ganancias y pérdidas · Jenna AI", "Built by dealers, for dealers": "Hecho por dealers, para dealers", "Now live — start free today": "Ya disponible — empieza gratis hoy", "The Dealership Operating System": "El sistema operativo para concesionarios", "The problem": "El problema", "The biggest losses aren't on the lot.": "Las mayores pérdidas no están en el lote.", "They're in the numbers you don't track.": "Están en los números que no rastreas.", "Most dealerships don't lose money because they can't sell cars — they lose it because they can't track them.": "La mayoría de los concesionarios no pierden dinero porque no puedan vender autos, lo pierden porque no pueden rastrearlos.", "With AutoVault": "Con AutoVault", "One live dashboard. Every number, tracked.": "Un panel en vivo. Cada número, rastreado.", "Inventory, true profit per VIN, sales tax, payroll and P&L — one login, updated in real time and ready for tax season.": "Inventario, ganancia real por VIN, impuesto sobre ventas, nómina y ganancias y pérdidas — un inicio de sesión, actualizado en tiempo real y listo para la temporada de impuestos.", "Live now": "Ya disponible", "First month free": "Primer mes gratis", "No setup fees · cancel anytime": "Sin cuota de instalación · cancela cuando quieras", "Run your entire dealership from the touch of your phone.": "Dirige todo tu concesionario desde tu teléfono.", "Real outcomes": "Resultados reales", "What AutoVault does for your dealership.": "Lo que AutoVault hace por tu concesionario.", "Increase Profitability": "Aumenta la rentabilidad", "Increase Efficiency": "Aumenta la eficiencia", "Stay Tax-Ready": "Listo para impuestos", "Never Miss a Number": "Nunca pierdas un número", "See every hidden dollar": "Ve cada dólar oculto", "Your whole desk, one login": "Todo tu escritorio, un inicio de sesión", "Never scramble at filing": "Nunca corras al declarar", "Nothing slips through": "Nada se te escapa", "True profit on every VIN": "Ganancia real en cada VIN", "Catch cars losing money": "Detecta autos que pierden dinero", "Every expense captured": "Cada gasto registrado", "Higher net on every deal": "Mayor ganancia neta en cada venta", "One login for everything": "Un inicio de sesión para todo", "Automated daily reminders": "Recordatorios diarios automáticos", "Jenna AI does the digging": "Jenna AI hace la búsqueda", "No more spreadsheets": "Sin más hojas de cálculo", "Sales tax organized by state": "Impuesto organizado por estado", "Filing reminders & schedule": "Recordatorios y calendario de declaración", "Tax-ready P&L, always": "Ganancias y pérdidas listas para impuestos", "CPA / accountant login": "Acceso para tu contador (CPA)", "Title tracking, in & out": "Seguimiento de títulos, entrada y salida", "Flooring costs controlled": "Costos de flooring controlados", "Every deal & payout logged": "Cada venta y pago registrado", "Nothing lost in a text": "Nada se pierde en un mensaje", "One platform, whole operation": "Una plataforma, toda la operación", "Your desk, organized": "Tu escritorio, organizado", "What's inside": "Qué incluye", "State Tax Center": "Centro de impuestos estatales", "Team communication": "Comunicación del equipo", "For wholesalers": "Para mayoristas", "Why dealers switch": "Por qué los dealers cambian", "How it tracks every number": "Cómo rastrea cada número", "Our Company": "Nuestra empresa", "One more step": "Un paso más", "Get in touch": "Contáctanos", "Legal": "Legal", "The AI assistant built for dealerships.": "El asistente de IA hecho para concesionarios.", "Selling cars makes revenue. Tracking numbers builds wealth.": "Vender autos genera ingresos. Rastrear números crea riqueza.", "Your entire desk, in one login.": "Todo tu escritorio, en un inicio de sesión.", "Every part of the dealership, in one login.": "Cada parte del concesionario, en un inicio de sesión.", "Every vehicle, down to the dollar.": "Cada vehículo, hasta el último dólar.", "Your sales tax, organized and never late.": "Tu impuesto sobre ventas, organizado y nunca tarde.", "Keep the whole floor connected — and closing.": "Mantén a todo el equipo conectado — y cerrando ventas.", "Your cars move fast. Your numbers should move faster.": "Tus autos se mueven rápido. Tus números deberían moverse más rápido.", "The lot runs on gut feel and six open tabs.": "El lote funciona por intuición y seis pestañas abiertas.", "Every dollar tied to a VIN, a rep, or a filing.": "Cada dólar ligado a un VIN, un vendedor o una declaración.", "Get your first month free.": "Obtén tu primer mes gratis.", "Choose the plan that fits your dealership.": "Elige el plan ideal para tu concesionario.", "Contact us": "Contáctanos", "Give every dealer total command of their numbers.": "Darle a cada dealer control total de sus números.", "Built by dealers": "Hecho por dealers", "Every number, tracked": "Cada número, rastreado", "Made to keep you profitable": "Hecho para mantenerte rentable", "One login, your whole desk": "Un inicio de sesión, todo tu escritorio", "Platform": "Plataforma", "Company": "Empresa", "List a car in Inventory, close it in Transactions, and the sale flows straight into Payments, Sales Reps, and your live Reports — no double entry, no drift between files.": "Registra un auto en Inventario, ciérralo en Transacciones, y la venta fluye directo a Pagos, Vendedores y tus Reportes en vivo — sin doble captura, sin descuadres entre archivos.", "Purchase, auction fees, flooring, and sales tax — captured per VIN — so you see true gross and net profit on every car, and catch the ones quietly losing money.": "Compra, tarifas de subasta, flooring e impuesto — capturado por VIN — para que veas la ganancia bruta y neta real de cada auto, y detectes los que pierden dinero en silencio.", "Set your filing frequency — monthly, quarterly, or annual — and AutoVault reminds you before every due date. Separate what you've collected by state, keep each vehicle's tax tied to its VIN, and export a filing-ready report in one click.": "Configura tu frecuencia de declaración — mensual, trimestral o anual — y AutoVault te recuerda antes de cada fecha límite. Separa lo recaudado por estado, mantén el impuesto de cada vehículo ligado a su VIN, y exporta un reporte listo para declarar con un clic.", "Deals live in a spreadsheet, commissions in a text thread, expenses on a shoebox of receipts. By the time the numbers add up, the month is over. AutoVault closes the gap.": "Las ventas viven en una hoja de cálculo, las comisiones en mensajes, los gastos en una caja de recibos. Para cuando cuadran los números, el mes ya terminó. AutoVault cierra esa brecha.", "Flip through the dashboard and you'll see the same data broken down four ways. Here's what each screen is actually doing.": "Recorre el panel y verás los mismos datos desglosados de cuatro maneras. Esto es lo que hace cada pantalla.", "AutoVault started with a simple frustration: the hardest part of running a dealership isn't selling cars — it's keeping track of everything that happens around the sale. So we built the tool we always wished we had.": "AutoVault nació de una frustración simple: lo más difícil de manejar un concesionario no es vender autos — es llevar el control de todo lo que pasa alrededor de la venta. Así que creamos la herramienta que siempre quisimos tener.", "Built for wholesalers": "Para mayoristas", "Built by dealership people,": "Hecho por gente de concesionarios,", "for dealership people.": "para gente de concesionarios.", "Wholesalers": "Mayoristas", "Independent Dealers": "Dealers independientes", "Growing Dealerships": "Concesionarios en crecimiento", "You're all set!": "¡Todo listo!", "Start free": "Empieza gratis", "Increase profit": "Aumenta la ganancia", "Save time": "Ahorra tiempo", "Stay compliant": "Cumple las normas", "Access anywhere": "Accede desde donde sea", "Cost to the penny, per vehicle": "Costo al centavo, por vehículo", "Sales tax kept on file": "Impuesto sobre ventas registrado", "Payroll & commissions in one run": "Nómina y comisiones en una sola corrida", "A live profit & loss statement": "Un estado de ganancias y pérdidas en vivo", "First name": "Nombre", "Last name": "Apellido", "Company / Dealership": "Empresa / Concesionario", "Email": "Correo electrónico", "Mobile number": "Número de celular", "State": "Estado", "How can we help?": "¿Cómo podemos ayudarte?", "1. Information We Collect": "1. Información que recopilamos", "2. How We Use Your Information": "2. Cómo usamos tu información", "3. How We Share Information": "3. Cómo compartimos la información", "4. Data Security": "4. Seguridad de los datos", "5. Data Retention": "5. Retención de datos", "6. Your Rights & Choices": "6. Tus derechos y opciones", "7. Cookies & Tracking": "7. Cookies y seguimiento", "8. Third-Party Services": "8. Servicios de terceros", "9. Children's Privacy": "9. Privacidad de menores", "10. Changes to This Policy": "10. Cambios a esta política", "11. Contact Us": "11. Contáctanos", "Dashboard": "Panel", "Inventory": "Inventario", "Sales Tax": "Impuesto", "Payroll": "Nómina", "Calendar": "Calendario", "This month": "Este mes", "Net profit": "Ganancia neta", "Revenue": "Ingresos", "Owed to reps": "Debido a vendedores", "Owed to Reps": "Debido a vendedores", "Profit per VIN": "Ganancia por VIN", "Sold": "Vendido", "In stock": "En inventario", "Underwater": "En pérdida", "Quarterly": "Trimestral", "Next filing due": "Próxima declaración", "Collected": "Recaudado", "On file": "Registrado", "Salary + comm": "Salario + comisión", "Hourly": "Por hora", "Profit & Loss": "Ganancias y pérdidas", "Cost of goods": "Costo de bienes", "Commissions": "Comisiones", "Net Profit": "Ganancia neta", "Total revenue": "Ingresos totales", "Gross Profit": "Ganancia bruta", "Before overhead": "Antes de gastos", "Commissions due": "Comisiones pendientes", "Inventory Overview": "Resumen de inventario", "Vehicles": "Vehículos", "Floored": "En flooring", "True cost & profit per VIN": "Costo real y ganancia por VIN", "All-in cost": "Costo total", "Sold / Ask": "Vendido / Pedido", "Days": "Días", "Vehicle": "Vehículo", "Frequency": "Frecuencia", "Due date": "Fecha límite", "Sale price": "Precio de venta", "Tax collected": "Impuesto recaudado", "Filed": "Declarado", "Employee": "Empleado", "Type": "Tipo", "Notifications": "Notificaciones", "Dealership Login": "Acceso de concesionario", "Welcome back": "Bienvenido de nuevo", "Sign in to your dealership dashboard.": "Inicia sesión en el panel de tu concesionario.", "Username or email": "Usuario o correo", "Password": "Contraseña", "Remember me": "Recuérdame", "Forgot password?": "¿Olvidaste tu contraseña?", "Sign in to dashboard": "Entrar al panel", "New dealership?": "¿Nuevo concesionario?", "Sign up here": "Regístrate aquí", "Secured with 256-bit encryption": "Protegido con cifrado de 256 bits", "Back to site": "Volver al sitio", "Send message": "Enviar mensaje", "Tell us about your dealership and we'll get right back to you.": "Cuéntanos sobre tu concesionario y te responderemos enseguida.", "Privacy Policy": "Política de privacidad", "Overview": "Resumen", "Early access": "Acceso anticipado", "Terms of Service": "Términos del servicio", "Back to home": "Volver al inicio", "you@yourdealership.com": "tu@concesionario.com", "Jane": "Juana", "Dealer": "Dealer", "Riverside Auto Group": "Grupo Auto Riverside", "jane@yourdealership.com": "juana@concesionario.com", "(555) 010-2020": "(555) 010-2020", "Tell us what you're looking for...": "Cuéntanos qué buscas...", "Select your state": "Elige tu estado", "Last updated: August 5, 2026": "Última actualización: 5 de agosto de 2026", "Introducing Jenna": "Te presentamos a Jenna", "The AI assistant": "El asistente de IA", "built for dealerships.": "hecho para concesionarios.", "Jenna is modeled for dealerships and nothing else. Ask her about your lot, your profit, or your deals — she answers instantly, takes action, and keeps you profitable. The assistant every dealership needs, right in your pocket — one click away.": "Jenna está diseñada solo para concesionarios. Pregúntale sobre tu lote, tus ganancias o tus ventas — responde al instante, toma acción y te mantiene rentable. El asistente que todo concesionario necesita, en tu bolsillo — a un clic de distancia.", "Every car carries purchase price, auction & doc fees, repairs, add-ons, and flooring — so you see true net profit, not sticker vs. sale.": "Cada auto incluye precio de compra, tarifas de subasta y documentos, reparaciones, extras y flooring — para que veas la ganancia neta real, no precio de lista vs. venta.", "Tax collected is captured on every sale, tied to the VIN, and rolled into your filing schedule — you always know what's owed and when.": "El impuesto recaudado se captura en cada venta, se liga al VIN y se integra a tu calendario de declaración — siempre sabes cuánto debes y cuándo.", "Base pay plus commission per deal calculates itself, hourly staff clock automatically, and every payout is logged with proof.": "El salario base más comisión por venta se calcula solo, el personal por hora registra su tiempo automáticamente, y cada pago queda con comprobante.", "Auction": "Subasta", "Re-run": "Repetir", "Filing": "Declaración", "July 2026 · what sold & what's due": "Julio 2026 · qué se vendió y qué vence", "3 sold this week": "3 vendidos esta semana", "July 2026": "Julio 2026", "Wed, Jul 15 · Your note": "Mié, 15 jul · Tu nota", "Rogue title's in — call the buyer. Pull Silverado for Friday's re-run.": "Llegó el título del Rogue — llama al comprador. Saca el Silverado para repetir el viernes.", "+ Add": "+ Agregar", "Sales tax due — File Q2": "Impuesto vence — Declara Q2", "Jeep Grand Cherokee sold": "Jeep Grand Cherokee vendido", "Manheim Riverside · 4 cars": "Manheim Riverside · 4 autos", "Ford F-150 XLT sold": "Ford F-150 XLT vendido", "Silverado LT — re-run": "Silverado LT — repetir", "Statement · This month": "Estado · Este mes", "Net margin · 15%": "Margen neto · 15%", "− Cost of goods sold": "− Costo de bienes vendidos", "− Commissions": "− Comisiones", "− Operating expenses": "− Gastos operativos", "COGS 79%": "Costo 79%", "Commissions 3%": "Comisiones 3%", "Overhead 3%": "Generales 3%", "Net profit 15%": "Ganancia neta 15%", "Collected & on file, per VIN": "Recaudado y registrado, por VIN", "Next filing · Jul 31": "Próxima declaración · 31 jul", "Collected for state": "Recaudado para el estado", "Salary, hourly & commission in one run": "Salario, por hora y comisión en una corrida", "Owed · $9,280": "Debido · $9,280", "Base / rate": "Base / tarifa", "Commission": "Comisión", "Net pay": "Pago neto", "Salesperson": "Vendedor", "Mechanic": "Mecánico", "Finance Manager": "Gerente de finanzas", "Salary": "Salario", "Live": "En vivo", "Profit & Loss · This month": "Ganancias y pérdidas · Este mes", "Top Performers · Cars sold": "Mejores vendedores · Autos vendidos", "AutoVault Dashboard": "Panel de AutoVault", "3 reps": "3 vendedores", "128 tracked": "128 rastreados", "tracked": "rastreados", "Inventory  Cost per VIN  Flooring  Sales Reps  Commissions  Payroll  Sales Tax  Filing Schedule  Expenses  Profit & Loss  ROI  Customers  Auctions": "Inventario  Costo por VIN  Flooring  Vendedores  Comisiones  Nómina  Impuesto  Calendario de declaración  Gastos  Ganancias y pérdidas  ROI  Clientes  Subastas", "Thanks — we'll be in touch soon!": "¡Gracias — pronto nos pondremos en contacto!", "Welcome to AutoVault!": "¡Bienvenido a AutoVault!", "Check your inbox to finish setting up your dealership dashboard.": "Revisa tu correo para terminar de configurar el panel de tu concesionario.", "Every plan starts with your first month free. Pick the one built for how you operate.": "Cada plan comienza con tu primer mes gratis. Elige el que se adapte a cómo operas."};
     Object.assign(DICT, window.AV_LANDING_EXTRA || {});
+    DICT["Open Dashboard"] = "Abrir panel";
+    DICT["Log Out"] = "Cerrar sesión";
+    DICT["Signed in"] = "Sesión iniciada";
+    DICT["Dealer Admin"] = "Admin del concesionario";
+    DICT["Sales Rep"] = "Vendedor";
+    DICT["Wholesale Dealer"] = "Mayorista";
+    DICT["Platform Owner"] = "Propietario";
     window.AV_LANDING_DICT = DICT;
     const btn=document.getElementById("langBtn"); if(!btn) return;
     let es=false;
@@ -2647,6 +2736,78 @@
     }
     btn.addEventListener("click",(e)=>{e.preventDefault();es=!es;document.documentElement.lang=es?"es":"en";apply(es);btn.textContent=es?"English":"Español";try{localStorage.setItem("av_landing_lang",es?"es":"en");}catch(_){}});
     try{if(localStorage.getItem("av_landing_lang")==="es"){es=true;document.documentElement.lang="es";apply(true);btn.textContent="English";}}catch(_){}
+  })();
+</script>
+<script>
+  (function(){
+    const wrap = document.getElementById("landingProfileWrap");
+    const chip = document.getElementById("landingProfileChip");
+    const avatar = document.getElementById("lpAvatar");
+    const nameEl = document.getElementById("lpName");
+    const roleEl = document.getElementById("lpRole");
+    const dash = document.getElementById("lpDashLink");
+    const logoutBtn = document.getElementById("lpLogout");
+    if (!wrap || !chip || !window.AVPortal) return;
+
+    let currentPortal = "admin";
+
+    function showGuest() {
+      document.documentElement.classList.remove("av-logged-in");
+      wrap.classList.remove("open");
+      chip.setAttribute("aria-expanded", "false");
+    }
+
+    function fill(session) {
+      if (!session) { showGuest(); return; }
+      currentPortal = session.portal || "admin";
+      document.documentElement.classList.add("av-logged-in");
+      const name = session.name || session.email || "Dashboard";
+      if (nameEl) nameEl.textContent = name;
+      if (roleEl) roleEl.textContent = AVPortal.roleLabel(session.role);
+      if (avatar) avatar.textContent = AVPortal.initialsFrom(session.name, session.email);
+      if (dash) dash.href = AVPortal.dashboardPath(session.portal) || "/dashboard";
+    }
+
+    async function applySession() {
+      try {
+        let session = await AVPortal.ensureSession("admin");
+        if (!session || session.portal === "owner") {
+          session = await AVPortal.ensureSession("owner");
+        }
+        fill(session);
+      } catch (_) {
+        showGuest();
+      }
+    }
+
+    chip.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const open = !wrap.classList.contains("open");
+      wrap.classList.toggle("open", open);
+      chip.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    document.addEventListener("click", function (e) {
+      if (!wrap.contains(e.target)) {
+        wrap.classList.remove("open");
+        chip.setAttribute("aria-expanded", "false");
+      }
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape") {
+        wrap.classList.remove("open");
+        chip.setAttribute("aria-expanded", "false");
+      }
+    });
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", function (e) {
+        e.preventDefault();
+        AVPortal.logout(currentPortal, { redirect: "/" });
+      });
+    }
+
+    applySession();
+    window.addEventListener("pageshow", function () { applySession(); });
   })();
 </script>
 

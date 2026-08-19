@@ -79,6 +79,58 @@
     } catch (_) {}
   }
 
+  const ROLE_LABELS = {
+    owner: "Dealer Admin",
+    manager: "Manager",
+    sales_rep: "Sales Rep",
+    cpa: "CPA",
+    wholesale_dealer: "Wholesale Dealer",
+    platform_owner: "Platform Owner",
+  };
+
+  function roleLabel(role) {
+    const key = String(role || "").toLowerCase();
+    return ROLE_LABELS[key] || (role ? String(role) : "Signed in");
+  }
+
+  function initialsFrom(name, email) {
+    const parts = String(name || "")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+    }
+    if (parts.length === 1 && parts[0].length >= 2) {
+      return parts[0].slice(0, 2).toUpperCase();
+    }
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    const e = String(email || "").trim();
+    if (e.length >= 2) return e.slice(0, 2).toUpperCase();
+    return "AV";
+  }
+
+  function persistTokens(portal, accessToken, refreshToken) {
+    const owner = normalizePortal(portal) === "owner";
+    const accessKey = owner ? "avOwnerToken" : "avAuthToken";
+    const refreshKey = owner ? "avOwnerRefreshToken" : "avRefreshToken";
+    let sessionOnly = false;
+    try {
+      sessionOnly = sessionStorage.getItem("av_session_only") === "1";
+    } catch (_) {}
+    const store = sessionOnly ? sessionStorage : localStorage;
+    if (accessToken) store.setItem(accessKey, accessToken);
+    if (refreshToken) store.setItem(refreshKey, refreshToken);
+    const claimed = portalFromClaims(parseJwt(accessToken)) || normalizePortal(portal);
+    try {
+      store.setItem("avAuthPortal", claimed);
+    } catch (_) {}
+  }
+
+  function hasStoredAuth(portal) {
+    return !!(getToken(portal) || readRefreshToken(portal));
+  }
+
   function clearSession(portal) {
     try {
       if (sessionStorage.getItem("avImpersonation")) {
@@ -146,7 +198,7 @@
    * hide UI first → revoke refresh token → wipe storage → replace to login.
    * Never strips portal body classes or renders the admin dashboard.
    */
-  function logout(portal) {
+  function logout(portal, opts) {
     const routePortal = normalizePortal(portal || getRoutePortal());
     hideAppShell();
 
@@ -174,11 +226,18 @@
       }
     } catch (_) {}
 
-    const loginUrl = LOGIN_BY_PORTAL[routePortal] || "/login";
+    const dest =
+      opts && Object.prototype.hasOwnProperty.call(opts, "redirect")
+        ? opts.redirect
+        : LOGIN_BY_PORTAL[routePortal] || "/login";
+    if (!dest) {
+      revealDashboard();
+      return;
+    }
     try {
-      location.replace(loginUrl);
+      location.replace(dest);
     } catch (_) {
-      location.href = loginUrl;
+      location.href = dest;
     }
   }
 
@@ -217,7 +276,7 @@
     const token = getToken(normalizedPortal);
     if (!token) return null;
     const claims = parseJwt(token);
-    if (!claims || !claims.exp || claims.exp * 1000 <= Date.now()) {
+    if (!claims || (claims.exp && claims.exp * 1000 <= Date.now())) {
       if (impersonating) {
         try {
           sessionStorage.removeItem("avImpAccessToken");
@@ -225,7 +284,7 @@
         } catch (_) {}
         return null;
       }
-      clearSession(normalizedPortal);
+      if (!readRefreshToken(normalizedPortal)) clearSession(normalizedPortal);
       return null;
     }
     const claimedPortal = impersonating
@@ -282,6 +341,20 @@
     } catch (_) {}
     const session = readSession(routePortal);
     if (!session) {
+      if (readRefreshToken(routePortal)) {
+        ensureSession(routePortal).then(function (restored) {
+          if (!restored || restored.portal !== routePortal) {
+            redirect(LOGIN_BY_PORTAL[routePortal] || "/login");
+            return;
+          }
+          try {
+            location.reload();
+          } catch (_) {
+            redirect(DASHBOARD_BY_PORTAL[routePortal] || "/dashboard");
+          }
+        });
+        return null;
+      }
       redirect(LOGIN_BY_PORTAL[routePortal] || "/login");
       return null;
     }
@@ -296,26 +369,70 @@
     return session;
   }
 
-  function guardLogin() {
-    const routePortal = getRoutePortal();
-
-    // Owner login stays isolated.
-    if (routePortal === "owner") {
-      const ownerSession = readSession("owner");
-      if (ownerSession && ownerSession.portal === "owner") {
-        redirect(DASHBOARD_BY_PORTAL.owner);
-      }
-      return;
-    }
-
-    // Unified /login — any valid non-owner session goes to its role dashboard.
-    const session = readSession("admin");
-    if (!session) return;
+  function goToSessionDashboard(session) {
+    if (!session) return false;
     if (session.portal === "owner") {
-      clearSession("admin");
+      hideAppShell();
+      redirect(DASHBOARD_BY_PORTAL.owner);
+      return true;
+    }
+    hideAppShell();
+    redirect(DASHBOARD_BY_PORTAL[session.portal] || "/dashboard");
+    return true;
+  }
+
+  async function refreshSession(portal) {
+    const normalized = normalizePortal(portal);
+    const refreshToken = readRefreshToken(normalized);
+    if (!refreshToken) return null;
+    try {
+      const resp = await fetch(`${API_URL}/api/v1/auth/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refreshToken }),
+      });
+      const data = await resp.json().catch(function () {
+        return {};
+      });
+      if (!resp.ok) {
+        clearSession(normalized);
+        return null;
+      }
+      const access = data.token || data.accessToken;
+      if (!access) {
+        clearSession(normalized);
+        return null;
+      }
+      persistTokens(data.user?.portal || normalized, access, data.refreshToken || refreshToken);
+      return readSession(normalized);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  async function ensureSession(portal) {
+    const normalized = normalizePortal(portal);
+    const session = readSession(normalized);
+    if (session) return session;
+    return refreshSession(normalized);
+  }
+
+  async function guardLogin() {
+    if (hasStoredAuth("admin") || hasStoredAuth("owner")) hideAppShell();
+
+    const dealer = await ensureSession("admin");
+    if (dealer && dealer.portal && dealer.portal !== "owner") {
+      goToSessionDashboard(dealer);
       return;
     }
-    redirect(DASHBOARD_BY_PORTAL[session.portal] || "/dashboard");
+
+    const owner = await ensureSession("owner");
+    if (owner && owner.portal === "owner") {
+      goToSessionDashboard(owner);
+      return;
+    }
+
+    revealDashboard();
   }
 
   function verifySessionInBackground(onInvalid) {
@@ -365,11 +482,30 @@
       });
   }
 
-  // Back/forward cache: if the user returns to a dashboard after logout, hide + bounce.
+  function isLoginPath() {
+    const path = (location.pathname || "").replace(/\/+$/, "") || "/";
+    return path === "/login" || path === "/owner/login";
+  }
+
+  try {
+    if (!document.getElementById("av-auth-pending-css")) {
+      const style = document.createElement("style");
+      style.id = "av-auth-pending-css";
+      style.textContent =
+        "html.av-auth-pending body,html.av-logging-out body{visibility:hidden!important}";
+      document.documentElement.appendChild(style);
+    }
+  } catch (_) {}
+
+  // Back/forward cache: bounce stale dashboards after logout; re-check login pages.
   try {
     global.addEventListener("pageshow", function (event) {
       if (!event.persisted) return;
       try {
+        if (isLoginPath()) {
+          guardLogin();
+          return;
+        }
         if (!document.body || document.body.getAttribute("data-av-dashboard") !== "1") {
           return;
         }
@@ -392,6 +528,10 @@
     getToken,
     clearSession,
     readSession,
+    ensureSession,
+    hasStoredAuth,
+    roleLabel,
+    initialsFrom,
     redirect,
     guardDashboard,
     guardLogin,
