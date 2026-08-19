@@ -5972,19 +5972,47 @@
         text-align: right;
       }
 
-      #pnlDonutCenter {
-        font-size: 23px;
+      #page-pnl .donut-wrap,
+      #page-ws-pnl .donut-wrap {
+        width: 260px;
+        height: 260px;
+      }
+
+      #page-pnl .donut-wrap svg,
+      #page-ws-pnl .donut-wrap svg {
+        width: 260px;
+        height: 260px;
+      }
+
+      /* Keep center label inside the donut hole. */
+      #page-pnl .donut-wrap .donut-center,
+      #page-ws-pnl .donut-wrap .donut-center {
+        inset: 17%;
+        padding: 0 6px;
+        box-sizing: border-box;
+      }
+
+      #pnlDonutCenter,
+      #wsPnlDonutCenter {
+        font-size: 18px;
         font-weight: 800;
+        max-width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        line-height: 1.15;
+        letter-spacing: -0.03em;
+        text-align: center;
       }
 
       #pnlDonutCenterLab {
-        font-size: 11px;
+        font-size: 10px;
         letter-spacing: 1.2px;
         text-transform: uppercase;
         color: var(--text);
         font-weight: 700;
         opacity: 0.85;
         margin-top: 2px;
+        white-space: nowrap;
       }
 
       /* Print */
@@ -35385,7 +35413,7 @@
           },
         ];
         const total = segs.reduce((s, x) => s + x.value, 0) || 1;
-        const rr = 70,
+        const rr = 80,
           circ = 2 * Math.PI * rr;
         let off = 0;
         const svg = segs
@@ -35399,6 +35427,13 @@
         document.getElementById("wsPnlDonut").innerHTML = svg;
         document.getElementById("wsPnlDonutCenter").textContent =
           dashMoney(net);
+        requestAnimationFrame(() =>
+          fitDonutCenterText(
+            document.getElementById("wsPnlDonutCenter"),
+            20,
+            10,
+          ),
+        );
         document.getElementById("wsPnlDonutLegend").innerHTML = segs
           .map(
             (s) =>
@@ -37756,6 +37791,20 @@
           })
         );
       };
+      function fitDonutCenterText(el, maxPx, minPx) {
+        if (!el) return;
+        const max = maxPx == null ? 16 : maxPx;
+        const min = minPx == null ? 9 : minPx;
+        el.style.fontSize = max + "px";
+        const box = el.parentElement || el;
+        const cap = Math.max(0, box.clientWidth);
+        if (!cap) return;
+        let size = max;
+        while (size > min && el.scrollWidth > cap) {
+          size -= 0.5;
+          el.style.fontSize = size + "px";
+        }
+      }
       function avNumFmt(v) {
         v = (v == null ? "" : v).toString().replace(/,/g, "").trim();
         if (v === "") return "";
@@ -52172,11 +52221,11 @@
           },
         ];
         const grand = items.reduce((s, i) => s + i.amount, 0);
-        const R = 70,
+        const R = 80,
           CX = 100,
           CY = 100,
           C = 2 * Math.PI * R;
-        let segs = `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${col("--border")}" stroke-width="26"/>`;
+        let segs = `<circle cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${col("--border")}" stroke-width="28"/>`;
         let offset = 0;
         const GAP = grand > 0 ? 1.4 : 0;
         items
@@ -52184,7 +52233,7 @@
           .forEach((i) => {
             const frac = grand > 0 ? i.amount / grand : 0;
             const len = Math.max(0, frac * C - GAP);
-            segs += `<circle class="donut-seg" cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${i.color}" stroke-width="26" stroke-dasharray="${len} ${C - len}" stroke-dashoffset="${-offset}"><title>${i.key}: ${fmt(i.amount)} (${Math.round(frac * 100)}%)</title></circle>`;
+            segs += `<circle class="donut-seg" cx="${CX}" cy="${CY}" r="${R}" fill="none" stroke="${i.color}" stroke-width="28" stroke-dasharray="${len} ${C - len}" stroke-dashoffset="${-offset}"><title>${i.key}: ${fmt(i.amount)} (${Math.round(frac * 100)}%)</title></circle>`;
             offset += frac * C;
           });
         document.getElementById("pnlDonutSvg").innerHTML =
@@ -52194,6 +52243,7 @@
         dc.style.color = netProfit >= 0 ? "var(--green)" : "var(--red)";
         document.getElementById("pnlDonutCenterLab").textContent =
           netProfit >= 0 ? "Net Profit" : "Net Loss";
+        requestAnimationFrame(() => fitDonutCenterText(dc, 20, 10));
         document.getElementById("pnlDonutLegend").innerHTML = items
           .map((i) => {
             const pct = grand > 0 ? Math.round((i.amount / grand) * 100) : 0;
