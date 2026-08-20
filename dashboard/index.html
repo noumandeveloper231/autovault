@@ -17372,6 +17372,9 @@
                 ></span>
               </div>
               <div class="kpi-foot">After all costs</div>
+            </div>
+            <div class="kpi" style="--accent: var(--orange)">
+              <div class="kpi-label">Owed to Reps</div>
               <div class="kpi-value" id="dashComm">
                 <span
                   class="dash-val-skel lg sk-bar"
@@ -56425,7 +56428,7 @@
         var count = document.getElementById("dashSoldCount");
         if (count)
           count.innerHTML =
-            '<span class="dash-inline-spin">Loading sales\u2026</span>';
+            `<span class="dash-inline-spin">${T("Loading sales…")}</span>`;
         var body = document.getElementById("dashSoldBody");
         if (body) body.innerHTML = dashSoldSkeletonHtml();
       }
@@ -56674,7 +56677,7 @@
           .slice()
           .sort((a, b) => (b.soldDate || "").localeCompare(a.soldDate || ""));
         document.getElementById("dashSoldCount").textContent =
-          `${rows.length} sold · ${lbl || ""}`;
+          `${rows.length} ${T("sold ·")} ${lbl || ""}`;
         document.getElementById("dashSoldBody").innerHTML = rows.length
           ? rows
               .map(
@@ -56687,14 +56690,14 @@
     </tr>`,
               )
               .join("")
-          : `<tr><td colspan="4"><div class="doc-empty" style="padding:24px;text-align:center;">No vehicles sold in ${lbl || "this period"}.</div></td></tr>`;
+          : `<tr><td colspan="4"><div class="doc-empty" style="padding:24px;text-align:center;">${T("No vehicles sold in")} ${lbl || T("this period")}.</div></td></tr>`;
         const margin = m.revenue > 0 ? m.net / m.revenue : 0;
         const capped = Math.max(-1, Math.min(1, margin));
         const circ = 2 * Math.PI * 26;
         const dash = Math.abs(capped) * circ;
         const col = m.net >= 0 ? "var(--green)" : "var(--red)";
         document.getElementById("dashPnlCircle").innerHTML =
-          `<svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="26" fill="none" stroke="var(--border)" stroke-width="7"/><circle cx="37" cy="37" r="26" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${dash} ${circ}" transform="rotate(-90 37 37)"/><text x="37" y="34" text-anchor="middle" font-size="8.5" fill="var(--muted)">Net P&amp;L</text><text x="37" y="47" text-anchor="middle" font-size="12" font-weight="800" fill="${col}">${Math.round(margin * 100)}%</text></svg>`;
+          `<svg width="74" height="74" viewBox="0 0 74 74"><circle cx="37" cy="37" r="26" fill="none" stroke="var(--border)" stroke-width="7"/><circle cx="37" cy="37" r="26" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${dash} ${circ}" transform="rotate(-90 37 37)"/><text x="37" y="34" text-anchor="middle" font-size="8.5" fill="var(--muted)">${T("Net P&L")}</text><text x="37" y="47" text-anchor="middle" font-size="12" font-weight="800" fill="${col}">${Math.round(margin * 100)}%</text></svg>`;
       }
       function renderDashCalendar() {
         const grid = document.getElementById("dashCalGrid");
