@@ -1066,7 +1066,7 @@
   "— Closed deals": "— Ventas cerradas",
   "Vehicles Sold This Month": "Vehículos Vendidos Este Mes",
   "sold ·": "vendidos ·",
-  "Net P&L": "Ganancias y Pérdidas Netas",
+  "Net P&L": "Ganancias Netas",
   "This month vs last month · ": "Este mes vs mes anterior · ",
   "This": "Este",
   "Last": "Anterior",
