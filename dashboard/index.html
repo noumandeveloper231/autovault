@@ -9609,6 +9609,11 @@
         width: 100%;
       }
 
+      /* Yearly/monthly sold history: 3 cards wrap 2-on-top, 1-below so they stay readable */
+      #page-vehicles .veh-kpi-group.month.sold-history-wrap .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       #page-vehicles .veh-kpi-group.costs .kpi-grid {
         grid-template-columns: repeat(5, minmax(0, 1fr));
       }
@@ -40124,6 +40129,10 @@
           set("footSoldValue", `total sale price, ${perLbl}`);
           set("kpiSoldValueMonth", fmt(monthSoldValue));
           if (soldValueBox) soldValueBox.style.display = "";
+          const monthGroup = document.querySelector(
+            "#page-vehicles .veh-kpi-group.month",
+          );
+          if (monthGroup) monthGroup.classList.add("sold-history-wrap");
           setHtml(
             "vehCostsLabel",
             `Costs · <span style="color:var(--blue);">${perLbl}</span> sold`,
@@ -40146,6 +40155,10 @@
             T("net, sold this month"),
           );
           if (soldValueBox) soldValueBox.style.display = "none";
+          const monthGroup = document.querySelector(
+            "#page-vehicles .veh-kpi-group.month",
+          );
+          if (monthGroup) monthGroup.classList.remove("sold-history-wrap");
           const vw = typeof vehView !== "undefined" ? vehView : "available";
           if (vw === "all") {
             setHtml(
