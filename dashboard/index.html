@@ -737,6 +737,7 @@
         font-weight: 600;
         line-height: 1.1;
         white-space: nowrap;
+        text-transform: capitalize;
       }
 
       .profile-role {
@@ -828,6 +829,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        text-transform: capitalize;
       }
 
       .am-role {
@@ -10151,6 +10153,7 @@
       .dash-welcome b {
         color: var(--text);
         font-weight: 800;
+        text-transform: capitalize;
       }
 
       .dash-cal-toolbar {
@@ -16056,6 +16059,7 @@
         Dashboard
       </div>
 
+      <!--
       <div
         class="nav-item cpa-x"
         data-page="messages"
@@ -16080,6 +16084,7 @@
           >0</span
         >
       </div>
+      -->
 
       <div class="nav-group rep-only-group">
         <div class="nav-section-label" style="color: var(--blue)">
@@ -16108,6 +16113,7 @@
           </svg>
           Dashboard
         </div>
+        <!--
         <div
           class="nav-item"
           data-page="messages"
@@ -16130,6 +16136,7 @@
           </svg>
           Messages
         </div>
+        -->
       </div>
 
       <div class="nav-group rep-only-group">
@@ -16409,10 +16416,7 @@
         <div
           class="nav-item sub"
           data-page="customer-leads"
-          onclick="
-            showPage('customer-leads', this);
-            renderCustomerLeads();
-          "
+          onclick="showPage('dashboard', document.querySelector('[data-page=&quot;dashboard&quot;]'))"
         >
           <svg
             width="14"
@@ -17052,12 +17056,14 @@
               <button class="qa-btn accent-green" onclick="openMarkSold()">
                 Mark Sold
               </button>
+              <!--
               <button
                 class="qa-btn qa-add-customer"
                 onclick="openCustLeadModal()"
               >
                 + Add Lead
               </button>
+              -->
             </div>
             <div class="topbar-utils">
               <button
@@ -19663,7 +19669,7 @@
           </div>
         </div>
 
-        <!-- MESSAGES PAGE -->
+        <!-- MESSAGES PAGE (hidden per request)
         <div id="page-messages" class="page-section" style="display: none">
           <div class="page-head">
             <div class="page-title">TEAM <b>MESSAGES</b></div>
@@ -19873,6 +19879,7 @@
           </div>
         </div>
 
+        -->
         <div id="page-cpa-overview" class="page-section" style="display: none">
           <div class="page-head">
             <div class="page-title">CPA <b>FINANCIAL OVERVIEW</b></div>
@@ -38432,12 +38439,23 @@
             return null;
           });
       }
+      function capitalizeDisplayName(name) {
+        var s = String(name || "").trim();
+        if (!s || s.indexOf("@") !== -1) return s;
+        return s
+          .toLowerCase()
+          .replace(/(^|[\s\-'])(\S)/g, function (_, lead, ch) {
+            return lead + ch.toUpperCase();
+          });
+      }
       function updateProfileChip() {
         var owner = window.crmOwner || crmOwner;
         if (!owner) return;
         var chip = document.getElementById("profileChip");
         if (!chip) return;
-        var name = owner.name || owner.fullName || owner.email || "";
+        var name = capitalizeDisplayName(
+          owner.name || owner.fullName || owner.email || "",
+        );
         var roleKey = owner.role || "";
         var roleLabel =
           PROFILE_ROLE_LABELS[roleKey] || roleKey || "User";
@@ -38581,10 +38599,10 @@
             const isYou = !!(u.isYou || (owner.id && u.id === owner.id));
             const label = u.roleLabel || PROFILE_ROLE_LABELS[u.role] || u.role;
             const canRemove = mainOwner && !u.isMainOwner && !isYou;
-            html += `<div class="am-row"><div class="am-av ${u.isMainOwner ? "owner" : "editor"}">${amInitials(u.fullName || u.name || u.email)}</div><div class="am-info"><div class="am-name">${msgEsc(u.fullName || u.name || "Owner")}</div><div class="am-role ${u.isMainOwner ? "owner" : "editor"}">${msgEsc(label)}${u.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(u.email) + "</span>" : ""}</div></div>${isYou ? '<span class="am-tag-owner">You</span>' : canRemove ? `<button class="am-act revoke" onclick="removePlatformOwner('${u.id}')">Remove</button>` : ""}</div>`;
+            html += `<div class="am-row"><div class="am-av ${u.isMainOwner ? "owner" : "editor"}">${amInitials(u.fullName || u.name || u.email)}</div><div class="am-info"><div class="am-name">${msgEsc(capitalizeDisplayName(u.fullName || u.name || "Owner"))}</div><div class="am-role ${u.isMainOwner ? "owner" : "editor"}">${msgEsc(label)}${u.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(u.email) + "</span>" : ""}</div></div>${isYou ? '<span class="am-tag-owner">You</span>' : canRemove ? `<button class="am-act revoke" onclick="removePlatformOwner('${u.id}')">Remove</button>` : ""}</div>`;
           });
         } else {
-          html += `<div class="am-row"><div class="am-av owner">${amInitials(owner.name)}</div><div class="am-info"><div class="am-name">${msgEsc(owner.name || "You")}</div><div class="am-role owner">${msgEsc(roleLabel)}${owner.dealershipName ? " · " + msgEsc(owner.dealershipName) : ""}${owner.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(owner.email) + "</span>" : ""}</div></div><span class="am-tag-owner">You</span></div>`;
+          html += `<div class="am-row"><div class="am-av owner">${amInitials(owner.name)}</div><div class="am-info"><div class="am-name">${msgEsc(capitalizeDisplayName(owner.name || "You"))}</div><div class="am-role owner">${msgEsc(roleLabel)}${owner.dealershipName ? " · " + msgEsc(owner.dealershipName) : ""}${owner.email ? "<br><span style='opacity:.75;font-weight:600'>" + msgEsc(owner.email) + "</span>" : ""}</div></div><span class="am-tag-owner">You</span></div>`;
           extraAdmins.forEach((u, i) => {
             html += `<div class="am-row"><div class="am-av editor">${amInitials(u.name)}</div><div class="am-info"><div class="am-name">${msgEsc(u.name)}</div><div class="am-role editor">Admin \u00b7 Editor</div></div><button class="am-act revoke" onclick="removeExtraAdmin(${i})">Remove</button></div>`;
           });
@@ -56331,10 +56349,12 @@
 
       function dashWelcomeName() {
         try {
-          if (crmOwner && crmOwner.name) return crmOwner.name;
+          if (crmOwner && crmOwner.name)
+            return capitalizeDisplayName(crmOwner.name);
           var session =
             window.AVPortal && AVPortal.readSession(AVPortal.getRoutePortal());
-          if (session && session.name) return session.name;
+          if (session && session.name)
+            return capitalizeDisplayName(session.name);
         } catch (e) {}
         return "there";
       }
