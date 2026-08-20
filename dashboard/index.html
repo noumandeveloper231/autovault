@@ -10809,6 +10809,9 @@
         align-items: center;
         flex-shrink: 0;
       }
+      .imsg-compose.no-conv {
+        display: none;
+      }
 
       .imsg-input {
         width: 100%;
@@ -19753,7 +19756,7 @@
                 id="imsgAttachPreview"
                 style="display: none"
               ></div>
-              <div class="imsg-compose" id="imsgCompose">
+              <div class="imsg-compose no-conv" id="imsgCompose">
                 <button
                   class="imsg-attach"
                   id="imsgAttachBtn"
@@ -46634,7 +46637,7 @@
         if (jennaOpen && !jennaWelcomed) {
           jennaWelcomed = true;
           jennaBot(
-            'Hey, I\'m Jenna \uD83D\uDC4B your AI assistant. Ask me things like "How much money do I have in cars?" or "How much do I owe my reps this month?" \u2014 or tell me to scan a receipt to a vehicle.',
+            T('Hey, I\'m Jenna \uD83D\uDC4B your AI assistant. Ask me things like "How much money do I have in cars?" or "How much do I owe my reps this month?" \u2014 or tell me to scan a receipt to a vehicle.'),
           );
         }
         if (jennaOpen)

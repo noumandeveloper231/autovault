@@ -326,7 +326,10 @@
     var inp = document.getElementById('imsgInput');
     var attach = document.getElementById('imsgAttachBtn');
     var send = document.getElementById('imsgSendBtn');
-    if (compose) compose.classList.remove('is-loading');
+    if (compose) {
+      compose.classList.remove('is-loading');
+      compose.classList.toggle('no-conv', !enabled);
+    }
     if (inp) {
       inp.disabled = !enabled;
       inp.placeholder = placeholder || (enabled ? t("Type a message") : t("Select a conversation to start messaging"));
