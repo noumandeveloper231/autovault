@@ -9497,8 +9497,9 @@
 
       #page-vehicles .veh-kpi-row {
         display: grid;
-        grid-template-columns: 4fr 2fr;
-        gap: 18px;
+        /* 3 inventory + 2 sold-history columns → same card width on both sides */
+        grid-template-columns: 3fr 2fr;
+        gap: 10px;
         align-items: flex-start;
       }
 
@@ -9600,18 +9601,13 @@
       }
 
       #page-vehicles .veh-kpi-group.inventory .kpi-grid {
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
         width: 100%;
       }
 
       #page-vehicles .veh-kpi-group.month .kpi-grid {
-        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
-        width: 100%;
-      }
-
-      /* Yearly/monthly sold history: 3 cards wrap 2-on-top, 1-below so they stay readable */
-      #page-vehicles .veh-kpi-group.month.sold-history-wrap .kpi-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+        width: 100%;
       }
 
       #page-vehicles .veh-kpi-group.costs .kpi-grid {
@@ -9620,6 +9616,7 @@
 
       #page-vehicles .veh-kpi-group .kpi {
         min-width: 0;
+        width: 100%;
         padding: 10px 14px;
         border-radius: 12px;
         background: var(--panel);
