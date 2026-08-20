@@ -126,6 +126,7 @@
           };
         }),
         applied: !!cfg.applied,
+        configured: !!(cfg.configured || cfg.applied),
         scope: cfg.scope || "all",
         payoffDays: Number(cfg.payoffDays) || 90,
         gracePeriod: Number(cfg.gracePeriod) || 0,
@@ -141,6 +142,7 @@
         { max: Infinity, rate: 0 },
       ],
       applied: false,
+      configured: false,
       scope: "all",
       payoffDays: Number(plan.gracePeriodDays) || 90,
       gracePeriod: 0,
@@ -169,6 +171,7 @@
         buyFee: Number(cfg.buyFee) || 0,
         tiers: tiers,
         applied: !!cfg.applied,
+        configured: !!cfg.configured,
         scope: cfg.scope || "all",
         payoffDays: Number(cfg.payoffDays) || 90,
         gracePeriod: Number(cfg.gracePeriod) || 0,

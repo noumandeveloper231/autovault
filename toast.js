@@ -56,11 +56,15 @@
     return remove;
   }
 
+  function tr(s) {
+    return typeof window.avT === "function" ? window.avT(s) : s;
+  }
+
   function notify(options) {
     var opts = options || {};
     var type = opts.type || "success";
-    var title = opts.title || "Notice";
-    var message = opts.message || "";
+    var title = tr(opts.title || "Notice");
+    var message = tr(opts.message || "");
     var duration = Number(opts.duration || 3800);
 
     var node = document.createElement("div");
@@ -87,6 +91,8 @@
     node.className = "av-toast show av-" + type;
     var titleEl = node.querySelector(".av-toast-title");
     var msgEl = node.querySelector(".av-toast-msg");
+    title = tr(title || "");
+    message = tr(message || "");
     if (titleEl) titleEl.textContent = title;
     if (msgEl) msgEl.textContent = message;
 
@@ -108,16 +114,20 @@
   window.AVToast = {
     show: notify,
     success: function (message, title) {
-      notify({ type: "success", title: title || "Success", message: message });
+      notify({ type: "success", title: title || "Success", message: message || "" });
     },
     warning: function (message, title) {
-      notify({ type: "warning", title: title || "Warning", message: message });
+      notify({ type: "warning", title: title || "Warning", message: message || "" });
     },
     error: function (message, title) {
-      notify({ type: "error", title: title || "Something went wrong", message: message });
+      notify({
+        type: "error",
+        title: title || "Something went wrong",
+        message: message || "",
+      });
     },
     info: function (message, title) {
-      notify({ type: "info", title: title || "Working", message: message });
+      notify({ type: "info", title: title || "Working", message: message || "" });
     },
     promise: function (promise, opts) {
       var o = opts || {};
@@ -126,8 +136,12 @@
       node.innerHTML =
         '<span class="av-toast-icon" aria-hidden="true"></span>' +
         '<div><div class="av-toast-title"></div><div class="av-toast-msg"></div></div>';
-      node.querySelector(".av-toast-title").textContent = o.loading || "Saving\u2026";
-      node.querySelector(".av-toast-msg").textContent = o.loadingMsg || "Please wait";
+      node.querySelector(".av-toast-title").textContent = tr(
+        o.loading || "Saving\u2026",
+      );
+      node.querySelector(".av-toast-msg").textContent = tr(
+        o.loadingMsg || "Please wait",
+      );
       getWrap().appendChild(node);
       requestAnimationFrame(function () {
         node.classList.add("show");

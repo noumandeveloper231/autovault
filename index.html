@@ -2734,8 +2734,11 @@
       applyAttrs(toEs, "aria-label", "__aria");
       document.dispatchEvent(new CustomEvent("av-landing-lang", { detail: { es: toEs } }));
     }
-    btn.addEventListener("click",(e)=>{e.preventDefault();es=!es;document.documentElement.lang=es?"es":"en";apply(es);btn.textContent=es?"English":"Español";try{localStorage.setItem("av_landing_lang",es?"es":"en");}catch(_){}});
-    try{if(localStorage.getItem("av_landing_lang")==="es"){es=true;document.documentElement.lang="es";apply(true);btn.textContent="English";}}catch(_){}
+    btn.addEventListener("click",(e)=>{e.preventDefault();es=!es;document.documentElement.lang=es?"es":"en";apply(es);btn.textContent=es?"English":"Español";try{localStorage.setItem("av_lang",es?"es":"en");localStorage.setItem("av_landing_lang",es?"es":"en");}catch(_){}});
+    try{
+      var saved = localStorage.getItem("av_lang") || localStorage.getItem("av_landing_lang");
+      if(saved==="es"){es=true;document.documentElement.lang="es";apply(true);btn.textContent="English";}
+    }catch(_){}
   })();
 </script>
 <script>

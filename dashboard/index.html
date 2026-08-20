@@ -1136,6 +1136,161 @@
         line-height: 1.5;
       }
 
+      /* Sleek redesigned flooring card (main vehicles view) */
+      .flooring-banner.flooring-card {
+        padding: 14px 18px 15px;
+        gap: 16px;
+        align-items: center;
+        justify-content: flex-start;
+        background:
+          radial-gradient(
+            130% 170% at 0% 0%,
+            rgba(74, 157, 255, 0.13),
+            rgba(74, 157, 255, 0) 46%
+          ),
+          linear-gradient(180deg, var(--panel-2), var(--panel));
+      }
+      .flb-lead {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .flb-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(145deg, #2f6bff, #4a9dff);
+        color: #fff;
+        box-shadow: 0 6px 15px rgba(34, 100, 228, 0.35);
+      }
+      .flb-icon svg {
+        width: 21px;
+        height: 21px;
+      }
+      .flb-lead-txt .flb-title {
+        font-size: 14.5px;
+        font-weight: 800;
+        color: var(--text);
+        letter-spacing: -0.2px;
+      }
+      .flb-lead-txt .flb-sub {
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .flooring-card .flb-stat {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 16px;
+        border-left: 1px solid var(--border);
+        cursor: pointer;
+      }
+      .flooring-card .flb-num {
+        font-size: 22px;
+        font-weight: 800;
+        color: var(--blue);
+        font-family: var(--mono);
+        line-height: 1;
+        transition: opacity 0.15s;
+      }
+      .flooring-card .flb-stat:hover .flb-num {
+        opacity: 0.8;
+      }
+      .flooring-card .flb-cap {
+        font-size: 9px;
+        letter-spacing: 0.9px;
+        text-transform: uppercase;
+        color: var(--muted);
+        margin-top: 5px;
+      }
+      .flb-note {
+        flex: 1;
+        min-width: 230px;
+        display: flex;
+        gap: 9px;
+        align-items: flex-start;
+        font-size: 11.5px;
+        color: var(--muted);
+        line-height: 1.45;
+        background: rgba(127, 146, 184, 0.07);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 9px 12px;
+      }
+      .flb-note svg {
+        width: 15px;
+        height: 15px;
+        color: var(--blue);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .flb-note b {
+        color: var(--text);
+        font-weight: 700;
+      }
+      .flb-actions {
+        display: flex;
+        gap: 9px;
+        margin-left: auto;
+        flex-shrink: 0;
+        flex-wrap: wrap;
+      }
+      .flb-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        border-radius: 10px;
+        padding: 9px 15px;
+        font-size: 12.5px;
+        font-weight: 700;
+        cursor: pointer;
+        font-family: inherit;
+        white-space: nowrap;
+        transition: all 0.14s;
+        border: 1px solid transparent;
+      }
+      .flb-btn svg {
+        width: 15px;
+        height: 15px;
+      }
+      .flb-btn.primary {
+        background: linear-gradient(145deg, #2f6bff, #4a9dff);
+        color: #fff;
+        box-shadow: 0 5px 13px rgba(34, 100, 228, 0.3);
+      }
+      .flb-btn.primary:hover {
+        filter: brightness(1.07);
+        transform: translateY(-1px);
+      }
+      .flb-btn.ghost {
+        background: transparent;
+        border-color: var(--border);
+        color: var(--text);
+      }
+      .flb-btn.ghost:hover {
+        border-color: var(--blue);
+        color: var(--blue);
+      }
+      .flb-btn.danger {
+        background: transparent;
+        border-color: rgba(251, 106, 131, 0.5);
+        color: var(--red);
+      }
+      @media (max-width: 900px) {
+        .flb-actions {
+          margin-left: 0;
+        }
+        .flb-note {
+          order: 5;
+          min-width: 100%;
+        }
+      }
+
       /* KPI STAT STRIP */
       .kpi-grid {
         display: grid;
@@ -2417,6 +2572,58 @@
         padding-left: 6px;
         padding-right: 6px;
         text-align: center;
+      }
+      #vehTable.no-flooring th[data-colgrp="flooring"],
+      #vehTable.no-flooring td[data-colgrp="flooring"],
+      #vehTable.no-flooring th[data-colgrp="floorage"],
+      #vehTable.no-flooring td[data-colgrp="floorage"],
+      #vehTable.no-flooring th[data-colgrp="allinfloor"],
+      #vehTable.no-flooring td[data-colgrp="allinfloor"] {
+        display: none !important;
+      }
+      .repairs-save-msg {
+        display: none;
+        margin: 12px 0 0;
+        padding: 11px 14px;
+        background: rgba(255, 159, 67, 0.12);
+        border: 1px solid rgba(255, 159, 67, 0.42);
+        border-radius: 9px;
+        color: var(--orange);
+        font-size: 12.5px;
+        font-weight: 600;
+        line-height: 1.45;
+      }
+      .repairs-save-msg b {
+        color: var(--orange);
+      }
+      @keyframes rpShake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        20% {
+          transform: translateX(-5px);
+        }
+        40% {
+          transform: translateX(5px);
+        }
+        60% {
+          transform: translateX(-3px);
+        }
+        80% {
+          transform: translateX(3px);
+        }
+      }
+      .rp-shake {
+        animation: rpShake 0.4s;
+      }
+      .rp-pulse {
+        box-shadow: 0 0 0 3px rgba(255, 159, 67, 0.4) !important;
+        border-color: var(--orange) !important;
+        color: var(--orange) !important;
+      }
+      .rp-ring {
+        box-shadow: 0 0 0 3px rgba(255, 159, 67, 0.5) !important;
       }
       #salesTaxInfoModal .stb-row {
         display: flex;
@@ -15732,6 +15939,8 @@
   @media(max-width:800px){ .dj-dtbox-grid{ grid-template-columns:1fr; } }
 
     </style>
+    <script src="/dashboard-es-dict.js"></script>
+    <script src="/av-i18n.js"></script>
     <script src="/auth-portal.js"></script>
     <script src="/api.js"></script>
     <script src="/finance-persist.js"></script>
@@ -22043,93 +22252,41 @@
                 <path d="M6 9l6 6 6-6" />
               </svg>
             </button>
-            <div class="flooring-banner">
-              <div class="fb-label">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <path d="M12 2 2 7l10 5 10-5-10-5Z" />
-                  <path d="m2 17 10 5 10-5" />
-                  <path d="m2 12 10 5 10-5" />
-                </svg>
-                FLOORING COST
+            <div class="flooring-banner flooring-card">
+              <div class="flb-lead">
+                <div class="flb-icon">
+                  <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2 2 7l10 5 10-5-10-5Z" />
+                    <path d="m2 17 10 5 10-5" />
+                    <path d="m2 12 10 5 10-5" />
+                  </svg>
+                </div>
+                <div class="flb-lead-txt">
+                  <div class="flb-title">Flooring Rate System</div>
+                  <div class="flb-sub">Floor-plan interest, tracked per vehicle</div>
+                </div>
               </div>
-              <div class="fb-divider"></div>
-              <div
-                class="fb-stat"
-                onclick="openFlooringPage()"
-                style="cursor: pointer"
-              >
-                <div class="fb-num" id="totalFlooringCost">$0</div>
-                <div class="fb-cap">TOTAL FLOORING COST</div>
+              <div class="flb-stat" onclick="openFlooringPage()" style="cursor: pointer">
+                <div class="flb-num" id="totalFlooringCost">$0</div>
+                <div class="flb-cap">Total Flooring Cost</div>
               </div>
-              <div class="fb-divider"></div>
-              <div class="fb-meta">
-                Floor-plan interest accrues daily per vehicle and is deducted from
-                net profit. Treated as a cost.
+              <div class="flb-note">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg>
+                <span>Add your rate to unlock the <b>Flooring Cost</b>, <b>Flooring Age</b> and <b>All-In + Flooring</b> columns — they fill in only for the cars you actually floor.</span>
               </div>
-              <div class="fb-btns">
-                <button
-                  type="button"
-                  class="btn-ghost"
-                  id="removeFlooringAll"
-                  style="
-                    color: var(--red);
-                    border-color: rgba(251, 106, 131, 0.5);
-                    white-space: nowrap;
-                  "
-                >
-                  Remove Flooring From All Vehicles
+              <div class="flb-actions">
+                <button type="button" class="flb-btn primary" id="openFlooringModal">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 5v14M5 12h14"/></svg>
+                  Add Flooring Rate
                 </button>
-                <button
-                  type="button"
-                  class="btn-primary"
-                  id="flooringUndoCompactBtn"
-                  style="display: none; box-shadow: none; white-space: nowrap"
-                  onclick="undoRemoveFlooringAll()"
-                >
+                <button type="button" class="flb-btn ghost" onclick="openFlooringPage()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View
+                </button>
+                <button type="button" class="flb-btn danger" id="removeFlooringAll">Remove From All</button>
+                <button type="button" class="flb-btn ghost" id="flooringUndoCompactBtn" style="display: none" onclick="undoRemoveFlooringAll()">
                   Undo Removal
                   <span id="flooringUndoCompactTimer" style="opacity: 0.85"></span>
-                </button>
-                <button
-                  class="btn-ghost"
-                  id="openFlooringModal"
-                  style="white-space: nowrap"
-                >
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M12 5v14M5 12h14" />
-                  </svg>
-                  Add Flooring Rate to System
-                </button>
-                <button
-                  class="btn-ghost"
-                  onclick="openFlooringPage()"
-                  style="white-space: nowrap"
-                >
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  >
-                    <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                  View Flooring Cost
                 </button>
               </div>
             </div>
@@ -22364,6 +22521,10 @@
                       ><span class="th-total red" id="thRepairs">—</span>
                     </th>
                     <th>
+                      <span class="th-label">Commission</span
+                      ><span class="th-total purple" id="thCommission">—</span>
+                    </th>
+                    <th>
                       <span class="th-label">All-In Cost</span
                       ><span class="th-total" id="thAllIn" style="color: var(--c-cost)">—</span>
                     </th>
@@ -22383,16 +22544,16 @@
                       <span class="th-total" id="thAllInFloor" style="color: var(--c-cost)">—</span>
                     </th>
                     <th>
+                      <span class="th-label">Sold Price</span
+                      ><span class="th-total" id="thSoldPrice" style="color: #46d392">—</span>
+                    </th>
+                    <th>
                       <span class="th-label">Sales Tax</span
                       ><span class="th-total muted" id="thSalesTax">—</span>
                     </th>
                     <th>
                       <span class="th-label">Reg. Fees</span
                       ><span class="th-total muted" id="thRegFees">—</span>
-                    </th>
-                    <th>
-                      <span class="th-label">Commission</span
-                      ><span class="th-total purple" id="thCommission">—</span>
                     </th>
                     <th>
                       <span class="th-label">Net Vehicle Profit</span
@@ -23041,6 +23202,11 @@
             </button>
           </div>
 
+          <!-- LIVE NUMBERS TICKER (same moving bar as inventory) -->
+          <div class="veh-ticker" id="djTicker">
+            <div class="veh-ticker-track" id="djTickerTrack"></div>
+          </div>
+
           <!-- VEHICLE HERO -->
           <div class="vdp-hero" id="djHero">
             <div>
@@ -23132,29 +23298,6 @@
                 </div>
                 <div class="dj-section-body">
 
-                <div class="form-group" style="margin-bottom: 14px">
-                  <label>Deal Type / Status</label>
-                  <select id="djDealStatus" onchange="djSetDealStatus(this.value)">
-                    <option value="Sold">Standard Sale</option>
-                    <option value="Arbitration">Arbitration</option>
-                    <option value="Sold Loss">Sold at a Loss</option>
-                    <option value="Wholesale">Wholesale</option>
-                    <option value="Out of State Sale">Out of State Sale</option>
-                  </select>
-                  <div
-                    style="
-                      font-size: 11px;
-                      color: var(--muted);
-                      line-height: 1.5;
-                      margin-top: 5px;
-                    "
-                  >
-                    Choosing Arbitration, Sold Loss, Wholesale, or Out of State
-                    opens its own details box right below.
-                  </div>
-                </div>
-                <div id="djDealTypeBox"></div>
-
                 <div class="dj-sale-summary empty" id="djSaleSummary">
                   <div class="dss-main">
                     <div class="dss-k">Your profit on this deal</div>
@@ -23168,6 +23311,15 @@
                 <div class="dss-hint" id="djSaleHint">Fill in the sale below — your profit updates live as you type.</div>
 
                 <div class="dj-sale-sec"><span class="dss-dot" style="background:var(--blue);"></span>The Sale</div>
+                <div class="form-group">
+                  <label>How much did it sell for? ($)</label>
+                  <input
+                    type="number"
+                    id="djSoldPrice"
+                    placeholder="e.g. 28500"
+                    oninput="dealRecalc()"
+                  />
+                </div>
                 <div class="form-row">
                   <div class="form-group">
                     <label>Deal Number</label>
@@ -23206,15 +23358,28 @@
                     ><input type="date" id="djSaleDate" />
                   </div>
                 </div>
-                <div class="form-group" style="margin-bottom: 0">
-                  <label>Sold Price ($)</label
-                  ><input
-                    type="number"
-                    id="djSoldPrice"
-                    placeholder="e.g. 28500"
-                    oninput="dealRecalc()"
-                  />
+                <div class="form-group" style="margin-bottom: 14px">
+                  <label>Deal Type / Status</label>
+                  <select id="djDealStatus" onchange="djSetDealStatus(this.value)">
+                    <option value="Sold">Sold</option>
+                    <option value="Arbitration">Arbitration</option>
+                    <option value="Sold Loss">Sold at a Loss</option>
+                    <option value="Wholesale">Wholesale</option>
+                    <option value="Out of State Sale">Out of State Sale</option>
+                  </select>
+                  <div
+                    style="
+                      font-size: 11px;
+                      color: var(--muted);
+                      line-height: 1.5;
+                      margin-top: 5px;
+                    "
+                  >
+                    Standard sale by default. Pick Arbitration, Sold at a Loss,
+                    Wholesale, or Out of State to open its details.
+                  </div>
                 </div>
+                <div id="djDealTypeBox"></div>
 
                 <div class="dj-sale-sec"><span class="dss-dot" style="background:var(--purple);"></span>Financing <span class="dss-opt">optional</span></div>
                 <div class="form-group" style="margin-bottom: 0">
@@ -24665,6 +24830,36 @@
       </div>
     </div>
 
+    <!-- Deal Jacket: Sales Rep & Commission editor -->
+    <div class="modal-overlay" id="djCommModal" onclick="if(event.target===this)djCloseCommission()">
+      <div class="modal" style="max-width: 480px">
+        <div class="modal-head">
+          <h3>Sales Rep &amp; Commission</h3>
+          <button class="modal-close" onclick="djCloseCommission()">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group" style="margin-bottom: 12px">
+            <label class="av-label">Sales Rep</label>
+            <input id="djCommRep" class="rc-input" list="djCommRepList" placeholder="Select or type a rep…" autocomplete="off" oninput="djCommModalRecalc()" />
+            <datalist id="djCommRepList"></datalist>
+          </div>
+          <div id="djCommRepRate" style="font-size: 11.5px; color: var(--muted); margin: -6px 0 14px"></div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label">Commission %</label>
+              <input id="djCommPctIn" class="rc-input av-num" type="text" inputmode="decimal" placeholder="e.g. 20" oninput="djCommModalPct()" />
+            </div>
+            <div>
+              <label class="av-label">Or Commission $</label>
+              <input id="djCommAmtIn" class="rc-input av-num" type="text" inputmode="decimal" placeholder="auto" oninput="djCommModalAmt()" />
+            </div>
+          </div>
+          <div id="djCommPreview" style="background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 8px; font-size: 13px; line-height: 1.5">—</div>
+          <button class="btn-primary av-submit" style="margin-top: 14px" onclick="djSaveCommission()">Save Commission</button>
+        </div>
+      </div>
+    </div>
+
     <!-- REPAIRS MODAL -->
     <div class="modal-overlay" id="repairsModal">
       <div class="modal">
@@ -24744,9 +24939,8 @@
               </div>
             </div>
             <p class="repair-form-hint" id="repairFormHint">
-              Click <strong>+ Add Repair</strong> to add this line to the list.
-              <strong>Save</strong> closes this window and will also add or
-              update anything still in the form.
+              Click <strong>+ Add Repair</strong> to add this line to the list,
+              then <strong>Save</strong> when you are done.
             </p>
             <div
               class="repair-pending-hint"
@@ -24756,6 +24950,7 @@
             ></div>
           </div>
         </div>
+        <div class="repairs-save-msg" id="repairsSaveMsg"></div>
         <div
           class="modal-foot"
           style="justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px"
@@ -24921,6 +25116,7 @@
             </div>
           </div>
         </div>
+        <div class="repairs-save-msg" id="addOnSaveMsg" style="margin: 0 16px 12px"></div>
         <div class="modal-foot">
           <button class="btn-ghost" id="cancelAddOnModal">Done</button>
           <button
@@ -29953,7 +30149,7 @@
               label = `${SV_MFULL[+p[1] - 1]} ${p[0]}`;
             }
             return (
-              `<tr class="sv-month-row"><td colspan="20"><span class="sv-mr-name">${label}</span><span class="sv-mr-meta">${grp.length} vehicle${grp.length === 1 ? "" : "s"}</span></td></tr>` +
+              `<tr class="sv-month-row"><td colspan="21"><span class="sv-mr-name">${label}</span><span class="sv-mr-meta">${grp.length} vehicle${grp.length === 1 ? "" : "s"}</span></td></tr>` +
               grp.map(rowFn).join("")
             );
           })
@@ -31000,9 +31196,11 @@
         const sub = document.getElementById("repDashSub");
         if (sub)
           sub.textContent =
-            "Welcome back, " +
+            (typeof avT === "function" ? avT("Welcome back, ") : "Welcome back, ") +
             (repUser || "") +
-            ". Here is your month at a glance.";
+            (typeof avT === "function"
+              ? avT(". Here is your month at a glance.")
+              : ". Here is your month at a glance.");
         const cm = today.getMonth(),
           cy = today.getFullYear();
         let pm = cm - 1,
@@ -34752,7 +34950,9 @@
                 if (sess && sess.name) name = sess.name;
               }
             } catch (_) {}
-            welcome.textContent = "Welcome back, " + name;
+            welcome.textContent =
+              (typeof avT === "function" ? avT("Welcome back, ") : "Welcome back, ") +
+              name;
           }
         } catch (_) {}
         if (typeof renderDashNotes === "function") renderDashNotes();
@@ -37544,6 +37744,7 @@
           { max: Infinity, rate: 0 },
         ],
         applied: false,
+        configured: false,
         scope: "all",
         payoffDays: 90,
       };
@@ -37676,15 +37877,17 @@
             ? v.commissionPct / 100
             : 0.04;
         const repForComm = (salesReps || []).find((x) => x.name === v.rep);
-        const autoCommission = hasRep
-          ? (repForComm && repForComm.commissionType === "flat"
-              ? Math.max(0, Math.round(Number(repForComm.commissionFlat) || 0))
-              : Math.round((Number(v.price) || 0) * commRate)) + extraRepPay
-          : 0;
-        const commission =
-          v.commissionOverride !== null && v.commissionOverride !== undefined
+        const autoCommission =
+          isSoldRow && hasRep
+            ? (repForComm && repForComm.commissionType === "flat"
+                ? Math.max(0, Math.round(Number(repForComm.commissionFlat) || 0))
+                : Math.round((Number(v.price) || 0) * commRate)) + extraRepPay
+            : 0;
+        const commission = isSoldRow
+          ? v.commissionOverride !== null && v.commissionOverride !== undefined
             ? Number(v.commissionOverride)
-            : autoCommission;
+            : autoCommission
+          : 0;
         // Add-on items: price = customer upcharge revenue; cost counted above in COGS
         const addOnRevenue = (v.addOnItems || []).reduce(
           (s, a) => s + (Number(a.price) || 0),
@@ -39551,6 +39754,14 @@
           renderWsVehicles();
 
         const tableBody = document.getElementById("tableBody");
+        {
+          const _vt = document.getElementById("vehTable");
+          if (_vt)
+            _vt.classList.toggle(
+              "no-flooring",
+              !(typeof flooringConfig !== "undefined" && flooringConfig.configured),
+            );
+        }
         if (tableBody) {
           if (filtered.length === 0) {
             const emptyMsg = vehPeriod.active
@@ -39558,7 +39769,7 @@
               : vehView === "sold"
                 ? "No sold vehicles to show."
                 : "No vehicles in inventory yet. Use + Add Vehicle to get started.";
-            tableBody.innerHTML = `<tr class="veh-load-row"><td colspan="20"><div class="veh-load-inner" style="font-weight:500;">${emptyMsg}</div></td></tr>`;
+            tableBody.innerHTML = `<tr class="veh-load-row"><td colspan="21"><div class="veh-load-inner" style="font-weight:500;">${emptyMsg}</div></td></tr>`;
           } else {
             tableBody.innerHTML = vehRender(
               filtered,
@@ -39582,13 +39793,14 @@
       <td data-col="purchase"><span class="editable-cell" data-vin="${r.vin}" data-field="price" onclick="startEditCell(this)" title="Click to edit">${fmt(r.price)}</span></td>
       <td data-col="fees"><span class="editable-cell" data-vin="${r.vin}" data-field="fees" onclick="startEditCell(this)" title="Click to edit">${fmt(r.fees)}</span></td>
       <td data-col="repairs"><span class="editable-cell repairs-cell" data-vin="${r.vin}" onclick="openRepairsModal('${r.vin}')" title="Click to view repairs & attached expenses">${fmt(r.repairs + r.attachedExp)}</span></td>
+      <td data-col="commission"><span class="editable-cell" data-vin="${r.vin}" data-field="commission" onclick="${r.sold || vehicleIsSold(r) ? `startEditCell(this)` : `void 0`}" title="${r.sold || vehicleIsSold(r) ? "Click to edit" : "Commission applies only on sold vehicles"}">${fmt(r.commission)}</span></td>
       <td data-col="allin"><b>${fmt(r.allInCost)}</b></td>
-      <td data-col="flooring" data-colgrp="flooring"><span class="editable-cell flooring-cell" onclick="openFlooringDetail('${r.vin}')" title="Click to configure flooring">${r.flooringOverride !== null && r.flooringOverride !== undefined ? fmt(Number(r.flooringOverride) || 0) : r.flooringCost > 0 ? fmt(r.flooringCost) : '<span style="color:var(--muted);font-size:11px;">Set flooring</span>'}</span>${r.flooringPaidOff ? '<div class="fl-paid-tag">Paid off</div>' : ""}</td>
-      <td data-colgrp="floorage" style="color:var(--muted);font-size:12px;"><span>${r.flooringCost > 0 || (r.flooringOverride !== null && r.flooringOverride !== undefined) || flooringConfig.applied ? r.daysOnLot + (r.daysOnLot === 1 ? " Day" : " Days") : "—"}</span></td>
-      <td data-col="totalcost" data-colgrp="allinfloor"><b>${fmt(r.allInPlusFlooring)}</b></td>
+      <td data-col="flooring" data-colgrp="flooring"><span class="editable-cell flooring-cell" onclick="openFlooringDetail('${r.vin}')" title="${r.floored ? "Click to view / edit flooring" : "Click to add flooring to this vehicle"}">${r.floored ? fmt(Number(r.flooringOverride !== null && r.flooringOverride !== undefined ? r.flooringOverride : r.flooringCost) || 0) : '<span style="color:var(--muted);font-size:11px;">—</span>'}</span>${r.floored && r.flooringPaidOff ? '<div class="fl-paid-tag">Paid off</div>' : ""}</td>
+      <td data-colgrp="floorage" style="color:var(--muted);font-size:12px;"><span>${r.floored ? r.daysOnLot + (r.daysOnLot === 1 ? " Day" : " Days") : "—"}</span></td>
+      <td data-col="totalcost" data-colgrp="allinfloor">${r.floored ? `<b>${fmt(r.allInPlusFlooring)}</b>` : '<span style="color:var(--muted);">—</span>'}</td>
+      <td data-col="soldprice">${r.baseSale != null && (r.sold || vehicleIsSold(r)) ? `<b style="color:#2fae6b;">${fmt(r.baseSale)}</b>` : '<span style="color:var(--muted);">—</span>'}</td>
       <td data-col="salestax">${r.sold || vehicleIsSold(r) ? fmt(r.salesTaxCollected) : "—"}</td>
       <td><span class="editable-cell" onclick="openRegFeesNotice()" title="Mark vehicle as sold to enable Registration Fees">${r.sold || vehicleIsSold(r) ? fmt(r.regFeesCollected) : "—"}</span></td>
-      <td data-col="commission"><span class="editable-cell" data-vin="${r.vin}" data-field="commission" onclick="startEditCell(this)" title="Click to edit">${fmt(r.commission)}</span></td>
       <td class="${r.netProfit == null ? "" : r.netProfit >= 0 ? "pos" : "neg"}"><b title="Calculated after an actual sale price is entered">${fmtSigned(r.netProfit)}</b></td>
       <td class="${r.roi == null ? "" : r.roi >= 0 ? "pos" : "neg"}">${r.roi == null ? "—" : r.roi.toFixed(1) + "%"}</td>
       <td>
@@ -39982,7 +40194,12 @@
           (s, r) => s + n(r.repairs) + n(r.attachedExp),
           0,
         );
-        const totalFlooring = rows.reduce((s, r) => s + n(r.flooringCost), 0);
+        const totalFlooring = rows
+          .filter((r) => r.floored)
+          .reduce((s, r) => s + n(r.flooringCost), 0);
+        const totalSoldPrice = rows
+          .filter((r) => r.sold || vehicleIsSold(r))
+          .reduce((s, r) => s + (r.baseSale != null ? n(r.baseSale) : 0), 0);
         const totalSalesTax = rows.reduce((s, r) => s + n(r.salesTaxCollected), 0);
         const totalRegFees = rows.reduce((s, r) => s + n(r.regFeesCollected), 0);
         const totalAllIn = rows.reduce((s, r) => s + n(r.allInCost), 0);
@@ -40000,11 +40217,15 @@
         const avgDays = rows.length
           ? rows.reduce((s, r) => s + n(r.daysOnLot), 0) / rows.length
           : 0;
-        const flooredRows = rows.filter((r) => r.flooringCost > 0);
+        const flooredRows = rows.filter((r) => r.floored);
         const avgFlooringDays = flooredRows.length
           ? flooredRows.reduce((s, r) => s + n(r.daysOnLot), 0) /
             flooredRows.length
           : 0;
+        const totalAllInFloorFloored = flooredRows.reduce(
+          (s, r) => s + n(r.allInPlusFlooring),
+          0,
+        );
         const potRows = rows.filter((r) => r.potentialProfit != null);
         const totalPotential = potRows.reduce(
           (s, r) => s + n(r.potentialProfit),
@@ -40021,10 +40242,17 @@
         );
         set("thSalesTax", fmt(totalSalesTax));
         set("thRegFees", fmt(totalRegFees));
-        set("thAllInFloor", fmt(totalAllInFloor));
+        set(
+          "thAllInFloor",
+          flooredRows.length ? fmt(totalAllInFloorFloored) : "—",
+        );
+        set(
+          "thSoldPrice",
+          totalSoldPrice > 0 ? fmt(totalSoldPrice) : "—",
+        );
         set(
           "thFlooringAge",
-          flooringConfig.applied || flooredRows.length
+          flooredRows.length
             ? `avg ${Math.round(avgFlooringDays)}d`
             : "—",
         );
@@ -41183,6 +41411,7 @@
         const autoNew = autoAll ? !!autoAll.checked : true;
         flooringConfig = { ...cfg };
         flooringConfig.applied = true;
+        flooringConfig.configured = true;
         const activeVehicles = vehicles.filter((v) => !v.sold);
         const affectedVins = [];
         activeVehicles.forEach((v) => {
@@ -42366,6 +42595,7 @@
           avValidateField(costEl, true, "repairCostErr");
         }
         syncRepairFormPendingUi();
+        repairsClearSavePrompt();
       }
 
       function editRepairEntry(index) {
@@ -42484,6 +42714,7 @@
             resetRepairForm();
             renderRepairsList();
             refreshAfterRepairChange();
+            repairsClearSavePrompt();
             if (typeof AVToast !== "undefined") AVToast.success("Repair saved");
             ok = true;
           } catch (err) {
@@ -42549,10 +42780,38 @@
         refreshAfterRepairChange();
       }
 
+      function repairsSavePrompt(editing) {
+        const btn = document.getElementById("addRepairBtn");
+        const label = editing ? "Update Repair" : "Add Repair";
+        const msg = document.getElementById("repairsSaveMsg");
+        if (msg) {
+          msg.innerHTML = `You typed a repair but haven't ${editing ? "updated" : "added"} it yet. Click <b>"${label}"</b> first, then press <b>Save</b>.`;
+          msg.style.display = "block";
+        }
+        if (btn) {
+          btn.classList.remove("rp-shake");
+          void btn.offsetWidth;
+          btn.classList.add("rp-shake", "rp-pulse");
+          try {
+            btn.scrollIntoView({ block: "nearest" });
+          } catch (e) {}
+        }
+      }
+
+      function repairsClearSavePrompt() {
+        const m = document.getElementById("repairsSaveMsg");
+        if (m) {
+          m.style.display = "none";
+          m.innerHTML = "";
+        }
+        const b = document.getElementById("addRepairBtn");
+        if (b) b.classList.remove("rp-shake", "rp-pulse");
+      }
+
       async function saveRepairsModal() {
         if (repairFormHasPending()) {
-          const ok = await addRepairEntry();
-          if (!ok) return;
+          repairsSavePrompt(editingRepairIndex !== null);
+          return;
         }
         closeRepairsModalUi();
       }
@@ -43746,6 +44005,7 @@
         document.getElementById("addOnType").selectedIndex = 0;
         renderAddOnExistingList();
         addOnRefresh();
+        addOnClearPrompt();
       };
 
       function toggleAddOnForm(disabled) {
@@ -43755,7 +44015,41 @@
         for (var i = 0; i < els.length; i++) els[i].disabled = disabled;
       }
 
+      function addOnFormHasPending() {
+        const d = ((document.getElementById("addOnDesc") || {}).value || "").trim();
+        const pr =
+          parseFloat((document.getElementById("addOnPrice") || {}).value) || 0;
+        return d !== "" || pr > 0;
+      }
+      function addOnSavePrompt() {
+        const btn = document.getElementById("saveAddOnItem");
+        const msg = document.getElementById("addOnSaveMsg");
+        if (msg) {
+          msg.innerHTML = `You typed an add-on but haven't added it yet. Click <b>"+ Add Item"</b> first, then <b>Done</b>.`;
+          msg.style.display = "block";
+        }
+        if (btn) {
+          btn.classList.remove("rp-shake");
+          void btn.offsetWidth;
+          btn.classList.add("rp-shake", "rp-ring");
+        }
+      }
+      function addOnClearPrompt() {
+        const m = document.getElementById("addOnSaveMsg");
+        if (m) {
+          m.style.display = "none";
+          m.innerHTML = "";
+        }
+        const b = document.getElementById("saveAddOnItem");
+        if (b) b.classList.remove("rp-shake", "rp-ring");
+      }
+
       async function saveAddOnsAndClose() {
+        if (addOnFormHasPending()) {
+          addOnSavePrompt();
+          return;
+        }
+        addOnClearPrompt();
         if (!_addOnDirty) {
           document.getElementById("addOnModal").classList.remove("open");
           return;
@@ -49526,6 +49820,132 @@
         dealRecalc();
       }
 
+      function djOpenExpenses() {
+        if (currentDealVin) openRepairsModal(currentDealVin);
+      }
+      function djOpenCommission() {
+        const v = findDealVehicle(currentDealVin);
+        if (!v) return;
+        const dl = document.getElementById("djCommRepList");
+        if (dl) {
+          dl.innerHTML = (typeof REP_LIST !== "undefined" ? REP_LIST : [])
+            .map((rp) => `<option value="${rp}"></option>`)
+            .join("");
+        }
+        document.getElementById("djCommRep").value = v.rep || "";
+        const pctIn = document.getElementById("djCommPctIn");
+        const amtIn = document.getElementById("djCommAmtIn");
+        if (v.commMode === "amt" && v.commissionOverride != null) {
+          amtIn.value = v.commissionOverride;
+          pctIn.value = "";
+        } else {
+          amtIn.value = "";
+          pctIn.value = v.commissionPct != null ? v.commissionPct : "";
+        }
+        djCommModalRecalc();
+        document.getElementById("djCommModal").classList.add("open");
+      }
+      function djCloseCommission() {
+        const m = document.getElementById("djCommModal");
+        if (m) m.classList.remove("open");
+      }
+      function djCommModalPct() {
+        const a = document.getElementById("djCommAmtIn");
+        if (a) a.value = "";
+        djCommModalRecalc();
+      }
+      function djCommModalAmt() {
+        const p = document.getElementById("djCommPctIn");
+        if (p) p.value = "";
+        djCommModalRecalc();
+      }
+      function djCommModalRecalc() {
+        const v = findDealVehicle(currentDealVin);
+        if (!v) return;
+        const soldPrice =
+          parseFloat((document.getElementById("djSoldPrice") || {}).value) || 0;
+        const addOnRev = (v.addOnItems || []).reduce(
+          (s, a) => s + (Number(a.price) || 0),
+          0,
+        );
+        const gross = soldPrice - (Number(v.price) || 0);
+        const rep = (document.getElementById("djCommRep").value || "").trim();
+        const rate = repRate(rep);
+        const rr = document.getElementById("djCommRepRate");
+        if (rr)
+          rr.textContent = rep
+            ? rate != null
+              ? `${rep}'s saved commission rate: ${rate}% of gross`
+              : `${rep} — no saved rate; enter a % or $ below.`
+            : "Pick a rep or type a name.";
+        const amtIn = parseFloat((document.getElementById("djCommAmtIn") || {}).value);
+        const pctIn = parseFloat((document.getElementById("djCommPctIn") || {}).value);
+        let commission, pct;
+        if (!isNaN(amtIn) && amtIn > 0) {
+          commission = amtIn;
+          pct = gross !== 0 ? (commission / gross) * 100 : 0;
+        } else {
+          pct = !isNaN(pctIn) ? pctIn : rate != null ? rate : 20;
+          commission = Math.max(0, Math.round((gross * pct) / 100));
+        }
+        const pv = document.getElementById("djCommPreview");
+        if (pv)
+          pv.innerHTML = `Gross profit <b>${fmtSigned(gross)}</b><br>Commission (what the rep gets paid): <b style="color:var(--purple);">${fmt(commission)}</b>${pct ? ` &middot; ${Math.round(pct * 10) / 10}% of gross` : ""}`;
+      }
+      async function djSaveCommission() {
+        const v = findDealVehicle(currentDealVin);
+        if (!v) return;
+        const rep = (document.getElementById("djCommRep").value || "").trim();
+        const amtIn = parseFloat((document.getElementById("djCommAmtIn") || {}).value);
+        const pctIn = parseFloat((document.getElementById("djCommPctIn") || {}).value);
+        v.rep = rep;
+        if (!isNaN(amtIn) && amtIn > 0) {
+          v.commMode = "amt";
+          v.commissionOverride = amtIn;
+          v.commissionPct = null;
+        } else {
+          v.commMode = "pct";
+          v.commissionPct = !isNaN(pctIn)
+            ? pctIn
+            : repRate(rep) != null
+              ? repRate(rep)
+              : 20;
+          v.commissionOverride = null;
+        }
+        djCloseCommission();
+        djCommOpen = true;
+        {
+          const cw = document.getElementById("djCommWrap");
+          if (cw) cw.classList.add("open");
+          const ct = document.getElementById("djCommToggle");
+          if (ct) ct.setAttribute("aria-expanded", "true");
+        }
+        const repSel = document.getElementById("djRep");
+        if (repSel) repSel.value = rep;
+        djRepChanged();
+        if (v.commMode === "amt") {
+          document.getElementById("djCommAmt").value = v.commissionOverride;
+          djCommMode = "amt";
+        } else {
+          djCommMode = "pct";
+        }
+        try {
+          if (window.AVVehicles && v.commissionOverride != null) {
+            await AVVehicles.persistMoneyField(
+              v.vin,
+              "commissionOverride",
+              v.commissionOverride,
+            );
+          }
+          if (rep) updateRep(v.vin, rep);
+        } catch (_) {}
+        dealRecalc();
+        renderDealJacket(v.vin);
+        try {
+          if (typeof render === "function") render();
+          if (typeof refreshAllPnl === "function") refreshAllPnl();
+        } catch (e) {}
+      }
       function djUndoBtn(v, field) {
         if (!v || !v._undo || v._undo[field] === undefined || v._undo[field] === null)
           return "";
@@ -49570,13 +49990,13 @@
     <div class="vdp-row"><span class="vdp-row-label">Fees</span>${ed("fees", fmt(v.fees))}</div>
     <div class="vdp-row"><span class="vdp-row-label">Repairs (${(v.repairsList || []).length})</span><span class="vdp-row-value"><span class="vdp-ed" onclick="openRepairsModal('${v.vin}')" title="Click to edit repair items">${fmt(r.repairs)}</span></span></div>
     <div class="vdp-row"><span class="vdp-row-label">Flooring</span>${ed("flooringOverride", flooringDisplay, ' style="color:var(--red);"')}</div>
-    <div class="vdp-row"><span class="vdp-row-label">Expenses${attachedRows.length ? " <span style='color:var(--muted);font-weight:400;text-transform:none;'>(" + attachedRows.length + ")</span>" : ""}</span><span class="vdp-row-value">${r.attachedExp > 0 ? fmt(r.attachedExp) : "\u2014"}</span></div>
+    <div class="vdp-row"><span class="vdp-row-label">Expenses${attachedRows.length ? " <span style='color:var(--muted);font-weight:400;text-transform:none;'>(" + attachedRows.length + ")</span>" : ""}</span><span class="vdp-row-value"><span class="vdp-ed" onclick="djOpenExpenses()" title="Click to edit attached expenses">${r.attachedExp > 0 ? fmt(r.attachedExp) : "\u2014"}</span></span></div>
     ${attachedItemsHtml}
-    <div class="vdp-row"><span class="vdp-row-label" id="djBrkCommLbl">Commission</span><span class="vdp-row-value" id="djBrkComm" style="color:var(--purple);">\u2014</span></div>
+    <div class="vdp-row"><span class="vdp-row-label" id="djBrkCommLbl">Commission</span><span class="vdp-row-value"><span class="vdp-ed" id="djBrkComm" onclick="djOpenCommission()" style="color:var(--purple);" title="Click to edit rep &amp; commission">\u2014</span></span></div>
     <div class="vdp-row" style="border-top:2px solid var(--border);"><span class="vdp-row-label" style="font-weight:800;color:var(--text);">Total Cost</span><span class="vdp-row-value" id="djBrkTotalCost" style="color:var(--blue);font-weight:800;">\u2014</span></div>
 
     <div class="dj-brk-label" style="margin-top:16px;">Sale &amp; Profit</div>
-    <div class="vdp-row"><span class="vdp-row-label">Vehicle Sold Price</span><span class="vdp-row-value" id="djBrkSold">\u2014</span></div>
+    <div class="vdp-row"><span class="vdp-row-label" style="font-weight:800;">Vehicle Sold Price</span><span class="vdp-row-value" id="djBrkSold" style="color:var(--blue);font-weight:800;">\u2014</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Gross Profit</span><span class="vdp-row-value" id="djBrkGross">\u2014</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Net Profit</span><span class="vdp-row-value" id="djBrkNet">\u2014</span></div>
     <div class="vdp-row"><span class="vdp-row-label">Add-Ons <span style="color:var(--muted);font-weight:400;">(into profit)</span></span><span class="vdp-row-value" id="djBrkAddon" style="color:var(--green);">\u2014</span></div>
@@ -49932,6 +50352,37 @@
         document.getElementById("djKpiCost").textContent = fmt(vehicleCost);
         document.getElementById("djCommVal").textContent = fmt(commission);
         syncDjCommHead(commission, rep);
+
+        // Moving numbers ticker at the top (same style as inventory)
+        {
+          const _tt = document.getElementById("djTickerTrack");
+          if (_tt) {
+            const hasSale = showMoney;
+            const _items = [
+              ["Vehicle", `${v.year} ${v.make} ${v.model}`],
+              ["VIN", v.vin || "\u2014"],
+              ["Sold Price", soldPrice > 0 ? fmt(soldPrice) : "\u2014"],
+              ["Gross Profit", soldPrice > 0 ? fmtSigned(gross) : "\u2014"],
+              ["Commission", fmt(commission)],
+              ["Net Profit", hasSale ? fmtSigned(totalProfit) : "\u2014"],
+              ["ROI", hasSale ? Math.round(roi) + "%" : "\u2014"],
+              ["Vehicle Cost", fmt(vehicleCost)],
+              [
+                "Sold Date",
+                v.soldDate ? fmtDate(v.soldDate) : "\u2014",
+              ],
+              ["Status", v.sold ? "Sold" : "Active"],
+            ];
+            const _pills = _items
+              .map(
+                ([k, val]) =>
+                  `<span class="vt-item"><span class="vt-k">${k}</span><span class="vt-v">${val}</span></span>`,
+              )
+              .join('<span class="vt-sep">\u2022</span>');
+            _tt.innerHTML = `<div class="vt-group">${_pills}</div><div class="vt-group">${_pills}</div>`;
+          }
+        }
+
         {
           const _sum = document.getElementById("djSaleSummary");
           if (_sum) {
@@ -53192,337 +53643,92 @@
           document.getElementById("settingsMenu").classList.remove("open");
       });
 
-      // ---- Spanish dictionary (English -> Spanish). Numbers/data stay the same. ----
-      const EN2ES = {
-        // sidebar sections
-        INVENTORY: "INVENTARIO",
-        DOCUMENTS: "DOCUMENTOS",
-        PAYROLL: "NÓMINA",
-        TOOLS: "HERRAMIENTAS",
-        SALES: "VENTAS",
-        FINANCIALS: "FINANZAS",
-        REPORTS: "REPORTES",
-        // nav items
-        Dashboard: "Panel",
-        Vehicles: "Vehículos",
-        "Profit & Loss": "Ganancias y Pérdidas",
-        Expenses: "Gastos",
-        "Paid Customers": "Clientes Pagados",
-        Customers: "Clientes",
-        "Deal Jackets": "Carpetas de Venta",
-        "Files & Storage": "Archivos y Almacenamiento",
-        "Payroll & Commissions": "Nómina y Comisiones",
-        "Sales Reps": "Vendedores",
-        Calendar: "Calendario",
-        "Reports & Reminders": "Reportes y Recordatorios",
-        "State Tax": "Impuesto Estatal",
-        "CPA Portal Login": "Acceso Portal CPA",
-        // topbar
-        "+ Add Vehicle": "+ Agregar Vehículo",
-        "+ Add Expense": "+ Agregar Gasto",
-        "Scan VIN": "Escanear VIN",
-        "Mark Sold": "Marcar Vendido",
-        "+ Add Customer": "+ Agregar Cliente",
-        "⋯ More": "⋯ Más",
-        "Dealer Admin": "Admin del Concesionario",
-        "Search vehicles, VIN, customers, jackets…":
-          "Buscar vehículos, VIN, clientes, jackets…",
-        "Search vehicles, VIN, customers...":
-          "Buscar vehículos, VIN, clientes...",
-        // page title prefixes / bold
-        "PAID CUSTOMERS": "CLIENTES PAGADOS",
-        "PROFIT & LOSS": "GANANCIAS Y PÉRDIDAS",
-        EXPENSES: "GASTOS",
-        "PAYROLL & COMMISSIONS": "NÓMINA Y COMISIONES",
-        "DEAL JACKETS": "CARPETAS DE VENTA",
-        "SALES REPS": "VENDEDORES",
-        "FLOORING BREAKDOWN": "DESGLOSE DE FINANCIAMIENTO",
-        // common KPIs / labels
-        "Total Revenue": "Ingresos Totales",
-        "Gross Profit": "Ganancia Bruta",
-        "Net Profit": "Ganancia Neta",
-        "Net Loss": "Pérdida Neta",
-        "Total Expenses": "Gastos Totales",
-        "Total Cost": "Costo Total",
-        "Total Vehicle Cost": "Costo Total del Vehículo",
-        "Vehicle Cost": "Costo del Vehículo",
-        "Sold Price": "Precio de Venta",
-        "Purchase Price": "Precio de Compra",
-        "Vehicle Sold Price": "Precio de Venta del Vehículo",
-        "Vehicle Purchase Price": "Precio de Compra del Vehículo",
-        Commission: "Comisión",
-        Commissions: "Comisiones",
-        "Sales Commissions": "Comisiones de Venta",
-        Repairs: "Reparaciones",
-        "Repairs / Expenses": "Reparaciones / Gastos",
-        Fees: "Cargos",
-        Flooring: "Financiamiento de Piso",
-        "Flooring Cost": "Costo de Financiamiento",
-        "Total Flooring Cost": "Costo Total de Financiamiento",
-        "Add-Ons": "Extras",
-        "Add-On Revenue": "Ingresos por Extras",
-        "Sales Tax": "Impuesto de Venta",
-        "Registration Fees": "Cargos de Registro",
-        "Registration Fee ($)": "Cargo de Registro ($)",
-        "Total Amount Collected": "Monto Total Cobrado",
-        "Total Purchase Value": "Valor Total de Compra",
-        "Average Purchase": "Compra Promedio",
-        "Total Inventory": "Inventario Total",
-        "Purchase Cost": "Costo de Compra",
-        "All-In Vehicle Cost": "Costo Total del Vehículo",
-        "Total Repairs": "Reparaciones Totales",
-        "Upcoming Floored": "Financiados Próximos",
-        "Average ROI %": "ROI Promedio %",
-        "Total Net Profit": "Ganancia Neta Total",
-        "Sold This Month": "Vendidos Este Mes",
-        "Profit This Month": "Ganancia Este Mes",
-        "Sold History": "Historial de Ventas",
-        "Sold Value": "Valor Vendido",
-        "Total Sold Value": "Valor Total Vendido",
-        "available inventory": "inventario disponible",
-        "units sold": "unidades vendidas",
-        "units moved": "unidades movidas",
-        "This Month": "Este Mes",
-        "Total Vehicles": "Vehículos Totales",
-        "on the lot now": "en el lote ahora",
-        "Flooring rate system": "Sistema de financiamiento",
-        "Add Flooring Rate to System": "Agregar Tasa de Financiamiento al Sistema",
-        "Browse sold history": "Explorar historial de ventas",
-        "vehicles on lot": "vehículos en el lote",
-        "vehicles in current inventory": "vehículos en inventario actual",
-        "Profit Calculator": "Calculadora de Ganancia",
-        "Set Status…": "Definir Estado…",
-        "Open Deal Jacket →": "Abrir Carpeta de Venta →",
-        "Your profit on this deal": "Tu ganancia en esta venta",
-        "The Sale": "La Venta",
-        Financing: "Financiamiento",
-        "Collected for State": "Cobrado para el Estado",
-        "pass-through": "traspaso",
-        "Fill in the sale below — your profit updates live as you type.":
-          "Completa la venta abajo — tu ganancia se actualiza al escribir.",
-        "No commission · $0": "Sin comisión · $0",
-        "You're in at": "Estás invertido en",
-        "If you sell for": "Si vendes por",
-        "Projected profit": "Ganancia proyectada",
-        "Purchase price": "Precio de compra",
-        "Other expenses": "Otros gastos",
-        "No itemized costs yet": "Aún no hay costos desglosados",
-        "Enter a target sale price to see your projected profit.":
-          "Ingresa un precio de venta para ver la ganancia proyectada.",
-        "Enter a sale price of $0 or more.":
-          "Ingresa un precio de venta de $0 o más.",
-        Titles: "Títulos",
-        "Deals Closed": "Ventas Cerradas",
-        "Avg ROI": "ROI Prom.",
-        "Paid Customers": "Clientes Pagados",
-        "Vehicles Floored": "Vehículos Financiados",
-        "Flooring Fees Owed": "Cargos de Financiamiento Adeudados",
-        "Owed to Flooring Co.": "Adeudado a la Financiera",
-        "Coming Up for Payoff": "Próximos a Liquidar",
-        "Total Payroll": "Nómina Total",
-        "Wages & Salary": "Sueldos y Salarios",
-        Headcount: "Personal",
-        // section headings
-        "Team Payroll": "Nómina del Equipo",
-        "Customer Directory": "Directorio de Clientes",
-        "Revenue Allocation": "Distribución de Ingresos",
-        "Profit & Loss Statement": "Estado de Ganancias y Pérdidas",
-        "How Net Profit Was Calculated": "Cómo se Calculó la Ganancia Neta",
-        "Where the Money Goes": "A Dónde Va el Dinero",
-        "Where You're Losing": "Dónde Estás Perdiendo",
-        "Rest of Inventory": "Resto del Inventario",
-        "Other Paid Customers": "Otros Clientes Pagados",
-        "Underwater Vehicles": "Vehículos en Números Rojos",
-        "Floored Vehicles": "Vehículos Financiados",
-        "All Sales Reps": "Todos los Vendedores",
-        "Cost of Goods Sold": "Costo de Ventas",
-        Revenue: "Ingresos",
-        "Operating Expenses": "Gastos Operativos",
-        // deal jacket
-        "Sale Information": "Información de Venta",
-        "Customer Information": "Información del Cliente",
-        "Cost Breakdown": "Desglose de Costos",
-        "Sales Rep & Commission": "Vendedor y Comisión",
-        "Add-On Upcharges": "Cargos por Extras",
-        Documents: "Documentos",
-        "Deal Notes": "Notas de Venta",
-        "Full Name": "Nombre Completo",
-        "Cell Phone": "Teléfono Celular",
-        Email: "Correo",
-        Address: "Dirección",
-        "Sale Date": "Fecha de Venta",
-        "Deal Number": "Número de Venta",
-        "State Sales Tax ($)": "Impuesto de Venta Estatal ($)",
-        "Sold Price ($)": "Precio de Venta ($)",
-        "Sales Rep": "Vendedor",
-        "Commission %": "Comisión %",
-        "Or Commission $": "O Comisión $",
-        "Commission owed to rep": "Comisión adeudada al vendedor",
-        "Save Deal & Mark Sold": "Guardar Venta y Marcar Vendido",
-        "Choose another vehicle": "Elegir otro vehículo",
-        "Back to Paid Customers": "Volver a Clientes Pagados",
-        "Scan Document": "Escanear Documento",
-        "Scan / Upload ID": "Escanear / Subir ID",
-        "Purchase Agreement": "Contrato de Compra",
-        Title: "Título",
-        "Odometer Statement": "Declaración de Odómetro",
-        "Bill of Sale": "Factura de Venta",
-        Insurance: "Seguro",
-        Registration: "Registro",
-        // expenses / payroll
-        "Payment Method": "Método de Pago",
-        Category: "Categoría",
-        Amount: "Monto",
-        "Due Date": "Fecha de Vencimiento",
-        Frequency: "Frecuencia",
-        Notes: "Notas",
-        Status: "Estado",
-        Paid: "Pagado",
-        Unpaid: "No Pagado",
-        "Attach to vehicle": "Adjuntar a vehículo",
-        "Add Expense": "Agregar Gasto",
-        "Edit Expense": "Editar Gasto",
-        Employee: "Empleado",
-        Role: "Rol",
-        "Pay Type": "Tipo de Pago",
-        Basis: "Base",
-        Earnings: "Ganancias",
-        "Add Employee": "Agregar Empleado",
-        "Edit Employee": "Editar Empleado",
-        "Add Sales Rep": "Agregar Vendedor",
-        Commission: "Comisión",
-        Salary: "Salario",
-        Hourly: "Por Hora",
-        Name: "Nombre",
-        "Monthly Salary ($)": "Salario Mensual ($)",
-        "Hourly Rate ($)": "Tarifa por Hora ($)",
-        "Hours / Month": "Horas / Mes",
-        "Commission Rate (% of gross)": "Tasa de Comisión (% del bruto)",
-        // customers table
-        Customer: "Cliente",
-        Phone: "Teléfono",
-        "Vehicle Purchased": "Vehículo Comprado",
-        Purchased: "Comprado",
-        "Sale Price": "Precio de Venta",
-        Vehicle: "Vehículo",
-        Actions: "Acciones",
-        "Days on Lot": "Días en el Lote",
-        "Sales Rep ": "Vendedor ",
-        "ROI %": "ROI %",
-        Gross: "Bruto",
-        "Net Loss": "Pérdida Neta",
-        Date: "Fecha",
-        // buttons / misc
-        Save: "Guardar",
-        Cancel: "Cancelar",
-        Delete: "Eliminar",
-        Remove: "Quitar",
-        "Got it": "Entendido",
-        Exit: "Salir",
-        "Save Rep": "Guardar Vendedor",
-        "Print / Export": "Imprimir / Exportar",
-        Monthly: "Mensual",
-        Yearly: "Anual",
-        "View Flooring Cost": "Ver Costo de Financiamiento",
-        "Mark Paid Off": "Marcar Liquidado",
-        "Add Sales Rep": "Agregar Vendedor",
-        "Top Sales Rep": "Mejor Vendedor",
-        "Cars Sold": "Autos Vendidos",
-        "Avg / Deal": "Prom. / Venta",
-        "View details →": "Ver detalles →",
-        "View deal jacket →": "Ver carpeta de venta →",
-        // settings labels
-        Appearance: "Apariencia",
-        Language: "Idioma",
-        "Bright mode": "Modo claro",
-        "Dark / Bright theme": "Tema oscuro / claro",
-        "Switch to bright mode": "Cambiar a modo claro",
-        "Switch to dark mode": "Cambiar a modo oscuro",
-        "Dark or light theme": "Tema oscuro o claro",
-        Settings: "Ajustes",
-        "Numbers stay the same; only wording changes.":
-          "Los números no cambian; solo cambia el texto.",
-        "Acquisition & Cost Breakdown": "Adquisición y Desglose de Costos",
-        "Vehicle Acquisition": "Adquisición del Vehículo",
-        "Sale & Profit": "Venta y Ganancia",
-      };
-      const ES2EN = (() => {
-        const o = {};
-        for (const k in EN2ES) {
-          o[EN2ES[k]] = k;
-        }
-        return o;
-      })();
-      let currentLang = "en";
-      let langObserver = null;
+      // ---- Spanish (shared av-i18n.js — same pattern as landing) ----
+      // Dictionary: window.AV_DASH_ES. JS strings: avT("English"). Toggle: toggleLang().
+      var currentLang =
+        document.documentElement.lang === "es" ? "es" : "en";
+      var EN2ES = window.AV_DASH_ES || {};
 
-      function walkTranslate(root, map) {
-        if (!root) return;
-        if (root.nodeType === 3) {
-          const key = root.nodeValue.trim();
-          if (key && map[key] !== undefined && map[key] !== key)
-            root.nodeValue = root.nodeValue.replace(key, map[key]);
-          return;
+      (function bindDashboardI18n() {
+        var sharedApply = window.applyLang;
+        // Page renderers touch let-bound state (dashYear, etc.) declared later
+        // in this script — never refresh until that block has run.
+        var dashI18nReady = false;
+
+        function refreshCurrentPageForLang() {
+          if (!dashI18nReady) return;
+          try {
+            var cur =
+              typeof getCurrentPage === "function" ? getCurrentPage() : "dashboard";
+            var result = null;
+            if (typeof PAGE_RENDERERS === "object") {
+              var fn = PAGE_RENDERERS[cur];
+              if (typeof fn === "function") result = fn();
+            } else if (cur === "vehicles" && typeof render === "function") {
+              result = render();
+            } else if (cur === "dashboard" && typeof renderDashboard === "function") {
+              result = renderDashboard();
+            }
+            if (cur === "deal-jacket" && typeof dealRecalc === "function")
+              dealRecalc();
+            // async renderers reject as promises — don't leave uncaught errors
+            if (result && typeof result.then === "function")
+              result.catch(function () {});
+          } catch (e) {}
         }
-        if (root.nodeType !== 1) return;
-        const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-          acceptNode(n) {
-            const p = n.parentNode;
-            if (!p) return NodeFilter.FILTER_REJECT;
-            const tag = p.nodeName;
-            if (tag === "SCRIPT" || tag === "STYLE" || tag === "NOSCRIPT")
-              return NodeFilter.FILTER_REJECT;
-            return n.nodeValue.trim()
-              ? NodeFilter.FILTER_ACCEPT
-              : NodeFilter.FILTER_REJECT;
-          },
+
+        window.applyLang = function (lang, opts) {
+          opts = opts || {};
+          currentLang = lang === "es" ? "es" : "en";
+          var toEs = currentLang === "es";
+          var batch = window.avI18nBatch;
+          var run = function () {
+            if (typeof sharedApply === "function") {
+              sharedApply(currentLang, { deferWalk: true, noObserver: true });
+            }
+            if (!opts.skipRefresh) refreshCurrentPageForLang();
+            if (typeof window.avI18nWalk === "function") {
+              window.avI18nWalk(document.body, toEs);
+            }
+            if (toEs) {
+              if (typeof window.avI18nStartObserver === "function")
+                window.avI18nStartObserver();
+            } else if (typeof window.avI18nStopObserver === "function") {
+              window.avI18nStopObserver();
+            }
+          };
+          if (typeof batch === "function") batch(run);
+          else run();
+          var btn = document.getElementById("langToggle");
+          if (btn) btn.classList.toggle("on", currentLang === "es");
+        };
+
+        window.toggleLang = function () {
+          var next = document.documentElement.lang === "es" ? "en" : "es";
+          window.applyLang(next);
+          return next;
+        };
+
+        document.addEventListener("av-lang", function (ev) {
+          currentLang = ev.detail && ev.detail.es ? "es" : "en";
+          var btn = document.getElementById("langToggle");
+          if (btn) btn.classList.toggle("on", currentLang === "es");
         });
-        const nodes = [];
-        while (walker.nextNode()) nodes.push(walker.currentNode);
-        nodes.forEach((n) => {
-          const key = n.nodeValue.trim();
-          if (map[key] !== undefined && map[key] !== key)
-            n.nodeValue = n.nodeValue.replace(key, map[key]);
-        });
-        root.querySelectorAll &&
-          root
-            .querySelectorAll("input[placeholder],textarea[placeholder]")
-            .forEach((el) => {
-              const key = (el.getAttribute("placeholder") || "").trim();
-              if (map[key] !== undefined)
-                el.setAttribute("placeholder", map[key]);
-            });
-      }
-      function startLangObserver() {
-        if (langObserver) return;
-        langObserver = new MutationObserver((muts) => {
-          muts.forEach((m) =>
-            m.addedNodes.forEach((node) => walkTranslate(node, EN2ES)),
-          );
-        });
-        langObserver.observe(document.body, { childList: true, subtree: true });
-      }
-      function stopLangObserver() {
-        if (langObserver) {
-          langObserver.disconnect();
-          langObserver = null;
-        }
-      }
-      function applyLang(lang) {
-        currentLang = lang;
-        if (lang === "es") {
-          walkTranslate(document.body, EN2ES);
-          startLangObserver();
-        } else {
-          stopLangObserver();
-          walkTranslate(document.body, ES2EN);
-        }
-      }
-      function toggleLang() {
-        const es = currentLang !== "es";
-        applyLang(es ? "es" : "en");
-        document.getElementById("langToggle").classList.toggle("on", es);
-      }
+
+        // Restore lang preference with DOM walk only (no page re-render yet).
+        try {
+          var saved =
+            (typeof localStorage !== "undefined" && localStorage.getItem("av_lang")) ||
+            "";
+          if (saved === "es") window.applyLang("es", { skipRefresh: true });
+        } catch (_) {}
+
+        // After the rest of this script initializes dashYear / renderers, allow
+        // toggle refreshes and optionally re-walk (bootstrap will re-render too).
+        setTimeout(function () {
+          dashI18nReady = true;
+        }, 0);
+      })();
 
       // ---------- CALENDAR ----------
       let calSelectedDay = null;
@@ -54287,7 +54493,7 @@
           <div class="tg-action">${filed ? `<span class="tg-filed">Filed \u2713 \u00b7 ${filedLbl}</span> <button class="btn-ghost tg-view-btn" onclick="openFilingDetail('${filed.id}')">View / Print</button>` : `<button class="btn-primary tg-file-btn" onclick="promptFileBucket(${year},'${bk.months.join(",")}','${bk.label + " " + year}','${dueDate}')">Mark as Filed</button>`}</div>
         </div>
       </div>
-      ${rows.length ? `<div class="table-scroll"><table class="rd-cars"><thead><tr><th>Sold Date</th><th>Vehicle</th><th>VIN</th><th>Sold Price</th><th>Sales Tax</th></tr></thead><tbody>${rows.map((r) => `<tr><td>${fmtDate(r.date)}</td><td class="veh-cell"><div class="veh-name">${r.label}</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--muted);" title="${r.vin}">\u2026${r.vin.slice(-8)}</td><td style="font-weight:700;">${fmt(r.sold)}</td><td style="font-weight:800;color:var(--green);">${fmt(r.tax)}</td></tr>`).join("")}</tbody></table></div>` : `<div class="tg-empty">No vehicles sold in this period.</div>`}
+      ${rows.length ? `<div class="table-scroll fit-table"><table class="rd-cars"><thead><tr><th>Sold Date</th><th>Vehicle</th><th>VIN</th><th>Sold Price</th><th>Sales Tax</th></tr></thead><tbody>${rows.map((r) => `<tr><td>${fmtDate(r.date)}</td><td class="veh-cell"><div class="veh-name">${r.label}</div></td><td style="font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap;">${r.vin}</td><td style="font-weight:700;">${fmt(r.sold)}</td><td style="font-weight:800;color:var(--green);">${fmt(r.tax)}</td></tr>`).join("")}</tbody></table></div>` : `<div class="tg-empty">No vehicles sold in this period.</div>`}
     </div>`;
           })
           .join("");
@@ -55978,7 +56184,7 @@
             ? Math.round(((m.net - last.net) / Math.abs(last.net)) * 100)
             : null;
         const parts = [
-          "Welcome back, " +
+          (typeof avT === "function" ? avT("Welcome back, ") : "Welcome back, ") +
             (typeof dashWelcomeName === "function"
               ? dashWelcomeName()
               : "there") +
@@ -55987,7 +56193,11 @@
         try {
           const _bd = peopleBirthdaysOn(today.toISOString().slice(0, 10));
           if (_bd.includes(crmOwner.name))
-            parts.push("And happy birthday to you! \ud83c\udf89");
+            parts.push(
+              typeof avT === "function"
+                ? avT("And happy birthday to you! 🎉")
+                : "And happy birthday to you! \ud83c\udf89",
+            );
           const _oth = _bd.filter((n) => n !== crmOwner.name);
           if (_oth.length)
             parts.push(
@@ -55995,19 +56205,39 @@
             );
         } catch (e) {}
         if (m.net >= 0 && (pct === null || pct >= 0))
-          parts.push("You're doing well this month.");
+          parts.push(
+            typeof avT === "function"
+              ? avT("You're doing well this month.")
+              : "You're doing well this month.",
+          );
         if (pct !== null)
           parts.push(
             pct >= 0
-              ? `You're up ${pct}% from last month.`
-              : `You're down ${Math.abs(pct)}% from last month.`,
+              ? (typeof avT === "function" ? avT("You're up ") : "You're up ") +
+                pct +
+                (typeof avT === "function"
+                  ? avT("% from last month.")
+                  : "% from last month.")
+              : (typeof avT === "function" ? avT("You're down ") : "You're down ") +
+                Math.abs(pct) +
+                (typeof avT === "function"
+                  ? avT("% from last month.")
+                  : "% from last month."),
           );
         parts.push(
           m.net >= 0
-            ? "Looks like this'll be a profitable month."
-            : "Let's keep an eye on the margins this month.",
+            ? typeof avT === "function"
+              ? avT("Looks like this'll be a profitable month.")
+              : "Looks like this'll be a profitable month."
+            : typeof avT === "function"
+              ? avT("Let's keep an eye on the margins this month.")
+              : "Let's keep an eye on the margins this month.",
         );
-        parts.push("Let me know if there's anything I can help you with.");
+        parts.push(
+          typeof avT === "function"
+            ? avT("Let me know if there's anything I can help you with.")
+            : "Let me know if there's anything I can help you with.",
+        );
         txt.textContent = parts.join(" ");
         bub.classList.add("show");
         clearTimeout(window.__jennaGreetTimer);
@@ -56035,8 +56265,19 @@
       }
 
       function updateDashWelcome() {
+        var wrap = document.getElementById("dashWelcome");
         var el = document.getElementById("dashWelcomeName");
-        if (el) el.textContent = dashWelcomeName();
+        var name = dashWelcomeName();
+        var prefix =
+          typeof avT === "function" ? avT("Welcome back, ") : "Welcome back, ";
+        if (el) el.textContent = name;
+        if (wrap) {
+          if (wrap.firstChild && wrap.firstChild.nodeType === 3) {
+            wrap.firstChild.nodeValue = prefix;
+          } else if (el) {
+            wrap.insertBefore(document.createTextNode(prefix), el);
+          }
+        }
       }
 
       function dashVehiclesReady() {
