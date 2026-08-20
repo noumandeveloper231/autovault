@@ -22,6 +22,10 @@
       .replace(/"/g, "&quot;");
   }
 
+  function t(s) {
+    return typeof global.avT === "function" ? global.avT(s) : s;
+  }
+
   function ensureDom() {
     wrapEl = document.querySelector(".topbar .search, .search");
     if (!wrapEl) return false;
@@ -148,10 +152,16 @@
     flatItems = [];
     panelEl.innerHTML =
       '<div class="gs-state gs-empty">' +
-      "<strong>No matches</strong>" +
-      "<span>Nothing found for &ldquo;" +
+      "<strong>" +
+      t("No matches") +
+      "</strong>" +
+      "<span>" +
+      t("Nothing found for") +
+      " &ldquo;" +
       esc(q) +
-      "&rdquo;. Try VIN, stock #, customer, or jacket number.</span>" +
+      "&rdquo;. " +
+      t("Try VIN, stock #, customer, or jacket number.") +
+      "</span>" +
       "</div>";
     setOpen(true);
   }
@@ -160,9 +170,11 @@
     flatItems = [];
     panelEl.innerHTML =
       '<div class="gs-state gs-error">' +
-      "<strong>Search failed</strong>" +
+      "<strong>" +
+      t("Search failed") +
+      "</strong>" +
       "<span>" +
-      esc(msg || "Please try again.") +
+      esc(msg || t("Please try again.")) +
       "</span>" +
       "</div>";
     setOpen(true);
@@ -172,7 +184,11 @@
     flatItems = [];
     panelEl.innerHTML =
       '<div class="gs-state gs-hint">' +
-      "<span>Type at least 2 characters to search vehicles, VINs, customers, deal jackets, and expenses.</span>" +
+      "<span>" +
+      t(
+        "Type at least 2 characters to search vehicles, VINs, customers, deal jackets, and expenses.",
+      ) +
+      "</span>" +
       "</div>";
     setOpen(true);
   }
@@ -181,10 +197,10 @@
     flatItems = [];
     var r = (data && data.results) || {};
     var html =
-      sectionHtml("Vehicles", iconSvg("vehicle"), r.vehicles) +
-      sectionHtml("Customers &amp; Leads", iconSvg("customer"), r.customers) +
-      sectionHtml("Deal Jackets", iconSvg("jacket"), r.jackets) +
-      sectionHtml("Expenses", iconSvg("expense"), r.expenses);
+      sectionHtml(t("Vehicles"), iconSvg("vehicle"), r.vehicles) +
+      sectionHtml(t("Customers & Leads"), iconSvg("customer"), r.customers) +
+      sectionHtml(t("Deal Jackets"), iconSvg("jacket"), r.jackets) +
+      sectionHtml(t("Expenses"), iconSvg("expense"), r.expenses);
 
     if (!html) {
       renderEmpty(data && data.query);

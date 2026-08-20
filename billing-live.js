@@ -49,9 +49,17 @@
       .replace(/"/g, "&quot;");
   }
 
+  function t(s) {
+    return typeof global.avT === "function" ? global.avT(s) : s;
+  }
+
   function setText(id, text) {
     var el = document.getElementById(id);
     if (el) el.textContent = text;
+  }
+
+  function setTextT(id, en) {
+    setText(id, t(en));
   }
 
   function setHtml(id, html) {
@@ -77,7 +85,7 @@
   }
 
   function showValueSkeletons() {
-    setText("psSub", "— your plan, billing, and payment method");
+    setTextT("psSub", "— your plan, billing, and payment method");
 
     var alert = document.getElementById("psAlert");
     if (alert) {
@@ -92,7 +100,7 @@
     setText("psPlanCycle", "");
     setHtml("psPlanBadge", valSkel("badge"));
     setHtml("psPlanCycleVal", valSkel("sm", "64px"));
-    setText("psPlanDueLbl", "Next charge");
+    setTextT("psPlanDueLbl", "Next charge");
     setHtml("psPlanDueVal", valSkel("sm", "88px"));
     setHtml("psPlanFeatVal", valSkel("sm", "120px"));
     setPanelLoading("psPlanCard", true);
@@ -109,7 +117,7 @@
     setHtml("psExpenseLogVal", valSkel("sm", "36px"));
     var pb = document.getElementById("psPayBtn");
     if (pb) {
-      pb.textContent = "Make a payment";
+      pb.textContent = t("Make a payment");
       pb.className = "ps-btn";
       pb.disabled = true;
       pb.style.opacity = "0.55";
@@ -136,20 +144,20 @@
     if (termsHost) {
       termsHost.innerHTML =
         '<div class="tr-rec">' +
-        '<div><div class="tr-cell-l">Signed by</div><div class="tr-cell-v" id="psTermsName">' +
+        '<div><div class="tr-cell-l">' + t("Signed by") + '</div><div class="tr-cell-v" id="psTermsName">' +
         valSkel("", "70%") +
         "</div></div>" +
-        '<div><div class="tr-cell-l">Dealership</div><div class="tr-cell-v" id="psTermsDealer">' +
+        '<div><div class="tr-cell-l">' + t("Dealership") + '</div><div class="tr-cell-v" id="psTermsDealer">' +
         valSkel("", "64%") +
         "</div></div>" +
-        '<div><div class="tr-cell-l">Version</div><div class="tr-cell-v" id="psTermsVer">' +
+        '<div><div class="tr-cell-l">' + t("Version") + '</div><div class="tr-cell-v" id="psTermsVer">' +
         valSkel("sm", "36px") +
         "</div></div>" +
-        '<div><div class="tr-cell-l">Accepted</div><div class="tr-cell-v" id="psTermsWhen">' +
+        '<div><div class="tr-cell-l">' + t("Accepted") + '</div><div class="tr-cell-v" id="psTermsWhen">' +
         valSkel("", "88px") +
         "</div></div>" +
         "</div>" +
-        '<div class="tr-sig"><div class="terms-siglabel">Electronic Signature</div>' +
+        '<div class="tr-sig"><div class="terms-siglabel">' + t("Electronic Signature") + '</div>' +
         '<div class="terms-sigwrap signed" id="psTermsSigWrap">' +
         valSkel("sig") +
         "</div></div>";
@@ -159,7 +167,7 @@
     var histHost = document.getElementById("psHistory");
     if (histHost) {
       histHost.innerHTML =
-        '<div class="table-scroll"><table class="dash-sold-table"><thead><tr><th>Date</th><th>Plan</th><th>Amount</th><th>Status</th></tr></thead><tbody id="psHistoryBody">' +
+        '<div class="table-scroll"><table class="dash-sold-table"><thead><tr><th>' + t("Date") + '</th><th>' + t("Plan") + '</th><th>' + t("Amount") + '</th><th>' + t("Status") + '</th></tr></thead><tbody id="psHistoryBody">' +
         '<tr class="ps-hist-skel-row"><td><div class="sk-bar" style="width:70%"></div></td><td><div class="sk-bar" style="width:80%"></div></td><td><div class="sk-bar" style="width:55%"></div></td><td><div class="sk-bar" style="width:45%"></div></td></tr>' +
         '<tr class="ps-hist-skel-row"><td><div class="sk-bar" style="width:62%"></div></td><td><div class="sk-bar" style="width:75%"></div></td><td><div class="sk-bar" style="width:50%"></div></td><td><div class="sk-bar" style="width:40%"></div></td></tr>' +
         '<tr class="ps-hist-skel-row"><td><div class="sk-bar" style="width:78%"></div></td><td><div class="sk-bar" style="width:70%"></div></td><td><div class="sk-bar" style="width:58%"></div></td><td><div class="sk-bar" style="width:48%"></div></td></tr>' +
@@ -173,8 +181,11 @@
     if (!alert) return;
     if (b.linked === false) {
       alert.className = "ps-alert due";
-      setText("psAlertTitle", "Billing not linked");
-      setText("psAlertSub", b.message || "Contact support to connect Stripe.");
+      setTextT("psAlertTitle", "Billing not linked");
+      setText(
+        "psAlertSub",
+        b.message || t("Contact support to connect Stripe."),
+      );
       setHtml("psAlertAction", "");
       return;
     }
@@ -184,30 +195,38 @@
     if (due) {
       setText(
         "psAlertTitle",
-        "Payment past due — " + psFmt(b.amountDue || price),
+        t("Payment past due — ") + psFmt(b.amountDue || price),
       );
       setText(
         "psAlertSub",
-        "Due " +
+        t("Due ") +
           fmtDateSafe(b.dueDate) +
           (b.daysLate
             ? " · " +
               b.daysLate +
-              " day" +
-              (b.daysLate === 1 ? "" : "s") +
-              " late"
+              " " +
+              (b.daysLate === 1 ? t("day") : t("days")) +
+              " " +
+              t("late")
             : "") +
-          ". Pay now to keep your account active.",
+          ". " +
+          t("Pay now to keep your account active."),
       );
       setHtml(
         "psAlertAction",
-        '<button class="ps-btn danger" onclick="openMakePayment()">Make payment</button>',
+        '<button class="ps-btn danger" onclick="openMakePayment()">' +
+          t("Make payment") +
+          "</button>",
       );
     } else {
-      setText("psAlertTitle", "Your account is up to date");
+      setTextT("psAlertTitle", "Your account is up to date");
       setText(
         "psAlertSub",
-        "Next charge of " + psFmt(price) + " on " + fmtDateSafe(b.dueDate) + ".",
+        t("Next charge of ") +
+          psFmt(price) +
+          t(" on ") +
+          fmtDateSafe(b.dueDate) +
+          ".",
       );
       setHtml("psAlertAction", "");
     }
@@ -220,12 +239,12 @@
       setText("psPlanCycle", "");
       var bd0 = document.getElementById("psPlanBadge");
       if (bd0) {
-        bd0.textContent = "Unlinked";
+        bd0.textContent = t("Unlinked");
         bd0.className = "ps-badge due";
       }
       setText("psPlanCycleVal", "—");
-      setText("psPlanDueLbl", "Status");
-      setText("psPlanDueVal", "Billing not linked");
+      setTextT("psPlanDueLbl", "Status");
+      setTextT("psPlanDueVal", "Billing not linked");
       setText("psPlanFeatVal", "—");
       return;
     }
@@ -235,14 +254,14 @@
     var planLabel = b.planLabel || b.plan || "—";
     setText("psPlanName", planLabel);
     setText("psPlanPrice", psFmt(price));
-    setText("psPlanCycle", "/ " + String(cycle).toLowerCase());
+    setText("psPlanCycle", "/ " + String(t(cycle)).toLowerCase());
     var bd = document.getElementById("psPlanBadge");
     if (bd) {
-      bd.textContent = due ? "Past due" : "Active";
+      bd.textContent = due ? t("Past due") : t("Active");
       bd.className = "ps-badge " + (due ? "due" : "active");
     }
-    setText("psPlanCycleVal", cycle);
-    setText("psPlanDueLbl", due ? "Past due since" : "Next charge");
+    setText("psPlanCycleVal", t(cycle));
+    setTextT("psPlanDueLbl", due ? "Past due since" : "Next charge");
     setText("psPlanDueVal", fmtDateSafe(b.dueDate));
     setText("psPlanFeatVal", b.planFeat || "—");
   }
@@ -363,7 +382,11 @@
 
   function renderCardMethodHtml(method) {
     if (!method) {
-      return '<div style="color:var(--muted);font-size:13px;">No card on file. Update your payment method to add one.</div>';
+      return (
+        '<div style="color:var(--muted);font-size:13px;">' +
+        t("No card on file. Update your payment method to add one.") +
+        "</div>"
+      );
     }
     var key = cardBrandKey(method.brand);
     var label = cardBrandLabel(method.brand);
@@ -378,7 +401,8 @@
       esc(label) +
       '</div><div class="ps-card-num">•••• ' +
       esc(method.last4) +
-      '</div><div class="ps-card-exp">Expires ' +
+      '</div><div class="ps-card-exp">' +
+      t("Expires ") +
       esc(method.exp || "—") +
       "</div></div>"
     );
@@ -388,7 +412,9 @@
     if (b.linked === false) {
       setHtml(
         "psMethod",
-        '<div style="color:var(--muted);font-size:13px;">Connect billing to manage your payment method.</div>',
+        '<div style="color:var(--muted);font-size:13px;">' +
+          t("Connect billing to manage your payment method.") +
+          "</div>",
       );
       setText("psAmountDueVal", "—");
       setText("psExpenseLogVal", "—");
@@ -396,7 +422,7 @@
       if (pb0) {
         pb0.disabled = true;
         pb0.style.opacity = "0.55";
-        pb0.textContent = "Make a payment";
+        pb0.textContent = t("Make a payment");
         pb0.className = "ps-btn";
       }
       return;
@@ -406,12 +432,12 @@
     var me = document.getElementById("psMethod");
     if (me) me.innerHTML = renderCardMethodHtml(b.method);
     setText("psAmountDueVal", psFmt(due ? b.amountDue || price : 0));
-    setText("psExpenseLogVal", b.autoExpense ? "On" : "Off");
+    setText("psExpenseLogVal", b.autoExpense ? t("On") : t("Off"));
     var pb = document.getElementById("psPayBtn");
     if (pb) {
       pb.textContent = due
-        ? "Make payment · " + psFmt(b.amountDue || price)
-        : "Make a payment";
+        ? t("Make payment") + " · " + psFmt(b.amountDue || price)
+        : t("Make a payment");
       pb.className = "ps-btn" + (due ? " danger" : "");
       pb.disabled = !due;
       pb.style.opacity = due ? "1" : "0.55";
@@ -429,10 +455,15 @@
     if (st) {
       st.innerHTML =
         b && b.autoExpense
-          ? "<b>On</b> — payments are added to Expenses as “" +
+          ? "<b>" +
+            t("On") +
+            "</b> — " +
+            t("payments are added to Expenses as") +
+            " “" +
             esc(planLabel) +
-            ' plan subscription” under Dealership Expense → Subscriptions.'
-          : "Off — payments are not written to your Expenses section.";
+            "” " +
+            t("under Dealership Expense → Subscriptions.")
+          : t("Off — payments are not written to your Expenses section.");
     }
     var nt = document.getElementById("psNotifyBefore");
     if (nt) {
@@ -443,8 +474,11 @@
     if (ns) {
       ns.innerHTML =
         !b || b.notifyBefore !== false
-          ? "<b>On</b> — you'll get an email 3 days before each billing date."
-          : "Off — no 3-day reminder emails (billing-day notice still sends).";
+          ? "<b>" +
+            t("On") +
+            "</b> — " +
+            t("you'll get an email 3 days before each billing date.")
+          : t("Off — no 3-day reminder emails (billing-day notice still sends).");
     }
   }
 
@@ -454,11 +488,13 @@
     if (!hs) return;
     if (!hist.length) {
       hs.innerHTML =
-        '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">No payments yet.</div>';
+        '<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">' +
+        t("No payments yet.") +
+        "</div>";
       return;
     }
     hs.innerHTML =
-      '<div class="table-scroll"><table class="dash-sold-table"><thead><tr><th>Date</th><th>Plan</th><th>Amount</th><th>Status</th></tr></thead><tbody id="psHistoryBody">' +
+      '<div class="table-scroll"><table class="dash-sold-table"><thead><tr><th>' + t("Date") + '</th><th>' + t("Plan") + '</th><th>' + t("Amount") + '</th><th>' + t("Status") + '</th></tr></thead><tbody id="psHistoryBody">' +
       hist
         .map(function (h) {
           var statusColor =
@@ -488,7 +524,7 @@
   function paintSummary(b) {
     if (!b) return;
     if (b.linked === false) {
-      setText("psSub", "— billing not linked");
+      setText("psSub", t("— billing not linked"));
     } else {
       var price = Number(b.amount != null ? b.amount : b.monthlyFee) || 0;
       var cycle = b.cycle || "Monthly";
@@ -586,28 +622,28 @@
 
     if (!o.termsAccepted) {
       host.innerHTML =
-        '<div style="padding:12px 0;color:var(--muted);font-size:13px;">No signed agreement on file yet.</div>';
+        '<div style="padding:12px 0;color:var(--muted);font-size:13px;">' + t("No signed agreement on file yet.") + '</div>';
       return;
     }
 
     var when = o.termsAcceptedAt ? fmtDateSafe(o.termsAcceptedAt) : "—";
     host.innerHTML =
       '<div class="tr-rec">' +
-      '<div><div class="tr-cell-l">Signed by</div><div class="tr-cell-v">' +
+      '<div><div class="tr-cell-l">' + t("Signed by") + '</div><div class="tr-cell-v">' +
       esc(o.termsPrintedName || o.name || "—") +
       "</div></div>" +
-      '<div><div class="tr-cell-l">Dealership</div><div class="tr-cell-v">' +
+      '<div><div class="tr-cell-l">' + t("Dealership") + '</div><div class="tr-cell-v">' +
       esc(o.termsDealership || o.dealershipName || "—") +
       "</div></div>" +
-      '<div><div class="tr-cell-l">Version</div><div class="tr-cell-v">' +
+      '<div><div class="tr-cell-l">' + t("Version") + '</div><div class="tr-cell-v">' +
       esc(o.termsVersion || "—") +
       "</div></div>" +
-      '<div><div class="tr-cell-l">Accepted</div><div class="tr-cell-v">' +
+      '<div><div class="tr-cell-l">' + t("Accepted") + '</div><div class="tr-cell-v">' +
       esc(when) +
       "</div></div>" +
       "</div>" +
       (o.termsSignature
-        ? '<div class="tr-sig"><div class="terms-siglabel">Electronic Signature</div><div class="terms-sigwrap signed"><img src="' +
+        ? '<div class="tr-sig"><div class="terms-siglabel">' + t("Electronic Signature") + '</div><div class="terms-sigwrap signed"><img src="' +
           esc(o.termsSignature) +
           '" alt="Signature"/></div></div>'
         : "");
@@ -638,9 +674,9 @@
           alert.className = "ps-alert due";
           alert.classList.remove("is-loading");
         }
-        setText("psSub", "— unable to load billing");
-        setText("psAlertTitle", "Failed to load billing");
-        setText("psAlertSub", (err && err.message) || "Please try again.");
+        setText("psSub", t("— unable to load billing"));
+        setText("psAlertTitle", t("Failed to load billing"));
+        setText("psAlertSub", (err && err.message) || t("Please try again."));
       });
 
     var historyP = loadBillingHistory()
@@ -687,12 +723,12 @@
           esc(current.name) +
           '</div><div class="plan-opt-price"><b>' +
           psFmt(current.amount) +
-          "</b> / month</div><div class=\"plan-opt-feat\">" +
+          "</b> / " + t("mo") + '</div><div class=\"plan-opt-feat\">" +
           esc(current.feat) +
-          '</div></div><span class="ps-badge active">Current plan</span></div>'
+          '</div></div><span class="ps-badge active">' + t("Current plan") + '</span></div>'
         : "";
       var upHtml = ups.length
-        ? '<div class="plan-sec-label">Available upgrade' +
+        ? '<div class="plan-sec-label">' + t("Available upgrade") +
           (ups.length > 1 ? "s" : "") +
           "</div>" +
           ups
@@ -708,17 +744,17 @@
                 esc(p.name) +
                 '</div><div class="plan-opt-price"><b>' +
                 psFmt(p.amount) +
-                "</b> / month" +
+                "</b> / " + t("mo") +
                 diff +
                 '</div><div class="plan-opt-feat">' +
                 esc(p.feat) +
                 '</div></div><button class="ps-btn primary" onclick="selectBillingPlan(\'' +
                 esc(p.slug) +
-                "')\">Upgrade</button></div>"
+                "')\">" + t("Upgrade") + "</button></div>"
               );
             })
             .join("")
-        : '<div class="plan-top-note">You\'re on the top plan — there\'s nothing higher to upgrade to.</div>';
+        : '<div class="plan-top-note">' + t("You're on the top plan — there's nothing higher to upgrade to.") + '</div>';
       list.innerHTML = curHtml + upHtml;
     }
     var m = document.getElementById("upgradePlanModal");
@@ -757,12 +793,12 @@
     if (c) {
       c.innerHTML = b.method
         ? renderCardMethodHtml(b.method)
-        : '<div style="color:var(--muted);font-size:13px;">No card on file yet.</div>';
+        : '<div style="color:var(--muted);font-size:13px;">' + t("No card on file yet.") + '</div>';
     }
     var note = document.getElementById("umNote");
     if (note) {
       note.textContent =
-        "You'll be redirected to Stripe's secure billing portal to update your card. No card details are stored in AutoVault.";
+        t("You'll be redirected to Stripe's secure billing portal to update your card. No card details are stored in AutoVault.");
     }
     var m = document.getElementById("updateMethodModal");
     if (m) m.classList.add("open");
@@ -798,31 +834,31 @@
     var due = !!b.pastDue;
     var price = Number(b.amountDue != null ? b.amountDue : b.amount) || 0;
     var method = b.method;
-    var t = document.getElementById("mpTitle");
-    if (t) t.textContent = due ? "Payment Past Due" : "Make a Payment";
+    var titleEl = document.getElementById("mpTitle");
+    if (titleEl) titleEl.textContent = due ? t("Payment Past Due") : t("Make a Payment");
     var a = document.getElementById("mpAmount");
     if (a) a.textContent = psFmt(price);
     var l = document.getElementById("mpLines");
     if (l) {
       l.innerHTML =
-        '<div class="psl"><span>Plan</span><span>' +
+        '<div class="psl"><span>' + t("Plan") + '</span><span>' +
         esc(b.planLabel || b.plan || "—") +
         '</span></div><div class="psl ' +
         (due ? "warn" : "") +
-        '"><span>Due date</span><span>' +
+        '"><span>' + t("Due date") + '</span><span>' +
         fmtDateSafe(b.dueDate) +
         (due && b.daysLate ? " · " + b.daysLate + "d late" : "") +
-        '</span></div><div class="psl"><span>Paying with</span><span>' +
+        '</span></div><div class="psl"><span>' + t("Paying with") + '</span><span>' +
         (method
           ? esc(cardBrandLabel(method.brand)) + " •••• " + esc(method.last4)
-          : "Card on file") +
+          : t("Card on file")) +
         "</span></div>";
     }
     var note = document.getElementById("mpNote");
     if (note) {
       note.textContent = due
-        ? "You'll be redirected to Stripe to pay the open invoice securely."
-        : "Your account is current — no payment is due.";
+        ? t("You'll be redirected to Stripe to pay the open invoice securely.")
+        : t("Your account is current — no payment is due.");
     }
     var btn = document.getElementById("mpPayBtn");
     if (btn) {

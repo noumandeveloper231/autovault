@@ -17,6 +17,10 @@
 
   var state = global.msgState;
 
+  function t(s) {
+    return typeof global.avT === "function" ? global.avT(s) : s;
+  }
+
   function currentUserId() {
     if (global.crmOwner && global.crmOwner.id) return global.crmOwner.id;
     try {
@@ -290,13 +294,17 @@
       body.classList.remove('is-loading');
       body.innerHTML =
         '<div class="imsg-empty-chat">' +
-        '<strong>Your messages</strong>' +
-        '<span>Select a conversation or start a new one.</span>' +
-        '</div>';
+        "<strong>" +
+        t("Your messages") +
+        "</strong>" +
+        "<span>" +
+        t("Select a conversation or start a new one.") +
+        "</span>" +
+        "</div>";
     }
-    var head = document.getElementById('imsgChatHead');
-    if (head) head.innerHTML = '';
-    setComposeEnabled(false, 'Select a conversation to start messaging');
+    var head = document.getElementById("imsgChatHead");
+    if (head) head.innerHTML = "";
+    setComposeEnabled(false, t("Select a conversation to start messaging"));
   }
 
   function setComposeLoading(loading, placeholder) {
@@ -321,7 +329,7 @@
     if (compose) compose.classList.remove('is-loading');
     if (inp) {
       inp.disabled = !enabled;
-      inp.placeholder = placeholder || (enabled ? 'Type a message' : 'Select a conversation to start messaging');
+      inp.placeholder = placeholder || (enabled ? t("Type a message") : t("Select a conversation to start messaging"));
     }
     if (attach) attach.disabled = !enabled;
     if (send) send.disabled = !enabled;
@@ -448,7 +456,10 @@
     }
     if (list.length === 0) {
       host.innerHTML = '<div style="padding:30px 16px;text-align:center;color:var(--muted);font-size:13px;">' +
-        (q ? 'No conversations match your search.' : 'No conversations yet. Start a new message!') + '</div>';
+        (q
+          ? t("No conversations match your search.")
+          : t("No conversations yet. Start a new message!")) +
+        "</div>";
       return;
     }
     host.innerHTML = list.map(function (c) {
@@ -904,7 +915,7 @@
         '<div class="imsg-avatar" style="background:' + msgColor(c.name) + ';width:38px;height:38px;font-size:13px;">' + msgInitials(c.name) + '</div>' +
         '<div><div style="font-weight:700;font-size:13.5px;color:var(--text);">' + msgEsc(c.name) + '</div><div style="font-size:11.5px;color:var(--muted);">' + msgEsc(c.role) + '</div></div>' +
         '</div>';
-    }).join('') || '<div style="color:var(--muted);font-size:13px;padding:10px;">No contacts found.</div>';
+    }).join('') || '<div style="color:var(--muted);font-size:13px;padding:10px;">' + t("No contacts found.") + '</div>';
   };
 
   function formatRoleLabel(role) {

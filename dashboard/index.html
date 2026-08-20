@@ -1362,6 +1362,7 @@
         font-size: 9.5px;
         color: var(--muted);
         margin-top: 2px;
+        letter-spacing: 0.4px;
       }
 
       @media (max-width: 900px) {
@@ -1729,6 +1730,32 @@
         max-height: 90vh;
         overflow-y: auto;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+
+      /* Add Vehicle / Prev Sold — sticky bottom action bar */
+      #addVehModal .modal,
+      #prevSoldModal .modal {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        max-width: 640px;
+      }
+      #addVehModal .modal-body,
+      #prevSoldModal .modal-body {
+        overflow-y: auto;
+        flex: 1 1 auto;
+        min-height: 0;
+      }
+      #addVehModal .av-modal-foot,
+      #prevSoldModal .av-modal-foot {
+        flex-shrink: 0;
+        padding: 14px 22px 18px;
+        border-top: 1px solid var(--border);
+        background: var(--panel);
+      }
+      #addVehModal .av-modal-foot .av-submit,
+      #prevSoldModal .av-modal-foot .av-submit {
+        margin: 0;
       }
 
       .modal-head {
@@ -16575,21 +16602,6 @@
           </svg>
           CPA Portal Login
         </div>
-        <div class="nav-item sub" onclick="openRepLogin()">
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-            <circle cx="9" cy="7" r="4" />
-            <path d="M20 8v6M23 11h-6" />
-          </svg>
-          Sales Rep Login
-        </div>
         <div
           class="nav-item sub wholesale-crm-nav"
           id="adminWholesaleCrmNav"
@@ -17339,7 +17351,7 @@
                   style="width: 48px"
                 ></span>
               </div>
-              <div class="kpi-foot">this month</div>
+              <div class="kpi-foot">This month</div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Gross Profit</div>
@@ -17349,7 +17361,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">before costs</div>
+              <div class="kpi-foot">Before costs</div>
             </div>
             <div class="kpi" style="--accent: var(--green)">
               <div class="kpi-label">Net Profit</div>
@@ -17359,17 +17371,14 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">after all costs</div>
-            </div>
-            <div class="kpi" style="--accent: var(--orange)">
-              <div class="kpi-label">Owed to Reps</div>
+              <div class="kpi-foot">After all costs</div>
               <div class="kpi-value" id="dashComm">
                 <span
                   class="dash-val-skel lg sk-bar"
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">commission this month</div>
+              <div class="kpi-foot">Commission this month</div>
             </div>
             <div class="kpi" style="--accent: var(--blue)">
               <div class="kpi-label">Total Invested</div>
@@ -17379,7 +17388,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">in vehicles sold</div>
+              <div class="kpi-foot">In vehicles sold</div>
             </div>
             <div class="kpi" style="--accent: var(--green)">
               <div class="kpi-label">Total Vehicles</div>
@@ -17389,7 +17398,7 @@
                   style="width: 48px"
                 ></span>
               </div>
-              <div class="kpi-foot">on the lot now</div>
+              <div class="kpi-foot">On the lot now</div>
             </div>
           </div>
 
@@ -17612,7 +17621,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot" id="taxTotalFoot">loading…</div>
+              <div class="kpi-foot" id="taxTotalFoot">Loading…</div>
             </div>
             <div class="kpi" style="--accent: var(--blue)">
               <div class="kpi-label">Taxable Sales</div>
@@ -17622,7 +17631,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">total sold value</div>
+              <div class="kpi-foot">Total sold value</div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Cars Sold</div>
@@ -17632,7 +17641,7 @@
                   style="width: 48px"
                 ></span>
               </div>
-              <div class="kpi-foot">in this period</div>
+              <div class="kpi-foot">In this period</div>
             </div>
             <div class="kpi" style="--accent: var(--orange)">
               <div class="kpi-label">Next Filing</div>
@@ -17642,7 +17651,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot" id="taxNextKpiFoot">set a due date</div>
+              <div class="kpi-foot" id="taxNextKpiFoot">Set a due date</div>
             </div>
           </div>
 
@@ -17902,7 +17911,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot" id="prTotalFoot">loading…</div>
+              <div class="kpi-foot" id="prTotalFoot">Loading…</div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Sales Commissions</div>
@@ -17912,7 +17921,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">earned from deals</div>
+              <div class="kpi-foot">Earned from deals</div>
             </div>
             <div class="kpi" style="--accent: var(--blue)">
               <div class="kpi-label">Wages &amp; Salary</div>
@@ -17922,7 +17931,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">staff (hourly + salary)</div>
+              <div class="kpi-foot">Staff (hourly + salary)</div>
             </div>
             <div class="kpi" style="--accent: var(--orange)">
               <div class="kpi-label">Headcount</div>
@@ -17932,7 +17941,7 @@
                   style="width: 48px"
                 ></span>
               </div>
-              <div class="kpi-foot" id="prHeadcountFoot">on the team</div>
+              <div class="kpi-foot" id="prHeadcountFoot">On the team</div>
             </div>
           </div>
 
@@ -18054,22 +18063,22 @@
             <div class="kpi" style="--accent: var(--green)">
               <div class="kpi-label">Paid Customers</div>
               <div class="kpi-value" id="custCount">0</div>
-              <div class="kpi-foot">vehicles sold to buyers</div>
+              <div class="kpi-foot">Vehicles sold to buyers</div>
             </div>
             <div class="kpi" style="--accent: var(--blue)">
               <div class="kpi-label">Total Purchase Value</div>
               <div class="kpi-value" id="custValue">$0</div>
-              <div class="kpi-foot">sum of what they paid</div>
+              <div class="kpi-foot">Sum of what they paid</div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Average Purchase</div>
               <div class="kpi-value" id="custAvg">$0</div>
-              <div class="kpi-foot">per customer</div>
+              <div class="kpi-foot">Per customer</div>
             </div>
             <div class="kpi" style="--accent: var(--orange)">
               <div class="kpi-label">Full Contact on File</div>
               <div class="kpi-value" id="custContact">0</div>
-              <div class="kpi-foot">phone &amp; email captured</div>
+              <div class="kpi-foot">Phone &amp; email captured</div>
             </div>
           </div>
 
@@ -18387,13 +18396,13 @@
               <div class="kpi-label">Total Revenue</div>
               <div class="kpi-value" id="pnlRevenue">$0</div>
               <div class="kpi-foot" id="pnlRevenueFoot">
-                vehicle sales + add-ons
+                Vehicle sales + add-ons
               </div>
             </div>
             <div class="kpi" style="--accent: var(--green)">
               <div class="kpi-label">Gross Profit</div>
               <div class="kpi-value" id="pnlGross">$0</div>
-              <div class="kpi-foot" id="pnlGrossFoot">&mdash; gross margin</div>
+              <div class="kpi-foot" id="pnlGrossFoot">&mdash; Gross margin</div>
             </div>
             <div
               class="kpi pnl-kpi-click"
@@ -18403,8 +18412,7 @@
             >
               <div class="kpi-label">Total Expenses</div>
               <div class="kpi-value" id="pnlExpenses">$0</div>
-              <div class="kpi-foot">
-                operating expenses (excludes COGS) &middot;
+              <div class="kpi-foot">Operating expenses (excludes COGS) &middot;
                 <span style="color: var(--orange); font-weight: 700"
                   >view all &rarr;</span
                 >
@@ -18413,7 +18421,7 @@
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Net Profit</div>
               <div class="kpi-value" id="pnlNet">$0</div>
-              <div class="kpi-foot" id="pnlNetFoot">&mdash; net margin</div>
+              <div class="kpi-foot" id="pnlNetFoot">&mdash; Net margin</div>
             </div>
           </div>
 
@@ -18500,22 +18508,22 @@
             <div class="kpi" style="--accent: var(--blue)">
               <div class="kpi-label">Vehicles Floored</div>
               <div class="kpi-value" id="flVehicles">0</div>
-              <div class="kpi-foot">on the floor plan</div>
+              <div class="kpi-foot">On the floor plan</div>
             </div>
             <div class="kpi" style="--accent: var(--red)">
               <div class="kpi-label">Flooring Fees Owed</div>
               <div class="kpi-value" id="flFeesOwed">$0</div>
-              <div class="kpi-foot">accrued interest to date</div>
+              <div class="kpi-foot">Accrued interest to date</div>
             </div>
             <div class="kpi" style="--accent: var(--orange)">
               <div class="kpi-label">Owed to Flooring Co.</div>
               <div class="kpi-value" id="flPayoff">$0</div>
-              <div class="kpi-foot">principal + fees to clear</div>
+              <div class="kpi-foot">Principal + fees to clear</div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Coming Up for Payoff</div>
               <div class="kpi-value" id="flComingUp">0</div>
-              <div class="kpi-foot">due soon or overdue</div>
+              <div class="kpi-foot">Due soon or overdue</div>
             </div>
           </div>
 
@@ -18808,7 +18816,7 @@
                   style="width: 48px"
                 ></span>
               </div>
-              <div class="kpi-foot" id="rdCarsFoot">this period</div>
+              <div class="kpi-foot" id="rdCarsFoot">This period</div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label">Total Sales</div>
@@ -18818,7 +18826,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">sold value</div>
+              <div class="kpi-foot">Sold value</div>
             </div>
             <div class="kpi" style="--accent: var(--orange)">
               <div class="kpi-label">Commission</div>
@@ -18828,7 +18836,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">earned this period</div>
+              <div class="kpi-foot">Earned this period</div>
             </div>
             <div class="kpi" style="--accent: var(--green)">
               <div class="kpi-label">Net Salary</div>
@@ -18838,7 +18846,7 @@
                   style="width: 72px"
                 ></span>
               </div>
-              <div class="kpi-foot">greater of base / commission</div>
+              <div class="kpi-foot">Greater of base / commission</div>
             </div>
           </div>
 
@@ -19051,7 +19059,7 @@
             <div class="kpi" style="--accent: var(--blue)">
               <div class="kpi-label" id="sdYearLbl">Paid This Year</div>
               <div class="kpi-value" id="sdYear">$0</div>
-              <div class="kpi-foot">annualized</div>
+              <div class="kpi-foot">Annualized</div>
             </div>
             <div class="kpi" style="--accent: var(--purple)">
               <div class="kpi-label" id="sdRateLbl">Rate</div>
@@ -22338,7 +22346,7 @@
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'titles')" title="Change number color"></button>
                     <div class="kpi-label">Titles Present</div>
                     <div class="kpi-value" id="kpiTitles">0 of 0</div>
-                    <div class="kpi-foot" id="kpiTitlesFoot">in-stock · click to filter</div>
+                    <div class="kpi-foot" id="kpiTitlesFoot">In-stock · click to filter</div>
                   </div>
                   <div
                     class="kpi clickable"
@@ -22364,19 +22372,19 @@
                     <button class="kpi-cbtn" onclick="openKpiColorPop(event,'sold')" title="Change number color"></button>
                     <div class="kpi-label" id="lblSoldMonth">Sold This Month</div>
                     <div class="kpi-value" id="kpiSoldMonth">0</div>
-                    <div class="kpi-foot" id="footSoldMonth">units moved</div>
+                    <div class="kpi-foot" id="footSoldMonth">Units moved</div>
                   </div>
                   <div class="kpi" id="kpiSoldValueBox" style="--accent: var(--c-sold); display: none">
                     <button class="kpi-cbtn" onclick="openKpiColorPop(event,'sold')" title="Change number color"></button>
                     <div class="kpi-label" id="lblSoldValue">Total Sold Value</div>
                     <div class="kpi-value" id="kpiSoldValueMonth">$0</div>
-                    <div class="kpi-foot" id="footSoldValue">total sale price</div>
+                    <div class="kpi-foot" id="footSoldValue">Total sale price</div>
                   </div>
                   <div class="kpi" style="--accent: var(--c-profit)">
                     <button class="kpi-cbtn" onclick="openKpiColorPop(event,'profit')" title="Change number color"></button>
                     <div class="kpi-label" id="lblProfitMonth">Profit This Month</div>
                     <div class="kpi-value" id="kpiProfitMonth">$0</div>
-                    <div class="kpi-foot" id="footProfitMonth">net, sold this month</div>
+                    <div class="kpi-foot" id="footProfitMonth">Net, sold this month</div>
                   </div>
                 </div>
               </div>
@@ -22391,31 +22399,31 @@
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'purchase')" title="Change number color"></button>
                   <div class="kpi-label" title="Cost of available inventory">Inventory Cost</div>
                   <div class="kpi-value" id="kpiPurchaseCost">$0</div>
-                  <div class="kpi-foot" id="footPurchaseCost">spent on current stock</div>
+                  <div class="kpi-foot" id="footPurchaseCost">Spent on current stock</div>
                 </div>
                 <div class="kpi" style="--accent: var(--c-repairs)">
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'repairs')" title="Change number color"></button>
                   <div class="kpi-label">Total Repairs</div>
                   <div class="kpi-value" id="kpiRepairs">$0</div>
-                  <div class="kpi-foot">recon + parts</div>
+                  <div class="kpi-foot">Recon + parts</div>
                 </div>
                 <div class="kpi clickable" style="--accent: var(--c-tax)" onclick="openSalesTaxBreakdown()" title="Sales tax collected this filing period — click for the full breakdown">
               <button class="kpi-cbtn" onclick="event.stopPropagation(); openKpiColorPop(event,'tax')" title="Change number color"></button>
                   <div class="kpi-label">Sales Tax</div>
                   <div class="kpi-value" id="kpiSalesTax">$0</div>
-                  <div class="kpi-foot" id="footSalesTax">collected this period</div>
+                  <div class="kpi-foot" id="footSalesTax">Collected this period</div>
                 </div>
                 <div class="kpi" style="--accent: var(--c-commission)">
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'commission')" title="Change number color"></button>
                   <div class="kpi-label">Commission</div>
                   <div class="kpi-value" id="kpiCommission">$0</div>
-                  <div class="kpi-foot">owed to reps</div>
+                  <div class="kpi-foot">Owed to reps</div>
                 </div>
                 <div class="kpi" style="--accent: var(--c-cost)">
               <button class="kpi-cbtn" onclick="openKpiColorPop(event,'cost')" title="Change number color"></button>
                   <div class="kpi-label">All-In Vehicle Cost</div>
                   <div class="kpi-value" id="kpiTotalCost">$0</div>
-                  <div class="kpi-foot" id="footTotalVehCost">all-in on current stock</div>
+                  <div class="kpi-foot" id="footTotalVehCost">All-in on current stock</div>
                 </div>
               </div>
             </div>
@@ -23872,7 +23880,7 @@
           >
             <div>
               <div class="page-title">DOCUMENTS <b>DEAL JACKETS</b></div>
-              <div class="page-sub" id="djlSub" style="display:none;">— closed deals</div>
+              <div class="page-sub" id="djlSub" style="display:none;">— Closed deals</div>
             </div>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center">
               <button class="grid-toggle-btn" onclick="openMarkSold()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg> New Deal / Mark Sold</button>
@@ -23911,10 +23919,10 @@
             </div>
           </div>
           <div class="kpi-grid">
-            <div class="kpi" style="--accent:var(--green)"><div class="kpi-label">Deals Closed</div><div class="kpi-value" id="djlCount">0</div><div class="kpi-foot">sold vehicles</div></div>
-            <div class="kpi" style="--accent:var(--blue)"><div class="kpi-label">Total Sold Value</div><div class="kpi-value" id="djlSoldValue">$0</div><div class="kpi-foot">gross sales</div></div>
-            <div class="kpi" style="--accent:var(--orange)"><div class="kpi-label">Net Profit</div><div class="kpi-value" id="djlNet">$0</div><div class="kpi-foot">after all costs</div></div>
-            <div class="kpi" style="--accent:var(--purple)"><div class="kpi-label">Avg ROI</div><div class="kpi-value" id="djlRoi">0%</div><div class="kpi-foot">across deals</div></div>
+            <div class="kpi" style="--accent:var(--green)"><div class="kpi-label">Deals Closed</div><div class="kpi-value" id="djlCount">0</div><div class="kpi-foot">Sold vehicles</div></div>
+            <div class="kpi" style="--accent:var(--blue)"><div class="kpi-label">Total Sold Value</div><div class="kpi-value" id="djlSoldValue">$0</div><div class="kpi-foot">Gross sales</div></div>
+            <div class="kpi" style="--accent:var(--orange)"><div class="kpi-label">Net Profit</div><div class="kpi-value" id="djlNet">$0</div><div class="kpi-foot">After all costs</div></div>
+            <div class="kpi" style="--accent:var(--purple)"><div class="kpi-label">Avg ROI</div><div class="kpi-value" id="djlRoi">0%</div><div class="kpi-foot">Across deals</div></div>
           </div>
           <div class="action-row">
             <div class="hint">Every closed deal is filed here with its paperwork and customer record.</div>
@@ -26945,7 +26953,7 @@
         </div>
         <div class="modal-body">
           <div class="pv-intro">
-            For vehicles you sold <b>before</b> joining AutoVault. This saves
+            For vehicles you sold before joining AutoVault. This saves
             straight into Sold Vehicles and updates every report, P&amp;L and
             KPI as if it had been sold here.
           </div>
@@ -27314,13 +27322,6 @@
 
           <div class="pv-summary" id="pvSummary"></div>
 
-          <button
-            class="btn-primary av-submit"
-            id="pvSaveBtn"
-            onclick="prevSoldSave()"
-          >
-            Save to Sold Vehicles
-          </button>
           <div class="av-title-pop" id="pvTitlePop">
             <div class="atp-q">Is the title present for this vehicle?</div>
             <div class="atp-sub">
@@ -27349,11 +27350,20 @@
             <div class="atp-q">Save this vehicle without a VIN?</div>
             <div class="atp-sub">No VIN was entered. We'll assign a temporary stock tag so you can track it now &mdash; you can add the real VIN later from its deal jacket.</div>
             <div class="atp-btns">
-              <button class="atp-yes" onclick="pvConfirmNoVin(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Yes, save without VIN</button>
+              <button class="atp-yes" onclick="pvConfirmNoVin(true)">... Yes, save without VIN</button>
               <button class="atp-no" onclick="pvConfirmNoVin(false)">No, I'll add it</button>
             </div>
           </div>
           <div id="pvMsg" style="margin-top: 12px"></div>
+        </div>
+        <div class="av-modal-foot">
+          <button
+            class="btn-primary av-submit"
+            id="pvSaveBtn"
+            onclick="prevSoldSave()"
+          >
+            Save to Sold Vehicles
+          </button>
         </div>
       </div>
     </div>
@@ -27558,13 +27568,6 @@
               ></span
             ></label>
           </div>
-          <button
-            class="btn-primary av-submit"
-            id="avSaveBtn"
-            onclick="addVehicleSave()"
-          >
-            Add Vehicle to Inventory
-          </button>
           <div class="av-title-pop" id="avTitlePop">
             <div class="atp-q">Is the title present for this vehicle?</div>
             <div class="atp-sub">
@@ -27593,11 +27596,21 @@
             <div class="atp-q">Save this vehicle without a VIN?</div>
             <div class="atp-sub">No VIN was entered. We'll assign a temporary stock tag so you can track it now &mdash; you can add the real VIN later from its deal jacket.</div>
             <div class="atp-btns">
-              <button class="atp-yes" onclick="avConfirmNoVin(true)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg> Yes, save without VIN</button>
+              <button class="atp-yes" onclick="avConfirmNoVin(true)">... Yes, save without VIN</button>
               <button class="atp-no" onclick="avConfirmNoVin(false)">No, I'll add it</button>
             </div>
           </div>
+          </div>
           <div id="avMsg" style="margin-top: 12px"></div>
+        </div>
+        <div class="av-modal-foot">
+          <button
+            class="btn-primary av-submit"
+            id="avSaveBtn"
+            onclick="addVehicleSave()"
+          >
+            Add Vehicle to Inventory
+          </button>
         </div>
       </div>
     </div>
@@ -28615,6 +28628,11 @@
     <script src="/presence.js"></script>
     <script src="/messages-live.js"></script>
     <script>
+      // Translate helper for JS-built copy (landing-style avT)
+      function T(s) {
+        return typeof avT === "function" ? avT(s) : s;
+      }
+
       // ---------- GRID LINES TOGGLE ----------
       let gridLinesOn = false;
       function toggleGridLines() {
@@ -30516,7 +30534,9 @@
                   `<div class="notif-item" onclick="notifClick(${i})"><div class="notif-dot" style="background:${it.color}"></div><div style="flex:1;"><div class="notif-title">${it.title}</div><div class="notif-text">${it.text}</div></div><div class="notif-arrow">\u203a</div></div>`,
               )
               .join("")
-          : '<div class="notif-empty">All caught up. No reminders right now.</div>';
+          : '<div class="notif-empty">' +
+            T("All caught up. No reminders right now.") +
+            "</div>";
       }
       function notifClick(i) {
         const it = (window.__notifs || [])[i];
@@ -30590,12 +30610,12 @@
           }
           if (text) {
             text.innerHTML =
-              'Viewing as <b id="repWhoami">' +
+              T("Viewing as") + ' <b id="repWhoami">' +
               (meta.targetName || repUser || "Sales Rep") +
-              "</b> &mdash; secure admin support session. Changes are audited.";
+              "</b> &mdash; " + T("secure admin support session. Changes are audited.");
           }
           if (exitBtn) {
-            exitBtn.textContent = "Return to admin";
+            exitBtn.textContent = T("Return to admin");
             exitBtn.style.borderColor = "rgba(255,159,67,.65)";
             exitBtn.style.color = "var(--orange)";
             exitBtn.setAttribute("onclick", "exitImpersonation()");
@@ -30608,14 +30628,14 @@
           }
           if (text) {
             text.innerHTML =
-              'Signed in as <b id="repWhoami">' +
+              T("Signed in as") + ' <b id="repWhoami">' +
               (repUser || "") +
-              "</b> &mdash; Sales Rep Portal.";
+              "</b> &mdash; " + T("Sales Rep Portal.");
           } else if (who) {
             who.textContent = repUser || "";
           }
           if (exitBtn) {
-            exitBtn.textContent = "Log out";
+            exitBtn.textContent = T("Log out");
             exitBtn.style.borderColor = "rgba(58,160,255,.6)";
             exitBtn.style.color = "var(--blue)";
             exitBtn.setAttribute("onclick", "exitRepMode()");
@@ -31476,7 +31496,9 @@
             " in your pipeline.";
         if (!mine.length) {
           host.innerHTML =
-            '<div class="lead-empty">No leads yet. Add a lead to start tracking potential buyers.</div>';
+            '<div class="lead-empty">' +
+            T("No leads yet. Add a lead to start tracking potential buyers.") +
+            "</div>";
           setRepPageLoading("rep-leads", false);
           return;
         }
@@ -31722,7 +31744,11 @@
         }
         if (!n) {
           host.innerHTML =
-            '<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">No leads yet. Click <b>+ Add Lead</b> to log a potential customer\u2019s name, phone, and email.</div>';
+            '<div class="table-card" style="padding:44px;text-align:center;color:var(--muted);">' +
+            T(
+              "No leads yet. Click <b>+ Add Lead</b> to log a potential customer\u2019s name, phone, and email.",
+            ) +
+            "</div>";
           return;
         }
         if (!shown) {
@@ -32000,7 +32026,7 @@
         avNoVinMode = !!on;
         const sec = document.getElementById("avVinSection"); if (sec) sec.style.display = on ? "none" : "";
         const btn = document.getElementById("avNoVinToggle");
-        if (btn) { btn.classList.toggle("active", !!on); btn.textContent = on ? "Add with VIN number" : "Add without VIN number"; }
+        if (btn) { btn.classList.toggle("active", !!on); btn.textContent = on ? T("Add with VIN number") : T("Add without VIN number"); }
         setTimeout(() => { const el = document.getElementById(on ? "avYear" : "avVin"); if (el) { try { el.focus(); } catch(e) {} } }, 60);
       }
       function avToggleNoVin() { avSetNoVin(!avNoVinMode); }
@@ -32116,7 +32142,7 @@
         const btn = document.getElementById("pvNoVinToggle");
         if (btn) {
           btn.classList.toggle("active", !!on);
-          btn.textContent = on ? "Add with VIN number" : "Add without VIN number";
+          btn.textContent = on ? T("Add with VIN number") : T("Add without VIN number");
         }
         if (on && !(opts && opts.keepVin)) {
           const vinEl = document.getElementById("pvVin");
@@ -35314,7 +35340,7 @@
         const avgDays = rows.length
           ? Math.round(rows.reduce((s, r) => s + r.days, 0) / rows.length)
           : 0;
-        const _titlesCard = `<div class="kpi clickable${wsOnlyTitles ? " active" : ""}" id="wsTitlesBox" onclick="toggleWsTitles()" title="Click to view present titles" style="--accent:var(--green)"><div class="kpi-label">Titles Present</div><div class="kpi-value">${_wtp} of ${_wtt}</div><div class="kpi-foot">click to view present titles</div></div>`;
+        const _titlesCard = `<div class="kpi clickable${wsOnlyTitles ? " active" : ""}" id="wsTitlesBox" onclick="toggleWsTitles()" title="Click to view present titles" style="--accent:var(--green)"><div class="kpi-label">Titles Present</div><div class="kpi-value">${_wtp} of ${_wtt}</div><div class="kpi-foot">Click to view present titles</div></div>`;
         const _kc = [
           { l: "Total Vehicles", v: rows.length, c: "var(--blue)" },
           { l: "Vehicles Floored", v: flooredList.length, c: "var(--orange)" },
@@ -39765,10 +39791,10 @@
         if (tableBody) {
           if (filtered.length === 0) {
             const emptyMsg = vehPeriod.active
-              ? "No sold vehicles in this period."
+              ? T("No sold vehicles in this period.")
               : vehView === "sold"
-                ? "No sold vehicles to show."
-                : "No vehicles in inventory yet. Use + Add Vehicle to get started.";
+                ? T("No sold vehicles to show.")
+                : T("No vehicles in inventory yet. Use + Add Vehicle to get started.");
             tableBody.innerHTML = `<tr class="veh-load-row"><td colspan="21"><div class="veh-load-inner" style="font-weight:500;">${emptyMsg}</div></td></tr>`;
           } else {
             tableBody.innerHTML = vehRender(
@@ -40079,45 +40105,60 @@
           set("footPurchaseCost", `on cars sold, ${perLbl}`);
           set("footTotalVehCost", `all-in, cars sold ${perLbl}`);
         } else {
-          setIds(["vehMonthGroupLabel", "vehKpiMonthLabel"], "This Month");
-          setIds(["lblSoldMonth", "kpiSoldMonthLabel"], "Sold This Month");
-          set("footSoldMonth", "units moved");
-          setIds(["lblProfitMonth", "kpiProfitMonthLabel"], "Profit This Month");
+          setIds(["vehMonthGroupLabel", "vehKpiMonthLabel"], T("This Month"));
+          setIds(
+            ["lblSoldMonth", "kpiSoldMonthLabel"],
+            T("Sold This Month"),
+          );
+          set("footSoldMonth", T("units moved"));
+          setIds(
+            ["lblProfitMonth", "kpiProfitMonthLabel"],
+            T("Profit This Month"),
+          );
           setIds(
             ["footProfitMonth", "kpiProfitMonthFoot"],
-            "net, sold this month",
+            T("net, sold this month"),
           );
           if (soldValueBox) soldValueBox.style.display = "none";
           const vw = typeof vehView !== "undefined" ? vehView : "available";
           if (vw === "all") {
             setHtml(
               "vehCostsLabel",
-              'Costs · <span style="color:var(--blue);">all vehicles</span>',
+              T("Costs · ") +
+                '<span style="color:var(--blue);">' +
+                T("all vehicles") +
+                "</span>",
             );
-            set("footPurchaseCost", "across all vehicles");
-            set("footTotalVehCost", "all-in, all vehicles");
+            set("footPurchaseCost", T("across all vehicles"));
+            set("footTotalVehCost", T("all-in, all vehicles"));
           } else if (vw === "sold") {
             setHtml(
               "vehCostsLabel",
-              'Costs · <span style="color:var(--blue);">sold vehicles</span>',
+              T("Costs · ") +
+                '<span style="color:var(--blue);">' +
+                T("sold vehicles") +
+                "</span>",
             );
-            set("footPurchaseCost", "on cars sold");
-            set("footTotalVehCost", "all-in, cars sold");
+            set("footPurchaseCost", T("on cars sold"));
+            set("footTotalVehCost", T("all-in, cars sold"));
           } else {
             setHtml(
               "vehCostsLabel",
-              'Costs · <span style="color:var(--green);">available inventory</span>',
+              T("Costs · ") +
+                '<span style="color:var(--green);">' +
+                T("available inventory") +
+                "</span>",
             );
-            set("footPurchaseCost", "spent on current stock");
-            set("footTotalVehCost", "all-in on current stock");
+            set("footPurchaseCost", T("spent on current stock"));
+            set("footTotalVehCost", T("all-in on current stock"));
           }
           const filingFoot =
             typeof currentFilingTax === "function" ? currentFilingTax() : null;
           set(
             "footSalesTax",
             filingFoot && filingFoot.label
-              ? "collected " + filingFoot.label
-              : "collected this period",
+              ? T("collected ") + filingFoot.label
+              : T("collected this period"),
           );
         }
 
@@ -40127,13 +40168,17 @@
         );
         const kpiInv = document.getElementById("kpiTotalInventory");
         if (kpiInv) {
-          const invLabel = `${totalInv} car${totalInv === 1 ? "" : "s"} / ${fmt(invValue)}`;
+          const carWord =
+            totalInv === 1 ? T(" car") : T(" cars");
+          const invLabel =
+            totalInv + carWord + " / " + fmt(invValue);
           kpiInv.title = invLabel;
-          kpiInv.innerHTML = `<span class="kpi-inv-n">${totalInv} car${totalInv === 1 ? "" : "s"}</span><span class="kpi-slash">/</span><span class="kpi-inv-amt">${fmt(invValue)}</span>`;
+          kpiInv.innerHTML =
+            `<span class="kpi-inv-n">${totalInv}${carWord}</span><span class="kpi-slash">/</span><span class="kpi-inv-amt">${fmt(invValue)}</span>`;
         }
         const invFoot = document.getElementById("kpiTotalInventoryFoot");
         if (invFoot) {
-          invFoot.textContent = "in stock · total value all-in";
+          invFoot.textContent = T("in stock · total value all-in");
         }
 
         set("kpiPurchaseCost", fmt(purchaseCost));
@@ -40141,7 +40186,10 @@
         set("kpiTotalCost", fmt(totalCost));
         set("kpiSalesTax", fmt(salesTax));
         set("kpiCommission", fmt(commission));
-        set("kpiTitles", `${titlesInHand} of ${totalInv}`);
+        set(
+          "kpiTitles",
+          titlesInHand + T(" of ") + totalInv,
+        );
         {
           const missing = Math.max(0, totalInv - titlesInHand);
           const tf = typeof titleFilter !== "undefined" ? titleFilter : "";
@@ -40406,11 +40454,14 @@
       </div>
     </div>`;
         } else {
-          sp.innerHTML = `<div class="rep-spotlight"><div class="rep-avatar">\u2014</div><div class="sl-info"><div class="sl-tag">Top Sales Rep</div><div class="sl-name">No sales yet</div><div class="sl-rate">Close a deal to crown your top rep.</div></div></div>`;
+          sp.innerHTML = `<div class="rep-spotlight"><div class="rep-avatar">\u2014</div><div class="sl-info"><div class="sl-tag">${T("Top Sales Rep")}</div><div class="sl-name">${T("No sales yet")}</div><div class="sl-rate">${T("Close a deal to crown your top rep.")}</div></div></div>`;
         }
 
         document.getElementById("repRowCount").textContent =
-          `${salesReps.length} rep${salesReps.length === 1 ? "" : "s"} on the team`;
+          salesReps.length +
+          (salesReps.length === 1
+            ? T(" rep on the team")
+            : T(" reps on the team"));
 
         document.getElementById("repList").innerHTML = enriched
           .map(
@@ -51944,7 +51995,17 @@
                   fmtSigned(g.reduce((s, r) => s + r.netProfit, 0)),
               )
             : _djS.map(_djRf).join("")
-          : `<tr><td colspan="9"><div class="doc-empty">${djView === "month" ? "No deals closed in " + PNL_MFULL[djMonth] + " " + djYear + "." : "No deals closed yet. Click \u201cNew Deal / Mark Sold\u201d to create one."}</div></td></tr>`;
+          : `<tr><td colspan="9"><div class="doc-empty">${
+              djView === "month"
+                ? T("No deals closed in ") +
+                  PNL_MFULL[djMonth] +
+                  " " +
+                  djYear +
+                  "."
+                : T(
+                    "No deals closed yet. Click \u201cNew Deal / Mark Sold\u201d to create one.",
+                  )
+            }</div></td></tr>`;
       }
 
       function currentDailyRate(daysOnLot, cfg) {
@@ -52543,20 +52604,27 @@
         // KPI cards
         document.getElementById("pnlRevenue").textContent = fmt(totalRevenue);
         document.getElementById("pnlRevenueFoot").textContent =
-          `${sold.length} unit${sold.length === 1 ? "" : "s"} sold + add-ons`;
+          sold.length +
+          (sold.length === 1
+            ? T(" Unit sold + add-ons")
+            : T(" Units sold + add-ons"));
         document.getElementById("pnlGross").textContent = fmt(grossProfit);
         document.getElementById("pnlGross").style.color =
           grossProfit >= 0 ? "var(--green)" : "var(--red)";
         document.getElementById("pnlGrossFoot").textContent =
-          `${grossMargin.toFixed(1)}% gross margin`;
+          grossMargin.toFixed(1) + "% " + T("Gross margin");
         document.getElementById("pnlExpenses").textContent = fmt(totalOpEx);
         const netEl = document.getElementById("pnlNet");
         netEl.textContent = fmtSigned(netProfit);
         netEl.style.color = netProfit >= 0 ? "var(--green)" : "var(--red)";
         document.getElementById("pnlNetFoot").textContent =
-          `${netMargin.toFixed(1)}% net margin`;
+          netMargin.toFixed(1) + "% " + T("Net margin");
         document.getElementById("pnlAsOf").textContent =
-          `${periodLabel} \u00b7 ${sold.length} vehicle${sold.length === 1 ? "" : "s"} sold`;
+          periodLabel +
+          " \u00b7 " +
+          sold.length +
+          " " +
+          T(sold.length === 1 ? "vehicle sold" : "vehicles sold");
 
         // ---- Statement ----
         const row = (l, v) =>
@@ -52570,7 +52638,7 @@
           recurringTotal,
           dealershipTotal,
         );
-        const opSubtotal = `<div class="pnl-subtotal pnl-clickable" onclick="openPnlExpenses()" title="View every operating expense in this period, including recurring"><span>Total Operating Expenses <span style="font-size:11px;font-weight:700;color:var(--orange);margin-left:8px;">view all →</span></span><span class="v">${fmt(totalOpEx)}</span></div>`;
+        const opSubtotal = `<div class="pnl-subtotal pnl-clickable" onclick="openPnlExpenses()" title="${T("View every operating expense in this period, including recurring")}"><span>${T("Total Operating Expenses")} <span style="font-size:11px;font-weight:700;color:var(--orange);margin-left:8px;">${T("view all →")}</span></span><span class="v">${fmt(totalOpEx)}</span></div>`;
         const ncSold = sold.filter((r) => r.hasNetCheck);
         const netCheckMemo =
           ncSold.length === 0
@@ -52580,61 +52648,61 @@
         if (isEmpty) {
           document.getElementById("pnlStatement").innerHTML = `
     <div class="pnl-block">
-      <div class="pnl-section-label">Revenue</div>
-      ${row("Vehicle Sales", 0)}
+      <div class="pnl-section-label">${T("Revenue")}</div>
+      ${row(T("Vehicle Sales"), 0)}
       ${row("Add-On &amp; Upcharge Revenue", 0)}
-      ${sub("Total Revenue", 0)}
+      ${sub(T("Total Revenue"), 0)}
     </div>
     <div class="pnl-block">
-      <div class="pnl-section-label">Cost of Goods Sold</div>
-      ${row("Vehicle Acquisition", 0)}
+      <div class="pnl-section-label">${T("Cost of Goods Sold")}</div>
+      ${row(T("Vehicle Acquisition"), 0)}
       ${row("Auction &amp; Title Fees", 0)}
       ${row("Reconditioning &amp; Repairs", 0)}
       ${row("Floor-Plan (Flooring)", 0)}
-      ${row("Vehicle-Attached Expenses", 0)}
-      ${sub("Total COGS", 0)}
+      ${row(T("Vehicle-Attached Expenses"), 0)}
+      ${sub(T("Total COGS"), 0)}
     </div>
-    ${total("Gross Profit", 0, 0, "var(--muted)")}
+    ${total(T("Gross Profit"), 0, 0, "var(--muted)")}
     <div class="pnl-block">
-      <div class="pnl-section-label">Operating Expenses</div>
+      <div class="pnl-section-label">${T("Operating Expenses")}</div>
       ${opGroupHtml}
       ${opSubtotal}
     </div>
-    ${total("Net Profit", -totalOpEx, 0, netProfit >= 0 ? "var(--green)" : "var(--red)")}
+    ${total(T("Net Profit"), -totalOpEx, 0, netProfit >= 0 ? "var(--green)" : "var(--red)")}
     <div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;border:1px dashed var(--border);border-radius:8px;margin:16px 0;">
-      No vehicles sold in this period. Sales data will appear here once deals are completed and marked as sold.
+      ${T("No vehicles sold in this period. Sales data will appear here once deals are completed and marked as sold.")}
     </div>
     <div class="pnl-memo">
-      <b style="color:var(--text);">Memo — outside the P&amp;L:</b><br>
-      Sales tax &amp; registration collected for the state (pass-through, not income): <b>${fmt(collected)}</b><br>
-      Recurring expenses auto-carry into each month's Operating Expenses until edited or deleted. Run-rate: <b>${fmt(recurringMonthly)}/mo</b>
+      <b style="color:var(--text);">${T("Memo — outside the P&L:")}</b><br>
+      ${T("Sales tax & registration collected for the state (pass-through, not income): ")}${fmt(collected)}<br>
+      ${T("Recurring expenses auto-carry into each month's Operating Expenses until edited or deleted. Run-rate: ")}${fmt(recurringMonthly)}${T("/mo")}
       ${netCheckMemo}
     </div>`;
         } else {
           document.getElementById("pnlStatement").innerHTML = `
     <div class="pnl-block">
-      <div class="pnl-section-label">Revenue</div>
-      ${row("Vehicle Sales", vehicleSales)}
+      <div class="pnl-section-label">${T("Revenue")}</div>
+      ${row(T("Vehicle Sales"), vehicleSales)}
       ${row("Add-On &amp; Upcharge Revenue", addOnRev)}
-      ${sub("Total Revenue", totalRevenue)}
+      ${sub(T("Total Revenue"), totalRevenue)}
     </div>
     <div class="pnl-block">
-      <div class="pnl-section-label">Cost of Goods Sold</div>
-      ${row("Vehicle Acquisition", cogsPurchase)}
+      <div class="pnl-section-label">${T("Cost of Goods Sold")}</div>
+      ${row(T("Vehicle Acquisition"), cogsPurchase)}
       ${row("Auction &amp; Title Fees", cogsFees)}
       ${row("Reconditioning &amp; Repairs", cogsRepairs)}
       ${row("Floor-Plan (Flooring)", cogsFlooring)}
-      <div class="pnl-row pnl-exp-row"><span>Vehicle-Attached Expenses <button type="button" class="pnl-exp-view" onclick="openExpGroup('vehicle')">view<span class="pev-arw">&rarr;</span></button></span><span class="v">${fmt(cogsAttached)}</span></div>
+      <div class="pnl-row pnl-exp-row"><span>${T("Vehicle-Attached Expenses")} <button type="button" class="pnl-exp-view" onclick="openExpGroup('vehicle')">${T("view")}<span class="pev-arw">&rarr;</span></button></span><span class="v">${fmt(cogsAttached)}</span></div>
       ${cogsAddOns > 0 ? row("Add-On Cost", cogsAddOns) : ""}
       ${sub("Total COGS", totalCOGS)}
     </div>
     ${total("Gross Profit", grossProfit, grossMargin, grossProfit >= 0 ? "var(--green)" : "var(--red)")}
     <div class="pnl-block">
-      <div class="pnl-section-label">Operating Expenses</div>
+      <div class="pnl-section-label">${T("Operating Expenses")}</div>
       ${opGroupHtml}
       ${opSubtotal}
     </div>
-    ${total(netProfit >= 0 ? "Net Profit" : "Net Loss", netProfit, netMargin, netProfit >= 0 ? "var(--green)" : "var(--red)")}
+    ${total(netProfit >= 0 ? T("Net Profit") : T("Net Loss"), netProfit, netMargin, netProfit >= 0 ? "var(--green)" : "var(--red)")}
     <div class="pnl-memo">
       <b style="color:var(--text);">Memo — outside the P&amp;L:</b><br>
       Sales tax &amp; registration collected for the state (pass-through, not income): <b>${fmt(collected)}</b><br>
@@ -52706,12 +52774,12 @@
         const pne = document.getElementById("pnlNetExplain");
         if (pne) {
           pne.innerHTML = `
-      <div class="pne-title">How Net Profit Was Calculated</div>
-      <div class="pne-row"><span>Gross Profit</span><span class="v">${fmt(grossProfit)}</span></div>
-      <div class="pne-row minus"><span>Less: Sales Commissions (Payroll)</span><span class="v">${commissions > 0 ? "\u2212" + fmt(commissions) : fmt(0)}</span></div>
-      <div class="pne-row minus"><span>Less: Operating Expenses</span><span class="v">${opTotal > 0 ? "\u2212" + fmt(opTotal) : fmt(0)}</span></div>
-      <div class="pne-row total" style="color:${netProfit >= 0 ? "var(--green)" : "var(--red)"};"><span>Net Profit</span><span class="v">${fmtSigned(netProfit)}</span></div>
-      <div class="pne-note">Gross profit is what's left after the <b style="color:var(--text);">cost of the vehicles</b> (COGS). From there we subtract the <b style="color:var(--text);">commissions</b> paid to your sales reps and all <b style="color:var(--text);">dealership overhead</b> (rent, utilities, marketing, etc.). What remains is your true bottom-line <b style="color:var(--text);">net profit</b>.</div>`;
+      <div class="pne-title">${T("How Net Profit Was Calculated")}</div>
+      <div class="pne-row"><span>${T("Gross Profit")}</span><span class="v">${fmt(grossProfit)}</span></div>
+      <div class="pne-row minus"><span>${T("Less: Sales Commissions (Payroll)")}</span><span class="v">${commissions > 0 ? "\u2212" + fmt(commissions) : fmt(0)}</span></div>
+      <div class="pne-row minus"><span>${T("Less: Operating Expenses")}</span><span class="v">${opTotal > 0 ? "\u2212" + fmt(opTotal) : fmt(0)}</span></div>
+      <div class="pne-row total" style="color:${netProfit >= 0 ? "var(--green)" : "var(--red)"};"><span>${T("Net Profit")}</span><span class="v">${fmtSigned(netProfit)}</span></div>
+      <div class="pne-note">${T("Gross profit is what's left after the cost of the vehicles (COGS). From there we subtract the commissions paid to your sales reps and all dealership overhead (rent, utilities, marketing, etc.). What remains is your true bottom-line net profit.")}</div>`;
         }
       }
 
@@ -53875,13 +53943,14 @@
           ? new Set()
           : new Set(taxFilings.map((f) => f.dueDate));
         const payables = flMode ? [] : calPayables();
-        document.getElementById("calMonthTitle").textContent =
-          `${PNL_MFULL[month]} ${year}`;
+        document.getElementById("calMonthTitle").textContent = T(
+          `${PNL_MFULL[month]} ${year}`,
+        );
         const btnTxt = document.getElementById("calModeBtnText");
         if (btnTxt)
           btnTxt.textContent = flMode
-            ? "View Sales Calendar"
-            : "View Flooring Calendar";
+            ? T("View Sales Calendar")
+            : T("View Flooring Calendar");
         const btn = document.getElementById("calModeBtn");
         if (btn) btn.classList.toggle("active", flMode);
         const leg = document.getElementById("calLegend");
@@ -54061,8 +54130,8 @@
         }
         if (!calSelectedDay) {
           html += flMode
-            ? `<div class="cds-hint">Click a day to add flooring notes for it.</div>`
-            : `<div class="cal-side-empty"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--muted);"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><div>Select a day to see its sales and write appointments or notes.</div></div>`;
+            ? `<div class="cds-hint">${T("Click a day to add flooring notes for it.")}</div>`
+            : `<div class="cal-side-empty"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--muted);"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><div>${T("Select a day to see its sales and write appointments or notes.")}</div></div>`;
           side.innerHTML = html;
           return;
         }
@@ -54114,11 +54183,11 @@
               `</div>`;
           }
         }
-        html += `<label class="cds-label">Notes &amp; Appointments</label>`;
-        html += `<textarea id="calDeskPad" class="desk-pad" placeholder="Write notes for this day...">${text}</textarea>`;
-        html += `<div class="cal-desk-foot"><span id="calSavedMsg" class="cal-saved-msg"></span><button class="btn-primary" style="box-shadow:none;white-space:nowrap;" onclick="calSaveDay()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> Save</button></div>`;
+        html += `<label class="cds-label">${T("Notes & Appointments")}</label>`;
+        html += `<textarea id="calDeskPad" class="desk-pad" placeholder="${T("Write notes for this day...")}">${text}</textarea>`;
+        html += `<div class="cal-desk-foot"><span id="calSavedMsg" class="cal-saved-msg"></span><button class="btn-primary" style="box-shadow:none;white-space:nowrap;" onclick="calSaveDay()"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 13l4 4L19 7"/></svg> ${T("Save")}</button></div>`;
         if (flMode) {
-          html += `<div class="cds-fl-banner" style="margin-top:14px;margin-bottom:0;">This is the <b>Flooring Calendar</b>. Any notes you save here are stored on the <b>flooring calendar</b> \u2014 not the sales calendar.</div>`;
+          html += `<div class="cds-fl-banner" style="margin-top:14px;margin-bottom:0;">${T("This is the")} <b>${T("Flooring Calendar")}</b>. ${T("Any notes you save here are stored on the")} <b>${T("flooring calendar")}</b> \u2014 ${T("not the sales calendar.")}</div>`;
         }
         side.innerHTML = html;
       }
@@ -54158,7 +54227,7 @@
           let h = "";
           if (floored.length) {
             h +=
-              `<div class="cdp-section-label" style="color:var(--blue);">Floored this day</div>` +
+              `<div class="cdp-section-label" style="color:var(--blue);">${T("Floored this day")}</div>` +
               floored
                 .map((r) => rh(r, fmt(r.price + r.fees) + " in", "var(--blue)"))
                 .join("");
@@ -57616,7 +57685,7 @@
         supportMessages.length + " total · " + nnew + " unread";
     }
     if (!rows.length) {
-      host.innerHTML = '<div class="om-empty">No messages right now.</div>';
+      host.innerHTML = '<div class="om-empty">' + T("No messages right now.") + '</div>';
       return;
     }
     host.innerHTML = rows
@@ -57697,7 +57766,7 @@
 
   async function renderOwnerMessages() {
     const host = document.getElementById("ownerMsgList");
-    if (host) host.innerHTML = '<div class="om-empty">Loading messages…</div>';
+    if (host) host.innerHTML = '<div class="om-empty">' + T("Loading messages…") + '</div>';
     try {
       if (window.AVApi && typeof AVApi.listSupportMessages === "function") {
         const res = await AVApi.listSupportMessages("?status=all");
