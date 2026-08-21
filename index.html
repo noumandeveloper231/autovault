@@ -195,6 +195,15 @@
   .admin-logout-btn svg{width:15px;height:15px;flex-shrink:0}
   .nav-links a{font-size:14px;color:var(--muted);font-weight:500;transition:color .18s;white-space:nowrap}
   .nav-links a:hover{color:var(--text)}
+  /* social icon buttons in the top nav */
+  .nav-social{display:flex;align-items:center;gap:9px}
+  .nav-social a{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:var(--muted);border:1px solid var(--line);background:rgba(255,255,255,.35);transition:transform .12s,background .18s,color .18s,border-color .18s}
+  .nav-social a:hover{transform:translateY(-1px);color:#fff;border-color:transparent}
+  .nav-social a.ig:hover{background:linear-gradient(45deg,#feda75,#fa7e1e,#d62976,#962fbf,#4f5bd5)}
+  .nav-social a.li:hover{background:#0A66C2}
+  .nav-social a.xt:hover{background:#000}
+  .nav-social a.fb:hover{background:#1877F2}
+  html.dark .nav-social a{background:rgba(255,255,255,.05)}
   .btn{
     display:inline-flex;align-items:center;justify-content:center;gap:8px;
     font-family:var(--ff-body);font-weight:600;font-size:14.5px;cursor:pointer;
@@ -1339,6 +1348,7 @@
       height:42px;
       display:inline-flex;align-items:center;
     }
+    .nav-links.mobile-open .nav-social{justify-content:center;margin-top:6px}
     .nav-links.mobile-open .btn{
       width:100%;
     }
@@ -1373,6 +1383,20 @@
       <div class="nav-cta">
         <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Switch theme" aria-label="Toggle theme"></button>
         <a href="#" class="lang-btn" id="langBtn">Español</a>
+        <span class="nav-social">
+          <a class="ig" href="https://www.instagram.com/autovault360" target="_blank" rel="noopener" aria-label="AutoVault on Instagram" title="Instagram">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg>
+          </a>
+          <a class="li" href="https://www.linkedin.com/company/autovault360" target="_blank" rel="noopener" aria-label="AutoVault on LinkedIn" title="LinkedIn">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 8h4V23h-4V8zm7.5 0h3.8v2.05h.05c.53-1 1.83-2.05 3.76-2.05C19.6 8 23 10.05 23 14.5V23h-4v-7.5c0-1.8-.03-4.1-2.5-4.1s-2.88 1.95-2.88 3.97V23h-4V8z"/></svg>
+          </a>
+          <a class="xt" href="https://x.com/autovault360" target="_blank" rel="noopener" aria-label="AutoVault on X" title="X (Twitter)">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor"><path d="M18.9 2H22l-7.5 8.6L23 22h-6.8l-5.3-6.9L4.8 22H1.6l8-9.2L1 2h6.9l4.8 6.3L18.9 2zm-2.4 18h1.9L7.6 4H5.6l10.9 16z"/></svg>
+          </a>
+          <a class="fb" href="https://www.facebook.com/autovault360" target="_blank" rel="noopener" aria-label="AutoVault on Facebook" title="Facebook">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.2c-1.2 0-1.6.76-1.6 1.54V12h2.7l-.43 2.9h-2.27v7A10 10 0 0 0 22 12z"/></svg>
+          </a>
+        </span>
         <span class="nav-guest">
           <a href="/login" class="btn btn-login">Log In</a>
           <a href="#waitlist" class="btn btn-primary">Get Started</a>
