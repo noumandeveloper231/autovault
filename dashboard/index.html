@@ -5033,6 +5033,15 @@
         overflow: hidden;
         text-overflow: ellipsis;
       }
+      .pne-item-sub {
+        font-size: 11px;
+        color: var(--blue);
+        font-family: var(--mono);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-top: 1px;
+      }
       .pne-item-meta {
         font-size: 12px;
         color: var(--muted);
@@ -8130,6 +8139,9 @@
         text-overflow: ellipsis;
         max-width: 100%;
       }
+      .cal-payroll.paid { background: var(--green); }
+      .cal-payroll.due { background: #7c5cff; box-shadow: 0 0 0 1px rgba(124, 92, 255, 0.5); }
+      .cal-payroll.up { background: rgba(124, 92, 255, 0.4); }
 
       .cds-payroll-banner {
         font-size: 12px;
@@ -12021,6 +12033,72 @@
         font-size: 11.5px;
         color: var(--muted);
         margin-left: 12px;
+      }
+
+      .cust-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin: 0 0 14px;
+      }
+      .cust-search-wrap {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 9px;
+        padding: 0 12px;
+        height: 36px;
+        min-width: 220px;
+        flex: 0 1 340px;
+        color: var(--muted);
+        transition: border-color 0.12s;
+      }
+      .cust-search-wrap:focus-within {
+        border-color: var(--blue);
+        color: var(--blue);
+      }
+      .cust-search {
+        background: none;
+        border: none;
+        outline: none;
+        color: var(--text);
+        font-family: inherit;
+        font-size: 13px;
+        width: 100%;
+        height: 100%;
+      }
+      .cust-search::placeholder { color: var(--muted); }
+      .cust-mrow td {
+        background: var(--panel-2);
+        padding: 8px 16px !important;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+      .cust-mrow .m-name {
+        font-weight: 800;
+        font-size: 12px;
+        color: var(--text);
+      }
+      .cust-mrow .m-meta {
+        color: var(--muted);
+        font-size: 12px;
+        margin-left: 10px;
+      }
+      .cust-browse-sum {
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 700;
+        margin-bottom: 12px;
+        text-align: center;
+      }
+      @media (max-width: 720px) {
+        .cust-toolbar { flex-direction: column; align-items: stretch; }
+        .cust-search-wrap { flex: 1 1 auto; min-width: 0; width: 100%; }
       }
 
       #svBody .dash-sold-table thead th {
@@ -18065,6 +18143,43 @@
               </table>
             </div>
           </div>
+
+          <div
+            class="section-heading"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 12px;
+              flex-wrap: wrap;
+              margin-top: 28px;
+            "
+          >
+            <div>
+              <h2>Payroll History</h2>
+              <div class="section-sub" id="prHistSub">
+                Auto-recorded every payday · kept for your taxes
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+              <div style="font-size: 12px; color: var(--muted)">
+                Paid year-to-date
+                <b id="prHistYtd" style="color: var(--green)">$0</b>
+              </div>
+              <button class="print-btn" type="button" onclick="exportPayrollHistoryCsv()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                </svg>
+                Export CSV
+              </button>
+            </div>
+          </div>
+          <div
+            style="font-size: 12px; color: var(--muted); line-height: 1.55; margin: -6px 0 12px; max-width: 760px"
+          >
+            Every payday runs and resets automatically — the day before it appears in your reminders, on the day it shows on your dashboard calendar, and each run is logged here permanently for your records.
+          </div>
+          <div id="prHistoryBody"></div>
         </div>
 
         <div id="page-customers" class="page-section" style="display: none">
@@ -18098,41 +18213,46 @@
             </div>
           </div>
 
-          <div
-            class="section-heading"
-            style="
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-              gap: 12px;
-              flex-wrap: wrap;
-            "
-          >
-            <div>
-              <h2>Customer Directory</h2>
-              <div class="section-sub" id="custRowCount">— customers</div>
+          <div class="section-heading">
+            <h2>Customer Directory</h2>
+            <div class="section-sub" id="custRowCount">— customers</div>
+          </div>
+          <div class="cust-toolbar">
+            <div
+              class="veh-view-seg"
+              id="custSeg"
+              title="See all customers grouped by month, or browse a specific month and year"
+            >
+              <button
+                class="vv-btn active"
+                type="button"
+                data-ctab="all"
+                onclick="custSetTab('all')"
+              >
+                All Customers
+              </button>
+              <button class="vv-btn" type="button" onclick="custOpenBrowse()">
+                Customers
+              </button>
             </div>
-            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
-              <input
-                type="search"
-                id="custSearch"
-                class="module-search-input"
-                placeholder="Search customers, phone, email, VIN…"
-                autocomplete="off"
-                oninput="renderCustomersPage()"
-                style="
-                  background: var(--panel);
-                  border: 1px solid var(--border);
-                  color: var(--text);
-                  border-radius: 8px;
-                  padding: 9px 12px;
-                  font-size: 12.5px;
-                  min-width: 220px;
-                  outline: none;
-                "
-              />
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; flex: 1 1 280px; justify-content: flex-end">
+              <div class="cust-search-wrap">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="11" cy="11" r="7" />
+                  <path d="M21 21l-4.3-4.3" />
+                </svg>
+                <input
+                  type="search"
+                  id="custSearch"
+                  class="cust-search"
+                  placeholder="Search customers, phone, email, VIN…"
+                  autocomplete="off"
+                  oninput="renderCustomersPage()"
+                />
+              </div>
               <button
                 class="btn-primary"
+                type="button"
                 style="box-shadow: none"
                 onclick="openAddCustomerModal()"
               >
@@ -18155,6 +18275,52 @@
                 </thead>
                 <tbody id="custBody"></tbody>
               </table>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal-overlay"
+          id="custBrowseModal"
+          onclick="if(event.target===this) closeCustBrowse()"
+        >
+          <div class="modal">
+            <div class="modal-head">
+              <h3>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  style="color: var(--blue)"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" />
+                  <path d="M16 2v4M8 2v4M3 10h18" />
+                </svg>
+                <span>Browse Customers by Month</span>
+              </h3>
+              <button class="modal-close" type="button" onclick="closeCustBrowse()">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="pnl-cal-year" style="justify-content: center; margin-bottom: 12px">
+                <button type="button" onclick="custBrowseYear(-1)" title="Previous year">
+                  &lsaquo;
+                </button>
+                <span id="custBrowseYearVal">2026</span>
+                <button type="button" onclick="custBrowseYear(1)" title="Next year">
+                  &rsaquo;
+                </button>
+              </div>
+              <div
+                class="sv-months"
+                id="custBrowseMonths"
+                style="justify-content: center; flex-wrap: wrap; margin-bottom: 16px"
+              ></div>
+              <div id="custBrowseBody"></div>
             </div>
           </div>
         </div>
@@ -24044,9 +24210,22 @@
               ></span>
             </span>
           </h3>
-          <button class="modal-close" onclick="closePnlExpenses()">
-            &times;
-          </button>
+          <div style="display: flex; align-items: center; gap: 10px">
+            <button
+              class="print-btn"
+              type="button"
+              onclick="exportPnlDrillCsv()"
+              title="Export this list to CSV for your accountant"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+              </svg>
+              Export CSV
+            </button>
+            <button class="modal-close" onclick="closePnlExpenses()">
+              &times;
+            </button>
+          </div>
         </div>
         <div class="modal-body" id="pnlExpBody"></div>
       </div>
@@ -30501,12 +30680,52 @@
         } catch (e) {}
         try {
           if (typeof calPayables === "function") {
-            const d = calPayables().filter((w) => isPayday(w, todayStr));
-            if (d.length)
+            const dueToday =
+              typeof payrollDueOn === "function"
+                ? payrollDueOn(todayStr)
+                : {
+                    count: calPayables().filter((w) => isPayday(w, todayStr))
+                      .length,
+                    total: 0,
+                    people: [],
+                  };
+            if (dueToday.count)
               items.push({
                 color: "#a78bfa",
                 title: "Payroll due today",
-                text: `${d.length} team member${d.length === 1 ? "" : "s"} to pay`,
+                text:
+                  dueToday.count +
+                  " team member" +
+                  (dueToday.count === 1 ? "" : "s") +
+                  " to pay" +
+                  (dueToday.total
+                    ? " \u00b7 " + fmt(dueToday.total)
+                    : ""),
+                act: () => goPage("payroll", "renderPayrollPage"),
+              });
+            const tmr = new Date(todayStr + "T00:00:00");
+            tmr.setDate(tmr.getDate() + 1);
+            const tmrStr =
+              tmr.getFullYear() +
+              "-" +
+              String(tmr.getMonth() + 1).padStart(2, "0") +
+              "-" +
+              String(tmr.getDate()).padStart(2, "0");
+            const dueTmr =
+              typeof payrollDueOn === "function"
+                ? payrollDueOn(tmrStr)
+                : { count: 0, total: 0 };
+            if (dueTmr.count)
+              items.push({
+                color: "#7c5cff",
+                title: "Payroll tomorrow",
+                text:
+                  dueTmr.count +
+                  " team member" +
+                  (dueTmr.count === 1 ? "" : "s") +
+                  " to pay tomorrow \u00b7 " +
+                  fmt(dueTmr.total) +
+                  " \u2014 have funds ready",
                 act: () => goPage("payroll", "renderPayrollPage"),
               });
           }
@@ -41054,6 +41273,7 @@
                 base,
                 payFreq: freq,
                 payDay,
+                payAnchor: anchor,
                 birthday: bday,
                 phone: uphone,
               });
@@ -41085,6 +41305,7 @@
                 base,
                 payFreq: freq,
                 payDay,
+                payAnchor: anchor,
                 birthday: bday,
                 sendInvite: sendInvite,
               });
@@ -44610,12 +44831,10 @@
         ],
         "Recurring Expense": [
           "Rent",
-          "Payroll",
           "Utilities",
           "Flooring fees",
           "Insurance",
           "Subscriptions",
-          "Commissions",
           "Other",
         ],
         "Dealership Expense": [
@@ -44717,6 +44936,16 @@
         if (c === "Vehicle Expense" || e.vehicleVin) return "Vehicle Expense";
         if (c === "Dealership Expense") return "Dealership Expense";
         return "Recurring Expense";
+      }
+      function isEnginePayrollExpense(e) {
+        if (!e) return false;
+        const cat = String(e.category || "");
+        const t = String(e.expType || "").toLowerCase();
+        const name = String(e.name || "");
+        if (cat === "Payroll" || cat === "Commissions") return true;
+        if (t.includes("payroll") || t.includes("commission")) return true;
+        if (/sales\s*team\s*payroll/i.test(name)) return true;
+        return false;
       }
       function spendBucket(category) {
         switch (category) {
@@ -44869,6 +45098,7 @@
         for (let i = 0; i < list.length; i++) {
           const e = list[i];
           if (excludeVehicle && e.vehicleVin) continue;
+          if (isEnginePayrollExpense(e)) continue;
 
           if (!isRecurring(e)) {
             const d = pnlDateParts(e.dueDate);
@@ -45001,6 +45231,7 @@
             .forEach((r) => {
               items.push({
                 name: `${r.year} ${r.make} ${r.model}`,
+                sub: r.vin || "",
                 meta:
                   (r.soldDate ? fmtDate(r.soldDate) : "") +
                   (r.rep ? ` · ${r.rep}` : ""),
@@ -45010,6 +45241,26 @@
                 click: `openDealJacket('${r.vin}','sold')`,
               });
             });
+          (window.__pnlRepTop || []).forEach((r) => {
+            items.push({
+              name: r.name,
+              meta: "Rep base · above commission",
+              amount: Number(r.amount) || 0,
+              badge: "Base",
+              badgeCls: "recur",
+              click: "goPage('payroll','renderPayrollPage')",
+            });
+          });
+          (window.__pnlStaffPay || []).forEach((w) => {
+            items.push({
+              name: w.name,
+              meta: w.role || "",
+              amount: Number(w.amount) || 0,
+              badge: w.badge,
+              badgeCls: "once",
+              click: "goPage('payroll','renderPayrollPage')",
+            });
+          });
         } else if (group === "recurring") {
           heading = "Recurring Expenses";
           const raw = (window.__pnlOpInstances || []).filter(
@@ -45074,6 +45325,7 @@
           (window.__pnlVehExp || []).forEach((x) => {
             items.push({
               name: x.e.name || "(unnamed)",
+              sub: x.vin || "",
               meta: `${x.veh} · ${x.e.category || ""}`,
               amount: Number(x.amount != null ? x.amount : x.e.amount) || 0,
               badge: "Vehicle",
@@ -45083,6 +45335,18 @@
           });
         }
         const total = items.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+        window.__pnlDrillExport = {
+          heading,
+          period: pnlPeriodLabel(),
+          total,
+          rows: items.map((it) => ({
+            item: it.name || "",
+            ref: it.sub || "",
+            detail: it.meta || "",
+            type: it.badge || "",
+            amount: Number(it.amount) || 0,
+          })),
+        };
         const t = document.getElementById("pnlExpTitle");
         if (t) t.textContent = heading;
         const lbl = document.getElementById("pnlExpPeriodLbl");
@@ -45096,7 +45360,7 @@
             items
               .map(
                 (it) =>
-                  `<div class="pne-item" onclick="closePnlExpenses(); ${it.click}"><div class="pne-item-main"><span class="pne-item-name">${it.name}</span><span class="pne-badge ${it.badgeCls}">${it.badge}</span></div><div class="pne-item-meta">${it.meta || ""}</div><div class="pne-item-amt">${fmt(it.amount)}</div></div>`,
+                  `<div class="pne-item" onclick="closePnlExpenses(); ${it.click}"><div class="pne-item-main"><div style="min-width:0;"><div class="pne-item-name">${it.name}</div>${it.sub ? `<div class="pne-item-sub">${it.sub}</div>` : ""}</div><span class="pne-badge ${it.badgeCls}">${it.badge}</span></div><div class="pne-item-meta">${it.meta || ""}</div><div class="pne-item-amt">${fmt(it.amount)}</div></div>`,
               )
               .join("") +
             "</div>";
@@ -45114,18 +45378,54 @@
           ? window.__pnlOpInstances
           : [];
         const commissions = Number(window.__pnlCommissions || 0);
+        const payrollTotal = Number(
+          window.__pnlPayrollTotal != null
+            ? window.__pnlPayrollTotal
+            : commissions,
+        );
         const t = document.getElementById("pnlExpTitle");
         if (t) t.textContent = "Operating Expenses";
         const lbl = document.getElementById("pnlExpPeriodLbl");
         if (lbl) lbl.textContent = pnlPeriodLabel();
         const opTotal = inst.reduce((s, x) => s + (Number(x.amount) || 0), 0);
-        const grand = opTotal + commissions;
+        const grand = opTotal + payrollTotal;
+        const _exRows = [];
         let html = "";
-        if (commissions > 0) {
-          html += `<div class="pne-cat"><div class="pne-cat-head"><span>Sales Commissions (Payroll)</span><span class="pne-cat-tot">${fmt(commissions)}</span></div>`;
-          html += `<div class="pne-item static"><div class="pne-item-main"><span class="pne-item-name">Commissions paid on sold vehicles</span><span class="pne-badge">${pnlPeriodLabel()}</span></div><div class="pne-item-meta"></div><div class="pne-item-amt">${fmt(commissions)}</div></div></div>`;
+        if (payrollTotal > 0) {
+          html += `<div class="pne-cat"><div class="pne-cat-head"><span>Sales Commissions &amp; Payroll</span><span class="pne-cat-tot">${fmt(payrollTotal)}</span></div>`;
+          if (commissions > 0) {
+            html += `<div class="pne-item static"><div class="pne-item-main"><span class="pne-item-name">Commissions paid on sold vehicles</span><span class="pne-badge">${pnlPeriodLabel()}</span></div><div class="pne-item-meta"></div><div class="pne-item-amt">${fmt(commissions)}</div></div>`;
+            _exRows.push({
+              item: "Commissions paid on sold vehicles",
+              ref: "",
+              detail: pnlPeriodLabel(),
+              type: "Commission",
+              amount: commissions,
+            });
+          }
+          (window.__pnlRepTop || []).forEach((r) => {
+            html += `<div class="pne-item" onclick="closePnlExpenses(); goPage('payroll','renderPayrollPage')"><div class="pne-item-main"><span class="pne-item-name">${r.name}</span><span class="pne-badge recur">Base</span></div><div class="pne-item-meta">Rep base · above commission</div><div class="pne-item-amt">${fmt(r.amount)}</div></div>`;
+            _exRows.push({
+              item: r.name,
+              ref: "",
+              detail: "Rep base · above commission",
+              type: "Base",
+              amount: Number(r.amount) || 0,
+            });
+          });
+          (window.__pnlStaffPay || []).forEach((w) => {
+            html += `<div class="pne-item" onclick="closePnlExpenses(); goPage('payroll','renderPayrollPage')"><div class="pne-item-main"><span class="pne-item-name">${w.name}</span><span class="pne-badge once">${w.badge || "Staff"}</span></div><div class="pne-item-meta">${w.role || ""}</div><div class="pne-item-amt">${fmt(w.amount)}</div></div>`;
+            _exRows.push({
+              item: w.name,
+              ref: "",
+              detail: w.role || "",
+              type: w.badge || "Staff",
+              amount: Number(w.amount) || 0,
+            });
+          });
+          html += `</div>`;
         }
-        if (!inst.length && commissions <= 0) {
+        if (!inst.length && payrollTotal <= 0) {
           html = `<div style="padding:40px;text-align:center;color:var(--muted);font-size:13px;">No operating expenses recorded for ${pnlPeriodLabel()}.</div>`;
         } else {
           const display = collapseExpensesForDisplay(
@@ -45167,6 +45467,13 @@
                   const badge = recurring
                     ? `<span class="pne-badge recur">↻ ${e.recurring || "Monthly"}</span>`
                     : `<span class="pne-badge once">One-time</span>`;
+                  _exRows.push({
+                    item: e.name || "(unnamed)",
+                    ref: e.vehicleVin || "",
+                    detail: monLbl,
+                    type: recurring ? e.recurring || "Monthly" : "One-time",
+                    amount: Number(e.amount) || 0,
+                  });
                   return `<div class="pne-item" onclick="closePnlExpenses(); openExpenseModal('${e.id}')" title="Open this expense"><div class="pne-item-main"><span class="pne-item-name">${e.name || "(unnamed)"}</span>${badge}</div><div class="pne-item-meta">${monLbl}</div><div class="pne-item-amt">${fmt(e.amount)}</div></div>`;
                 })
                 .join("");
@@ -45175,12 +45482,47 @@
         }
         html += `<div class="pne-grand"><span>Total Operating Expenses</span><span>${fmt(grand)}</span></div>`;
         html += `<div class="pne-hint">Recurring expenses are counted for every month they are active in this period.</div>`;
+        window.__pnlDrillExport = {
+          heading: "Operating Expenses",
+          period: pnlPeriodLabel(),
+          total: grand,
+          rows: _exRows,
+        };
         body.innerHTML = html;
         document.getElementById("pnlExpModal").classList.add("open");
+      }
+      function exportPnlDrillCsv() {
+        const d = window.__pnlDrillExport;
+        if (!d || !d.rows || !d.rows.length) {
+          if (typeof AVToast !== "undefined")
+            AVToast.info("Nothing to export in this view.");
+          return;
+        }
+        const headers = ["Item", "VIN / Ref", "Detail", "Type", "Amount"];
+        const rows = d.rows.map((r) => [
+          r.item,
+          r.ref,
+          r.detail,
+          r.type,
+          r.amount,
+        ]);
+        rows.push(["", "", "", "TOTAL — " + d.heading, d.total]);
+        const clean = (s) =>
+          String(s || "")
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-|-$/g, "");
+        const nm =
+          "autovault-" +
+          (clean(d.heading) || "expenses") +
+          (d.period ? "-" + clean(d.period) : "") +
+          ".csv";
+        downloadCsv(nm, headers, rows);
       }
       window.openPnlExpenses = openPnlExpenses;
       window.openExpGroup = openExpGroup;
       window.closePnlExpenses = closePnlExpenses;
+      window.exportPnlDrillCsv = exportPnlDrillCsv;
 
       // Attached expenses feed straight into each vehicle's cost & P&L (used by computeRow)
       function isVehicleCostMirrorExpense(e) {
@@ -52509,6 +52851,49 @@
         // sales activity (yearly) or the selected month (monthly). Stopped
         // recurring (endDate) no longer projects past that month.
         const commissions = sold.reduce((s, r) => s + r.commission, 0);
+        if (typeof ensureStaffLoaded === "function") ensureStaffLoaded();
+        const _plMult =
+          typeof payrollPeriodMult === "function"
+            ? payrollPeriodMult()
+            : pnlPeriod.mode === "month"
+              ? 1
+              : 12;
+        const staffPayRows = (typeof staff !== "undefined" ? staff : [])
+          .map((w) => {
+            let amt = 0;
+            if (w.payType === "Salary") amt = (w.monthly || 0) * _plMult;
+            else if (w.payType === "Hourly")
+              amt =
+                (typeof hourlyMonthlyPay === "function"
+                  ? hourlyMonthlyPay(w)
+                  : 0) * _plMult;
+            return {
+              name: w.name,
+              role: w.role || "Staff",
+              amount: amt,
+              badge: w.payType,
+            };
+          })
+          .filter((r) => r.amount > 0.005);
+        const staffWages = staffPayRows.reduce((s, r) => s + r.amount, 0);
+        const repTopRows = [];
+        (typeof salesReps !== "undefined" ? salesReps : []).forEach((r) => {
+          const base = (r.base || 0) * _plMult;
+          const comm =
+            typeof repPeriodCommission === "function"
+              ? repPeriodCommission(r.name)
+              : 0;
+          const topUp = Math.max(0, base - comm);
+          if (topUp > 0.005)
+            repTopRows.push({
+              name: r.name,
+              role: "Sales Rep",
+              amount: topUp,
+              badge: "Base guarantee",
+            });
+        });
+        const repBaseTopUp = repTopRows.reduce((s, r) => s + r.amount, 0);
+        const payrollTotal = commissions + staffWages + repBaseTopUp;
         const opExpenses = expensesForPeriod(
           typeof _expenses !== "undefined" ? _expenses : [],
           { excludeVehicle: true },
@@ -52533,11 +52918,14 @@
           (s, e) => s + (Number(e.amount) || 0),
           0,
         );
-        const totalOpEx = commissions + opTotal;
+        const totalOpEx = payrollTotal + opTotal;
 
         window.__pnlOpInstances = buildPnlOpInstances(opExpenses);
         window.__pnlCommissions = commissions;
         window.__pnlSold = sold;
+        window.__pnlStaffPay = staffPayRows;
+        window.__pnlRepTop = repTopRows;
+        window.__pnlPayrollTotal = payrollTotal;
         // Mirror the COGS "Vehicle-Attached Expenses" line exactly: the attached
         // expenses of the vehicles sold in this period, mirrors excluded.
         const vehExpRows = [];
@@ -52610,6 +52998,8 @@
               label: "Operating Expenses",
               rows: [
                 ["Sales Commissions", commissions],
+                ["Rep Base Guarantees", repBaseTopUp],
+                ["Wages & Salaries", staffWages],
                 ["Recurring Expenses", recurringTotal],
                 ["Dealership Expenses", dealershipTotal],
                 ["Total Operating Expenses", totalOpEx],
@@ -52670,7 +53060,7 @@
         const total = (l, v, m, color) =>
           `<div class="pnl-total" style="color:${color};"><span class="lbl">${l}</span><span><span class="v">${fmtSigned(v)}</span><span class="mrg">${m.toFixed(1)}% margin</span></span></div>`;
         const opGroupHtml = pnlOpExGroupRows(
-          commissions,
+          payrollTotal,
           recurringTotal,
           dealershipTotal,
         );
@@ -52760,9 +53150,9 @@
             amount: totalCOGS,
           },
           {
-            key: "Sales Commissions",
+            key: "Commissions & Payroll",
             color: col("--purple"),
-            amount: commissions,
+            amount: payrollTotal,
           },
           {
             key: "Operating Expenses",
@@ -52812,7 +53202,7 @@
           pne.innerHTML = `
       <div class="pne-title">${T("How Net Profit Was Calculated")}</div>
       <div class="pne-row"><span>${T("Gross Profit")}</span><span class="v">${fmt(grossProfit)}</span></div>
-      <div class="pne-row minus"><span>${T("Less: Sales Commissions (Payroll)")}</span><span class="v">${commissions > 0 ? "\u2212" + fmt(commissions) : fmt(0)}</span></div>
+      <div class="pne-row minus"><span>${T("Less: Sales Commissions & Payroll")}</span><span class="v">${payrollTotal > 0 ? "\u2212" + fmt(payrollTotal) : fmt(0)}</span></div>
       <div class="pne-row minus"><span>${T("Less: Operating Expenses")}</span><span class="v">${opTotal > 0 ? "\u2212" + fmt(opTotal) : fmt(0)}</span></div>
       <div class="pne-row total" style="color:${netProfit >= 0 ? "var(--green)" : "var(--red)"};"><span>${T("Net Profit")}</span><span class="v">${fmtSigned(netProfit)}</span></div>
       <div class="pne-note">${T("Gross profit is what's left after the cost of the vehicles (COGS). From there we subtract the commissions paid to your sales reps and all dealership overhead (rent, utilities, marketing, etc.). What remains is your true bottom-line net profit.")}</div>`;
@@ -52904,7 +53294,7 @@
                 ? total +
                   " customer" +
                   (total === 1 ? "" : "s") +
-                  " \u2014 newest first"
+                  " \u00b7 grouped by month"
                 : "No customers yet";
 
         const body = document.getElementById("custBody");
@@ -52939,65 +53329,288 @@
             '<tr><td colspan="6"><div style="padding:40px;text-align:center;color:var(--muted);font-size:13px;">No customers match this search.</div></td></tr>';
           return;
         }
-        body.innerHTML = rows
-          .map((r) => {
-            const name = r.customer || "\u2014";
-            const phone = r.customerPhone
-              ? r.customerPhone
-              : '<span style="color:var(--muted);">No phone on file</span>';
-            const email = r.customerEmail || dash;
-            const veh =
-              [r.year, r.make, r.model].filter(Boolean).join(" ") || "\u2014";
-            const vin = r.vin || dash;
-            const purchased = r.soldDate
-              ? typeof fmtDate === "function"
-                ? fmtDate(r.soldDate)
-                : r.soldDate
-              : dash;
-            const price = r.soldPrice ? fmt(r.soldPrice) : dash;
-            const gsKey = r.customerId
-              ? "customer:" + r.customerId
-              : r.vin
-                ? "customer-vin:" + r.vin
-                : "customer-name:" + String(name).toLowerCase();
-            const click = r.vin
-              ? "onclick=\"openDealJacket('" +
-                r.vin +
-                "','customers')\" style=\"cursor:pointer;\""
-              : "";
-            return (
-              "<tr data-gs-key=\"" +
-              gsKey.replace(/"/g, "") +
-              "\" " +
-              click +
-              ">" +
-              '<td class="veh-cell">' +
-              '<div class="veh-name" style="color:var(--blue);">' +
-              name +
-              "</div>" +
-              '<div class="veh-trim">' +
-              phone +
-              "</div>" +
-              "</td>" +
-              "<td>" +
-              email +
-              "</td>" +
-              '<td class="veh-cell"><div class="veh-name">' +
-              veh +
-              "</div></td>" +
-              '<td class="vin">' +
-              vin +
-              "</td>" +
-              '<td style="color:var(--muted);font-size:12px;">' +
-              purchased +
-              "</td>" +
-              '<td style="font-weight:700;">' +
-              price +
-              "</td></tr>"
-            );
-          })
-          .join("");
+        const monthNames =
+          typeof PNL_MFULL !== "undefined"
+            ? PNL_MFULL
+            : [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ];
+        function custRowHtml(r) {
+          const name = r.customer || "\u2014";
+          const phone = r.customerPhone
+            ? r.customerPhone
+            : '<span style="color:var(--muted);">No phone on file</span>';
+          const email = r.customerEmail || dash;
+          const veh =
+            [r.year, r.make, r.model].filter(Boolean).join(" ") || "\u2014";
+          const vin = r.vin || dash;
+          const purchased = r.soldDate
+            ? typeof fmtDate === "function"
+              ? fmtDate(r.soldDate)
+              : r.soldDate
+            : dash;
+          const price = r.soldPrice ? fmt(r.soldPrice) : dash;
+          const gsKey = r.customerId
+            ? "customer:" + r.customerId
+            : r.vin
+              ? "customer-vin:" + r.vin
+              : "customer-name:" + String(name).toLowerCase();
+          const click = r.vin
+            ? "onclick=\"openDealJacket('" +
+              String(r.vin).replace(/'/g, "\\'") +
+              "','customers')\" style=\"cursor:pointer;\""
+            : "";
+          return (
+            "<tr data-gs-key=\"" +
+            gsKey.replace(/"/g, "") +
+            "\" " +
+            click +
+            ">" +
+            '<td class="veh-cell">' +
+            '<div class="veh-name" style="color:var(--blue);">' +
+            name +
+            "</div>" +
+            '<div class="veh-trim">' +
+            phone +
+            "</div>" +
+            "</td>" +
+            "<td>" +
+            email +
+            "</td>" +
+            '<td class="veh-cell"><div class="veh-name">' +
+            veh +
+            "</div></td>" +
+            '<td class="vin">' +
+            vin +
+            "</td>" +
+            '<td style="color:var(--muted);font-size:12px;">' +
+            purchased +
+            "</td>" +
+            '<td style="font-weight:700;">' +
+            price +
+            "</td></tr>"
+          );
+        }
+        const groups = {};
+        rows.forEach((r) => {
+          const key = (r.soldDate || "").slice(0, 7) || "0000-00";
+          (groups[key] = groups[key] || []).push(r);
+        });
+        const keys = Object.keys(groups).sort().reverse();
+        let html = "";
+        keys.forEach((k) => {
+          const g = groups[k];
+          let label = "No date on file";
+          if (k !== "0000-00") {
+            const p = k.split("-");
+            label = (monthNames[+p[1] - 1] || p[1]) + " " + p[0];
+          }
+          const val = g.reduce((s, r) => s + (Number(r.soldPrice) || 0), 0);
+          html +=
+            '<tr class="cust-mrow"><td colspan="6"><span class="m-name">' +
+            label +
+            '</span><span class="m-meta">' +
+            g.length +
+            " customer" +
+            (g.length === 1 ? "" : "s") +
+            " \u00b7 " +
+            fmt(val) +
+            " collected</span></td></tr>";
+          html += g.map(custRowHtml).join("");
+        });
+        body.innerHTML = html;
       }
+
+      function custAllRows() {
+        if (window.AVCustomers && typeof AVCustomers.soldBuyerRows === "function") {
+          return AVCustomers.soldBuyerRows();
+        }
+        return (vehicles || [])
+          .filter((v) => v.sold && v.customer && String(v.customer).trim())
+          .map((v) => computeRow(v))
+          .sort(
+            (a, b) =>
+              String(b.soldDate || "").localeCompare(String(a.soldDate || "")),
+          );
+      }
+      function custSetTab(t) {
+        document
+          .querySelectorAll("#custSeg .vv-btn[data-ctab]")
+          .forEach((b) =>
+            b.classList.toggle("active", b.dataset.ctab === t),
+          );
+        renderCustomersPage();
+      }
+      let custBrowseYearV = null,
+        custBrowseMonthV = null;
+      function custOpenBrowse() {
+        const ov = document.getElementById("custBrowseModal");
+        if (!ov) return;
+        if (custBrowseYearV == null) {
+          try {
+            custBrowseYearV = today.getFullYear();
+            custBrowseMonthV = today.getMonth();
+          } catch (e) {
+            custBrowseYearV = new Date().getFullYear();
+            custBrowseMonthV = new Date().getMonth();
+          }
+        }
+        ov.classList.add("open");
+        renderCustBrowse();
+      }
+      function closeCustBrowse() {
+        const ov = document.getElementById("custBrowseModal");
+        if (ov) ov.classList.remove("open");
+      }
+      function custBrowseYear(d) {
+        custBrowseYearV += d;
+        renderCustBrowse();
+      }
+      function custBrowsePickMonth(i) {
+        custBrowseMonthV = i;
+        renderCustBrowse();
+      }
+      function renderCustBrowse() {
+        const yv = document.getElementById("custBrowseYearVal");
+        if (yv) yv.textContent = custBrowseYearV;
+        const all = custAllRows();
+        const has = {};
+        all.forEach((r) => {
+          const s = r.soldDate || "";
+          if (s.startsWith(String(custBrowseYearV))) {
+            has[+s.slice(5, 7) - 1] = true;
+          }
+        });
+        const short =
+          typeof PNL_MSHORT !== "undefined"
+            ? PNL_MSHORT
+            : [
+                "Jan",
+                "Feb",
+                "Mar",
+                "Apr",
+                "May",
+                "Jun",
+                "Jul",
+                "Aug",
+                "Sep",
+                "Oct",
+                "Nov",
+                "Dec",
+              ];
+        const full =
+          typeof PNL_MFULL !== "undefined"
+            ? PNL_MFULL
+            : [
+                "January",
+                "February",
+                "March",
+                "April",
+                "May",
+                "June",
+                "July",
+                "August",
+                "September",
+                "October",
+                "November",
+                "December",
+              ];
+        const mh = document.getElementById("custBrowseMonths");
+        if (mh)
+          mh.innerHTML = short
+            .map(
+              (m, i) =>
+                '<button type="button" class="pnl-month ' +
+                (i === custBrowseMonthV ? "active" : "") +
+                (has[i] ? " has-act" : "") +
+                '" onclick="custBrowsePickMonth(' +
+                i +
+                ')">' +
+                m +
+                "</button>",
+            )
+            .join("");
+        const pfx =
+          custBrowseYearV +
+          "-" +
+          String(custBrowseMonthV + 1).padStart(2, "0");
+        const rows = all.filter((r) => (r.soldDate || "").startsWith(pfx));
+        const bodyEl = document.getElementById("custBrowseBody");
+        if (!bodyEl) return;
+        if (!rows.length) {
+          bodyEl.innerHTML =
+            '<div class="doc-empty" style="padding:30px;text-align:center;color:var(--muted);">No customers in ' +
+            full[custBrowseMonthV] +
+            " " +
+            custBrowseYearV +
+            ".</div>";
+          return;
+        }
+        const val = rows.reduce((s, r) => s + (Number(r.soldPrice) || 0), 0);
+        bodyEl.innerHTML =
+          '<div class="cust-browse-sum">' +
+          rows.length +
+          " customer" +
+          (rows.length === 1 ? "" : "s") +
+          " \u00b7 " +
+          fmt(val) +
+          " collected in " +
+          full[custBrowseMonthV] +
+          " " +
+          custBrowseYearV +
+          "</div>" +
+          '<div class="table-scroll"><table class="fit-table"><thead><tr><th>Customer</th><th>Vehicle</th><th>Date</th><th>Sale Price</th></tr></thead><tbody>' +
+          rows
+            .map((r) => {
+              const vin = r.vin
+                ? String(r.vin).replace(/'/g, "\\'")
+                : "";
+              return (
+                "<tr>" +
+                '<td class="veh-cell" style="cursor:pointer;" onclick="closeCustBrowse();openDealJacket(\'' +
+                vin +
+                "','customers')\">" +
+                '<div class="veh-name" style="color:var(--blue);">' +
+                (r.customer || "\u2014") +
+                "</div>" +
+                '<div class="veh-trim">' +
+                (r.customerPhone ||
+                  '<span style="color:var(--muted);">No phone on file</span>') +
+                "</div></td>" +
+                "<td>" +
+                [r.year, r.make, r.model].filter(Boolean).join(" ") +
+                "</td>" +
+                "<td>" +
+                (r.soldDate
+                  ? typeof fmtDate === "function"
+                    ? fmtDate(r.soldDate)
+                    : r.soldDate
+                  : "\u2014") +
+                "</td>" +
+                '<td style="font-weight:700;">' +
+                (r.soldPrice ? fmt(r.soldPrice) : "\u2014") +
+                "</td></tr>"
+              );
+            })
+            .join("") +
+          "</tbody></table></div>";
+      }
+      window.custSetTab = custSetTab;
+      window.custOpenBrowse = custOpenBrowse;
+      window.closeCustBrowse = closeCustBrowse;
+      window.custBrowseYear = custBrowseYear;
+      window.custBrowsePickMonth = custBrowsePickMonth;
 
       // ---------- PAYROLL & COMMISSIONS ----------
       var staff = [];
@@ -53038,11 +53651,12 @@
           payMethod: s.payMethod,
           payDocUrl: s.payDocUrl,
           isActive: s.isActive !== false,
-          payFreq: s.payFrequency || s.payFreq || "biweekly",
+          payFreq: s.payFrequency || s.payFreq || "weekly",
           payDay: s.payDay != null ? s.payDay : 5,
           payAnchor: s.payAnchor || null,
-          workDays: s.workDays,
-          hoursPerDay: s.hoursPerDay,
+          workDays: Array.isArray(s.workDays) ? s.workDays : [1, 2, 3, 4, 5],
+          hoursPerDay:
+            s.hoursPerDay != null ? Number(s.hoursPerDay) : 8,
           hours: s.hours,
         };
       }
@@ -53055,7 +53669,7 @@
           return null;
         }
         staffLoading = true;
-        _staffLoadPromise = AVApi.listStaff()
+        _staffLoadPromise = AVApi.listStaff("?limit=100")
           .then(function (res) {
             var apiStaff = res.staff || res.data || res || [];
             if (!Array.isArray(apiStaff)) apiStaff = [];
@@ -53070,12 +53684,18 @@
             staffLoading = false;
             _staffLoadPromise = null;
             try {
-              if (
-                typeof getCurrentPage === "function" &&
-                getCurrentPage() === "payroll" &&
-                typeof renderPayrollPage === "function"
-              ) {
-                renderPayrollPage();
+              if (typeof getCurrentPage === "function") {
+                var pg = getCurrentPage();
+                if (
+                  pg === "payroll" &&
+                  typeof renderPayrollPage === "function"
+                ) {
+                  renderPayrollPage();
+                }
+                if (pg === "pnl" && typeof renderPnlPage === "function") {
+                  renderPnlPage();
+                }
+                if (typeof updateNotifBadge === "function") updateNotifBadge();
               }
             } catch (_) {}
           });
@@ -53110,9 +53730,12 @@
         if (body) body.innerHTML = skTbody(6, 5, [70, 40, 45, 55, 48, 20]);
       }
       function hourlyWeeklyHours(w) {
-        if (Array.isArray(w.workDays))
-          return w.workDays.length * (Number(w.hoursPerDay) || 0);
-        return ((Number(w.hours) || 0) * 12) / 52;
+        const hpd = Number(w.hoursPerDay);
+        const hours = hpd > 0 ? hpd : 8;
+        if (Array.isArray(w.workDays) && w.workDays.length)
+          return w.workDays.length * hours;
+        if (w.hours != null) return ((Number(w.hours) || 0) * 12) / 52;
+        return 5 * hours;
       }
       function hourlyMonthlyPay(w) {
         return (hourlyWeeklyHours(w) * (Number(w.rate) || 0) * 52) / 12;
@@ -53200,6 +53823,60 @@
         return e.kind === "rep"
           ? repPeriodPay(e.ent, dateStr).total
           : payAmount(e.ent);
+      }
+      function paydaysBetween(payable, startStr, endStr) {
+        const out = [];
+        if (!payable || payable.payDay == null) return out;
+        const d = new Date(startStr + "T00:00:00");
+        const end = new Date(endStr + "T00:00:00");
+        while (d <= end) {
+          const ds =
+            d.getFullYear() +
+            "-" +
+            String(d.getMonth() + 1).padStart(2, "0") +
+            "-" +
+            String(d.getDate()).padStart(2, "0");
+          if (isPayday(payable, ds)) out.push(ds);
+          d.setDate(d.getDate() + 1);
+        }
+        return out;
+      }
+      function payrollRunsYTD(uptoStr) {
+        const end =
+          uptoStr ||
+          (typeof today !== "undefined"
+            ? today.toISOString().slice(0, 10)
+            : new Date().toISOString().slice(0, 10));
+        const yStart = end.slice(0, 4) + "-01-01";
+        const runs = [];
+        calPayables().forEach((e) => {
+          paydaysBetween(e, yStart, end).forEach((ds) => {
+            runs.push({
+              date: ds,
+              name: e.name,
+              kind: e.kind,
+              role:
+                e.kind === "rep"
+                  ? "Sales Rep"
+                  : (e.ent && e.ent.role) || "Staff",
+              amount: payableAmount(e, ds),
+            });
+          });
+        });
+        runs.sort(
+          (a, b) =>
+            b.date.localeCompare(a.date) ||
+            String(a.name).localeCompare(String(b.name)),
+        );
+        return runs;
+      }
+      function payrollDueOn(dateStr) {
+        const due = calPayables().filter((e) => isPayday(e, dateStr));
+        return {
+          count: due.length,
+          total: due.reduce((s, e) => s + payableAmount(e, dateStr), 0),
+          people: due,
+        };
       }
       function empPaidMonth(kind, ref) {
         if (kind === "rep") {
@@ -53485,7 +54162,131 @@
             })
             .join("") ||
           `<tr><td colspan="6"><div class="doc-empty" style="padding:30px;text-align:center;">No employees on payroll yet.</div></td></tr>`;
+        renderPayrollHistory();
       }
+
+      function renderPayrollHistory() {
+        const host = document.getElementById("prHistoryBody");
+        if (!host) return;
+        const runs =
+          typeof payrollRunsYTD === "function" ? payrollRunsYTD() : [];
+        const ytd = runs.reduce((s, r) => s + r.amount, 0);
+        const ytdEl = document.getElementById("prHistYtd");
+        if (ytdEl) ytdEl.textContent = fmt(ytd);
+        if (!runs.length) {
+          host.innerHTML =
+            '<div class="table-card" style="padding:34px;text-align:center;color:var(--muted);">No paydays have come up yet this year. Once a payday passes, each run is logged here automatically.</div>';
+          return;
+        }
+        const byDate = {};
+        runs.forEach((r) => {
+          (byDate[r.date] = byDate[r.date] || []).push(r);
+        });
+        const dates = Object.keys(byDate).sort().reverse();
+        const todayStr =
+          typeof today !== "undefined"
+            ? today.toISOString().slice(0, 10)
+            : new Date().toISOString().slice(0, 10);
+        let html =
+          '<div class="table-card"><div class="table-scroll"><table class="fit-table"><thead><tr><th>Pay Date</th><th>Team Member</th><th>Role</th><th>Paid</th></tr></thead><tbody>';
+        dates.forEach((dt) => {
+          const g = byDate[dt];
+          const tot = g.reduce((s, r) => s + r.amount, 0);
+          const lbl = new Date(dt + "T00:00:00").toLocaleDateString("en-US", {
+            weekday: "short",
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          });
+          const status =
+            dt < todayStr
+              ? "Paid \u2713"
+              : dt === todayStr
+                ? "Due today"
+                : "Upcoming";
+          const stColor =
+            dt < todayStr
+              ? "var(--green)"
+              : dt === todayStr
+                ? "#a78bfa"
+                : "var(--muted)";
+          html +=
+            '<tr class="cust-mrow"><td colspan="4"><span class="m-name">' +
+            lbl +
+            '</span><span class="m-meta" style="color:' +
+            stColor +
+            ';">' +
+            status +
+            '</span><span class="m-meta">' +
+            g.length +
+            ' paid \u00b7 <b style="color:var(--green);">' +
+            fmt(tot) +
+            "</b></span></td></tr>";
+          html += g
+            .map(
+              (r) =>
+                "<tr>" +
+                '<td style="color:var(--muted);">' +
+                new Date(r.date + "T00:00:00").toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                }) +
+                "</td>" +
+                '<td class="veh-cell"><div class="veh-name">' +
+                r.name +
+                "</div></td>" +
+                "<td>" +
+                r.role +
+                "</td>" +
+                '<td style="font-weight:700;color:var(--green);">' +
+                fmt(r.amount) +
+                "</td></tr>",
+            )
+            .join("");
+        });
+        html += "</tbody></table></div></div>";
+        host.innerHTML = html;
+        persistPayrollHistory();
+      }
+      function persistPayrollHistory() {
+        if (!window.AVApi || typeof AVApi.payrollHistory !== "function") return;
+        const y =
+          typeof today !== "undefined"
+            ? today.getFullYear()
+            : new Date().getFullYear();
+        const upto =
+          typeof today !== "undefined"
+            ? today.toISOString().slice(0, 10)
+            : new Date().toISOString().slice(0, 10);
+        AVApi.payrollHistory("?year=" + y + "&upto=" + upto).catch(function () {});
+      }
+      function exportPayrollHistoryCsv() {
+        const runs =
+          typeof payrollRunsYTD === "function" ? payrollRunsYTD() : [];
+        const headers = [
+          "Pay Date",
+          "Team Member",
+          "Role",
+          "Kind",
+          "Amount Paid",
+        ];
+        const rows = runs.map((r) => [
+          r.date,
+          r.name,
+          r.role,
+          r.kind === "rep" ? "Commission/Rep" : "Wages/Staff",
+          r.amount,
+        ]);
+        const tot = runs.reduce((s, r) => s + r.amount, 0);
+        rows.push(["", "", "", "TOTAL PAID YTD", tot]);
+        const yr =
+          typeof today !== "undefined"
+            ? today.toISOString().slice(0, 4)
+            : new Date().toISOString().slice(0, 4);
+        downloadCsv("autovault-payroll-history-" + yr + ".csv", headers, rows);
+      }
+      window.renderPayrollHistory = renderPayrollHistory;
+      window.exportPayrollHistoryCsv = exportPayrollHistoryCsv;
 
       function empPayTypeChange() {
         const t = document.getElementById("empPayType").value;
@@ -53681,6 +54482,29 @@
           payType,
           payRate,
         };
+        if (payType === "hourly") {
+          payload.payFrequency =
+            (document.getElementById("empPayFreq") || {}).value || "weekly";
+          payload.payDay = parseInt(
+            (document.getElementById("empPayDay") || {}).value,
+            10,
+          );
+          if (!Number.isFinite(payload.payDay)) payload.payDay = 5;
+          payload.workDays =
+            typeof empGetWorkDays === "function"
+              ? empGetWorkDays()
+              : [1, 2, 3, 4, 5];
+          payload.hoursPerDay =
+            parseFloat(
+              (document.getElementById("empHoursPerDay") || {}).value,
+            ) || 8;
+          if (payload.payFrequency === "biweekly") {
+            payload.payAnchor =
+              typeof nextWeekdayOnOrAfter === "function"
+                ? nextWeekdayOnOrAfter(today, payload.payDay)
+                : null;
+          }
+        }
 
         const btn = document.getElementById("empSaveBtn");
         if (btn) {
@@ -53698,6 +54522,10 @@
             AVToast.success("Employee created");
           }
           closeEmployeeModal();
+          staffLoaded = false;
+          if (typeof ensureStaffLoaded === "function") {
+            await ensureStaffLoaded();
+          }
           renderPayrollPage();
         } catch (err) {
           AVToast.error(err.message || "Failed to save employee");
@@ -54069,7 +54897,11 @@
               ? `<div class="cal-filing">Tax filing due</div>`
               : "";
           const payChip = payables.some((e) => isPayday(e, dateStr))
-            ? `<div class="cal-payroll">Payroll due</div>`
+            ? dateStr < todayStr
+              ? `<div class="cal-payroll paid">Payroll paid \u2713</div>`
+              : dateStr === todayStr
+                ? `<div class="cal-payroll due">Payroll due today</div>`
+                : `<div class="cal-payroll up">Payroll due</div>`
             : "";
           const cls = ["cal-cell"];
           if (dateStr === todayStr) cls.push("today");
@@ -54198,7 +55030,7 @@
               0,
             );
             html +=
-              `<div class="cds-payroll-banner"><div><b>Payroll due</b> \u2014 ${_due.length} to pay \u00b7 <b style="color:var(--green);">${fmt(_tot)}</b></div>` +
+              `<div class="cds-payroll-banner"><div><b>${calSelectedDay < today.toISOString().slice(0, 10) ? "Payroll paid \u2713" : calSelectedDay === today.toISOString().slice(0, 10) ? "Payroll due today" : "Payroll due"}</b> \u2014 ${_due.length} to pay \u00b7 <b style="color:var(--green);">${fmt(_tot)}</b></div>` +
               _due
                 .map((e) => {
                   const amt = payableAmount(e, calSelectedDay);

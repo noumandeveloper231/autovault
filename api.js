@@ -666,6 +666,7 @@
         portal: "owner",
       }),
     listPayrollRuns: (qs = "") => request(`/api/v1/payroll-runs${qs}`),
+    payrollHistory: (qs = "") => request(`/api/v1/payroll-runs/history${qs}`),
     createPayrollRun: (body) =>
       request("/api/v1/payroll-runs", {
         method: "POST",

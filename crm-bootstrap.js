@@ -310,7 +310,9 @@
               base: parseFloat(profile.baseSalary) || 0,
               payFreq: profile.payFrequency || 'biweekly',
               payDay: profile.payDay != null ? profile.payDay : 5,
-              payAnchor: '',
+              payAnchor: profile.payAnchor
+                ? String(profile.payAnchor).slice(0, 10)
+                : '',
               birthday: bday,
               payMethod: profile.paymentMethod || 'Direct Deposit',
               payProof: profile.payDocUrl || null,
@@ -342,8 +344,11 @@
             payRate: s.payRate || s.payRate || 0,
             monthly: s.payType === 'salary' ? (s.payRate || 0) : 0,
             hourly: s.payType === 'hourly' ? (s.payRate || 0) : 0,
-            payFreq: s.payFrequency || 'biweekly',
+            payFreq: s.payFrequency || 'weekly',
             payDay: s.payDay != null ? s.payDay : 5,
+            payAnchor: s.payAnchor || null,
+            workDays: Array.isArray(s.workDays) ? s.workDays : [1, 2, 3, 4, 5],
+            hoursPerDay: s.hoursPerDay != null ? Number(s.hoursPerDay) : 8,
             isActive: s.isActive !== false,
             _raw: s
           });

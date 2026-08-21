@@ -47,7 +47,7 @@
       base: parseFloat(profile.baseSalary) || 0,
       payFreq: profile.payFrequency || "biweekly",
       payDay: profile.payDay != null ? profile.payDay : 5,
-      payAnchor: "",
+      payAnchor: toYmd(profile.payAnchor),
       birthday: toYmd(profile.birthDate),
       payMethod: profile.paymentMethod || "Direct Deposit",
       payProof: profile.payDocUrl || null,
@@ -132,6 +132,7 @@
         baseSalary: parseFloat(fields.base) || 0,
         payFrequency: fields.payFreq || undefined,
         payDay: parseInt(fields.payDay) || undefined,
+        payAnchor: fields.payAnchor || undefined,
         birthDate: fields.birthday ? toYmd(fields.birthday) || undefined : undefined,
         paymentMethod: fields.payMethod || undefined,
         payDocUrl: fields.payProof || undefined,
@@ -147,6 +148,7 @@
       ui.base = parseFloat(fields.base) || 0;
       ui.payFreq = fields.payFreq || "biweekly";
       ui.payDay = parseInt(fields.payDay) || 5;
+      ui.payAnchor = fields.payAnchor || ui.payAnchor || "";
       ui.birthday = fields.birthday || "";
       ui.username = (fields.username || "").trim() || "";
       getRepsList().push(ui);
@@ -167,6 +169,7 @@
     if (fields.base != null) body.baseSalary = parseFloat(fields.base) || 0;
     if (fields.payFreq != null) body.payFrequency = fields.payFreq || undefined;
     if (fields.payDay != null) body.payDay = parseInt(fields.payDay) || undefined;
+    if (fields.payAnchor !== undefined) body.payAnchor = fields.payAnchor || null;
     // Only send birthDate when the form has a real date. An empty field must not
     // null-out the DB value (the picker often looks blank after a bad hydrate).
     if (fields.birthday !== undefined) {
