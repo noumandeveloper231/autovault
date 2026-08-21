@@ -19516,26 +19516,8 @@
               </div>
             </div>
 
-            <!-- RIGHT: Notes + Profit Calculator -->
+            <!-- RIGHT: Profit Calculator + Notes -->
             <div>
-
-              <!-- Notes -->
-              <div class="vdp-section is-loading">
-                <div class="vdp-section-title">Notes</div>
-                <textarea
-                  id="vdpNotes"
-                  class="vdp-notes-area"
-                  placeholder="Type notes about this vehicle…"
-                  oninput="vdpSaveNotes(this.value)"
-                ></textarea>
-                <div id="vdpNotesStatus" aria-live="polite"></div>
-                <div class="vdp-sk">
-                  <div
-                    class="sk-bar"
-                    style="width: 100%; height: 80px; border-radius: 9px"
-                  ></div>
-                </div>
-              </div>
 
               <!-- Profit Calculator (minimizable) -->
               <div class="vdp-section pcalc-section is-loading" id="pcalcSection">
@@ -19635,6 +19617,24 @@
                   <div
                     class="sk-bar"
                     style="width: 100%; height: 64px; border-radius: 12px; margin-top: 14px"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Notes -->
+              <div class="vdp-section is-loading">
+                <div class="vdp-section-title">Notes</div>
+                <textarea
+                  id="vdpNotes"
+                  class="vdp-notes-area"
+                  placeholder="Type notes about this vehicle…"
+                  oninput="vdpSaveNotes(this.value)"
+                ></textarea>
+                <div id="vdpNotesStatus" aria-live="polite"></div>
+                <div class="vdp-sk">
+                  <div
+                    class="sk-bar"
+                    style="width: 100%; height: 80px; border-radius: 9px"
                   ></div>
                 </div>
               </div>
