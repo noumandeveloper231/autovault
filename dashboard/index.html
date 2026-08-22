@@ -7160,15 +7160,17 @@
 
       .settings-menu {
         position: absolute;
-        top: 46px;
+        top: calc(100% + 8px);
         right: 0;
-        width: 252px;
+        left: auto;
+        width: 240px;
+        max-width: calc(100vw - 24px);
         background: var(--panel);
         border: 1px solid var(--border);
         border-radius: 12px;
         padding: 6px;
         box-shadow: 0 16px 46px rgba(0, 0, 0, 0.45);
-        z-index: 400;
+        z-index: 450;
         display: none;
       }
 
@@ -7182,6 +7184,16 @@
         justify-content: space-between;
         gap: 12px;
         padding: 11px 10px;
+        border-radius: 8px;
+      }
+
+      .sm-row-action {
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+
+      .sm-row-action:hover {
+        background: rgba(58, 160, 255, 0.08);
       }
 
       .sm-label {
@@ -7233,15 +7245,6 @@
       .sm-toggle.on .knob {
         left: 22px;
         background: #fff;
-      }
-
-      .sm-hint {
-        font-size: 10.5px;
-        color: var(--muted);
-        padding: 7px 10px 9px;
-        line-height: 1.45;
-        border-top: 1px solid var(--border);
-        margin-top: 2px;
       }
 
       .cal-month-wrap {
@@ -18247,25 +18250,13 @@
                   </svg>
                 </button>
                 <div class="settings-menu" id="settingsMenu">
-                  <div class="sm-hint">
-                    Numbers stay the same; only wording changes.
-                  </div>
                   <div
-                    style="
-                      border-top: 1px solid var(--border);
-                      margin-top: 4px;
-                      padding-top: 4px;
-                    "
+                    class="sm-row sm-row-action"
+                    onclick="replayIntroduction(); toggleSettingsMenu();"
                   >
-                    <div
-                      class="sm-row"
-                      style="cursor: pointer"
-                      onclick="replayIntroduction()"
-                    >
-                      <div class="sm-label">
-                        <span>Replay Introduction</span
-                        ><small>Walk through the setup guide again</small>
-                      </div>
+                    <div class="sm-label">
+                      <span>Replay Introduction</span>
+                      <small>Walk through the setup guide again</small>
                     </div>
                   </div>
                 </div>
