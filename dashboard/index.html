@@ -1376,12 +1376,80 @@
         color: var(--red);
       }
       @media (max-width: 900px) {
+        .fl-bar-wrap .veh-cal-toggle {
+          flex-wrap: wrap;
+          gap: 8px;
+          padding: 10px 12px;
+        }
+
+        .fl-bar-wrap .vct-label {
+          flex: 1 1 auto;
+          min-width: 0;
+        }
+
+        .fl-bar-wrap .vct-state {
+          margin-left: 0;
+          max-width: 100%;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .flooring-banner.flooring-card,
+        .fl-bar-wrap .flooring-banner.flooring-card {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 14px;
+          padding: 14px;
+        }
+
+        .flooring-card .flb-lead {
+          width: 100%;
+        }
+
+        .flooring-card .flb-stat {
+          width: 100%;
+          padding-left: 0;
+          border-left: none;
+          border-top: 1px solid var(--border);
+          padding-top: 12px;
+          align-items: flex-start;
+        }
+
+        .flb-note {
+          min-width: 0;
+          width: 100%;
+        }
+
         .flb-actions {
           margin-left: 0;
+          width: 100%;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
         }
-        .flb-note {
-          order: 5;
-          min-width: 100%;
+
+        .flb-btn {
+          width: 100%;
+          justify-content: center;
+          white-space: normal;
+          text-align: center;
+        }
+
+        .fl-undo-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .fl-undo-bar .flu-actions {
+          width: 100%;
+          flex-direction: column;
+        }
+
+        .fl-undo-bar .flu-actions .btn-ghost,
+        .fl-undo-bar .flu-actions .btn-primary {
+          width: 100%;
+          justify-content: center;
         }
       }
 
@@ -1600,10 +1668,12 @@
           flex-direction: column;
           align-items: stretch;
           gap: 10px;
+          flex: 0 0 auto;
+          margin-bottom: 12px;
         }
 
         #page-vehicles .filter-row input#tableSearch {
-          flex: 1 1 auto;
+          flex: 0 0 auto;
           width: 100%;
           min-width: 0;
         }
@@ -1614,6 +1684,7 @@
           flex-direction: column;
           align-items: stretch;
           gap: 8px;
+          flex: 0 0 auto;
         }
 
         #page-vehicles .filter-controls .veh-view-seg {
@@ -1891,27 +1962,46 @@
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       }
 
-      /* Add Vehicle / Prev Sold — sticky bottom action bar */
-      #addVehModal .modal,
-      #prevSoldModal .modal {
+      /* Form modals — sticky bottom action bar (scroll body, pin footer) */
+      .modal-overlay .modal:has(> .modal-foot),
+      .modal-overlay .modal:has(> .av-modal-foot) {
         display: flex;
         flex-direction: column;
         overflow: hidden;
-        max-width: 640px;
+        max-height: min(90vh, 90dvh);
       }
-      #addVehModal .modal-body,
-      #prevSoldModal .modal-body {
+
+      .modal-overlay .modal:has(> .modal-foot) .modal-head,
+      .modal-overlay .modal:has(> .av-modal-foot) .modal-head {
+        flex-shrink: 0;
+      }
+
+      .modal-overlay .modal:has(> .modal-foot) .modal-body,
+      .modal-overlay .modal:has(> .av-modal-foot) .modal-body {
         overflow-y: auto;
         flex: 1 1 auto;
         min-height: 0;
+        -webkit-overflow-scrolling: touch;
       }
+
+      .modal-overlay .modal:has(> .modal-foot) .modal-foot,
+      .modal-overlay .modal:has(> .av-modal-foot) .av-modal-foot {
+        flex-shrink: 0;
+        background: var(--panel);
+        border-top: 1px solid var(--border);
+        z-index: 2;
+      }
+
+      #addVehModal .modal,
+      #prevSoldModal .modal {
+        max-width: 640px;
+      }
+
       #addVehModal .av-modal-foot,
       #prevSoldModal .av-modal-foot {
-        flex-shrink: 0;
         padding: 14px 22px 18px;
-        border-top: 1px solid var(--border);
-        background: var(--panel);
       }
+
       #addVehModal .av-modal-foot .av-submit,
       #prevSoldModal .av-modal-foot .av-submit {
         margin: 0;
@@ -1922,11 +2012,16 @@
           padding: 12px;
         }
 
-        #addVehModal .modal,
-        #prevSoldModal .modal {
+        .modal-overlay .modal:has(> .modal-foot),
+        .modal-overlay .modal:has(> .av-modal-foot) {
           width: 100%;
           max-width: none;
           max-height: min(92dvh, 92vh);
+        }
+
+        .modal-overlay .modal:has(> .modal-foot) .modal-foot,
+        .modal-overlay .modal:has(> .av-modal-foot) .av-modal-foot {
+          padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
         }
 
         #addVehModal .modal-head,
@@ -1938,11 +2033,6 @@
         #prevSoldModal .modal-body {
           padding: 16px;
           overflow-x: hidden;
-        }
-
-        #addVehModal .av-modal-foot,
-        #prevSoldModal .av-modal-foot {
-          padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
         }
 
         #addVehModal .av-grid3,
@@ -7376,6 +7466,99 @@
         box-sizing: border-box;
       }
 
+      /* Scrollable calendar body — keeps day cells readable on narrow screens */
+      .cal-scroll-area {
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+        scrollbar-gutter: stable;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+        padding-bottom: 2px;
+      }
+
+      .cal-scroll-area::-webkit-scrollbar {
+        height: 8px;
+      }
+
+      .cal-scroll-area::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .cal-scroll-area::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 999px;
+      }
+
+      .cal-scroll-area .cal-weekdays,
+      .cal-scroll-area .cal-grid {
+        --cal-col-min: 100px;
+        --cal-gap: 8px;
+        grid-template-columns: repeat(7, minmax(var(--cal-col-min), 1fr));
+        min-width: calc(7 * var(--cal-col-min) + 6 * var(--cal-gap));
+        width: 100%;
+        gap: var(--cal-gap);
+        box-sizing: border-box;
+      }
+
+      .cal-scroll-area .cal-weekdays {
+        margin-bottom: 8px;
+      }
+
+      .cal-scroll-area .cal-weekdays div {
+        font-size: 10.5px;
+      }
+
+      .cal-scroll-area .cal-cell:not(.expanded) {
+        min-height: var(--cal-col-min);
+        min-width: var(--cal-col-min);
+        aspect-ratio: auto;
+        padding: 8px 6px;
+      }
+
+      .cal-scroll-area .cal-cell.empty {
+        min-height: var(--cal-col-min);
+        min-width: var(--cal-col-min);
+        aspect-ratio: auto;
+      }
+
+      .cal-scroll-area .cal-grid > .dash-cal-skel {
+        grid-column: 1 / -1;
+      }
+
+      .cal-scroll-area .cal-cell.expanded {
+        grid-column: 1 / -1;
+        min-height: 240px;
+        aspect-ratio: auto;
+      }
+
+      @media (max-width: 900px) {
+        .cal-scroll-area .cal-weekdays,
+        .cal-scroll-area .cal-grid {
+          --cal-col-min: 96px;
+          --cal-gap: 6px;
+        }
+
+        .cal-scroll-area .cal-weekdays div {
+          font-size: 10px;
+        }
+
+        .cal-scroll-area .cal-daynum {
+          font-size: 12px;
+        }
+
+        .cal-scroll-area .cal-sold,
+        .cal-scroll-area .cal-note-bar,
+        .cal-scroll-area .cal-bday,
+        .cal-scroll-area .cal-filing,
+        .cal-scroll-area .cal-note-chip,
+        .cal-scroll-area .cal-fl {
+          font-size: 9px;
+          padding: 2px 5px;
+        }
+      }
+
       .cal-cell {
         min-height: 94px;
         min-width: 0;
@@ -8003,34 +8186,6 @@
         #page-calendar .cal-month-wrap {
           padding: 12px;
         }
-
-        #page-calendar .cal-weekdays,
-        #page-calendar .cal-grid {
-          gap: 4px;
-        }
-
-        #page-calendar .cal-weekdays div {
-          font-size: 9px;
-          letter-spacing: 0;
-        }
-
-        #page-calendar .cal-cell {
-          min-height: 0;
-          aspect-ratio: 1;
-          padding: 6px 4px;
-          gap: 3px;
-        }
-
-        #page-calendar .cal-cell.empty {
-          aspect-ratio: 1;
-          min-height: 0;
-        }
-
-        #page-calendar .cal-sk-cell {
-          aspect-ratio: 1;
-          min-height: 0;
-          padding: 6px 4px;
-        }
       }
 
       .cds-payoff-list {
@@ -8118,9 +8273,9 @@
       }
 
       .cal-sk-cell {
-        min-height: 0;
-        min-width: 0;
-        aspect-ratio: 1;
+        min-height: 100px;
+        min-width: 100px;
+        aspect-ratio: auto;
         border: 1px solid var(--border);
         border-radius: 10px;
         background: var(--panel-2);
@@ -8128,6 +8283,11 @@
         display: flex;
         flex-direction: column;
         gap: 6px;
+      }
+
+      .cal-scroll-area .cal-sk-cell {
+        min-height: var(--cal-col-min, 100px);
+        min-width: var(--cal-col-min, 100px);
       }
       .cal-sk-cell .sk-bar {
         height: 10px;
@@ -10585,68 +10745,6 @@
         margin: 0 !important;
       }
 
-      @media (max-width: 640px) {
-        .dash-cal-inner {
-          padding-left: 8px !important;
-          padding-right: 8px !important;
-        }
-
-        .dash-cal-inner .cal-weekdays,
-        .dash-cal-inner .cal-grid,
-        .dash-cal-skel {
-          gap: 3px;
-        }
-
-        .dash-cal-inner .cal-weekdays div {
-          font-size: 9px;
-          letter-spacing: 0;
-          padding: 0 1px;
-        }
-
-        .dash-cal-inner .cal-cell:not(.expanded) {
-          min-height: 0;
-          aspect-ratio: 1;
-          padding: 3px 2px;
-          gap: 2px;
-          border-radius: 6px;
-        }
-
-        .dash-cal-inner .cal-cell.empty {
-          aspect-ratio: 1;
-          min-height: 0;
-        }
-
-        .dash-cal-inner .cal-daynum {
-          font-size: 11px;
-          line-height: 1.1;
-        }
-
-        .dash-cal-inner .cal-sold,
-        .dash-cal-inner .cal-note-bar,
-        .dash-cal-inner .cal-bday,
-        .dash-cal-inner .cal-filing {
-          font-size: 8px;
-          padding: 1px 3px;
-          line-height: 1.15;
-          max-width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        .dash-cal-inner .cal-cell.expanded {
-          grid-column: 1 / -1;
-          grid-row: auto;
-          aspect-ratio: auto;
-          min-height: 220px;
-        }
-
-        .dash-cal-skel .sk-bar {
-          min-height: 0;
-          aspect-ratio: 1;
-        }
-      }
-
       @media (max-width: 680px) {
         .dash-compare-strip {
           grid-template-columns: 1fr;
@@ -10882,6 +10980,19 @@
         font-size: 12.5px;
         padding: 7px 14px;
         white-space: nowrap;
+      }
+
+      .dash-cal-month-title {
+        font-weight: 800;
+        font-size: 15px;
+        color: var(--text);
+        line-height: 1.2;
+      }
+
+      @media (max-width: 900px) {
+        .dash-cal-inner {
+          padding: 12px !important;
+        }
       }
 
       .fb-btns {
@@ -13661,11 +13772,12 @@
 
       .dash-cal-skel {
         display: grid;
-        grid-template-columns: repeat(7, minmax(0, 1fr));
-        gap: 8px;
+        grid-template-columns: repeat(7, minmax(var(--cal-col-min, 100px), 1fr));
+        gap: var(--cal-gap, 8px);
+        min-width: calc(7 * var(--cal-col-min, 100px) + 6 * var(--cal-gap, 8px));
       }
       .dash-cal-skel .sk-bar {
-        min-height: 72px;
+        min-height: var(--cal-col-min, 100px);
         border-radius: 10px;
         width: 100%;
         background: var(--panel-2);
@@ -13718,26 +13830,25 @@
       /* ── Rep portal skeleton ──────────────────────────────────────────── */
       .rep-sk {
         position: relative;
-        min-height: 280px;
+        min-height: 0;
       }
       .rep-sk .dash-sk-overlay {
         display: block;
-        margin-bottom: 8px;
       }
-      .rep-sk .rep-page-content {
-        visibility: hidden;
+      .rep-sk:not(.is-loaded) .rep-page-content {
+        display: none;
       }
       .rep-sk.is-loaded .dash-sk-overlay {
         display: none !important;
       }
       .rep-sk.is-loaded .rep-page-content {
-        visibility: visible;
+        display: block;
       }
       .rep-sk.page-data-loading .dash-sk-overlay {
         display: block;
       }
       .rep-sk.page-data-loading .rep-page-content {
-        visibility: hidden;
+        display: none;
       }
       .dash-sk-strip {
         width: 100%;
@@ -14844,6 +14955,13 @@
         border-radius: 8px;
         cursor: pointer;
         font-size: 15px;
+      }
+
+      .rd-cal-nav {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        flex-shrink: 0;
       }
 
       .rd-cal-nav button:hover {
@@ -17114,6 +17232,7 @@
     </style>
     <script src="/dashboard-es-dict.js"></script>
     <script src="/av-i18n.js"></script>
+    <script src="/api-config.js"></script>
     <script src="/auth-portal.js"></script>
     <script src="/api.js"></script>
     <script src="/finance-persist.js"></script>
@@ -17320,7 +17439,7 @@
           </svg>
           My Customers
         </div>
-        <div
+        <!-- <div
           class="nav-item"
           data-page="rep-leads"
           onclick="
@@ -17341,7 +17460,7 @@
             <path d="M23 11h-6" />
           </svg>
           My Leads
-        </div>
+        </div> -->
       </div>
 
       <div class="nav-group rep-only-group">
@@ -18573,16 +18692,17 @@
                   Open full calendar &rarr;
                 </button>
               </div>
-              <div class="cal-weekdays">
-                <div>Sun</div>
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
-              </div>
-              <div class="cal-grid" id="dashCalGrid">
+              <div class="cal-scroll-area">
+                <div class="cal-weekdays">
+                  <div>Sun</div>
+                  <div>Mon</div>
+                  <div>Tue</div>
+                  <div>Wed</div>
+                  <div>Thu</div>
+                  <div>Fri</div>
+                  <div>Sat</div>
+                </div>
+                <div class="cal-grid" id="dashCalGrid">
                 <div class="dash-cal-skel" aria-hidden="true">
                   <div class="sk-bar"></div>
                   <div class="sk-bar"></div>
@@ -18620,6 +18740,7 @@
                   <div class="sk-bar"></div>
                   <div class="sk-bar"></div>
                 </div>
+              </div>
               </div>
             </div>
           </div>
@@ -19469,16 +19590,18 @@
                     ></div>
                   </div>
                 </div>
-                <div class="cal-weekdays" id="calSkWeekdays">
-                  <div>Sun</div>
-                  <div>Mon</div>
-                  <div>Tue</div>
-                  <div>Wed</div>
-                  <div>Thu</div>
-                  <div>Fri</div>
-                  <div>Sat</div>
+                <div class="cal-scroll-area">
+                  <div class="cal-weekdays" id="calSkWeekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                  </div>
+                  <div class="cal-grid" id="calSkGrid"></div>
                 </div>
-                <div class="cal-grid" id="calSkGrid"></div>
               </div>
             </div>
             <div class="cal-side">
@@ -19521,16 +19644,18 @@
                   class="cal-filing-badge"
                   style="display: none"
                 ></div>
-                <div class="cal-weekdays" id="calWeekdays">
-                  <div>Sun</div>
-                  <div>Mon</div>
-                  <div>Tue</div>
-                  <div>Wed</div>
-                  <div>Thu</div>
-                  <div>Fri</div>
-                  <div>Sat</div>
+                <div class="cal-scroll-area">
+                  <div class="cal-weekdays" id="calWeekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                  </div>
+                  <div class="cal-grid" id="calGrid"></div>
                 </div>
-                <div class="cal-grid" id="calGrid"></div>
               </div>
             </div>
             <div class="cal-side">
@@ -21618,29 +21743,10 @@
             </div>
             <div class="rd-toprep" id="repTopRep"></div>
             <div class="dash-cal-card" style="margin-top: 16px">
-              <div
-                class="dcs-topbar"
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                  padding: 12px 16px 4px;
-                  flex-wrap: wrap;
-                  gap: 8px;
-                "
-              >
-                <div
-                  class="dcs-title"
-                  style="
-                    font-size: 11px;
-                    font-weight: 800;
-                    text-transform: uppercase;
-                    letter-spacing: 0.6px;
-                    color: var(--muted);
-                  "
-                >
+              <div class="dcs-topbar">
+                <div class="dcs-title">
                   This month vs last month &middot;
-                  <b id="repCmpLbl" style="color: var(--text)"></b>
+                  <b id="repCmpLbl"></b>
                 </div>
                 <span class="dch-legend"
                   ><span class="dch-dot this"></span> This
@@ -21652,36 +21758,30 @@
                 id="repCompareBars"
                 style="grid-template-columns: 1fr 1fr"
               ></div>
-              <div
-                class="dash-cal-toolbar"
-                style="
-                  display: flex;
-                  align-items: center;
-                  justify-content: space-between;
-                "
-              >
-                <div
-                  id="repCalTitle"
-                  style="font-weight: 800; font-size: 15px; color: var(--text)"
-                ></div>
-                <div class="rd-cal-nav">
-                  <button type="button" onclick="repCalMonth(-1)">
-                    &lsaquo;</button
-                  ><button type="button" onclick="repCalMonth(1)">
-                    &rsaquo;
-                  </button>
+              <div class="cal-month-wrap dash-cal-inner">
+                <div class="dash-cal-toolbar">
+                  <div id="repCalTitle" class="dash-cal-month-title"></div>
+                  <div class="rd-cal-nav">
+                    <button type="button" onclick="repCalMonth(-1)">
+                      &lsaquo;</button
+                    ><button type="button" onclick="repCalMonth(1)">
+                      &rsaquo;
+                    </button>
+                  </div>
+                </div>
+                <div class="cal-scroll-area">
+                  <div class="cal-weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                  </div>
+                  <div class="cal-grid" id="repCalGrid"></div>
                 </div>
               </div>
-              <div class="cal-weekdays">
-                <div>Sun</div>
-                <div>Mon</div>
-                <div>Tue</div>
-                <div>Wed</div>
-                <div>Thu</div>
-                <div>Fri</div>
-                <div>Sat</div>
-              </div>
-              <div class="cal-grid" id="repCalGrid"></div>
             </div>
             <div class="table-card dash-sold-card" style="margin-top: 16px">
               <div class="dash-sold-head">
@@ -22246,38 +22346,32 @@
               id="wsCompareBars"
               aria-busy="true"
             ></div>
-            <div
-              class="dash-cal-toolbar"
-              style="
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-              "
-            >
-              <div
-                style="font-weight: 800; font-size: 15px; color: var(--text)"
-                id="wsCalTitle"
-              >
-                Auction Activity
+            <div class="cal-month-wrap dash-cal-inner">
+              <div class="dash-cal-toolbar">
+                <div class="dash-cal-month-title" id="wsCalTitle">
+                  Auction Activity
+                </div>
+                <div style="font-size: 12px; color: var(--muted)">
+                  Green = sold &middot; Red = no-sale
+                </div>
               </div>
-              <div style="font-size: 12px; color: var(--muted)">
-                Green = sold &middot; Red = no-sale
+              <div class="cal-scroll-area">
+                <div class="cal-weekdays">
+                  <div>Sun</div>
+                  <div>Mon</div>
+                  <div>Tue</div>
+                  <div>Wed</div>
+                  <div>Thu</div>
+                  <div>Fri</div>
+                  <div>Sat</div>
+                </div>
+                <div
+                  class="cal-grid ws-panel-loading"
+                  id="wsCalGrid"
+                  aria-busy="true"
+                ></div>
               </div>
             </div>
-            <div class="cal-weekdays">
-              <div>Sun</div>
-              <div>Mon</div>
-              <div>Tue</div>
-              <div>Wed</div>
-              <div>Thu</div>
-              <div>Fri</div>
-              <div>Sat</div>
-            </div>
-            <div
-              class="cal-grid ws-panel-loading"
-              id="wsCalGrid"
-              aria-busy="true"
-            ></div>
           </div>
         </div>
 
@@ -26091,7 +26185,9 @@
             </div>
           </div>
           <div id="djCommPreview" style="background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; margin-top: 8px; font-size: 13px; line-height: 1.5">—</div>
-          <button class="btn-primary av-submit" style="margin-top: 14px" onclick="djSaveCommission()">Save Commission</button>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-primary av-submit" style="margin: 0; box-shadow: none" onclick="djSaveCommission()">Save Commission</button>
         </div>
       </div>
     </div>
@@ -27378,23 +27474,23 @@
               style="resize: vertical"
             ></textarea>
           </div>
-          <div style="display: flex; gap: 10px; margin-top: 10px">
-            <button
-              class="btn-danger"
-              id="leadDeleteBtn"
-              style="display: none"
-              onclick="deleteLead()"
-            >
-              Delete
-            </button>
-            <button
-              class="btn-primary"
-              style="flex: 1; box-shadow: none"
-              onclick="saveLead()"
-            >
-              Save Lead
-            </button>
-          </div>
+        </div>
+        <div class="modal-foot" style="justify-content: space-between">
+          <button
+            class="btn-danger"
+            id="leadDeleteBtn"
+            style="display: none"
+            onclick="deleteLead()"
+          >
+            Delete
+          </button>
+          <button
+            class="btn-primary"
+            style="box-shadow: none; margin-left: auto"
+            onclick="saveLead()"
+          >
+            Save Lead
+          </button>
         </div>
       </div>
     </div>
@@ -27457,33 +27553,31 @@
               style="resize: vertical"
             ></textarea>
           </div>
-          <div
-            style="display: flex; gap: 10px; margin-top: 10px; flex-wrap: wrap"
+        </div>
+        <div class="modal-foot" style="justify-content: space-between; flex-wrap: wrap">
+          <button
+            class="btn-danger"
+            id="custLeadDeleteBtn"
+            style="display: none"
+            onclick="openDeleteLeadModal()"
           >
-            <button
-              class="btn-danger"
-              id="custLeadDeleteBtn"
-              style="display: none"
-              onclick="openDeleteLeadModal()"
-            >
-              Delete
-            </button>
-            <button
-              class="btn-ghost"
-              id="custLeadConvertBtn"
-              style="display: none"
-              onclick="openConvertLeadModal()"
-            >
-              Convert to Customer
-            </button>
-            <button
-              class="btn-primary"
-              style="flex: 1; box-shadow: none; min-width: 120px"
-              onclick="saveCustLead()"
-            >
-              Save Lead
-            </button>
-          </div>
+            Delete
+          </button>
+          <button
+            class="btn-ghost"
+            id="custLeadConvertBtn"
+            style="display: none"
+            onclick="openConvertLeadModal()"
+          >
+            Convert to Customer
+          </button>
+          <button
+            class="btn-primary"
+            style="box-shadow: none; margin-left: auto"
+            onclick="saveCustLead()"
+          >
+            Save Lead
+          </button>
         </div>
       </div>
     </div>
@@ -27696,23 +27790,19 @@
               style="resize: vertical"
             ></textarea>
           </div>
-          <div style="display: flex; gap: 10px; margin-top: 10px">
-            <button
-              class="btn-ghost"
-              style="flex: 1"
-              onclick="closeAddCustomerModal()"
-            >
-              Cancel
-            </button>
-            <button
-              class="btn-primary"
-              id="addCustSaveBtn"
-              style="flex: 1; box-shadow: none"
-              onclick="saveAddCustomer()"
-            >
-              Save Customer
-            </button>
-          </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-ghost" onclick="closeAddCustomerModal()">
+            Cancel
+          </button>
+          <button
+            class="btn-primary"
+            id="addCustSaveBtn"
+            style="box-shadow: none"
+            onclick="saveAddCustomer()"
+          >
+            Save Customer
+          </button>
         </div>
       </div>
     </div>
@@ -28005,10 +28095,13 @@
             temporary password and must change it on first login. Maximum
             3 owners. Only the main owner can add or remove Secondary Owners.
           </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-ghost" onclick="closeAddAdmin()">Cancel</button>
           <button
             class="btn-primary"
             id="saveAdminUserBtn"
-            style="width: 100%; box-shadow: none; margin-top: 14px"
+            style="box-shadow: none"
             onclick="saveAdminUser()"
           >
             Send invite
@@ -28065,15 +28158,13 @@
             up to <b>3 times</b>, with a <b>10 minute</b> cooldown between
             sends.
           </div>
+        </div>
+        <div class="modal-foot">
+          <button class="btn-ghost" onclick="closeAddCpa()">Cancel</button>
           <button
             class="btn-primary"
             id="cpaInviteSaveBtn"
-            style="
-              width: 100%;
-              box-shadow: none;
-              margin-top: 14px;
-              background: #1c7a46;
-            "
+            style="box-shadow: none; background: #1c7a46"
             onclick="saveCpaInvite()"
           >
             Send CPA invite
@@ -37756,12 +37847,9 @@
         }, 1000);
       }
       const avConfig = {
-        apiUrl:
-          window.AUTOVAULT_API_URL ||
-          (location.hostname === "localhost" ||
-          location.hostname === "127.0.0.1"
-            ? "http://localhost:3000"
-            : "https://api.autovault360.com"),
+        apiUrl: window.AVApiConfig
+          ? AVApiConfig.resolveApiUrl()
+          : window.AUTOVAULT_API_URL || "https://api.autovault360.com",
         ownerApiKey: window.AUTOVAULT_OWNER_API_KEY || "",
       };
       const OWNER_STATES = {

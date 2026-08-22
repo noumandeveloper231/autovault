@@ -74,15 +74,14 @@
     </div>
   </section>
 
+  <script src="/api-config.js"></script>
   <script src="/landing-es-dict.js"></script>
   <script src="/auth-flow-ui.js"></script>
   <script>
     (async function () {
-      const API_URL = window.AUTOVAULT_API_URL || (
-        (location.hostname === "localhost" || location.hostname === "127.0.0.1")
-          ? "http://localhost:3000"
-          : "https://api.autovault360.com"
-      );
+      const API_URL = window.AVApiConfig
+        ? AVApiConfig.resolveApiUrl()
+        : (window.AUTOVAULT_API_URL || "https://api.autovault360.com");
 
       const panel = document.getElementById("panel");
       const statusIcon = document.getElementById("statusIcon");

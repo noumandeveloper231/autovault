@@ -4,10 +4,12 @@
  */
 (function (global) {
   const API_URL =
-    global.AUTOVAULT_API_URL ||
-    (location.hostname === "localhost" || location.hostname === "127.0.0.1"
-      ? "http://localhost:3000"
-      : "https://api.autovault360.com");
+    global.AVApiConfig && typeof global.AVApiConfig.resolveApiUrl === "function"
+      ? global.AVApiConfig.resolveApiUrl()
+      : global.AUTOVAULT_API_URL ||
+        (location.hostname === "localhost" || location.hostname === "127.0.0.1"
+          ? "http://localhost:3000"
+          : "https://api.autovault360.com");
 
   const ACCESS_KEY = "avAuthToken";
   const REFRESH_KEY = "avRefreshToken";

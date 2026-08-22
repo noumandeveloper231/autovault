@@ -1,9 +1,11 @@
 (function (global) {
-  var SOCKET_URL = (global.AUTOVAULT_API_URL || (
-    location.hostname === 'localhost' || location.hostname === '127.0.0.1'
-      ? 'http://localhost:3000'
-      : 'https://api.autovault360.com'
-  ));
+  var SOCKET_URL =
+    global.AVApiConfig && typeof global.AVApiConfig.resolveApiUrl === "function"
+      ? global.AVApiConfig.resolveApiUrl()
+      : global.AUTOVAULT_API_URL ||
+        (location.hostname === "localhost" || location.hostname === "127.0.0.1"
+          ? "http://localhost:3000"
+          : "https://api.autovault360.com");
 
   var ACCESS_KEY = 'avAuthToken';
   var OWNER_ACCESS_KEY = 'avOwnerToken';

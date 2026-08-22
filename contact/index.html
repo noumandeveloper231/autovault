@@ -66,6 +66,7 @@
       </form>
     </div>
   </div>
+<script src="/api-config.js"></script>
 <script src="/us-locations.js"></script>
 <script src="/toast.js"></script>
 <script>
@@ -94,11 +95,9 @@
       sel.appendChild(opt);
     });
   }
-  const API_URL = window.AUTOVAULT_API_URL || (
-    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-      ? 'http://localhost:3000'
-      : 'https://api.autovault360.com'
-  );
+  const API_URL = window.AVApiConfig
+    ? AVApiConfig.resolveApiUrl()
+    : (window.AUTOVAULT_API_URL || 'https://api.autovault360.com');
   form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     const need=['first','email']; let bad=false;

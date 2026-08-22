@@ -36,6 +36,7 @@
 <meta name="twitter:title" content="AutoVault — The Dealership Operating System" />
 <meta name="twitter:description" content="AutoVault brings inventory, sales, commissions, payments, taxes, and profit into one platform built for how dealerships actually run. Your first month is on us." />
 <meta name="twitter:image" content="https://www.autovault360.com/og-image.png" />
+<script src="/api-config.js"></script>
 <script src="/auth-portal.js"></script>
 <script>
 (function(){
@@ -2586,11 +2587,9 @@
     io.observe(document.getElementById('jenna'));
   })();
 
-  const API_URL = window.AUTOVAULT_API_URL || (
-    (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-      ? 'http://localhost:3000'
-      : 'https://api.autovault360.com'
-  );
+  const API_URL = window.AVApiConfig
+    ? AVApiConfig.resolveApiUrl()
+    : (window.AUTOVAULT_API_URL || 'https://api.autovault360.com');
   const PLAN_MAP = {
     'Fully Loaded': 'growing_dealership',
     'Wholesalers': 'wholesaler',
