@@ -4054,6 +4054,92 @@
           display: none;
         }
 
+        /* Page headers: stack title, then action buttons on the next line */
+        .page-head {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: stretch !important;
+          justify-content: flex-start !important;
+          gap: 12px !important;
+          margin-top: 14px;
+          margin-bottom: 16px;
+        }
+
+        .page-head .page-title {
+          order: 1;
+          width: 100%;
+          padding-right: 0;
+        }
+
+        .page-head .page-title b {
+          font-size: 22px;
+          line-height: 1.15;
+          word-break: break-word;
+        }
+
+        .page-head .page-sub {
+          order: 3;
+          width: 100%;
+        }
+
+        .page-head > div[style*="position: absolute"],
+        .page-head > div[style*="position:absolute"],
+        .page-head > .print-btn[style*="position: absolute"],
+        .page-head > .print-btn[style*="position:absolute"] {
+          position: static !important;
+          top: auto !important;
+          right: auto !important;
+          left: auto !important;
+          order: 2;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          width: 100%;
+          align-self: flex-start;
+        }
+
+        .page-head > .btn-primary,
+        .page-head > .btn-ghost,
+        .page-head > .print-btn {
+          order: 2;
+          align-self: flex-start;
+          max-width: 100%;
+        }
+
+        .page-head > div:not(.page-title):not(.page-sub):has(.page-title) {
+          order: 1;
+          width: 100%;
+        }
+
+        .page-head > div:not(.page-title):not(.page-sub):has(.btn-primary),
+        .page-head > div:not(.page-title):not(.page-sub):has(.print-btn),
+        .page-head > div:not(.page-title):not(.page-sub):has(.grid-toggle-btn),
+        .page-head > div:not(.page-title):not(.page-sub):has(.veh-view-seg) {
+          order: 2;
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          align-items: center;
+        }
+
+        .section-heading {
+          flex-direction: column !important;
+          align-items: stretch !important;
+          gap: 12px !important;
+        }
+
+        .section-heading > div:first-child {
+          width: 100%;
+        }
+
+        .section-heading .btn-primary,
+        .section-heading .btn-ghost,
+        .section-heading .print-btn {
+          align-self: flex-start;
+          max-width: 100%;
+        }
+
         .kpi-grid {
           grid-template-columns: repeat(2, 1fr);
         }
@@ -12394,44 +12480,6 @@
         body.rep-mode .cpa-banner-exit {
           padding: 4px 8px;
           font-size: 10.5px;
-        }
-
-        body.cpa-mode .page-head {
-          display: flex;
-          flex-direction: column;
-          align-items: stretch;
-          gap: 12px;
-          margin-top: 14px;
-        }
-
-        body.cpa-mode .page-head > div[style*="position: absolute"],
-        body.cpa-mode .page-head > div[style*="position:absolute"] {
-          position: static !important;
-          top: auto !important;
-          right: auto !important;
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-          width: 100%;
-          order: 2;
-        }
-
-        body.cpa-mode .page-head > .print-btn[style*="position: absolute"],
-        body.cpa-mode .page-head > .print-btn[style*="position:absolute"] {
-          position: static !important;
-          top: auto !important;
-          right: auto !important;
-          align-self: flex-start;
-          order: 2;
-        }
-
-        body.cpa-mode .page-title {
-          order: 1;
-          padding-right: 0;
-        }
-
-        body.cpa-mode .page-title b {
-          font-size: 22px;
         }
 
         body.cpa-mode #page-sold-vehicles .veh-view-seg,
