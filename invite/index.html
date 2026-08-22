@@ -1,96 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-av-surface="landing">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Accept Invite - AutoVault</title>
+  <script>
+    (function () {
+      try {
+        var s = localStorage.getItem("av-landing-theme");
+        var dark = s === "dark";
+        var r = document.documentElement;
+        r.classList.toggle("dark", dark);
+        r.classList.toggle("bright", !dark);
+        r.style.colorScheme = dark ? "dark" : "light";
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Accept Invite — AutoVault</title>
   <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#E6E8EF" data-theme-light="#E6E8EF" data-theme-dark="#0A0D10" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
-  <style>
-    :root { --bg:#0b0e14; --card:#12161b; --border:#232a32; --text:#eaecef; --muted:#8b95a1; --green:#2c9257; --green-2:#46d392; }
-    * { box-sizing: border-box; }
-    body {
-      margin:0; min-height:100vh; display:grid; place-items:center;
-      background:radial-gradient(1200px 600px at 20% -10%, #173021, transparent), var(--bg);
-      color:var(--text); font-family:Inter,system-ui,sans-serif;
-    }
-    .card { width:min(440px,92vw); background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px; }
-    .brand { font-family:"Space Grotesk",sans-serif; font-weight:700; font-size:18px; margin-bottom:18px; }
-    .eyebrow { color:var(--green-2); font-size:11px; letter-spacing:.12em; text-transform:uppercase; font-weight:700; margin-bottom:8px; }
-    h1 { font-family:"Space Grotesk",sans-serif; font-size:26px; margin:0 0 8px; }
-    p { color:var(--muted); font-size:14px; line-height:1.5; margin:0 0 18px; }
-    label { display:block; font-size:12px; color:var(--muted); margin-bottom:6px; }
-    input {
-      width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--border);
-      background:#0f1419; color:var(--text); margin-bottom:14px; font:inherit;
-    }
-    input:focus { outline:none; border-color:rgba(44,146,87,.55); }
-    button {
-      width:100%; border:0; border-radius:10px; padding:12px; background:var(--green);
-      color:#fff; font-weight:700; cursor:pointer; font:inherit;
-    }
-    button:disabled { opacity:.65; cursor:wait; }
-    .msg { margin-top:12px; font-size:13px; display:none; }
-    .err { color:#ff7b7b; }
-    .ok { color:var(--green-2); }
-    .hint { margin-top:14px; font-size:13px; }
-    .hint a { color:var(--green-2); text-decoration:none; }
-  </style>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <script src="/theme.js"></script>
+  <link rel="stylesheet" href="/auth-flow.css" />
 </head>
 <body>
-  <div class="card">
-    <div class="brand">AutoVault</div>
-    <div class="eyebrow">Team invitation</div>
-    <h1>Join your dealership</h1>
-    <p>Create your password to activate your AutoVault account. This link expires in 7 days.</p>
-    <form id="form">
-      <label for="fullName">Full name</label>
-      <input id="fullName" type="text" required autocomplete="name" placeholder="Your full name" />
-      <label for="password">Password</label>
-      <input id="password" type="password" minlength="8" required autocomplete="new-password" placeholder="Strong password (8+ chars)" />
-      <label for="confirm">Confirm password</label>
-      <input id="confirm" type="password" minlength="8" required autocomplete="new-password" placeholder="Re-enter password" />
-      <button type="submit" id="submitBtn">Accept invitation</button>
-    </form>
-    <p class="msg" id="msg"></p>
-    <p class="hint"><a href="/login">Already have an account? Log in</a></p>
+  <div class="backdrop" aria-hidden="true"><div class="grid-lines"></div></div>
+
+  <div class="login-utils">
+    <div class="nav-utils" aria-label="Language and theme">
+      <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Switch theme" aria-label="Toggle theme"></button>
+      <a href="#" class="lang-btn" title="Español" aria-label="Switch to Spanish">ES</a>
+    </div>
+    <a href="/" class="login-close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      <span>Back to Home</span>
+    </a>
   </div>
+
+  <section class="af-view">
+    <div class="af-bg" aria-hidden="true"><div class="af-grid"></div><div class="af-aura"></div></div>
+    <div class="af-shell">
+      <div class="af-card">
+        <a href="/" class="af-brand">
+          <span class="af-mark" aria-hidden="true">
+            <svg viewBox="0 0 120 78" width="64" height="30" focusable="false"><path d="M16 12 L42 64 L68 12" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 64 L78 12 L104 64" fill="none" stroke="var(--accent)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="af-name">AutoVault</span>
+        </a>
+        <span class="af-eyebrow" id="inviteEyebrow">Team invitation</span>
+        <h1 class="af-title" id="inviteTitle">Join your dealership</h1>
+        <p class="af-sub" id="inviteIntro">Create your password to activate your AutoVault account.</p>
+        <div class="af-email-box" id="inviteEmailBox" hidden>
+          <p class="label">Your login email</p>
+          <p class="value" id="inviteEmail"></p>
+        </div>
+        <p class="af-sub af-expiry-wrap"><strong id="inviteExpiry" class="af-expiry">Checking link…</strong></p>
+        <form id="form" class="af-form" novalidate>
+          <div class="af-field">
+            <label for="fullName">Full name</label>
+            <input id="fullName" type="text" required autocomplete="name" placeholder="Your full name" />
+          </div>
+          <div class="af-field">
+            <label for="password">Password</label>
+            <div class="af-pw-wrap">
+              <input id="password" type="password" minlength="8" required autocomplete="new-password" placeholder="Strong password (8+ chars)" />
+              <button type="button" class="af-pw-toggle" data-af-pw-toggle aria-label="Show password"></button>
+            </div>
+          </div>
+          <div class="af-field">
+            <label for="confirm">Confirm password</label>
+            <div class="af-pw-wrap">
+              <input id="confirm" type="password" minlength="8" required autocomplete="new-password" placeholder="Re-enter password" />
+              <button type="button" class="af-pw-toggle" data-af-pw-toggle aria-label="Show password"></button>
+            </div>
+          </div>
+          <button type="submit" class="af-btn" id="submitBtn">Accept invitation</button>
+        </form>
+        <p class="af-msg" id="msg"></p>
+        <p class="af-hint"><a href="/login">Already have an account? Log in</a></p>
+      </div>
+    </div>
+  </section>
+
   <script src="/api.js"></script>
+  <script src="/landing-es-dict.js"></script>
+  <script src="/auth-flow-ui.js"></script>
   <script>
     const token = new URLSearchParams(location.search).get("token") || "";
     const msg = document.getElementById("msg");
     const btn = document.getElementById("submitBtn");
+    const form = document.getElementById("form");
+    const expiryEl = document.getElementById("inviteExpiry");
+    const eyebrowEl = document.getElementById("inviteEyebrow");
+    const titleEl = document.getElementById("inviteTitle");
+    const introEl = document.getElementById("inviteIntro");
+    const emailBoxEl = document.getElementById("inviteEmailBox");
+    const emailEl = document.getElementById("inviteEmail");
+    const fullNameEl = document.getElementById("fullName");
+    let countdownTimer = null;
+
+    function showMsg(text, kind) {
+      msg.textContent = text;
+      msg.className = "af-msg show " + (kind || "");
+    }
 
     function loginPathForRole(role) {
       if (role === "platform_owner") return "/owner/login";
       return "/login";
     }
 
-    if (!token) {
-      msg.style.display = "block";
-      msg.className = "msg err";
-      msg.textContent = "This invite link is missing a token. Open the link from your email.";
-      btn.disabled = true;
+    function disableInviteForm(message) {
+      if (countdownTimer) clearInterval(countdownTimer);
+      form.querySelectorAll("input,button").forEach(function (el) {
+        el.disabled = true;
+      });
+      if (message) showMsg(message, "err");
     }
 
-    document.getElementById("form").addEventListener("submit", async (e) => {
+    function applyInvitePreview(preview) {
+      if (!preview) return;
+
+      if (preview.role === "cpa") {
+        eyebrowEl.textContent = "CPA portal invitation";
+        titleEl.textContent = "Join as CPA / Accountant";
+        introEl.textContent =
+          "Create your password to access the read-only CPA portal for your dealership.";
+      } else if (preview.dealershipName) {
+        titleEl.textContent = "Join " + preview.dealershipName;
+      }
+
+      if (preview.fullName && fullNameEl && !fullNameEl.value.trim()) {
+        fullNameEl.value = preview.fullName;
+      }
+
+      if (preview.email && emailEl && emailBoxEl) {
+        emailEl.textContent = preview.email;
+        emailBoxEl.hidden = false;
+      }
+
+      if (!preview.valid) {
+        expiryEl.textContent =
+          window.AVAuthFlow && AVAuthFlow.formatRemaining
+            ? AVAuthFlow.formatRemaining(0)
+            : "This link expired";
+        expiryEl.classList.add("is-expired");
+        disableInviteForm(
+          preview.reason === "invalid"
+            ? "This invite link is invalid. Ask your admin to send a new invite."
+            : "This invite link expired. Ask your admin to send a new invite.",
+        );
+        return;
+      }
+
+      if (window.AVAuthFlow && typeof AVAuthFlow.startCountdown === "function") {
+        countdownTimer = AVAuthFlow.startCountdown(expiryEl, preview.expiresAt, {
+          onExpired: function () {
+            disableInviteForm(
+              "This invite link expired. Ask your admin to send a new invite.",
+            );
+          },
+        });
+      }
+    }
+
+    async function loadInvitePreview() {
+      if (!token) {
+        expiryEl.textContent =
+          window.AVAuthFlow && AVAuthFlow.formatRemaining
+            ? AVAuthFlow.formatRemaining(0)
+            : "This link expired";
+        expiryEl.classList.add("is-expired");
+        showMsg(
+          "This invite link is missing a token. Open the link from your email.",
+          "err",
+        );
+        disableInviteForm();
+        return;
+      }
+
+      try {
+        const res = await AVApi.request(
+          "/api/v1/invitations/preview?token=" + encodeURIComponent(token),
+          { skipAuth: true },
+        );
+        applyInvitePreview((res && res.preview) || res);
+      } catch (err) {
+        expiryEl.textContent = "Unable to verify link";
+        showMsg(
+          err.message || "Could not verify this invite link.",
+          "err",
+        );
+      }
+    }
+
+    loadInvitePreview();
+
+    form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const fullName = document.getElementById("fullName").value.trim();
+      const fullName = fullNameEl.value.trim();
       const password = document.getElementById("password").value;
       const confirm = document.getElementById("confirm").value;
-      msg.style.display = "block";
-      msg.className = "msg";
 
       if (!fullName) {
-        msg.className = "msg err";
-        msg.textContent = "Enter your full name.";
+        showMsg("Enter your full name.", "err");
         return;
       }
       if (password.length < 8) {
-        msg.className = "msg err";
-        msg.textContent = "Password must be at least 8 characters.";
+        showMsg("Password must be at least 8 characters.", "err");
         return;
       }
       if (
@@ -99,14 +217,14 @@
         !/[0-9]/.test(password) ||
         !/[^A-Za-z0-9]/.test(password)
       ) {
-        msg.className = "msg err";
-        msg.textContent =
-          "Password needs uppercase, lowercase, a number, and a special character.";
+        showMsg(
+          "Password needs uppercase, lowercase, a number, and a special character.",
+          "err",
+        );
         return;
       }
       if (password !== confirm) {
-        msg.className = "msg err";
-        msg.textContent = "Passwords do not match.";
+        showMsg("Passwords do not match.", "err");
         return;
       }
 
@@ -118,14 +236,37 @@
           body: JSON.stringify({ token, fullName, password }),
           skipAuth: true,
         });
-        const user = (res && (res.user || res)) || {};
-        const path = loginPathForRole(user.role);
-        msg.className = "msg ok";
-        msg.textContent = "Account created. Redirecting to login...";
-        setTimeout(() => location.replace(path), 1200);
+        const user = (res && res.user) || res || {};
+        const email = user.email || emailEl?.textContent?.trim() || "";
+        const loginPath = loginPathForRole(user.role);
+        try {
+          const loginRes = await AVApi.request("/api/auth/login", {
+            method: "POST",
+            body: JSON.stringify({ email, password }),
+            skipAuth: true,
+          });
+          const portal = (loginRes.user && loginRes.user.portal) || "admin";
+          AVApi.setSession({
+            token: loginRes.token || loginRes.accessToken,
+            refreshToken: loginRes.refreshToken,
+            portal,
+          });
+          showMsg("Account created. Signing you in...", "ok");
+          setTimeout(function () {
+            location.replace(
+              loginRes.redirectDashboardPath ||
+                (portal === "cpa" ? "/cpa/dashboard" : "/dashboard"),
+            );
+          }, 800);
+        } catch (loginErr) {
+          showMsg("Account created. Redirecting to login...", "ok");
+          const q = email ? "?email=" + encodeURIComponent(email) : "";
+          setTimeout(function () {
+            location.replace(loginPath + q);
+          }, 1200);
+        }
       } catch (err) {
-        msg.className = "msg err";
-        msg.textContent = err.message || "Invite invalid or expired.";
+        showMsg(err.message || "Invite invalid or expired.", "err");
         btn.disabled = false;
         btn.textContent = "Accept invitation";
       }

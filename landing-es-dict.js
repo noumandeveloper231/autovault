@@ -303,6 +303,125 @@ window.AV_LANDING_EXTRA = {
   "Done — I've added the 2021 Nissan Rogue SV and logged the numbers.": "Listo — agregué el Nissan Rogue SV 2021 y registré los números."
 };
 
+window.AV_AUTH_FLOW_EXTRA = {
+  "Back to Home": "Volver al inicio",
+  "Team invitation": "Invitación del equipo",
+  "CPA portal invitation": "Invitación al portal CPA",
+  "Join your dealership": "Únete a tu concesionario",
+  "Join as CPA / Accountant": "Únete como CPA / Contador",
+  "Your login email": "Tu correo de acceso",
+  "Account created. Signing you in...": "Cuenta creada. Iniciando sesión...",
+  "Create your password to activate your AutoVault account.":
+    "Crea tu contraseña para activar tu cuenta de AutoVault.",
+  "Create your password to access the read-only CPA portal for your dealership.":
+    "Crea tu contraseña para acceder al portal CPA de solo lectura de tu concesionario.",
+  "Checking link…": "Verificando enlace…",
+  "Unable to verify link": "No se pudo verificar el enlace",
+  "This invite link is invalid. Ask your admin to send a new invite.":
+    "Este enlace de invitación no es válido. Pide a tu administrador que envíe una nueva invitación.",
+  "This invite link expired. Ask your admin to send a new invite.":
+    "Este enlace de invitación venció. Pide a tu administrador que envíe una nueva invitación.",
+  "Could not verify this invite link.":
+    "No se pudo verificar este enlace de invitación.",
+  "Show password": "Mostrar contraseña",
+  "Hide password": "Ocultar contraseña",
+  "Full name": "Nombre completo",
+  "Confirm password": "Confirmar contraseña",
+  "Your full name": "Tu nombre completo",
+  "Strong password (8+ chars)": "Contraseña segura (8+ caracteres)",
+  "Re-enter password": "Vuelve a escribir la contraseña",
+  "Accept invitation": "Aceptar invitación",
+  "Activating...": "Activando...",
+  "Already have an account? Log in": "¿Ya tienes cuenta? Inicia sesión",
+  "This invite link is missing a token. Open the link from your email.":
+    "Este enlace no tiene token. Abre el enlace desde tu correo.",
+  "Enter your full name.": "Escribe tu nombre completo.",
+  "Password must be at least 8 characters.":
+    "La contraseña debe tener al menos 8 caracteres.",
+  "Password needs uppercase, lowercase, a number, and a special character.":
+    "La contraseña necesita mayúscula, minúscula, un número y un carácter especial.",
+  "Passwords do not match.": "Las contraseñas no coinciden.",
+  "Account created. Redirecting to login...":
+    "Cuenta creada. Redirigiendo al inicio de sesión...",
+  "Invite invalid or expired.": "Invitación inválida o vencida.",
+  "Finishing setup…": "Finalizando configuración…",
+  "We're confirming your account. This only takes a moment.":
+    "Estamos confirmando tu cuenta. Solo toma un momento.",
+  "Account Created": "Cuenta creada",
+  "Welcome to AutoVault!": "¡Bienvenido a AutoVault!",
+  "Your account has been created successfully.":
+    "Tu cuenta se creó correctamente.",
+  "Login credentials sent to": "Credenciales enviadas a",
+  "Please check your inbox, and if you don't see the email, be sure to check your Spam/Junk folder.":
+    "Revisa tu bandeja de entrada y, si no ves el correo, revisa también Spam/Correo no deseado.",
+  "Go to Login Page": "Ir al inicio de sesión",
+  "You'll stay on this page until you continue to login.":
+    "Permanecerás en esta página hasta que continúes al inicio de sesión.",
+  "Invalid confirmation link": "Enlace de confirmación inválido",
+  "Token is missing. Please return to the landing page and try again.":
+    "Falta el token. Vuelve a la página principal e inténtalo de nuevo.",
+  "Could not verify purchase": "No se pudo verificar la compra",
+  "Your confirmation link is invalid or expired. Please contact support.":
+    "Tu enlace de confirmación es inválido o venció. Contacta a soporte.",
+  "Back to Home": "Volver al inicio",
+  "your email": "tu correo"
+};
+
+window.AV_CONTACT_EXTRA = {
+  "Back to site": "Volver al sitio",
+  "Language and theme": "Idioma y tema",
+  "Switch to Spanish": "Cambiar a español",
+  "Switch to English": "Cambiar a inglés",
+  "Español": "Español",
+  "English": "Inglés",
+  "Get in touch": "Contáctanos",
+  "Contact us": "Contáctanos",
+  "Tell us about your dealership and we'll get right back to you.":
+    "Cuéntanos sobre tu concesionario y te responderemos pronto.",
+  "First name": "Nombre",
+  "Last name": "Apellido",
+  "Company / Dealership": "Empresa / Concesionario",
+  "Email": "Correo electrónico",
+  "Mobile number": "Teléfono móvil",
+  "State": "Estado",
+  "Select your state": "Selecciona tu estado",
+  "How can we help?": "¿Cómo podemos ayudarte?",
+  "Tell us what you're looking for...": "Cuéntanos qué buscas...",
+  "Send message": "Enviar mensaje",
+  "Sending...": "Enviando...",
+  "Thanks — we'll be in touch soon!": "¡Gracias — nos pondremos en contacto pronto!"
+};
+
+window.AV_LOGIN_EXTRA = {
+  "Language and theme": "Idioma y tema",
+  "Switch to Spanish": "Cambiar a español",
+  "Switch to English": "Cambiar a inglés",
+  "Español": "Español",
+  "English": "Inglés",
+  "Dealership Login": "Inicio de sesión del concesionario",
+  "Super Owner Login": "Inicio de sesión del propietario",
+  "Welcome back": "Bienvenido de nuevo",
+  "Welcome to Owner Overview": "Bienvenido al panel del propietario",
+  "Sign in to your dealership dashboard.":
+    "Inicia sesión en el panel de tu concesionario.",
+  "Sign in to access your AutoVault dashboard.":
+    "Inicia sesión para acceder a tu panel de AutoVault.",
+  "Sign in as super owner to access the owner overview dashboard.":
+    "Inicia sesión como propietario para acceder al panel de resumen.",
+  "Username or email": "Usuario o correo",
+  "Password": "Contraseña",
+  "Stay signed in": "Mantener sesión iniciada",
+  "Forgot password?": "¿Olvidaste tu contraseña?",
+  "Sign in to dashboard": "Iniciar sesión en el panel",
+  "Sign in": "Iniciar sesión",
+  "Sign in to owner dashboard": "Iniciar sesión en el panel del propietario",
+  "New dealership?": "¿Nuevo concesionario?",
+  "Sign up here": "Regístrate aquí",
+  "Secured with 256-bit encryption": "Protegido con cifrado de 256 bits",
+  "Please enter your username and password.":
+    "Ingresa tu usuario y contraseña."
+};
+
 window.avT = function (en) {
   if (document.documentElement.lang !== "es") return en;
   const d = window.AV_LANDING_DICT || window.AV_LANDING_EXTRA || {};

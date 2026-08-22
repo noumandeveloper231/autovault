@@ -341,18 +341,87 @@
       .topbar-row-actions {
         flex-wrap: wrap;
         gap: 10px;
+        justify-content: flex-start;
       }
 
       .topbar-row-actions .quick-actions {
         flex-wrap: wrap;
+        flex: 1 1 auto;
+        min-width: 0;
+        justify-content: flex-start;
+      }
+
+      .topbar-row-actions .topbar-utils {
+        margin-left: auto;
+        flex-shrink: 0;
       }
 
       .topbar-utils {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 6px;
         margin-left: auto;
         flex-shrink: 0;
+      }
+
+      .dash-nav-utils {
+        display: inline-flex;
+        align-items: center;
+        height: 36px;
+        padding: 3px;
+        gap: 2px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.42);
+      }
+
+      html.bright .dash-nav-utils,
+      html:not(.dark) .dash-nav-utils {
+        background: rgba(255, 255, 255, 0.42);
+      }
+
+      html.dark .dash-nav-utils {
+        background: rgba(255, 255, 255, 0.05);
+      }
+
+      .dash-nav-utils .theme-toggle {
+        width: 30px;
+        height: 30px;
+        border: 0;
+        background: transparent;
+        border-radius: 999px;
+        box-shadow: none;
+        color: var(--text);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .dash-nav-utils .lang-btn {
+        height: 30px;
+        padding: 0 10px;
+        border: 0;
+        border-radius: 999px;
+        background: transparent;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        color: var(--muted);
+        line-height: 1;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
+      .dash-nav-utils .theme-toggle:hover,
+      .dash-nav-utils .lang-btn:hover {
+        background: rgba(58, 160, 255, 0.12);
+        color: var(--blue);
       }
 
       .search {
@@ -607,6 +676,7 @@
         gap: 8px;
         align-items: center;
         flex-wrap: wrap;
+        justify-content: flex-start;
       }
 
       .qa-btn {
@@ -1466,13 +1536,18 @@
         gap: 7px;
         align-items: center;
         flex-wrap: wrap;
+        flex: 1 1 320px;
+        min-width: 0;
       }
       .veh-view-seg {
         display: inline-flex;
+        align-items: stretch;
+        height: 28px;
         border: 1px solid var(--border);
         border-radius: 8px;
         overflow: hidden;
         background: var(--panel);
+        flex-shrink: 0;
       }
       .veh-view-seg.dimmed {
         opacity: 0.55;
@@ -1487,6 +1562,11 @@
         letter-spacing: 0.2px;
         padding: 0 13px;
         height: 28px;
+        line-height: 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
         cursor: pointer;
       }
       .vv-btn + .vv-btn {
@@ -1514,6 +1594,59 @@
         color: var(--text);
         border-color: var(--blue);
       }
+
+      @media (max-width: 900px) {
+        #page-vehicles .filter-row {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 10px;
+        }
+
+        #page-vehicles .filter-row input#tableSearch {
+          flex: 1 1 auto;
+          width: 100%;
+          min-width: 0;
+        }
+
+        #page-vehicles .filter-controls {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+
+        #page-vehicles .filter-controls .veh-view-seg {
+          display: flex;
+          width: 100%;
+          max-width: 100%;
+          height: 32px;
+          overflow: hidden;
+          gap: 0;
+        }
+
+        #page-vehicles .filter-controls .veh-view-seg .vv-btn {
+          flex: 1 1 0;
+          min-width: 0;
+          height: 100%;
+          padding: 0 6px;
+          font-size: 10.5px;
+        }
+
+        #page-vehicles .filter-controls select.sortby-sleek {
+          width: 100%;
+          max-width: none;
+          height: 32px;
+        }
+
+        #page-vehicles .filter-controls .grid-toggle-btn {
+          width: 100%;
+          justify-content: center;
+          min-width: 0;
+          height: 32px;
+        }
+      }
+
       .fit-table {
         min-width: 0 !important;
         width: 100%;
@@ -3820,8 +3953,92 @@
           margin-left: 0;
         }
 
+      @media (max-width: 900px) {
         .topbar {
-          flex-wrap: wrap;
+          gap: 8px;
+          padding: 10px 4px 12px;
+          margin-bottom: 14px;
+        }
+
+        .topbar-row-top {
+          flex-wrap: nowrap;
+          gap: 8px;
+        }
+
+        .topbar-row-top .search {
+          min-width: 0;
+          flex: 1 1 auto;
+        }
+
+        .topbar-utils {
+          margin-left: 0;
+          gap: 4px;
+        }
+
+        .topbar-utils .qa-btn.notif-btn {
+          width: 34px;
+          height: 34px;
+          min-width: 34px;
+          padding: 0;
+          justify-content: center;
+        }
+
+        .dash-nav-utils {
+          height: 34px;
+        }
+
+        .dash-nav-utils .theme-toggle {
+          width: 28px;
+          height: 28px;
+        }
+
+        .dash-nav-utils .lang-btn {
+          height: 28px;
+          padding: 0 8px;
+          font-size: 10px;
+        }
+
+        body.cpa-mode .topbar-row-actions .quick-actions,
+        body.rep-mode .topbar-row-actions .quick-actions,
+        body.owner-mode .topbar-row-actions .quick-actions {
+          display: none !important;
+        }
+
+        body.cpa-mode .topbar-row-actions,
+        body.rep-mode .topbar-row-actions,
+        body.owner-mode .topbar-row-actions {
+          justify-content: flex-end;
+        }
+
+        .topbar-row-actions {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 8px;
+        }
+
+        .topbar-row-actions .topbar-utils {
+          align-self: flex-end;
+          margin-left: 0;
+        }
+
+        #page-vehicles .table-scroll,
+        #svBody .table-scroll,
+        .sv-month-group .table-scroll,
+        #page-vehicles .table-card .table-scroll {
+          max-height: none !important;
+          overflow-y: visible;
+        }
+
+        #page-vehicles table thead th {
+          position: static;
+        }
+
+        .table-card {
+          overflow: visible;
+        }
+
+        .topbar-settings {
+          display: none;
         }
 
         .topbar-row-actions .quick-actions {
@@ -5807,6 +6024,182 @@
       .rep-login-as-btn.is-busy {
         color: var(--blue);
         border-color: rgba(58, 160, 255, 0.45);
+      }
+
+      @media (max-width: 900px) {
+        #page-reps .section-heading {
+          flex-direction: column;
+          align-items: stretch !important;
+          gap: 12px;
+        }
+
+        #page-reps .section-heading .btn-primary {
+          width: 100%;
+          justify-content: center;
+        }
+
+        #page-reps .rep-spotlight {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          grid-template-areas:
+            "avatar info"
+            "stats stats";
+          gap: 14px 16px;
+          padding: 16px 18px;
+          margin-bottom: 16px;
+          align-items: center;
+        }
+
+        #page-reps .rep-spotlight .crown {
+          font-size: 72px;
+          top: -2px;
+          right: 2px;
+          opacity: 0.06;
+        }
+
+        #page-reps .rep-spotlight .rep-avatar {
+          grid-area: avatar;
+          width: 56px;
+          height: 56px;
+          font-size: 20px;
+          border-radius: 14px;
+        }
+
+        #page-reps .rep-spotlight .sl-info {
+          grid-area: info;
+          min-width: 0;
+        }
+
+        #page-reps .rep-spotlight .sl-name {
+          font-size: 20px;
+          line-height: 1.2;
+        }
+
+        #page-reps .rep-spotlight .sl-rate {
+          font-size: 11.5px;
+          line-height: 1.45;
+        }
+
+        #page-reps .rep-spotlight .sl-stats {
+          grid-area: stats;
+          width: 100%;
+          flex-shrink: 1;
+          justify-content: space-around;
+          gap: 16px;
+          padding-top: 12px;
+          border-top: 1px solid var(--border);
+        }
+
+        #page-reps .rep-spotlight .sl-stat {
+          text-align: center;
+          flex: 1 1 0;
+          min-width: 0;
+        }
+
+        #page-reps .rep-spotlight .sl-stat .v {
+          font-size: 20px;
+          line-height: 1.15;
+          display: block;
+        }
+
+        #page-reps .rep-spotlight .sl-stat .l {
+          margin-top: 4px;
+          line-height: 1.25;
+          white-space: nowrap;
+        }
+
+        #page-reps .rep-row {
+          display: grid;
+          grid-template-columns: 24px 42px minmax(0, 1fr) auto;
+          grid-template-rows: auto auto;
+          gap: 10px 12px;
+          align-items: center;
+          padding: 14px;
+        }
+
+        #page-reps .rep-rank {
+          grid-column: 1;
+          grid-row: 1;
+          width: auto;
+        }
+
+        #page-reps .rep-av {
+          grid-column: 2;
+          grid-row: 1;
+        }
+
+        #page-reps .rep-id {
+          grid-column: 3;
+          grid-row: 1;
+          min-width: 0;
+        }
+
+        #page-reps .rep-actions {
+          grid-column: 4;
+          grid-row: 1;
+        }
+
+        #page-reps .rep-metrics {
+          grid-column: 1 / -1;
+          grid-row: 2;
+          width: 100%;
+          gap: 10px;
+          justify-content: space-between;
+          padding-top: 10px;
+          border-top: 1px solid var(--border);
+        }
+
+        #page-reps .rep-metric {
+          text-align: center;
+          min-width: 0;
+          flex: 1 1 0;
+        }
+
+        #page-reps .rep-metric .v {
+          font-size: 14px;
+          line-height: 1.15;
+          display: block;
+        }
+
+        #page-reps .rep-metric .l {
+          margin-top: 4px;
+          line-height: 1.25;
+          white-space: nowrap;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #page-reps .rep-spotlight {
+          padding: 14px;
+          gap: 12px;
+        }
+
+        #page-reps .rep-spotlight .sl-name {
+          font-size: 18px;
+        }
+
+        #page-reps .rep-spotlight .sl-stat .v {
+          font-size: 18px;
+        }
+
+        #page-reps .rep-row {
+          grid-template-columns: 20px 38px minmax(0, 1fr) auto;
+          gap: 8px 10px;
+        }
+
+        #page-reps .rep-av {
+          width: 38px;
+          height: 38px;
+          font-size: 13px;
+        }
+
+        #page-reps .rep-id .n {
+          font-size: 13.5px;
+        }
+
+        #page-reps .rep-id .r {
+          font-size: 11px;
+        }
       }
 
       .apply-all-box {
@@ -8857,6 +9250,12 @@
         margin-left: 8px;
       }
 
+      @media (max-width: 900px) {
+        .hs-arrow {
+          display: none !important;
+        }
+      }
+
       .tax-group {
         background: var(--panel);
         border: 1px solid var(--border);
@@ -11868,28 +12267,35 @@
         display: none;
         align-items: center;
         justify-content: space-between;
-        gap: 12px;
-        padding: 9px 18px;
+        gap: 10px;
+        padding: 7px 12px;
         background: linear-gradient(
           90deg,
-          rgba(28, 122, 70, 0.18),
-          rgba(28, 122, 70, 0.06)
+          rgba(28, 122, 70, 0.14),
+          rgba(28, 122, 70, 0.04)
         );
-        border-bottom: 1px solid rgba(28, 122, 70, 0.4);
-        font-size: 12.5px;
+        border: 1px solid rgba(28, 122, 70, 0.28);
+        border-radius: 10px;
+        font-size: 12px;
         color: var(--text);
-        position: sticky;
-        top: 0;
-        z-index: 60;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        min-height: 0;
       }
 
-      body.cpa-mode #cpaBanner {
+      .topbar-portal-strip.cpa-banner {
+        position: static;
+        margin: 0 0 2px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+
+      body.cpa-mode .topbar #cpaBanner,
+      body.rep-mode .topbar #repBanner {
         display: flex;
       }
 
       body.cpa-mode #repBanner,
-      body.cpa-mode .rep-banner {
+      body.cpa-mode .rep-banner:not(#repBanner) {
         display: none !important;
       }
 
@@ -11897,31 +12303,373 @@
         display: none !important;
       }
 
+      .cpa-banner-left {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow: hidden;
+      }
+
+      .cpa-banner-short {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+        font-weight: 600;
+      }
+
+      .cpa-banner-who {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        min-width: 0;
+        font-weight: 700;
+      }
+
+      .cpa-banner-detail {
+        display: none;
+      }
+
       .cpa-banner-badge {
         background: #1c7a46;
         color: #fff;
         font-size: 10px;
         font-weight: 800;
-        padding: 3px 8px;
+        padding: 3px 7px;
         border-radius: 6px;
         letter-spacing: 0.5px;
-        margin-right: 8px;
+        flex: 0 0 auto;
       }
 
       .cpa-banner-exit {
         background: transparent;
-        border: 1px solid rgba(28, 122, 70, 0.6);
+        border: 1px solid rgba(28, 122, 70, 0.55);
         color: #2dd47f;
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 700;
-        padding: 6px 14px;
+        padding: 5px 10px;
         border-radius: 8px;
         cursor: pointer;
         white-space: nowrap;
+        flex: 0 0 auto;
       }
 
       .cpa-banner-exit:hover {
         background: rgba(28, 122, 70, 0.15);
+      }
+
+      /* ===== CPA mobile / narrow viewport ===== */
+      body.cpa-mode .wrap,
+      body.cpa-mode .page-section {
+        max-width: 100%;
+        overflow-x: clip;
+      }
+
+      body.cpa-mode .table-scroll {
+        -webkit-overflow-scrolling: touch;
+        max-width: 100%;
+      }
+
+      @media (max-width: 900px) {
+        body.cpa-mode .topbar,
+        body.rep-mode .topbar {
+          gap: 8px;
+          padding-top: 10px;
+          padding-bottom: 10px;
+          margin-bottom: 14px;
+        }
+
+        body.cpa-mode .topbar-portal-strip,
+        body.rep-mode .topbar-portal-strip {
+          padding: 6px 10px;
+          font-size: 11px;
+          border-radius: 9px;
+        }
+
+        body.cpa-mode .cpa-banner-exit,
+        body.rep-mode .cpa-banner-exit {
+          padding: 4px 8px;
+          font-size: 10.5px;
+        }
+
+        body.cpa-mode .page-head {
+          display: flex;
+          flex-direction: column;
+          align-items: stretch;
+          gap: 12px;
+          margin-top: 14px;
+        }
+
+        body.cpa-mode .page-head > div[style*="position: absolute"],
+        body.cpa-mode .page-head > div[style*="position:absolute"] {
+          position: static !important;
+          top: auto !important;
+          right: auto !important;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          width: 100%;
+          order: 2;
+        }
+
+        body.cpa-mode .page-head > .print-btn[style*="position: absolute"],
+        body.cpa-mode .page-head > .print-btn[style*="position:absolute"] {
+          position: static !important;
+          top: auto !important;
+          right: auto !important;
+          align-self: flex-start;
+          order: 2;
+        }
+
+        body.cpa-mode .page-title {
+          order: 1;
+          padding-right: 0;
+        }
+
+        body.cpa-mode .page-title b {
+          font-size: 22px;
+        }
+
+        body.cpa-mode #page-sold-vehicles .veh-view-seg,
+        body.cpa-mode #svViewSeg {
+          display: flex;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          flex-wrap: nowrap;
+          gap: 0;
+          padding-bottom: 4px;
+          margin-bottom: 12px;
+        }
+
+        body.cpa-mode #page-sold-vehicles .veh-view-seg .vv-btn,
+        body.cpa-mode #svViewSeg .vv-btn {
+          flex: 0 0 auto;
+        }
+
+        body.cpa-mode .sv-year-lbl {
+          white-space: normal;
+          line-height: 1.55;
+          word-break: break-word;
+          font-size: 11px;
+          letter-spacing: 0.3px;
+          text-align: left;
+        }
+
+        body.cpa-mode .fin-calendar,
+        body.cpa-mode .sv-cal {
+          padding: 10px;
+          gap: 8px;
+        }
+
+        body.cpa-mode .fin-months,
+        body.cpa-mode .sv-months {
+          width: 100%;
+        }
+
+        body.cpa-mode .pnl-month,
+        body.cpa-mode .fin-months button,
+        body.cpa-mode .sv-months button {
+          min-width: 0;
+          padding: 6px 8px;
+          font-size: 11px;
+        }
+
+        body.cpa-mode #svBody .table-scroll,
+        body.cpa-mode #page-vehicles .table-scroll {
+          max-height: none;
+        }
+
+        body.cpa-mode .topbar-row-top .search {
+          min-width: 0;
+        }
+      }
+
+      @media (max-width: 640px) {
+        body.cpa-mode .kpi-grid,
+        body.cpa-mode #page-vehicles .veh-kpi-group .kpi-grid {
+          grid-template-columns: 1fr;
+        }
+
+        body.cpa-mode .table-card {
+          border-radius: 10px;
+        }
+
+        body.cpa-mode .cpa-note-input[style*="min-width"] {
+          min-width: 0 !important;
+          width: 100%;
+        }
+
+        body.cpa-mode #page-cpa-overview .table-card > div[style*="display: flex"],
+        body.cpa-mode #page-cpa-notes .table-card > div[style*="display: flex"] {
+          flex-direction: column !important;
+          align-items: stretch !important;
+        }
+
+        body.cpa-mode #page-cpa-overview .table-card select.cpa-note-input,
+        body.cpa-mode #page-cpa-notes .table-card select.cpa-note-input {
+          max-width: none !important;
+          width: 100%;
+        }
+
+        body.cpa-mode #page-cpa-overview .table-card .btn-primary,
+        body.cpa-mode #page-cpa-notes .table-card .btn-primary {
+          width: 100%;
+          justify-content: center;
+        }
+
+        body.cpa-mode #page-vehicles table {
+          min-width: 640px;
+        }
+
+        body.cpa-mode #vehTable [data-colgrp="potential"],
+        body.cpa-mode #vehTable [data-colgrp="flooring"],
+        body.cpa-mode #vehTable [data-colgrp="floorage"],
+        body.cpa-mode #vehTable [data-colgrp="allinfloor"],
+        body.cpa-mode #vehTable [data-col="fees"],
+        body.cpa-mode #vehTable [data-col="repairs"],
+        body.cpa-mode #vehTable [data-col="commission"] {
+          display: none;
+        }
+
+        body.cpa-mode .exp-table {
+          min-width: 640px;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table,
+        body.cpa-mode .sv-month-group .dash-sold-table {
+          min-width: 0 !important;
+        }
+
+        body.cpa-mode #svBody .table-scroll,
+        body.cpa-mode #page-sold-vehicles .table-scroll,
+        body.cpa-mode .sv-month-group .table-scroll {
+          overflow-x: visible;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table thead,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table thead,
+        body.cpa-mode .sv-month-group .dash-sold-table thead {
+          display: none;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table tbody tr,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody tr,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody tr {
+          display: block;
+          border: 1px solid var(--border);
+          border-radius: 12px;
+          margin-bottom: 10px;
+          padding: 2px 0;
+          background: var(--panel);
+        }
+
+        body.cpa-mode #svBody .dash-sold-table tbody td,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody td,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody td {
+          display: flex;
+          align-items: flex-start;
+          justify-content: space-between;
+          gap: 12px;
+          white-space: normal;
+          word-break: break-word;
+          padding: 8px 14px;
+          border: none;
+          border-bottom: 1px solid var(--border);
+          text-align: right;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table tbody td:last-child,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody td:last-child,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody td:last-child {
+          border-bottom: none;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table tbody td::before,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody td::before,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody td::before {
+          content: attr(data-label);
+          font-weight: 700;
+          font-size: 10px;
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          color: var(--muted);
+          text-align: left;
+          flex: 0 0 auto;
+          max-width: 46%;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table tbody td:not([data-label])::before,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody td:not([data-label])::before,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody td:not([data-label])::before,
+        body.cpa-mode #svBody .dash-sold-table tbody td[data-label=""]::before,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody td[data-label=""]::before,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody td[data-label=""]::before {
+          display: none;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table tbody td:first-child,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody td:first-child,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody td:first-child {
+          display: block;
+          text-align: left;
+          border-bottom: 1px solid var(--border);
+        }
+
+        body.cpa-mode #svBody .dash-sold-table tbody td:first-child::before,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody td:first-child::before,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody td:first-child::before {
+          display: none;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table .veh-name,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table .veh-name,
+        body.cpa-mode .sv-month-group .dash-sold-table .veh-name {
+          font-size: 15px;
+          font-weight: 800;
+          white-space: normal;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table .dash-veh-link,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table .dash-veh-link,
+        body.cpa-mode .sv-month-group .dash-sold-table .dash-veh-link {
+          cursor: default;
+          pointer-events: none;
+        }
+
+        body.cpa-mode #svBody .dash-sold-table tbody td.sv-vin,
+        body.cpa-mode #page-sold-vehicles .dash-sold-table tbody td.sv-vin,
+        body.cpa-mode .sv-month-group .dash-sold-table tbody td.sv-vin {
+          font-family: var(--mono);
+          font-size: 11px;
+        }
+
+        body.cpa-mode #svBody .table-card,
+        body.cpa-mode #page-sold-vehicles .table-card,
+        body.cpa-mode .sv-month-group .table-card {
+          background: transparent;
+          border: none;
+          box-shadow: none;
+        }
+
+        body.cpa-mode #svBody .table-scroll,
+        body.cpa-mode #page-sold-vehicles .table-scroll,
+        body.cpa-mode .sv-month-group .table-scroll {
+          padding: 0;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body.cpa-mode .page-title b {
+          font-size: 20px;
+        }
+
+        body.cpa-mode .print-btn {
+          flex: 1 1 auto;
+          justify-content: center;
+        }
       }
 
       .cpa-login {
@@ -12334,14 +13082,40 @@
         z-index: 2;
       }
 
+      @media (max-width: 900px) {
+        #svBody .dash-sold-table thead th,
+        #page-vehicles table thead th {
+          position: static;
+        }
+      }
+
       #svBody .table-scroll {
-        max-height: calc(100vh - 320px);
         overflow-y: auto;
       }
 
-      #page-vehicles .table-scroll {
-        max-height: calc(100vh - 340px);
-        overflow-y: auto;
+      @media (min-width: 901px) {
+        #svBody .table-scroll {
+          max-height: calc(100vh - 320px);
+        }
+
+        #page-vehicles .table-scroll {
+          max-height: calc(100vh - 340px);
+        }
+      }
+
+      @media (max-width: 900px) {
+        #svBody .table-scroll,
+        .sv-month-group .table-scroll,
+        #page-vehicles .table-scroll {
+          max-height: none !important;
+          overflow-y: visible;
+        }
+
+        #svBody .table-card,
+        .sv-month-group .table-card {
+          background: var(--panel);
+          overflow: visible;
+        }
       }
 
       #page-vehicles table thead th {
@@ -13442,6 +14216,9 @@
         line-height: 1;
         cursor: pointer;
         padding: 0 2px;
+        position: relative;
+        z-index: 1;
+        flex: 0 0 auto;
       }
       .calc-close:hover {
         color: var(--text);
@@ -13678,27 +14455,23 @@
         display: none;
         background: linear-gradient(
           90deg,
-          rgba(58, 160, 255, 0.16),
-          rgba(58, 160, 255, 0.05)
+          rgba(58, 160, 255, 0.12),
+          rgba(58, 160, 255, 0.04)
         ) !important;
-        border-bottom: 1px solid rgba(58, 160, 255, 0.4) !important;
+        border-color: rgba(58, 160, 255, 0.32) !important;
       }
 
-      body.rep-mode .rep-banner {
+      body.rep-mode .topbar .rep-banner {
         display: flex;
-      }
-
-      body.rep-mode #cpaBanner {
-        display: none !important;
       }
 
       body.rep-mode.impersonating .rep-banner {
         background: linear-gradient(
           90deg,
-          rgba(255, 159, 67, 0.18),
-          rgba(58, 160, 255, 0.08)
+          rgba(255, 159, 67, 0.14),
+          rgba(58, 160, 255, 0.05)
         ) !important;
-        border-bottom: 1px solid rgba(255, 159, 67, 0.45) !important;
+        border-color: rgba(255, 159, 67, 0.38) !important;
       }
 
       /* Plan-based restrictions */
@@ -15839,12 +16612,23 @@
         display: none !important;
       }
 
-      body.owner-mode .topbar-row-actions {
+      body.owner-mode .topbar-row-actions .quick-actions {
         display: none !important;
+      }
+
+      body.owner-mode .topbar-row-actions {
+        justify-content: flex-end;
       }
 
       body.owner-mode #addCpaLoginBtn,
       body.owner-mode .admin-cpa-btn {
+        display: none !important;
+      }
+
+      body.cpa-mode #addCpaLoginBtn,
+      body.cpa-mode .admin-cpa-btn,
+      body.rep-mode #addCpaLoginBtn,
+      body.rep-mode .admin-cpa-btn {
         display: none !important;
       }
 
@@ -17208,41 +17992,40 @@
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="main-content">
-      <div class="cpa-banner rep-banner" id="repBanner">
-        <div class="cpa-banner-left">
-          <span
-            class="cpa-banner-badge"
-            id="repBannerBadge"
-            style="background: var(--blue)"
-            >REP</span
-          ><span id="repBannerText"
-            >Signed in as <b id="repWhoami"></b> &mdash; Sales Rep Portal.</span
-          >
-        </div>
-        <button
-          class="cpa-banner-exit"
-          id="repBannerExitBtn"
-          style="border-color: rgba(58, 160, 255, 0.6); color: var(--blue)"
-          onclick="exitRepMode()"
-        >
-          Log out
-        </button>
-      </div>
-      <div class="cpa-banner" id="cpaBanner">
-        <div class="cpa-banner-left">
-          <span class="cpa-banner-badge">CPA</span
-          ><b>Read-only access</b> &mdash; viewing live financials as
-          <span id="cpaWhoami">accountant@autovault.com</span>. You can leave
-          review notes, but changes are disabled.
-        </div>
-        <button class="cpa-banner-exit" onclick="exitCpaMode()">
-          Exit portal
-        </button>
-      </div>
-
       <div class="wrap">
         <!-- TOPBAR -->
         <div class="topbar">
+          <div class="cpa-banner rep-banner topbar-portal-strip" id="repBanner">
+            <div class="cpa-banner-left">
+              <span
+                class="cpa-banner-badge"
+                id="repBannerBadge"
+                style="background: var(--blue)"
+                >REP</span
+              ><span class="cpa-banner-short" id="repBannerShort"
+                >Sales Rep ·</span
+              ><span class="cpa-banner-who" id="repWhoami"></span>
+            </div>
+            <button
+              class="cpa-banner-exit"
+              id="repBannerExitBtn"
+              style="border-color: rgba(58, 160, 255, 0.6); color: var(--blue)"
+              onclick="exitRepMode()"
+            >
+              Log out
+            </button>
+          </div>
+          <div class="cpa-banner topbar-portal-strip" id="cpaBanner">
+            <div class="cpa-banner-left">
+              <span class="cpa-banner-badge">CPA</span
+              ><span class="cpa-banner-short"
+                ><b>Read-only</b> · <span id="cpaWhoami">accountant</span></span
+              >
+            </div>
+            <button class="cpa-banner-exit" onclick="exitCpaMode()">
+              Exit
+            </button>
+          </div>
           <div class="topbar-row topbar-row-top">
             <div class="menu-toggle" id="menuToggle">
               <svg
@@ -17422,21 +18205,33 @@
                   <div class="notif-list" id="notifList"></div>
                 </div>
               </div>
-              <button
-                class="qa-btn notif-btn"
-                id="themeToggleBtn"
-                onclick="toggleTheme()"
-                title="Switch to bright mode"
-                style="margin-right: 8px"
-              >
-                <span id="themeToggleIcon"></span>
-              </button>
+              <div class="nav-utils dash-nav-utils" aria-label="Language and theme">
+                <button
+                  type="button"
+                  class="theme-toggle"
+                  id="dashThemeToggleBtn"
+                  onclick="toggleTheme()"
+                  title="Switch theme"
+                  aria-label="Toggle theme"
+                >
+                  <span id="themeToggleIcon"></span>
+                </button>
+                <a
+                  href="#"
+                  class="lang-btn"
+                  id="dashLangBtn"
+                  title="Español"
+                  aria-label="Switch to Spanish"
+                  onclick="toggleLang(); return false;"
+                  >ES</a
+                >
+              </div>
               <div class="topbar-settings" id="settingsWrap">
                 <button
                   class="qa-btn"
                   id="settingsBtn"
                   onclick="toggleSettingsMenu()"
-                  title="Language / Idioma — switch to Español"
+                  title="More settings"
                   style="padding: 8px 11px"
                 >
                   <svg
@@ -17447,39 +18242,12 @@
                     stroke="currentColor"
                     stroke-width="2"
                   >
-                    <circle cx="12" cy="12" r="3" />
-                    <path
-                      d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"
-                    />
+                    <circle cx="12" cy="12" r="1.5" />
+                    <circle cx="12" cy="5" r="1.5" />
+                    <circle cx="12" cy="19" r="1.5" />
                   </svg>
                 </button>
                 <div class="settings-menu" id="settingsMenu">
-                  <div class="sm-row">
-                    <div class="sm-label">
-                      <span>Bright mode</span><small>Dark / Bright theme</small>
-                    </div>
-                    <button
-                      class="sm-toggle"
-                      id="themeToggle"
-                      onclick="toggleTheme()"
-                      title="Dark / Bright"
-                    >
-                      <span class="knob"></span>
-                    </button>
-                  </div>
-                  <div class="sm-row">
-                    <div class="sm-label">
-                      <span>Language</span><small>English / Español</small>
-                    </div>
-                    <button
-                      class="sm-toggle"
-                      id="langToggle"
-                      onclick="toggleLang()"
-                      title="English / Español"
-                    >
-                      <span class="knob"></span>
-                    </button>
-                  </div>
                   <div class="sm-hint">
                     Numbers stay the same; only wording changes.
                   </div>
@@ -26307,7 +27075,14 @@
     <div class="calc-panel" id="calcPanel">
       <div class="calc-head" id="calcHead">
         <span class="calc-title">Calculator</span>
-        <button class="calc-close" onclick="toggleCalc()" aria-label="Close">
+        <button
+          class="calc-close"
+          type="button"
+          onclick="toggleCalc()"
+          onmousedown="event.stopPropagation()"
+          ontouchstart="event.stopPropagation()"
+          aria-label="Close"
+        >
           &times;
         </button>
       </div>
@@ -30456,13 +31231,13 @@
       }
       function svRowHtml(r) {
         return `<tr>
-  <td class="veh-cell dash-veh-link" onclick="openDealJacket('${r.vin}','sold')"><div class="veh-name">${r.year} ${r.make} ${r.model}</div></td>
-  <td style="font-family:var(--mono);font-size:12px;color:var(--muted);">${r.vin || ""}</td>
-  <td>${r.soldDate ? fmtDate(r.soldDate) : "\u2014"}</td>
-  <td>${fmt(r.price)}</td>
-  <td>${r.soldPrice != null && Number(r.soldPrice) > 0 ? fmt(r.soldPrice) : "\u2014"}</td>
-  <td style="font-weight:700;">${dashMoney(r.grossProfit)}</td>
-  <td style="font-weight:800;color:${r.netProfit == null ? "var(--muted)" : r.netProfit >= 0 ? "var(--green)" : "var(--red)"};">${dashMoney(r.netProfit)}</td>
+  <td data-label="Vehicle" class="veh-cell"><div class="veh-name">${r.year} ${r.make} ${r.model}</div></td>
+  <td data-label="VIN" class="sv-vin">${r.vin || ""}</td>
+  <td data-label="Sold Date">${r.soldDate ? fmtDate(r.soldDate) : "\u2014"}</td>
+  <td data-label="Purchase Price">${fmt(r.price)}</td>
+  <td data-label="Sold Price">${r.soldPrice != null && Number(r.soldPrice) > 0 ? fmt(r.soldPrice) : "\u2014"}</td>
+  <td data-label="Gross Profit" style="font-weight:700;">${dashMoney(r.grossProfit)}</td>
+  <td data-label="Net Profit" style="font-weight:800;color:${r.netProfit == null ? "var(--muted)" : r.netProfit >= 0 ? "var(--green)" : "var(--red)"};">${dashMoney(r.netProfit)}</td>
 </tr>`;
       }
       function renderSvCal(opts) {
@@ -31089,7 +31864,7 @@
       function updateRepBannerForSession() {
         var meta = readImpersonationMeta();
         var badge = document.getElementById("repBannerBadge");
-        var text = document.getElementById("repBannerText");
+        var short = document.getElementById("repBannerShort");
         var exitBtn = document.getElementById("repBannerExitBtn");
         var who = document.getElementById("repWhoami");
         if (meta) {
@@ -31098,12 +31873,8 @@
             badge.textContent = "SUPPORT";
             badge.style.background = "var(--orange)";
           }
-          if (text) {
-            text.innerHTML =
-              T("Viewing as") + ' <b id="repWhoami">' +
-              (meta.targetName || repUser || "Sales Rep") +
-              "</b> &mdash; " + T("secure admin support session. Changes are audited.");
-          }
+          if (short) short.textContent = T("Support view") + " ·";
+          if (who) who.textContent = meta.targetName || repUser || "Sales Rep";
           if (exitBtn) {
             exitBtn.textContent = T("Return to admin");
             exitBtn.style.borderColor = "rgba(255,159,67,.65)";
@@ -31116,14 +31887,8 @@
             badge.textContent = "REP";
             badge.style.background = "var(--blue)";
           }
-          if (text) {
-            text.innerHTML =
-              T("Signed in as") + ' <b id="repWhoami">' +
-              (repUser || "") +
-              "</b> &mdash; " + T("Sales Rep Portal.");
-          } else if (who) {
-            who.textContent = repUser || "";
-          }
+          if (short) short.textContent = T("Sales Rep") + " ·";
+          if (who) who.textContent = repUser || "";
           if (exitBtn) {
             exitBtn.textContent = T("Log out");
             exitBtn.style.borderColor = "rgba(58,160,255,.6)";
@@ -33884,6 +34649,7 @@
           dy = 0,
           drag = false;
         const down = (e) => {
+          if (e.target.closest(".calc-close")) return;
           drag = true;
           const t = e.touches ? e.touches[0] : e;
           const r = panel.getBoundingClientRect();
@@ -39032,7 +39798,11 @@
             ownerPortal && mainOwner && !atCap ? "" : "none";
         }
         if (cpaBtn) {
-          if (ownerPortal) {
+          if (
+            ownerPortal ||
+            document.body.classList.contains("cpa-mode") ||
+            document.body.classList.contains("rep-mode")
+          ) {
             cpaBtn.style.display = "none";
           }
         }
@@ -54807,10 +55577,27 @@
         const bright = document.documentElement.classList.contains("bright");
         const ic = document.getElementById("themeToggleIcon");
         if (ic) ic.innerHTML = bright ? MOON_ICON : SUN_ICON;
-        const tb = document.getElementById("themeToggleBtn");
-        if (tb) tb.title = bright ? "Switch to dark mode" : "Switch to bright mode";
-        const tog = document.getElementById("themeToggle");
-        if (tog) tog.classList.toggle("on", bright);
+        const tb =
+          document.getElementById("dashThemeToggleBtn") ||
+          document.getElementById("themeToggleBtn");
+        if (tb) {
+          tb.title = bright ? "Switch to dark mode" : "Switch to bright mode";
+          tb.setAttribute(
+            "aria-label",
+            bright ? "Switch to dark mode" : "Switch to bright mode",
+          );
+        }
+      }
+      function paintDashLangBtn() {
+        var btn = document.getElementById("dashLangBtn");
+        if (!btn) return;
+        var es = document.documentElement.lang === "es";
+        btn.textContent = es ? "EN" : "ES";
+        btn.title = es ? "English" : "Español";
+        btn.setAttribute(
+          "aria-label",
+          es ? "Switch to English" : "Switch to Spanish",
+        );
       }
       function toggleTheme() {
         if (window.AVTheme) AVTheme.toggle();
@@ -54821,7 +55608,10 @@
         applyThemeUI();
         try { termsApplySigInk(); } catch (e) {}
       };
-      try { applyThemeUI(); } catch (e) {}
+      try {
+        applyThemeUI();
+        paintDashLangBtn();
+      } catch (e) {}
 
       // ---------- SETTINGS: LANGUAGE ----------
       function toggleSettingsMenu() {
@@ -54892,6 +55682,7 @@
           else run();
           var btn = document.getElementById("langToggle");
           if (btn) btn.classList.toggle("on", currentLang === "es");
+          if (typeof paintDashLangBtn === "function") paintDashLangBtn();
         };
 
         window.toggleLang = function () {
@@ -54904,6 +55695,7 @@
           currentLang = ev.detail && ev.detail.es ? "es" : "en";
           var btn = document.getElementById("langToggle");
           if (btn) btn.classList.toggle("on", currentLang === "es");
+          if (typeof paintDashLangBtn === "function") paintDashLangBtn();
         });
 
         // Restore lang preference with DOM walk only (no page re-render yet).
@@ -58310,7 +59102,15 @@
           var cpaBtn = document.getElementById("addCpaLoginBtn") || document.querySelector(".admin-cpa-btn");
           var addOwnerBtn = document.getElementById("addAdminUserBtn");
           var isOwnerPortal = routePortal === "owner" || claims.role === "platform_owner";
-          if (cpaBtn) cpaBtn.style.display = isOwnerPortal || plan === "wholesaler" ? "none" : "";
+          if (cpaBtn) {
+            cpaBtn.style.display =
+              isOwnerPortal ||
+              plan === "wholesaler" ||
+              routePortal === "cpa" ||
+              routePortal === "sales_rep"
+                ? "none"
+                : "";
+          }
           if (addOwnerBtn) {
             addOwnerBtn.style.display =
               isOwnerPortal && !!claims.isMainOwner ? "" : "none";

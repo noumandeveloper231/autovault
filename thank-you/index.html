@@ -1,244 +1,164 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-av-surface="landing">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>Account Created — AutoVault</title>
-<meta name="robots" content="noindex, nofollow" />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<style>
-  :root{
-    --ink:#0A0D10;
-    --panel:#12161B;
-    --line:#232A32;
-    --text:#EAECEF;
-    --muted:#8B95A1;
-    --faint:#5A636D;
-    --accent:#2C9257;
-    --accent-2:#46B074;
-    --accent-soft:rgba(44,146,87,.13);
-    --accent-line:rgba(44,146,87,.34);
-    --up:#46D392;
-    --down:#F87171;
-    --ff-display:"Space Grotesk",system-ui,sans-serif;
-    --ff-body:"Inter",system-ui,sans-serif;
-  }
-  *{box-sizing:border-box}
-  html,body{margin:0;min-height:100%}
-  body{
-    background:var(--ink);
-    color:var(--text);
-    font-family:var(--ff-body);
-    font-size:16px;
-    line-height:1.55;
-    -webkit-font-smoothing:antialiased;
-    display:grid;
-    place-items:center;
-    padding:32px 20px;
-    position:relative;
-    overflow-x:hidden;
-  }
-  .backdrop{position:fixed;inset:0;z-index:-1;pointer-events:none}
-  .backdrop::before{
-    content:"";position:absolute;top:-18%;left:50%;transform:translateX(-50%);
-    width:900px;height:560px;
-    background:radial-gradient(ellipse at center,rgba(44,146,87,.14),transparent 64%);
-    filter:blur(18px);
-  }
-  .backdrop::after{
-    content:"";position:absolute;inset:0;
-    background-image:
-      linear-gradient(rgba(27,33,40,.55) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(27,33,40,.55) 1px,transparent 1px);
-    background-size:56px 56px;
-    -webkit-mask-image:radial-gradient(ellipse 75% 55% at 50% 20%,#000 0%,transparent 78%);
-            mask-image:radial-gradient(ellipse 75% 55% at 50% 20%,#000 0%,transparent 78%);
-  }
-  .shell{
-    width:min(520px,100%);
-    text-align:center;
-    animation:rise .55s cubic-bezier(.2,.7,.2,1) both;
-  }
-  @keyframes rise{
-    from{opacity:0;transform:translateY(18px)}
-    to{opacity:1;transform:translateY(0)}
-  }
-  .brand{
-    display:inline-flex;align-items:center;gap:10px;
-    font-family:var(--ff-display);font-weight:700;font-size:18px;
-    letter-spacing:-.02em;margin-bottom:36px;color:var(--text);
-    text-decoration:none;
-  }
-  .brand-mark{
-    width:34px;height:34px;border-radius:9px;
-    background:linear-gradient(145deg,#1B7A46,#2C9257);
-    display:grid;place-items:center;
-    box-shadow:0 8px 22px rgba(44,146,87,.28);
-  }
-  .brand-mark svg{width:18px;height:18px;color:#fff}
-  .panel{
-    background:linear-gradient(180deg,rgba(23,28,34,.92),rgba(18,22,27,.96));
-    border:1px solid var(--line);
-    border-radius:18px;
-    padding:40px 36px 34px;
-    box-shadow:0 24px 60px rgba(0,0,0,.35);
-  }
-  .icon{
-    width:64px;height:64px;margin:0 auto 22px;border-radius:50%;
-    display:grid;place-items:center;
-    background:var(--accent-soft);
-    border:1px solid var(--accent-line);
-    color:var(--up);
-  }
-  .icon svg{width:30px;height:30px}
-  .icon.spin svg{animation:spin .9s linear infinite}
-  .icon.error{color:var(--down);background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.35)}
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .icon.ok svg{animation:pop .45s cubic-bezier(.2,.8,.2,1) both}
-  @keyframes pop{
-    from{opacity:0;transform:scale(.55)}
-    to{opacity:1;transform:scale(1)}
-  }
-  .eyebrow{
-    font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
-    color:var(--accent-2);margin:0 0 12px;
-  }
-  h1{
-    font-family:var(--ff-display);font-weight:700;font-size:clamp(28px,5vw,34px);
-    letter-spacing:-.03em;line-height:1.12;margin:0 0 12px;
-  }
-  .lead{color:var(--muted);margin:0 0 22px;font-size:15.5px}
-  .email-box{
-    text-align:left;
-    background:rgba(10,13,16,.55);
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:16px 18px;
-    margin:0 0 16px;
-  }
-  .email-box .label{
-    font-size:12.5px;color:var(--faint);margin:0 0 6px;
-  }
-  .email-box .value{
-    font-family:var(--ff-display);font-weight:600;font-size:16px;
-    color:var(--text);word-break:break-all;margin:0;
-  }
-  .hint{
-    color:var(--muted);font-size:14px;margin:0 0 26px;line-height:1.55;
-  }
-  .btn{
-    display:inline-flex;align-items:center;justify-content:center;gap:8px;
-    width:100%;
-    background:linear-gradient(150deg,#1B7A46,#218A4E);
-    color:#fff;text-decoration:none;
-    font-weight:700;font-size:15px;
-    padding:14px 18px;border-radius:11px;border:0;
-    box-shadow:0 10px 28px rgba(44,146,87,.32);
-    transition:transform .12s,box-shadow .2s;
-    cursor:pointer;
-  }
-  .btn:hover{transform:translateY(-1px);box-shadow:0 14px 34px rgba(44,146,87,.42)}
-  .btn[hidden],.email-box[hidden],.hint[hidden],.eyebrow[hidden]{display:none !important}
-  .state-error h1{color:var(--text)}
-  .state-error .lead{color:var(--down)}
-  .foot{
-    margin-top:22px;font-size:12.5px;color:var(--faint);
-  }
-</style>
+  <meta charset="UTF-8" />
+  <script>
+    (function () {
+      try {
+        var s = localStorage.getItem("av-landing-theme");
+        var dark = s === "dark";
+        var r = document.documentElement;
+        r.classList.toggle("dark", dark);
+        r.classList.toggle("bright", !dark);
+        r.style.colorScheme = dark ? "dark" : "light";
+      } catch (e) {}
+    })();
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Account Created — AutoVault</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="theme-color" content="#E6E8EF" data-theme-light="#E6E8EF" data-theme-dark="#0A0D10" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <script src="/theme.js"></script>
+  <link rel="stylesheet" href="/auth-flow.css" />
 </head>
 <body>
-  <div class="backdrop" aria-hidden="true"></div>
-  <div class="shell">
-    <a class="brand" href="/">
-      <span class="brand-mark" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/><path d="M12 12l8-4.5M12 12v9M12 12L4 7.5"/></svg>
-      </span>
-      AutoVault
-    </a>
+  <div class="backdrop" aria-hidden="true"><div class="grid-lines"></div></div>
 
-    <div class="panel" id="panel">
-      <div class="icon spin" id="statusIcon" aria-hidden="true">
-        <svg id="iconSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9" opacity=".35"/><path d="M12 3a9 9 0 0 1 9 9"/></svg>
-      </div>
-      <p class="eyebrow" id="eyebrow" hidden>Account Created</p>
-      <h1 id="title">Finishing setup…</h1>
-      <p class="lead" id="desc">We’re confirming your account. This only takes a moment.</p>
-      <div class="email-box" id="emailBox" hidden>
-        <p class="label">Login credentials sent to</p>
-        <p class="value" id="userEmail"></p>
-      </div>
-      <p class="hint" id="spamNote" hidden>
-        Please check your inbox, and if you don’t see the email, be sure to check your Spam/Junk folder.
-      </p>
-      <a class="btn" id="nextLoginBtn" href="/login" hidden>Go to Login Page</a>
+  <div class="login-utils">
+    <div class="nav-utils" aria-label="Language and theme">
+      <button type="button" class="theme-toggle" id="themeToggleBtn" onclick="toggleTheme()" title="Switch theme" aria-label="Toggle theme"></button>
+      <a href="#" class="lang-btn" title="Español" aria-label="Switch to Spanish">ES</a>
     </div>
-    <p class="foot">You’ll stay on this page until you continue to login.</p>
+    <a href="/" class="login-close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>
+      <span>Back to Home</span>
+    </a>
   </div>
 
+  <section class="af-view">
+    <div class="af-bg" aria-hidden="true"><div class="af-grid"></div><div class="af-aura"></div></div>
+    <div class="af-shell af-shell-wide">
+      <div class="af-card af-card-center" id="panel">
+        <a href="/" class="af-brand af-brand-center">
+          <span class="af-mark" aria-hidden="true">
+            <svg viewBox="0 0 120 78" width="64" height="30" focusable="false"><path d="M16 12 L42 64 L68 12" fill="none" stroke="currentColor" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 64 L78 12 L104 64" fill="none" stroke="var(--accent)" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="af-name">AutoVault</span>
+        </a>
+
+        <div class="af-icon spin" id="statusIcon" aria-hidden="true">
+          <svg id="iconSvg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9" opacity=".35"/><path d="M12 3a9 9 0 0 1 9 9"/></svg>
+        </div>
+
+        <span class="af-eyebrow" id="eyebrow" hidden>Account Created</span>
+        <h1 class="af-title" id="title">Finishing setup…</h1>
+        <p class="af-sub" id="desc">We're confirming your account. This only takes a moment.</p>
+        <p class="af-sub af-expiry-wrap" id="confirmExpiryWrap" hidden><strong id="confirmExpiry" class="af-expiry"></strong></p>
+
+        <div class="af-email-box" id="emailBox" hidden>
+          <p class="label">Login credentials sent to</p>
+          <p class="value" id="userEmail"></p>
+        </div>
+
+        <p class="af-sub" id="spamNote" hidden style="font-size:14px;margin-top:0;">
+          Please check your inbox, and if you don't see the email, be sure to check your Spam/Junk folder.
+        </p>
+
+        <a class="af-btn af-btn-inline" id="nextLoginBtn" href="/login" hidden>Go to Login Page</a>
+        <p class="af-foot" id="footNote">You'll stay on this page until you continue to login.</p>
+      </div>
+    </div>
+  </section>
+
+  <script src="/landing-es-dict.js"></script>
+  <script src="/auth-flow-ui.js"></script>
   <script>
     (async function () {
       const API_URL = window.AUTOVAULT_API_URL || (
-        (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-          ? 'http://localhost:3000'
-          : 'https://api.autovault360.com'
+        (location.hostname === "localhost" || location.hostname === "127.0.0.1")
+          ? "http://localhost:3000"
+          : "https://api.autovault360.com"
       );
 
-      const panel = document.getElementById('panel');
-      const statusIcon = document.getElementById('statusIcon');
-      const iconSvg = document.getElementById('iconSvg');
-      const eyebrow = document.getElementById('eyebrow');
-      const title = document.getElementById('title');
-      const desc = document.getElementById('desc');
-      const emailBox = document.getElementById('emailBox');
-      const userEmail = document.getElementById('userEmail');
-      const spamNote = document.getElementById('spamNote');
-      const nextLoginBtn = document.getElementById('nextLoginBtn');
+      const panel = document.getElementById("panel");
+      const statusIcon = document.getElementById("statusIcon");
+      const eyebrow = document.getElementById("eyebrow");
+      const title = document.getElementById("title");
+      const desc = document.getElementById("desc");
+      const emailBox = document.getElementById("emailBox");
+      const userEmail = document.getElementById("userEmail");
+      const spamNote = document.getElementById("spamNote");
+      const nextLoginBtn = document.getElementById("nextLoginBtn");
+      const confirmExpiryWrap = document.getElementById("confirmExpiryWrap");
+      const confirmExpiry = document.getElementById("confirmExpiry");
 
       const params = new URLSearchParams(window.location.search);
-      const token = params.get('token');
-      const emailFromQuery = (params.get('email') || '').trim();
+      const token = params.get("token");
+      const emailFromQuery = (params.get("email") || "").trim();
 
       const CHECK_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>';
       const ERR_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>';
 
       function emailFromJwt(jwt) {
         try {
-          const part = jwt.split('.')[1];
-          if (!part) return '';
-          const json = atob(part.replace(/-/g, '+').replace(/_/g, '/'));
+          const part = jwt.split(".")[1];
+          if (!part) return "";
+          const json = atob(part.replace(/-/g, "+").replace(/_/g, "/"));
           const payload = JSON.parse(json);
-          return (payload.email || '').trim();
+          return (payload.email || "").trim();
         } catch {
-          return '';
+          return "";
+        }
+      }
+
+      function jwtExpiresAt(jwt) {
+        try {
+          const part = jwt.split(".")[1];
+          if (!part) return null;
+          const json = atob(part.replace(/-/g, "+").replace(/_/g, "/"));
+          const payload = JSON.parse(json);
+          if (!payload.exp) return null;
+          return new Date(payload.exp * 1000).toISOString();
+        } catch {
+          return null;
         }
       }
 
       function showEmail(email) {
-        const value = (email || '').trim() || 'your email';
+        const value = (email || "").trim() || "your email";
         userEmail.textContent = value;
         emailBox.hidden = false;
       }
 
+      function startConfirmCountdown(jwt) {
+        const expiresAt = jwtExpiresAt(jwt);
+        if (!expiresAt || !window.AVAuthFlow) return;
+        confirmExpiryWrap.hidden = false;
+        AVAuthFlow.startCountdown(confirmExpiry, expiresAt);
+      }
+
       function showSuccess(email, loginPath) {
-        statusIcon.classList.remove('spin', 'error');
-        statusIcon.classList.add('ok');
+        statusIcon.classList.remove("spin", "error");
+        statusIcon.classList.add("ok");
         statusIcon.innerHTML = CHECK_SVG;
         eyebrow.hidden = false;
-        title.textContent = 'Welcome to AutoVault!';
-        desc.textContent = 'Your account has been created successfully.';
+        title.textContent = "Welcome to AutoVault!";
+        desc.textContent = "Your account has been created successfully.";
         showEmail(email);
         spamNote.hidden = false;
         nextLoginBtn.hidden = false;
+        confirmExpiryWrap.hidden = true;
         if (loginPath) nextLoginBtn.href = loginPath;
       }
 
       function showError(heading, message) {
-        panel.classList.add('state-error');
-        statusIcon.classList.remove('spin', 'ok');
-        statusIcon.classList.add('error');
+        panel.classList.add("state-error");
+        statusIcon.classList.remove("spin", "ok");
+        statusIcon.classList.add("error");
         statusIcon.innerHTML = ERR_SVG;
         eyebrow.hidden = true;
         title.textContent = heading;
@@ -246,37 +166,48 @@
         emailBox.hidden = true;
         spamNote.hidden = true;
         nextLoginBtn.hidden = false;
-        nextLoginBtn.textContent = 'Back to Home';
-        nextLoginBtn.href = '/';
+        nextLoginBtn.textContent = "Back to Home";
+        nextLoginBtn.href = "/";
+        confirmExpiryWrap.hidden = true;
       }
 
-      // Show email immediately from redirect URL / token so the page never looks blank.
-      const immediateEmail = emailFromQuery || (token ? emailFromJwt(token) : '');
+      const immediateEmail = emailFromQuery || (token ? emailFromJwt(token) : "");
       if (immediateEmail) showEmail(immediateEmail);
+      if (token) startConfirmCountdown(token);
 
       if (!token) {
-        showError('Invalid confirmation link', 'Token is missing. Please return to the landing page and try again.');
+        showError(
+          "Invalid confirmation link",
+          "Token is missing. Please return to the landing page and try again.",
+        );
         return;
       }
 
       try {
-        const resp = await fetch(`${API_URL}/api/registrations/complete?token=${encodeURIComponent(token)}`);
+        const resp = await fetch(
+          `${API_URL}/api/registrations/complete?token=${encodeURIComponent(token)}`,
+        );
         const data = await resp.json().catch(() => ({}));
-        if (!resp.ok) throw new Error(data.message || data.error?.message || 'Unable to verify purchase.');
+        if (!resp.ok) {
+          throw new Error(
+            data.message || data.error?.message || "Unable to verify purchase.",
+          );
+        }
 
         const reg = data.registration || {};
-        const email = reg.loginEmail || reg.email || immediateEmail || '';
+        const email = reg.loginEmail || reg.email || immediateEmail || "";
         showSuccess(email, reg.loginPath);
       } catch (err) {
-        // If we already know the email from the redirect, keep a helpful success-style message
-        // only when the token was already used (common on refresh) — otherwise show the error.
-        const msg = (err && err.message) || '';
+        const msg = (err && err.message) || "";
         const alreadyUsed = /no longer valid|invalid or expired|already/i.test(msg);
         if (alreadyUsed && immediateEmail) {
-          showSuccess(immediateEmail, '/login');
+          showSuccess(immediateEmail, "/login");
           return;
         }
-        showError('Could not verify purchase', msg || 'Your confirmation link is invalid or expired. Please contact support.');
+        showError(
+          "Could not verify purchase",
+          msg || "Your confirmation link is invalid or expired. Please contact support.",
+        );
       }
     })();
   </script>
