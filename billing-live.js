@@ -723,7 +723,7 @@
           esc(current.name) +
           '</div><div class="plan-opt-price"><b>' +
           psFmt(current.amount) +
-          "</b> / " + t("mo") + '</div><div class=\"plan-opt-feat\">" +
+          "</b> / " + t("mo") + '</div><div class="plan-opt-feat">' +
           esc(current.feat) +
           '</div></div><span class="ps-badge active">' + t("Current plan") + '</span></div>'
         : "";

@@ -53,6 +53,8 @@
         --c-cost: #2dd4bf;
         --c-gross: var(--orange);
         --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+        --kpi-hover-bg: rgba(255, 255, 255, 0.025);
+        --kpi-hover-border: rgba(255, 255, 255, 0.1);
       }
       html.bright {
         --bg: #eceff5;
@@ -79,6 +81,8 @@
         --c-commission: var(--text);
         --c-cost: #0d9488;
         --c-gross: var(--text);
+        --kpi-hover-bg: var(--panel-2);
+        --kpi-hover-border: #cfd4df;
         color-scheme: light;
       }
       html.bright select {
@@ -164,8 +168,9 @@
 
       /* SIDEBAR — pinned to viewport while main content scrolls */
       .sidebar {
-        width: 248px;
-        min-width: 248px;
+        --sidebar-width: 248px;
+        width: var(--sidebar-width);
+        min-width: var(--sidebar-width);
         position: fixed;
         top: 0;
         left: 0;
@@ -285,8 +290,25 @@
 
       .wrap {
         max-width: 1500px;
-        margin: 0 auto;
+        width: 100%;
+        margin: 0;
         padding: 18px 48px 60px;
+        box-sizing: border-box;
+      }
+
+      @media (max-width: 900px) {
+        .wrap {
+          padding-left: 16px;
+          padding-right: 16px;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .wrap {
+          padding-left: 12px;
+          padding-right: 12px;
+          padding-bottom: 48px;
+        }
       }
 
       /* TOPBAR */
@@ -1317,8 +1339,8 @@
       }
 
       .kpi:hover {
-        background: rgba(255, 255, 255, 0.025);
-        border-color: rgba(255, 255, 255, 0.1);
+        background: var(--kpi-hover-bg);
+        border-color: var(--kpi-hover-border);
       }
 
       .kpi::after {
@@ -1729,8 +1751,10 @@
         border-radius: 16px;
         max-width: 560px;
         width: 100%;
+        min-width: 0;
         max-height: 90vh;
         overflow-y: auto;
+        box-sizing: border-box;
         box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       }
 
@@ -1758,6 +1782,77 @@
       #addVehModal .av-modal-foot .av-submit,
       #prevSoldModal .av-modal-foot .av-submit {
         margin: 0;
+      }
+
+      @media (max-width: 640px) {
+        .modal-overlay {
+          padding: 12px;
+        }
+
+        #addVehModal .modal,
+        #prevSoldModal .modal {
+          width: 100%;
+          max-width: none;
+          max-height: min(92dvh, 92vh);
+        }
+
+        #addVehModal .modal-head,
+        #prevSoldModal .modal-head {
+          padding: 14px 16px;
+        }
+
+        #addVehModal .modal-body,
+        #prevSoldModal .modal-body {
+          padding: 16px;
+          overflow-x: hidden;
+        }
+
+        #addVehModal .av-modal-foot,
+        #prevSoldModal .av-modal-foot {
+          padding: 12px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+        }
+
+        #addVehModal .av-grid3,
+        #prevSoldModal .av-grid3 {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        #addVehModal .av-grid3 > :first-child,
+        #prevSoldModal .av-grid3 > :first-child {
+          grid-column: 1 / -1;
+        }
+
+        #addVehModal .av-grid2,
+        #prevSoldModal .av-grid2 {
+          grid-template-columns: 1fr;
+        }
+
+        #addVehModal .av-vin-row,
+        #prevSoldModal .av-vin-row {
+          min-width: 0;
+        }
+
+        #addVehModal .av-vin-input,
+        #prevSoldModal .av-vin-input {
+          min-width: 0;
+          font-size: 14px;
+          letter-spacing: 0.5px;
+          padding: 12px;
+        }
+
+        #addVehModal .fastdate,
+        #prevSoldModal .fastdate {
+          display: flex;
+          width: 100%;
+          box-sizing: border-box;
+        }
+
+        #addVehModal .rc-input,
+        #prevSoldModal .rc-input {
+          width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
+        }
       }
 
       .modal-head {
@@ -3717,10 +3812,6 @@
 
         .sidebar.open {
           transform: translateX(0);
-        }
-
-        .sidebar-collapse {
-          display: none;
         }
 
         .main-content,
@@ -6153,18 +6244,19 @@
         color: #fff;
         border-color: var(--blue);
       }
-      .pnl-month.has-act::after {
+      .pnl-month.has-act::after,
+      .dp-m.has-act::after {
         content: "";
         position: absolute;
-        left: 50%;
-        bottom: 2px;
-        transform: translateX(-50%);
+        top: 3px;
+        right: 3px;
         width: 5px;
         height: 5px;
         border-radius: 50%;
         background: var(--green);
       }
-      .pnl-month.active.has-act::after {
+      .pnl-month.active.has-act::after,
+      .dp-m.active.has-act::after {
         background: #fff;
       }
 
@@ -6765,6 +6857,9 @@
         border: 1px solid var(--border);
         border-radius: 14px;
         padding: 18px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
       }
 
       .cal-month-head {
@@ -6776,9 +6871,11 @@
 
       .cal-weekdays {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(7, minmax(0, 1fr));
         gap: 8px;
         margin-bottom: 8px;
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .cal-weekdays div {
@@ -6792,12 +6889,15 @@
 
       .cal-grid {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(7, minmax(0, 1fr));
         gap: 8px;
+        width: 100%;
+        box-sizing: border-box;
       }
 
       .cal-cell {
         min-height: 94px;
+        min-width: 0;
         border: 1px solid var(--border);
         border-radius: 10px;
         background: var(--panel-2);
@@ -7327,18 +7427,21 @@
       }
 
       .cal-layout {
-        display: flex;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
         gap: 16px;
-        align-items: flex-start;
+        align-items: start;
+        width: 100%;
       }
 
       .cal-main {
-        flex: 1;
         min-width: 0;
+        width: 100%;
       }
 
       .cal-side {
-        width: 340px;
+        width: 100%;
+        max-width: 320px;
         flex-shrink: 0;
         background: var(--panel);
         border: 1px solid var(--border);
@@ -7396,12 +7499,56 @@
 
       @media (max-width: 1050px) {
         .cal-layout {
-          flex-direction: column;
+          grid-template-columns: 1fr;
         }
 
         .cal-side {
           width: 100%;
+          max-width: none;
           position: static;
+        }
+      }
+
+      /* Calendar page — skeleton uses full width; side panel appears when loaded */
+      #calSkeleton {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      #calSkeleton .cal-side {
+        display: none;
+      }
+
+      @media (max-width: 900px) {
+        #page-calendar .cal-month-wrap {
+          padding: 12px;
+        }
+
+        #page-calendar .cal-weekdays,
+        #page-calendar .cal-grid {
+          gap: 4px;
+        }
+
+        #page-calendar .cal-weekdays div {
+          font-size: 9px;
+          letter-spacing: 0;
+        }
+
+        #page-calendar .cal-cell {
+          min-height: 0;
+          aspect-ratio: 1;
+          padding: 6px 4px;
+          gap: 3px;
+        }
+
+        #page-calendar .cal-cell.empty {
+          aspect-ratio: 1;
+          min-height: 0;
+        }
+
+        #page-calendar .cal-sk-cell {
+          aspect-ratio: 1;
+          min-height: 0;
+          padding: 6px 4px;
         }
       }
 
@@ -7490,7 +7637,9 @@
       }
 
       .cal-sk-cell {
-        min-height: 94px;
+        min-height: 0;
+        min-width: 0;
+        aspect-ratio: 1;
         border: 1px solid var(--border);
         border-radius: 10px;
         background: var(--panel-2);
@@ -9064,6 +9213,7 @@
         padding: 5px 10px;
         border-radius: 7px;
         cursor: pointer;
+        position: relative;
       }
 
       .dp-m:hover,
@@ -9948,6 +10098,68 @@
         margin: 0 !important;
       }
 
+      @media (max-width: 640px) {
+        .dash-cal-inner {
+          padding-left: 8px !important;
+          padding-right: 8px !important;
+        }
+
+        .dash-cal-inner .cal-weekdays,
+        .dash-cal-inner .cal-grid,
+        .dash-cal-skel {
+          gap: 3px;
+        }
+
+        .dash-cal-inner .cal-weekdays div {
+          font-size: 9px;
+          letter-spacing: 0;
+          padding: 0 1px;
+        }
+
+        .dash-cal-inner .cal-cell:not(.expanded) {
+          min-height: 0;
+          aspect-ratio: 1;
+          padding: 3px 2px;
+          gap: 2px;
+          border-radius: 6px;
+        }
+
+        .dash-cal-inner .cal-cell.empty {
+          aspect-ratio: 1;
+          min-height: 0;
+        }
+
+        .dash-cal-inner .cal-daynum {
+          font-size: 11px;
+          line-height: 1.1;
+        }
+
+        .dash-cal-inner .cal-sold,
+        .dash-cal-inner .cal-note-bar,
+        .dash-cal-inner .cal-bday,
+        .dash-cal-inner .cal-filing {
+          font-size: 8px;
+          padding: 1px 3px;
+          line-height: 1.15;
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .dash-cal-inner .cal-cell.expanded {
+          grid-column: 1 / -1;
+          grid-row: auto;
+          aspect-ratio: auto;
+          min-height: 220px;
+        }
+
+        .dash-cal-skel .sk-bar {
+          min-height: 0;
+          aspect-ratio: 1;
+        }
+      }
+
       @media (max-width: 680px) {
         .dash-compare-strip {
           grid-template-columns: 1fr;
@@ -10244,13 +10456,13 @@
       }
 
       .sidebar-collapse {
+        --collapse-size: 26px;
         position: fixed;
         top: 50%;
-        left: 235px;
+        left: calc(248px - (var(--collapse-size) / 2));
         transform: translateY(-50%);
-        right: auto;
-        width: 26px;
-        height: 26px;
+        width: var(--collapse-size);
+        height: var(--collapse-size);
         border-radius: 50%;
         background: var(--panel-2);
         border: 1px solid var(--border);
@@ -10269,13 +10481,14 @@
           box-shadow 0.15s,
           transform 0.15s,
           left 0.2s ease;
-        z-index: 41;
+        z-index: 100;
+        pointer-events: auto;
         padding: 0;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
       }
 
-      .sidebar.collapsed .sidebar-collapse {
-        left: 55px;
+      .sidebar.collapsed + .sidebar-collapse {
+        left: calc(68px - (var(--collapse-size) / 2));
       }
 
       .sidebar-collapse:hover {
@@ -10286,7 +10499,20 @@
         transform: translateY(-50%) scale(1.08);
       }
 
+      @media (max-width: 900px) {
+        .sidebar-collapse {
+          display: none;
+        }
+
+        .sidebar.open + .sidebar-collapse {
+          display: flex;
+          z-index: 100;
+          left: calc(248px - (var(--collapse-size) / 2));
+        }
+      }
+
       .sidebar.collapsed {
+        --sidebar-width: 68px;
         width: 68px;
         min-width: 68px;
       }
@@ -12611,7 +12837,7 @@
 
       .dash-cal-skel {
         display: grid;
-        grid-template-columns: repeat(7, 1fr);
+        grid-template-columns: repeat(7, minmax(0, 1fr));
         gap: 8px;
       }
       .dash-cal-skel .sk-bar {
@@ -16101,14 +16327,6 @@
 
   <body data-av-dashboard="1">
     <nav class="sidebar">
-      <button
-        class="sidebar-collapse"
-        id="sidebarCollapse"
-        onclick="toggleSidebar()"
-        title="Collapse sidebar"
-      >
-        ‹
-      </button>
       <div class="sidebar-logo">
         <div class="logo-lockup">
           <svg class="logo-svg" viewBox="0 0 120 78" fill="none" role="img" aria-label="AutoVault"><path d="M16 12 L42 64 L68 12" stroke="var(--text)" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/><path d="M52 64 L78 12 L104 64" stroke="#2743E8" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -16979,6 +17197,14 @@
         </div>
       </div>
     </nav>
+    <button
+      class="sidebar-collapse"
+      id="sidebarCollapse"
+      onclick="toggleSidebar()"
+      title="Collapse sidebar"
+    >
+      ‹
+    </button>
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
     <div class="main-content">
@@ -27564,67 +27790,76 @@
       </div>
     </div>
 
-    <div class="modal-overlay" id="addVehModal">
-      <div class="modal" style="max-width: 470px">
+    <div
+      class="modal-overlay"
+      id="addVehModal"
+      onclick="if(event.target===this)closeAddVeh()"
+    >
+      <div class="modal" style="max-width: 640px">
         <div class="modal-head">
           <h3 id="addVehTitle">Add Vehicle</h3>
           <button class="modal-close" onclick="closeAddVeh()">&times;</button>
         </div>
         <div class="modal-body">
+          <div class="pv-sec">Vehicle</div>
           <div id="avVinSection">
-          <button type="button" class="av-scan-cta" id="avScanCta" onclick="avScan()">
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
-              />
-              <circle cx="12" cy="13" r="4" />
-            </svg>
-            Scan VIN number
-          </button>
-          <label class="av-label" id="avVinLabel">Or paste / type the VIN</label>
-          <div class="av-vin-row">
-            <input
-              id="avVin"
-              class="av-vin-input"
-              placeholder="17-digit VIN…"
-              maxlength="17"
-              oninput="avVinInput()"
-              onkeydown="
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                  document.getElementById('avPrice').focus();
-                }
-              "
-              autocomplete="off"
-            />
-            <button class="av-scan-btn" id="avScanIconBtn" onclick="avScan()" title="Scan VIN">
+            <button type="button" class="av-scan-cta" id="avScanCta" onclick="avScan()">
               <svg
-                width="20"
-                height="20"
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
                 stroke-width="2"
               >
                 <path
-                  d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"
+                  d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"
                 />
-                <path d="M7 8v8M10 8v8M13 8v8M16 8v8" />
+                <circle cx="12" cy="13" r="4" />
               </svg>
+              Scan VIN number
+            </button>
+            <label class="av-label" id="avVinLabel">Or paste / type the VIN</label>
+            <div class="av-vin-row" style="margin-bottom: 10px">
+              <input
+                id="avVin"
+                class="av-vin-input"
+                placeholder="17-digit VIN…"
+                maxlength="17"
+                oninput="avVinInput()"
+                onkeydown="
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    document.getElementById('avPrice').focus();
+                  }
+                "
+                autocomplete="off"
+              />
+              <button class="av-scan-btn" id="avScanIconBtn" onclick="avScan()" title="Scan VIN">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"
+                  />
+                  <path d="M7 8v8M10 8v8M13 8v8M16 8v8" />
+                </svg>
+              </button>
+            </div>
+            <div id="avDecoded" class="av-decoded"></div>
+          </div><!-- /avVinSection -->
+          <div class="av-novin-bar">
+            <button type="button" class="av-novin-toggle" id="avNoVinToggle" onclick="avToggleNoVin()">
+              Add without VIN number
             </button>
           </div>
-          <div id="avDecoded" class="av-decoded"></div>
-          </div><!-- /avVinSection -->
-          <div class="av-novin-bar"><button type="button" class="av-novin-toggle" id="avNoVinToggle" onclick="avToggleNoVin()">Add without VIN number</button></div>
           <div class="av-grid3">
             <div>
-              <label class="av-label">Year</label
-              ><input
+              <label class="av-label">Year</label>
+              <input
                 id="avYear"
                 class="rc-input"
                 type="number"
@@ -27632,84 +27867,83 @@
               />
             </div>
             <div>
-              <label class="av-label">Make</label
-              ><input id="avMake" class="rc-input" placeholder="Make" />
+              <label class="av-label">Make</label>
+              <input id="avMake" class="rc-input" placeholder="Make" />
             </div>
             <div>
-              <label class="av-label">Model</label
-              ><input id="avModel" class="rc-input" placeholder="Model" />
+              <label class="av-label">Model</label>
+              <input id="avModel" class="rc-input" placeholder="Model" />
             </div>
           </div>
-          <div>
-            <label class="av-label">Purchase Date</label>
-            <div class="fastdate">
-              <input
-                class="fd-mm"
-                maxlength="2"
-                inputmode="numeric"
-                placeholder="MM"
-                aria-label="Month"
-              />
-              <span class="fd-sep">/</span>
-              <input
-                class="fd-dd"
-                maxlength="2"
-                inputmode="numeric"
-                placeholder="DD"
-                aria-label="Day"
-              />
-              <span class="fd-sep">/</span>
-              <input
-                class="fd-yy"
-                maxlength="4"
-                inputmode="numeric"
-                placeholder="YYYY"
-                aria-label="Year"
-              />
-              <input type="hidden" id="avDate" />
-              <button
-                type="button"
-                class="fd-cal-btn"
-                onclick="fdOpenPicker(this)"
-                title="Pick date"
-                aria-label="Open calendar"
-              >
-                <svg
-                  width="15"
-                  height="15"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                >
-                  <rect x="3" y="4" width="18" height="18" rx="2" />
-                  <path d="M16 2v4M8 2v4M3 10h18" />
-                </svg>
-              </button>
-              <input
-                type="date"
-                class="fd-picker"
-                tabindex="-1"
-                aria-hidden="true"
-                onchange="fdFromPicker(this)"
-              />
-            </div>
-            <div
-              style="
-                font-size: 10.5px;
-                color: var(--muted);
-                margin-top: 4px;
-                margin-bottom: 12px;
-                line-height: 1.4;
-              "
-            >
-              Backdate this for vehicles bought in a previous month.
-            </div>
-          </div>
+
+          <div class="pv-sec">Dates</div>
           <div class="av-grid2">
             <div>
-              <label class="av-label">Purchase Price ($)</label
-              ><input
+              <label class="av-label">Purchase Date</label>
+              <div class="fastdate">
+                <input
+                  class="fd-mm"
+                  maxlength="2"
+                  inputmode="numeric"
+                  placeholder="MM"
+                  aria-label="Month"
+                />
+                <span class="fd-sep">/</span>
+                <input
+                  class="fd-dd"
+                  maxlength="2"
+                  inputmode="numeric"
+                  placeholder="DD"
+                  aria-label="Day"
+                />
+                <span class="fd-sep">/</span>
+                <input
+                  class="fd-yy"
+                  maxlength="4"
+                  inputmode="numeric"
+                  placeholder="YYYY"
+                  aria-label="Year"
+                />
+                <input type="hidden" id="avDate" />
+                <button
+                  type="button"
+                  class="fd-cal-btn"
+                  onclick="fdOpenPicker(this)"
+                  title="Pick date"
+                  aria-label="Open calendar"
+                >
+                  <svg
+                    width="15"
+                    height="15"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <rect x="3" y="4" width="18" height="18" rx="2" />
+                    <path d="M16 2v4M8 2v4M3 10h18" />
+                  </svg>
+                </button>
+                <input
+                  type="date"
+                  class="fd-picker"
+                  tabindex="-1"
+                  aria-hidden="true"
+                  onchange="fdFromPicker(this)"
+                />
+              </div>
+              <div class="pv-hint">
+                Backdate this for vehicles bought in a previous month.
+              </div>
+            </div>
+            <div></div>
+          </div>
+
+          <div class="pv-sec">Acquisition &amp; Costs</div>
+          <div class="av-grid2">
+            <div>
+              <label class="av-label">Purchase Price ($)</label>
+              <input
                 id="avPrice"
                 class="rc-input"
                 type="number"
@@ -27717,8 +27951,8 @@
               />
             </div>
             <div>
-              <label class="av-label">Auction Fees ($)</label
-              ><input
+              <label class="av-label">Auction Fees ($)</label>
+              <input
                 id="avFees"
                 class="rc-input"
                 type="number"
@@ -27732,10 +27966,19 @@
               />
             </div>
           </div>
-          <div style="margin-bottom:12px;">
+          <div style="margin-bottom: 4px">
             <label class="av-label">Purchase Location</label>
-            <input id="avLocation" class="rc-input" type="text" list="auctionList" placeholder="Manheim, ADESA, dealer trade, private\u2026" autocomplete="off">
-            <div style="font-size:10.5px;color:var(--muted);margin-top:4px;line-height:1.4;">Where you bought it &mdash; pick an auction or type your own.</div>
+            <input
+              id="avLocation"
+              class="rc-input"
+              type="text"
+              list="auctionList"
+              placeholder="Manheim, ADESA, dealer trade, private…"
+              autocomplete="off"
+            />
+            <div class="pv-hint">
+              Where you bought it — pick an auction or type your own.
+            </div>
           </div>
           <datalist id="auctionList">
             <option value="Manheim"></option>
@@ -27751,6 +27994,8 @@
             <option value="Off-Lease / Rental"></option>
             <option value="Repossession"></option>
           </datalist>
+
+          <div class="pv-sec">Flooring</div>
           <div class="av-flooring">
             <div>
               <div class="av-fl-title">Add Flooring Rate</div>
@@ -27790,12 +28035,13 @@
           </div>
           <div class="av-title-pop" id="avNoVinPop">
             <div class="atp-q">Save this vehicle without a VIN?</div>
-            <div class="atp-sub">No VIN was entered. We'll assign a temporary stock tag so you can track it now &mdash; you can add the real VIN later from its deal jacket.</div>
+            <div class="atp-sub">
+              No VIN was entered. We'll assign a temporary stock tag so you can track it now — you can add the real VIN later from its deal jacket.
+            </div>
             <div class="atp-btns">
               <button class="atp-yes" onclick="avConfirmNoVin(true)">... Yes, save without VIN</button>
               <button class="atp-no" onclick="avConfirmNoVin(false)">No, I'll add it</button>
             </div>
-          </div>
           </div>
           <div id="avMsg" style="margin-top: 12px"></div>
         </div>
@@ -28846,8 +29092,16 @@
       function toggleSidebar() {
         const sb = document.querySelector(".sidebar");
         if (!sb) return;
-        const collapsed = sb.classList.toggle("collapsed");
         const btn = document.getElementById("sidebarCollapse");
+
+        if (window.matchMedia("(max-width: 900px)").matches) {
+          sb.classList.remove("open");
+          const overlay = document.getElementById("sidebarOverlay");
+          if (overlay) overlay.classList.remove("open");
+          return;
+        }
+
+        const collapsed = sb.classList.toggle("collapsed");
         if (btn) {
           btn.textContent = collapsed ? "›" : "‹";
           btn.title = collapsed ? "Expand menu" : "Collapse menu";
@@ -38650,9 +38904,10 @@
         if (!window.AVApi || typeof AVApi.me !== "function") {
           return Promise.resolve(null);
         }
+        if (window._profileMeInflight) return window._profileMeInflight;
         var portal =
           (window.AVPortal && AVPortal.getRoutePortal()) || undefined;
-        return AVApi.me(portal)
+        window._profileMeInflight = AVApi.me(portal)
           .then(function (meResp) {
             var u = (meResp && meResp.user) || meResp;
             if (u && (u.fullName || u.name || u.email)) applyMeUserToProfile(u);
@@ -38660,7 +38915,11 @@
           })
           .catch(function () {
             return null;
+          })
+          .finally(function () {
+            window._profileMeInflight = null;
           });
+        return window._profileMeInflight;
       }
       function capitalizeDisplayName(name) {
         var s = String(name || "").trim();
@@ -54919,7 +55178,7 @@
       function calShowSkeleton() {
         const sk = document.getElementById("calSkeleton");
         const real = document.getElementById("calRealContent");
-        if (sk) sk.style.display = "";
+        if (sk) sk.style.display = "grid";
         if (real) real.style.display = "none";
         const grid = document.getElementById("calSkGrid");
         if (grid && !grid.children.length) {
@@ -54945,7 +55204,7 @@
         const sk = document.getElementById("calSkeleton");
         const real = document.getElementById("calRealContent");
         if (sk) sk.style.display = "none";
-        if (real) real.style.display = "";
+        if (real) real.style.display = "grid";
         const grid = document.getElementById("calSkGrid");
         if (grid) grid.innerHTML = "";
       }
@@ -56898,20 +57157,30 @@
           .replace(/"/g, "&quot;");
       }
       async function loadDashNotes() {
-        try {
-          const data = await AVApi.listDashboardNotes();
-          dashNotes = (data.notes || []).map((n) => ({
-            id: n.id,
-            text: n.text,
-            sortOrder: n.sortOrder || 0,
-          }));
-          dashNotesLoaded = true;
-        } catch (e) {
-          console.warn("[sticky-notes] Failed to load from API", e);
-          dashNotes = [];
-          dashNotesLoaded = true;
+        if (dashNotesLoaded) {
+          renderDashNotes();
+          return;
         }
-        renderDashNotes();
+        if (window._dashNotesInflight) return window._dashNotesInflight;
+        window._dashNotesInflight = (async function () {
+          try {
+            const data = await AVApi.listDashboardNotes();
+            dashNotes = (data.notes || []).map((n) => ({
+              id: n.id,
+              text: n.text,
+              sortOrder: n.sortOrder || 0,
+            }));
+            dashNotesLoaded = true;
+          } catch (e) {
+            console.warn("[sticky-notes] Failed to load from API", e);
+            dashNotes = [];
+            dashNotesLoaded = true;
+          }
+          renderDashNotes();
+        })().finally(function () {
+          window._dashNotesInflight = null;
+        });
+        return window._dashNotesInflight;
       }
       function renderDashNotes() {
         const hostNotes = document.getElementById("dashNotes");
@@ -57035,14 +57304,18 @@
       function renderDashPeriod() {
         const yv = document.querySelector(".dp-year");
         if (yv) yv.textContent = dashYear;
-        document
-          .querySelectorAll(".dp-m")
-          .forEach((b) =>
-            b.classList.toggle(
-              "active",
-              dashMode === "month" && +b.dataset.m === dashMonth,
-            ),
+        const activeMonths =
+          typeof pnlMonthsWithSales === "function"
+            ? pnlMonthsWithSales(dashYear)
+            : new Set();
+        document.querySelectorAll(".dp-m").forEach((b) => {
+          const m = +b.dataset.m;
+          b.classList.toggle(
+            "active",
+            dashMode === "month" && m === dashMonth,
           );
+          b.classList.toggle("has-act", activeMonths.has(m));
+        });
         const yb = document.querySelector(".dp-year-btn");
         if (yb) yb.classList.toggle("active", dashMode === "year");
       }
@@ -57400,24 +57673,51 @@
           if (dashVehiclesReady()) renderDashCalendar();
         }
 
-        try {
-          var data = await AVApi.listDayNotes("?from=" + fromD + "&to=" + toD);
+        if (
+          __dashDayNotesInflight &&
+          __dashDayNotesInflight.prefix === prefix
+        ) {
+          try {
+            await __dashDayNotesInflight.promise;
+          } catch (_) {}
           if (token !== __dashRenderToken) return;
-          var notes = data.notes || data || [];
-          var map = Object.create(null);
-          notes.forEach(function (n) {
-            var d = n.noteDate ? n.noteDate.slice(0, 10) : n.noteDate;
-            if (n.body) {
-              map[d] = n.body;
-              calNotesStore.sales[d] = n.body;
-              dashDayNotes[d] = n.body;
-            }
-          });
-          __dashDayNotesCache[prefix] = map;
           if (dashVehiclesReady()) renderDashCalendar();
-        } catch (e) {
-          console.warn("Failed to load day notes for dashboard", e);
+          return;
         }
+
+        var fetchPromise = (async function () {
+          try {
+            var data = await AVApi.listDayNotes("?from=" + fromD + "&to=" + toD);
+            if (token !== __dashRenderToken) return;
+            var notes = data.notes || data || [];
+            var map = Object.create(null);
+            notes.forEach(function (n) {
+              var d = n.noteDate ? n.noteDate.slice(0, 10) : n.noteDate;
+              if (n.body) {
+                map[d] = n.body;
+                calNotesStore.sales[d] = n.body;
+                dashDayNotes[d] = n.body;
+              }
+            });
+            __dashDayNotesCache[prefix] = map;
+            if (typeof calMonthKey === "function" && calMonthKey() === prefix) {
+              calNotesReadyKey = prefix;
+            }
+            if (dashVehiclesReady()) renderDashCalendar();
+          } catch (e) {
+            console.warn("Failed to load day notes for dashboard", e);
+          } finally {
+            if (
+              __dashDayNotesInflight &&
+              __dashDayNotesInflight.prefix === prefix
+            ) {
+              __dashDayNotesInflight = null;
+            }
+          }
+        })();
+
+        __dashDayNotesInflight = { prefix: prefix, promise: fetchPromise };
+        await fetchPromise;
       }
 
       async function renderDashboard() {
@@ -58338,13 +58638,13 @@
             startVehiclesIfNeeded();
           }
         } else {
-          if (typeof hydrateProfileFromApi === "function") {
-            hydrateProfileFromApi();
-          }
           if (window.AVCrmBootstrap) {
             AVCrmBootstrap.bootstrapCrmFromApi()
               .then(startVehiclesIfNeeded)
               .catch(startVehiclesIfNeeded);
+          } else if (typeof hydrateProfileFromApi === "function") {
+            hydrateProfileFromApi().finally(startVehiclesIfNeeded);
+            return;
           }
           /* Also kick vehicles immediately — don't wait for bootstrap at all.
            bootstrapCrmFromApi is idempotent, so double-calls are safe. */

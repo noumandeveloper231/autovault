@@ -349,14 +349,20 @@
   }
 
   function refreshUi() {
+    var cur =
+      typeof global.getCurrentPage === "function" ? global.getCurrentPage() : "";
     try {
       if (typeof global.render === "function") global.render();
     } catch (_) {}
     try {
-      if (typeof global.renderPnlPage === "function") global.renderPnlPage();
+      if (cur === "pnl" && typeof global.renderPnlPage === "function") {
+        global.renderPnlPage();
+      }
     } catch (_) {}
     try {
-      if (typeof global.renderCalendarPage === "function") global.renderCalendarPage();
+      if (cur === "calendar" && typeof global.renderCalendarPage === "function") {
+        global.renderCalendarPage();
+      }
     } catch (_) {}
     try {
       if (typeof global.syncWsVehicles === "function") global.syncWsVehicles();
@@ -372,10 +378,6 @@
       }
     } catch (_) {}
     try {
-      var cur =
-        typeof global.getCurrentPage === "function"
-          ? global.getCurrentPage()
-          : "";
       if (cur === "sold-vehicles" && typeof global.renderSoldVehicles === "function") {
         global.renderSoldVehicles();
       } else if (cur === "deal-jackets" && typeof global.renderDealJacketsList === "function") {
