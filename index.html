@@ -821,14 +821,26 @@
     .bgrid{grid-template-columns:repeat(2,1fr)}
   }
   @media(max-width:720px){
-    .wrap{padding:0 18px}
+    .wrap{
+      padding-left:max(20px, env(safe-area-inset-left));
+      padding-right:max(20px, env(safe-area-inset-right));
+    }
     .app-aura{width:100%;height:112%;filter:blur(34px)}
-    .hero{padding:40px 0 28px}
+    .hero{padding:28px 0 36px}
+    .hero-grid{gap:26px}
     .hero h1{font-size:clamp(32px,8.5vw,42px)}
+    .hero-copy h1{font-size:clamp(26px,7.6vw,36px);margin-top:16px}
     .hero-sub{font-size:16px}
     .hero-cta{flex-direction:column;gap:10px}
     .hero-cta .btn{width:100%}
-    .hero-trust{gap:12px;font-size:12px}
+    .hero-trust{gap:10px;font-size:12px;justify-content:center;row-gap:8px}
+    .hero-split{gap:12px;margin-top:20px}
+    .hero-box{padding:20px 18px 22px;border-radius:14px}
+    .hero-box h3{font-size:20px}
+    .hero-box p{font-size:14px;margin-top:10px}
+    .hero-action{gap:18px;margin-top:0}
+    .hero-action .btn-primary{min-width:0;width:100%;padding:14px 20px}
+    .hero-action .touch-tag{max-width:100%;border-radius:16px;padding:12px 16px;white-space:normal;line-height:1.5}
     .split{grid-template-columns:1fr}
     .statgrid{grid-template-columns:repeat(2,1fr)}
     .tax-grid{grid-template-columns:1fr}
@@ -840,10 +852,17 @@
     .sec-head h2{font-size:clamp(24px,7vw,32px)}
 
     /* dashboard panel */
-    .kpis{grid-template-columns:repeat(2,1fr);gap:8px}
-    .kpi{padding:10px}
-    .kpi .val{font-size:16px}
-    .app-cols{grid-template-columns:1fr}
+    .app-stage{gap:20px;padding:0 2px}
+    .app{border-radius:14px}
+    .app-bar{padding:12px 14px;gap:8px}
+    .app-url{margin-left:4px;padding:6px 10px;font-size:11px}
+    .kpis{grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+    .kpi{padding:13px 12px}
+    .kpi .val{font-size:17px;margin-top:7px}
+    .kpi .lbl{font-size:9px}
+    .kpi .foot{margin-top:8px}
+    .app-cols{grid-template-columns:1fr;gap:10px}
+    .card{padding:14px 12px}
     .cal-cols{grid-template-columns:1fr}
     .cal-wk,.cal-days{gap:3px}
     .cd{font-size:10px}
@@ -851,29 +870,48 @@
     .cal-notecell{flex-wrap:wrap;padding:10px 12px;gap:10px}
     .ncd-add{margin-left:auto}
     .app-body{grid-template-columns:1fr}
-    .app-side{flex-direction:row;justify-content:center;gap:14px;border-right:0;border-bottom:1px solid var(--line-soft);padding:10px}
-    .app-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+    .app-side{flex-direction:row;justify-content:space-evenly;gap:8px;border-right:0;border-bottom:1px solid var(--line-soft);padding:12px 10px}
+    .app-side .ico{width:34px;height:34px}
+    .app-main{padding:12px 12px 16px}
+    .app-tabs{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding:10px 10px 12px;gap:4px}
     .app-tabs::-webkit-scrollbar{display:none}
-    .stage{min-height:auto;padding:12px;overflow:visible}
+    .atab{padding:7px 11px}
+    .stage{min-height:auto;padding:12px 10px 14px;overflow:visible}
+    .s-head{margin-bottom:14px;gap:10px}
     .slide{position:relative;top:auto;left:auto;right:auto;display:none;opacity:1;transform:none;visibility:visible}
     .slide.on{display:block}
-    .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -12px;padding:0 12px}
+    .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -10px;padding:0 10px}
     .tscroll .dtable{min-width:498px}
     .dtable{font-size:11px}
-    .taxbar{gap:6px}
-    .taxstat{padding:8px 9px}
-    .taxstat .tv{font-size:12px!important}
+    .taxbar{gap:8px}
+    .taxstat{padding:10px 11px}
+    .taxstat .tv{font-size:13px!important}
 
     .wl-left,.wl-form{padding:30px 24px}
     .wl-left h2{font-size:clamp(24px,7vw,30px)}
     .statement{padding:64px 0}
+    .statement .q{padding:0 20px}
     .sec{padding:64px 0}
     .foot{display:flex;flex-direction:column}
     .foot-bottom{flex-direction:column;align-items:flex-start;gap:10px}
+    .topticker{padding:13px 0}
+    .tt-sep{padding:0 16px}
   }
   @media(max-width:390px){
-    .kpis{grid-template-columns:1fr 1fr;gap:7px}
+    .wrap{
+      padding-left:max(16px, env(safe-area-inset-left));
+      padding-right:max(16px, env(safe-area-inset-right));
+    }
+    .hero{padding:22px 0 32px}
+    .hero-grid{gap:22px}
+    .hero-box{padding:18px 16px 20px}
+    .kpis{grid-template-columns:1fr 1fr;gap:8px}
+    .kpi{padding:12px 10px}
     .kpi .val{font-size:15px}
+    .app-side{gap:6px;padding:10px 8px}
+    .app-side .ico{width:32px;height:32px}
+    .app-main{padding:10px 10px 14px}
+    .stage{padding:10px 8px 12px}
     .taxbar{grid-template-columns:1fr 1fr}
     .taxbar .taxstat:first-child{grid-column:1 / -1}
     .brand{font-size:17px}
@@ -1173,9 +1211,12 @@
   }
   @container hero-app (max-width:640px){
     .app-body{grid-template-columns:1fr}
-    .app-side{flex-direction:row;justify-content:center;gap:14px;border-right:0;border-bottom:1px solid var(--line-soft);padding:10px}
+    .app-side{flex-direction:row;justify-content:space-evenly;gap:8px;border-right:0;border-bottom:1px solid var(--line-soft);padding:12px 10px}
     .app-cols,.cal-cols{grid-template-columns:1fr}
-    .kpis{grid-template-columns:repeat(2,1fr);gap:8px}
+    .kpis{grid-template-columns:repeat(2,1fr);gap:10px}
+    .kpi{padding:13px 12px}
+    .app-main{padding:12px}
+    .stage{padding:12px 10px}
     .cal-wk,.cal-days{gap:3px}
     .cd{font-size:10px}
     .cal-legend{gap:8px 12px;margin-top:10px}
@@ -1189,6 +1230,9 @@
     .ncd-add{align-self:flex-start;margin-left:0}
     .cd{font-size:9px}
     .cal-wk span{font-size:8px}
+    .kpi{padding:12px 10px}
+    .kpi .val{font-size:15px}
+    .app-side{padding:10px 8px;gap:6px}
   }
   .contact-bg{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
   .contact-aura{position:absolute;top:30%;left:50%;width:760px;height:680px;transform:translate(-50%,-50%);background:radial-gradient(ellipse at center,rgba(39,67,232,.18),transparent 62%);filter:blur(26px)}
@@ -1211,9 +1255,9 @@
   .c-success.is-shown{display:flex}
   .c-success svg{width:20px;height:20px}
   @media(max-width:560px){.c-row{grid-template-columns:1fr}.contact-wrap{padding:86px 18px 50px}.contact-card{padding:32px 24px}}
-  .topticker{position:relative;z-index:6;overflow:hidden;background:linear-gradient(90deg,rgba(39,67,232,.14),rgba(39,67,232,.05) 60%,rgba(39,67,232,.14));border-bottom:1px solid var(--line-soft);padding:11px 0}
-  .tt-track{display:flex;white-space:nowrap;width:max-content;animation:ttscroll 34s linear infinite}
-  .tt-track span{display:inline-flex;align-items:center;font-family:var(--ff-mono);font-size:13px;letter-spacing:.02em;color:var(--muted);font-weight:500}
+  .topticker{position:relative;z-index:6;overflow:hidden;background:linear-gradient(90deg,rgba(39,67,232,.14),rgba(39,67,232,.05) 60%,rgba(39,67,232,.14));border-bottom:1px solid var(--line-soft);padding:12px 0}
+  .tt-track{display:flex;white-space:nowrap;width:max-content;animation:ttscroll 34s linear infinite;align-items:center}
+  .tt-track span{display:inline-block;font-family:var(--ff-mono);font-size:13px;letter-spacing:.02em;color:var(--muted);font-weight:500;line-height:1.45;vertical-align:middle}
   .tt-track b{color:var(--accent);font-weight:700}
   .tt-sep{color:var(--accent-line);padding:0 22px;font-style:normal}
   @keyframes ttscroll{to{transform:translateX(-50%)}}
@@ -1536,7 +1580,7 @@
 
 <!-- ============ TOP TICKER ============ -->
 <div class="topticker">
-  <div class="tt-track"><span>&#10022; Welcome to <b>AutoVault</b> &mdash; the dealership operating system<i class="tt-sep">&#10022;</i>Your <b>first month is free</b><i class="tt-sep">&#10022;</i>Run your entire dealership from one login<i class="tt-sep">&#10022;</i>Inventory &middot; Sales Tax &middot; Payroll &middot; P&amp;L &middot; Jenna AI<i class="tt-sep">&#10022;</i>Built by dealers, for dealers<i class="tt-sep">&#10022;</i><b>Now live &mdash; start free today</b><i class="tt-sep">&#10022;</i>&nbsp;</span><span>&#10022; Welcome to <b>AutoVault</b> &mdash; the dealership operating system<i class="tt-sep">&#10022;</i>Your <b>first month is free</b><i class="tt-sep">&#10022;</i>Run your entire dealership from one login<i class="tt-sep">&#10022;</i>Inventory &middot; Sales Tax &middot; Payroll &middot; P&amp;L &middot; Jenna AI<i class="tt-sep">&#10022;</i>Built by dealers, for dealers<i class="tt-sep">&#10022;</i><b>Now live &mdash; start free today</b><i class="tt-sep">&#10022;</i>&nbsp;</span></div>
+  <div class="tt-track"><span>&#10022; Welcome to <b>&nbsp;AutoVault</b> &mdash; the dealership operating system<i class="tt-sep">&#10022;</i>Your <b>first month is free</b><i class="tt-sep">&#10022;</i>Run your entire dealership from one login<i class="tt-sep">&#10022;</i>Inventory &middot; Sales Tax &middot; Payroll &middot; P&amp;L &middot; Jenna AI<i class="tt-sep">&#10022;</i>Built by dealers, for dealers<i class="tt-sep">&#10022;</i><b>Now live &mdash; start free today</b><i class="tt-sep">&#10022;</i>&nbsp;</span><span>&#10022; Welcome to <b>&nbsp;AutoVault</b> &mdash; the dealership operating system<i class="tt-sep">&#10022;</i>Your <b>first month is free</b><i class="tt-sep">&#10022;</i>Run your entire dealership from one login<i class="tt-sep">&#10022;</i>Inventory &middot; Sales Tax &middot; Payroll &middot; P&amp;L &middot; Jenna AI<i class="tt-sep">&#10022;</i>Built by dealers, for dealers<i class="tt-sep">&#10022;</i><b>Now live &mdash; start free today</b><i class="tt-sep">&#10022;</i>&nbsp;</span></div>
 </div>
 
 <!-- ============ HERO ============ -->

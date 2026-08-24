@@ -26,6 +26,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="dns-prefetch" href="https://api.autovault360.com" />
     <link rel="dns-prefetch" href="https://cdn.socket.io" />
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
     <style>
       :root {
         --bg: #0a0e17;
@@ -15528,7 +15529,7 @@
       }
 
       #vinScanModal {
-        z-index: 200;
+        z-index: 220;
       }
 
       .vinscan-stage {
@@ -15540,11 +15541,22 @@
         overflow: hidden;
       }
 
+      .vinscan-stage.is-off {
+        display: none;
+      }
+
       #vinScanVideo {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
+        background: #000;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+
+      #vinScanCanvas {
+        display: none;
       }
 
       .vinscan-frame {
@@ -15581,6 +15593,25 @@
         color: var(--muted);
         text-align: center;
         line-height: 1.4;
+      }
+
+      .vinscan-photo {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .vinscan-manual {
+        margin-top: 14px;
+      }
+
+      .vinscan-manual .av-label {
+        margin-bottom: 6px;
+      }
+
+      .vinscan-manual .av-vin-input {
+        width: 100%;
+        display: block;
+        box-sizing: border-box;
       }
 
       .av-decoded {
@@ -28184,16 +28215,50 @@
           <button class="modal-close" onclick="closeVinScan()">&times;</button>
         </div>
         <div class="modal-body">
-          <div class="vinscan-stage">
-            <video id="vinScanVideo" playsinline muted autoplay></video>
+          <div class="vinscan-stage" id="vinScanStage">
+            <video
+              id="vinScanVideo"
+              playsinline
+              webkit-playsinline
+              muted
+              autoplay
+            ></video>
+            <canvas id="vinScanCanvas"></canvas>
             <div class="vinscan-frame"></div>
           </div>
           <div id="vinScanStatus" class="vinscan-status">
             Point your camera at the VIN barcode&hellip;
           </div>
           <div class="vinscan-hint">
-            The VIN barcode is usually on the driver&rsquo;s door jamb or the
-            lower windshield.
+            The VIN barcode is usually on the driver&rsquo;s door jamb or the lower windshield.
+          </div>
+          <input
+            type="file"
+            id="vinScanFile"
+            accept="image/*"
+            capture="environment"
+            hidden
+            onchange="vinScanOnPhoto(event)"
+          />
+          <button
+            type="button"
+            class="btn-ghost vinscan-photo"
+            id="vinScanPhotoBtn"
+            onclick="vinScanPickPhoto()"
+          >
+            Take a photo instead
+          </button>
+          <div class="vinscan-manual">
+            <label class="av-label" for="vinScanManual">Or type the VIN</label>
+            <input
+              id="vinScanManual"
+              class="av-vin-input"
+              placeholder="17-digit VIN…"
+              maxlength="17"
+              autocomplete="off"
+              autocapitalize="characters"
+              oninput="vinScanManualInput()"
+            />
           </div>
           <button
             class="btn-ghost"
@@ -34490,59 +34555,274 @@
       let vinScanStream = null,
         vinScanRAF = null,
         vinScanDetector = null,
-        vinScanActive = false;
+        vinScanZxingReader = null,
+        vinScanActive = false,
+        vinScanZxingTimer = null,
+        vinScanZxingLoading = null;
+      function vinScanT(s) {
+        return typeof T === "function" ? T(s) : s;
+      }
+      function vinScanSetStatus(text, cls) {
+        const status = document.getElementById("vinScanStatus");
+        if (!status) return;
+        status.textContent = text;
+        status.className = "vinscan-status" + (cls ? " " + cls : "");
+      }
       function vinClean(s) {
         return (s || "").toUpperCase().replace(/[^A-HJ-NPR-Z0-9]/g, "");
       }
       function isLikelyVin(s) {
         const c = vinClean(s);
-        return c.length === 17 ? c : "";
+        if (c.length === 17) return c;
+        const m = String(s || "")
+          .toUpperCase()
+          .match(/[A-HJ-NPR-Z0-9]{17}/);
+        return m ? m[0] : "";
       }
-      async function avScan() {
-        const modal = document.getElementById("vinScanModal");
-        if (!modal) return;
-        const status = document.getElementById("vinScanStatus");
-        const setStatus = (t, cls) => {
-          if (status) {
-            status.textContent = t;
-            status.className = "vinscan-status" + (cls ? " " + cls : "");
+      function vinScanEnsureMedia() {
+        const n = navigator;
+        if (!n.mediaDevices) n.mediaDevices = {};
+        if (typeof n.mediaDevices.getUserMedia !== "function") {
+          const legacy =
+            n.getUserMedia || n.webkitGetUserMedia || n.mozGetUserMedia;
+          if (!legacy) return false;
+          n.mediaDevices.getUserMedia = (constraints) =>
+            new Promise((resolve, reject) =>
+              legacy.call(n, constraints, resolve, reject),
+            );
+        }
+        return true;
+      }
+      async function vinScanGetStream() {
+        const attempts = [
+          { video: { facingMode: { ideal: "environment" } }, audio: false },
+          { video: { facingMode: "environment" }, audio: false },
+          { video: true, audio: false },
+        ];
+        let lastErr;
+        for (const constraints of attempts) {
+          try {
+            return await navigator.mediaDevices.getUserMedia(constraints);
+          } catch (err) {
+            lastErr = err;
+            const name = err && err.name;
+            if (
+              name === "NotAllowedError" ||
+              name === "PermissionDeniedError" ||
+              name === "SecurityError"
+            ) {
+              throw err;
+            }
           }
-        };
-        modal.classList.add("open");
-        vinScanActive = true;
-        setStatus("Starting camera\u2026");
-        if (!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)) {
-          setStatus(
-            "Camera isn\u2019t available on this device or browser. Type the VIN below instead.",
-            "err",
+        }
+        throw lastErr || new Error("camera");
+      }
+      function vinScanCamMessage(err) {
+        const name = (err && err.name) || "";
+        const secure =
+          window.isSecureContext ||
+          location.protocol === "https:" ||
+          location.hostname === "localhost" ||
+          location.hostname === "127.0.0.1";
+        if (!secure) {
+          return vinScanT(
+            "Camera needs a secure connection (HTTPS). Type the VIN below, or take a photo.",
           );
-          return;
+        }
+        if (name === "NotFoundError" || name === "DevicesNotFoundError") {
+          return vinScanT(
+            "No camera found on this device. Type the VIN below, or take a photo.",
+          );
+        }
+        if (
+          name === "NotAllowedError" ||
+          name === "PermissionDeniedError" ||
+          name === "SecurityError"
+        ) {
+          const safari = /^((?!chrome|android|crios|fxios).)*safari/i.test(
+            navigator.userAgent || "",
+          );
+          return safari
+            ? vinScanT(
+                "Camera permission is blocked. In Safari: Settings \u2192 Safari \u2192 Camera (or aA \u2192 Website Settings) and allow this site, then try again.",
+              )
+            : vinScanT(
+                "Camera permission is blocked. Allow camera access for this site in your browser settings, then try again.",
+              );
+        }
+        if (name === "NotReadableError" || name === "TrackStartError") {
+          return vinScanT(
+            "The camera is in use by another app. Close it and try again, or take a photo.",
+          );
+        }
+        return vinScanT(
+          "Couldn\u2019t access the camera \u2014 allow camera permission, take a photo, or type the VIN below.",
+        );
+      }
+      async function vinScanAttachVideo(stream) {
+        const video = document.getElementById("vinScanVideo");
+        if (!video) return;
+        video.setAttribute("playsinline", "");
+        video.setAttribute("webkit-playsinline", "true");
+        video.muted = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.srcObject = stream;
+        if (video.readyState < 1) {
+          await new Promise((resolve) => {
+            const done = () => {
+              video.removeEventListener("loadedmetadata", done);
+              resolve();
+            };
+            video.addEventListener("loadedmetadata", done);
+            setTimeout(done, 1200);
+          });
         }
         try {
-          vinScanStream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: { ideal: "environment" } },
-            audio: false,
-          });
-        } catch (err) {
-          setStatus(
-            "Couldn\u2019t access the camera \u2014 allow camera permission, or type the VIN below.",
-            "err",
-          );
-          return;
+          await video.play();
+        } catch (e) {}
+      }
+      function loadZXing() {
+        if (window.ZXing) return Promise.resolve(window.ZXing);
+        if (vinScanZxingLoading) return vinScanZxingLoading;
+        const srcs = [
+          "https://cdn.jsdelivr.net/npm/@zxing/library@0.18.6/umd/index.min.js",
+          "https://unpkg.com/@zxing/library@0.18.6/umd/index.min.js",
+        ];
+        vinScanZxingLoading = new Promise((resolve, reject) => {
+          const trySrc = (i) => {
+            if (i >= srcs.length) {
+              vinScanZxingLoading = null;
+              reject(new Error("ZXing"));
+              return;
+            }
+            const s = document.createElement("script");
+            s.src = srcs[i];
+            s.async = true;
+            s.onload = () =>
+              window.ZXing
+                ? resolve(window.ZXing)
+                : trySrc(i + 1);
+            s.onerror = () => {
+              s.remove();
+              trySrc(i + 1);
+            };
+            document.head.appendChild(s);
+          };
+          trySrc(0);
+        });
+        return vinScanZxingLoading;
+      }
+      function vinScanZxingHints(ZXing) {
+        const hints = new Map();
+        if (ZXing.DecodeHintType && ZXing.BarcodeFormat) {
+          hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
+            ZXing.BarcodeFormat.CODE_39,
+            ZXing.BarcodeFormat.CODE_128,
+            ZXing.BarcodeFormat.CODE_93,
+            ZXing.BarcodeFormat.ITF,
+            ZXing.BarcodeFormat.CODABAR,
+            ZXing.BarcodeFormat.QR_CODE,
+            ZXing.BarcodeFormat.DATA_MATRIX,
+            ZXing.BarcodeFormat.PDF_417,
+            ZXing.BarcodeFormat.AZTEC,
+          ]);
+          hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
         }
-        if (!vinScanActive) {
-          // user closed while awaiting permission
-          vinScanStream.getTracks().forEach((t) => t.stop());
-          vinScanStream = null;
-          return;
+        return hints;
+      }
+      function vinScanBitmapFromCanvas(canvas) {
+        const ZXing = window.ZXing;
+        if (!ZXing || !canvas.width || !canvas.height) return null;
+        if (typeof ZXing.HTMLCanvasElementLuminanceSource === "function") {
+          const src = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
+          return new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(src));
         }
-        const video = document.getElementById("vinScanVideo");
-        if (video) {
-          video.srcObject = vinScanStream;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const n = canvas.width * canvas.height;
+        const pixels = new Uint8ClampedArray(n);
+        for (let i = 0, j = 0; i < img.data.length; i += 4, j++) {
+          pixels[j] =
+            (img.data[i] * 0.299 +
+              img.data[i + 1] * 0.587 +
+              img.data[i + 2] * 0.114) |
+            0;
+        }
+        const Src =
+          ZXing.RGBLuminanceSource || ZXing.PlanarYUVLuminanceSource;
+        if (!Src) return null;
+        let src;
+        try {
+          src = new Src(pixels, canvas.width, canvas.height);
+        } catch (e) {
           try {
-            await video.play();
-          } catch (e) {}
+            src = new Src(canvas.width, canvas.height, pixels);
+          } catch (e2) {
+            return null;
+          }
         }
+        return new ZXing.BinaryBitmap(new ZXing.HybridBinarizer(src));
+      }
+      function vinScanDrawFrame(video, canvas, crop) {
+        if (!video || !canvas || video.readyState < 2 || !video.videoWidth)
+          return false;
+        const vw = video.videoWidth,
+          vh = video.videoHeight;
+        let sx = 0,
+          sy = 0,
+          sw = vw,
+          sh = vh;
+        if (crop) {
+          sx = Math.floor(vw * 0.08);
+          sy = Math.floor(vh * 0.28);
+          sw = Math.max(1, Math.floor(vw * 0.84));
+          sh = Math.max(1, Math.floor(vh * 0.44));
+        }
+        canvas.width = sw;
+        canvas.height = sh;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        ctx.drawImage(video, sx, sy, sw, sh, 0, 0, sw, sh);
+        return true;
+      }
+      function vinScanDecodeCanvas(canvas) {
+        const ZXing = window.ZXing;
+        if (!ZXing || !vinScanZxingReader) return "";
+        try {
+          const bmp = vinScanBitmapFromCanvas(canvas);
+          if (!bmp) return "";
+          const result = vinScanZxingReader.decode(bmp);
+          try {
+            vinScanZxingReader.reset();
+          } catch (e) {}
+          return result && result.getText ? result.getText() : "";
+        } catch (e) {
+          try {
+            vinScanZxingReader.reset();
+          } catch (e2) {}
+          return "";
+        }
+      }
+      function vinScanTickZxing() {
+        if (!vinScanActive || !vinScanZxingReader) return;
+        const video = document.getElementById("vinScanVideo");
+        const canvas = document.getElementById("vinScanCanvas");
+        if (vinScanDrawFrame(video, canvas, true)) {
+          let text = vinScanDecodeCanvas(canvas);
+          let vin = isLikelyVin(text);
+          if (!vin && vinScanDrawFrame(video, canvas, false)) {
+            text = vinScanDecodeCanvas(canvas);
+            vin = isLikelyVin(text);
+          }
+          if (vin) {
+            vinScanFound(vin);
+            return;
+          }
+        }
+        vinScanZxingTimer = setTimeout(vinScanTickZxing, 220);
+      }
+      async function vinScanStartDecoder() {
+        const video = document.getElementById("vinScanVideo");
         if ("BarcodeDetector" in window) {
           try {
             let want;
@@ -34561,20 +34841,105 @@
             vinScanDetector = new window.BarcodeDetector(
               want && want.length ? { formats: want } : undefined,
             );
-            setStatus("Point your camera at the VIN barcode\u2026");
-            vinScanLoop();
-          } catch (e) {
-            setStatus(
-              "This browser can\u2019t auto-read barcodes. You\u2019ll see the camera \u2014 type the VIN below.",
-              "err",
+            vinScanSetStatus(
+              vinScanT("Point your camera at the VIN barcode\u2026"),
             );
+            vinScanLoop();
+            return;
+          } catch (e) {}
+        }
+        try {
+          const ZXing = await loadZXing();
+          if (!vinScanActive) return;
+          const hints = vinScanZxingHints(ZXing);
+          const canContinuous =
+            typeof ZXing.BrowserMultiFormatReader === "function" &&
+            typeof ZXing.BrowserMultiFormatReader.prototype
+              .decodeFromVideoElementContinuously === "function";
+          if (canContinuous) {
+            vinScanZxingReader = new ZXing.BrowserMultiFormatReader(
+              hints,
+              250,
+            );
+            vinScanSetStatus(
+              vinScanT("Point your camera at the VIN barcode\u2026"),
+            );
+            try {
+              const run = vinScanZxingReader.decodeFromVideoElementContinuously(
+                video,
+                (result) => {
+                  if (!vinScanActive || !result) return;
+                  const vin = isLikelyVin(result.getText());
+                  if (vin) vinScanFound(vin);
+                },
+              );
+              if (run && typeof run.catch === "function") {
+                run.catch(() => {
+                  if (!vinScanActive) return;
+                  vinScanZxingReader = new ZXing.MultiFormatReader();
+                  vinScanZxingReader.setHints(hints);
+                  vinScanTickZxing();
+                });
+              }
+              return;
+            } catch (e) {
+              vinScanZxingReader = null;
+            }
           }
-        } else {
-          setStatus(
-            "This browser can\u2019t auto-read barcodes (Chrome or an Android phone works best). Type the VIN below.",
+          vinScanZxingReader = new ZXing.MultiFormatReader();
+          vinScanZxingReader.setHints(hints);
+          vinScanSetStatus(
+            vinScanT("Point your camera at the VIN barcode\u2026"),
+          );
+          vinScanTickZxing();
+        } catch (e) {
+          if (!vinScanActive) return;
+          vinScanSetStatus(
+            vinScanT(
+              "Live barcode reading isn\u2019t available here. Take a photo of the VIN barcode, or type the VIN below.",
+            ),
             "err",
           );
         }
+      }
+      async function avScan() {
+        const modal = document.getElementById("vinScanModal");
+        if (!modal) return;
+        const stage = document.getElementById("vinScanStage");
+        if (stage) stage.classList.remove("is-off");
+        const manual = document.getElementById("vinScanManual");
+        if (manual) manual.value = "";
+        const file = document.getElementById("vinScanFile");
+        if (file) file.value = "";
+        modal.classList.add("open");
+        vinScanActive = true;
+        vinScanSetStatus(vinScanT("Starting camera\u2026"));
+        if (!vinScanEnsureMedia()) {
+          if (stage) stage.classList.add("is-off");
+          vinScanSetStatus(
+            vinScanT(
+              "Camera isn\u2019t available on this device or browser. Take a photo, or type the VIN below.",
+            ),
+            "err",
+          );
+          return;
+        }
+        try {
+          vinScanStream = await vinScanGetStream();
+        } catch (err) {
+          if (!vinScanActive) return;
+          if (stage) stage.classList.add("is-off");
+          vinScanSetStatus(vinScanCamMessage(err), "err");
+          return;
+        }
+        if (!vinScanActive) {
+          vinScanStream.getTracks().forEach((t) => t.stop());
+          vinScanStream = null;
+          return;
+        }
+        await vinScanAttachVideo(vinScanStream);
+        if (!vinScanActive) return;
+        await vinScanStartDecoder();
       }
       function vinScanLoop() {
         if (!vinScanActive || !vinScanDetector) return;
@@ -34596,21 +34961,125 @@
         }
         vinScanRAF = requestAnimationFrame(vinScanLoop);
       }
-      function vinScanFound(vin) {
-        const status = document.getElementById("vinScanStatus");
-        if (status) {
-          status.textContent = "\u2713 VIN captured: " + vin;
-          status.className = "vinscan-status ok";
+      function vinScanPickPhoto() {
+        const inp = document.getElementById("vinScanFile");
+        if (inp) {
+          inp.value = "";
+          inp.click();
         }
+      }
+      async function vinScanOnPhoto(ev) {
+        const file = ev && ev.target && ev.target.files && ev.target.files[0];
+        if (!file) return;
+        vinScanSetStatus(vinScanT("Reading photo\u2026"));
+        try {
+          const ZXing = await loadZXing();
+          const url = URL.createObjectURL(file);
+          const img = new Image();
+          img.onload = () => {
+            URL.revokeObjectURL(url);
+            const canvas = document.getElementById("vinScanCanvas");
+            if (!canvas) return;
+            canvas.width = img.naturalWidth || img.width;
+            canvas.height = img.naturalHeight || img.height;
+            const ctx = canvas.getContext("2d", { willReadFrequently: true });
+            ctx.drawImage(img, 0, 0);
+            let text = "";
+            try {
+              if (typeof ZXing.BrowserMultiFormatReader === "function") {
+                const reader = new ZXing.BrowserMultiFormatReader(
+                  vinScanZxingHints(ZXing),
+                );
+                const result = reader.decodeFromImage(img);
+                if (result && typeof result.then === "function") {
+                  result
+                    .then((r) => {
+                      const vin = isLikelyVin(r && r.getText && r.getText());
+                      if (vin) vinScanFound(vin);
+                      else
+                        vinScanSetStatus(
+                          vinScanT(
+                            "Couldn\u2019t read a VIN from that photo \u2014 try again or type it below.",
+                          ),
+                          "err",
+                        );
+                    })
+                    .catch(() =>
+                      vinScanSetStatus(
+                        vinScanT(
+                          "Couldn\u2019t read a VIN from that photo \u2014 try again or type it below.",
+                        ),
+                        "err",
+                      ),
+                    );
+                  return;
+                }
+                text = result && result.getText ? result.getText() : "";
+              } else {
+                const prev = vinScanZxingReader;
+                vinScanZxingReader = new ZXing.MultiFormatReader();
+                vinScanZxingReader.setHints(vinScanZxingHints(ZXing));
+                text = vinScanDecodeCanvas(canvas);
+                vinScanZxingReader = prev;
+              }
+            } catch (e) {}
+            const vin = isLikelyVin(text);
+            if (vin) vinScanFound(vin);
+            else
+              vinScanSetStatus(
+                vinScanT(
+                  "Couldn\u2019t read a VIN from that photo \u2014 try again or type it below.",
+                ),
+                "err",
+              );
+          };
+          img.onerror = () => {
+            URL.revokeObjectURL(url);
+            vinScanSetStatus(
+              vinScanT(
+                "Couldn\u2019t open that photo. Try another, or type the VIN below.",
+              ),
+              "err",
+            );
+          };
+          img.src = url;
+        } catch (e) {
+          vinScanSetStatus(
+            vinScanT(
+              "Couldn\u2019t read a VIN from that photo \u2014 try again or type it below.",
+            ),
+            "err",
+          );
+        }
+      }
+      function vinScanManualInput() {
+        const el = document.getElementById("vinScanManual");
+        if (!el) return;
+        const vin = vinClean(el.value).slice(0, 17);
+        if (el.value !== vin) el.value = vin;
+        if (vin.length === 17) vinScanFound(vin);
+      }
+      function vinScanFound(vin) {
+        vinScanSetStatus(
+          "\u2713 " + vinScanT("VIN captured:") + " " + vin,
+          "ok",
+        );
         vinScanActive = false;
         if (vinScanRAF) {
           cancelAnimationFrame(vinScanRAF);
           vinScanRAF = null;
         }
-        const el = document.getElementById("avVin");
-        if (el) {
-          el.value = vin;
+        if (vinScanZxingTimer) {
+          clearTimeout(vinScanZxingTimer);
+          vinScanZxingTimer = null;
         }
+        if (vinScanZxingReader && vinScanZxingReader.reset) {
+          try {
+            vinScanZxingReader.reset();
+          } catch (e) {}
+        }
+        const el = document.getElementById("avVin");
+        if (el) el.value = vin;
         setTimeout(() => {
           closeVinScan();
           if (typeof avVinInput === "function") avVinInput();
@@ -34624,6 +35093,18 @@
           cancelAnimationFrame(vinScanRAF);
           vinScanRAF = null;
         }
+        if (vinScanZxingTimer) {
+          clearTimeout(vinScanZxingTimer);
+          vinScanZxingTimer = null;
+        }
+        if (vinScanZxingReader && vinScanZxingReader.reset) {
+          try {
+            vinScanZxingReader.stopContinuousDecode &&
+              vinScanZxingReader.stopContinuousDecode();
+            vinScanZxingReader.reset();
+          } catch (e) {}
+        }
+        vinScanZxingReader = null;
         if (vinScanStream) {
           vinScanStream.getTracks().forEach((t) => t.stop());
           vinScanStream = null;
