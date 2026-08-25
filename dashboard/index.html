@@ -23,7 +23,7 @@
     <meta name="description" content="AutoVault dealership CRM — inventory, sales, tax, payroll, and profit." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="dns-prefetch" href="https://api.autovault360.com" />
     <link rel="dns-prefetch" href="https://cdn.socket.io" />
     <link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
@@ -4519,9 +4519,9 @@
 
       .donut-legend {
         flex: 1;
-        min-width: 300px;
+        min-width: 0;
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(210px, 100%), 1fr));
         gap: 0 30px;
       }
 
@@ -4569,7 +4569,43 @@
       @media (max-width: 640px) {
         .exp-breakdown-card {
           justify-content: center;
-          gap: 24px;
+          gap: 16px;
+          padding: 14px 12px 16px;
+          margin-bottom: 16px;
+        }
+
+        .donut-wrap,
+        .donut-wrap svg {
+          width: 148px;
+          height: 148px;
+        }
+
+        .donut-center .dc-val {
+          font-size: 16px;
+        }
+
+        .donut-legend {
+          min-width: 0;
+          width: 100%;
+          grid-template-columns: 1fr;
+          gap: 0;
+        }
+
+        .dl-row {
+          min-width: 0;
+          gap: 8px;
+          padding: 8px 0;
+        }
+
+        .dl-name {
+          white-space: normal;
+          min-width: 0;
+          flex: 1;
+        }
+
+        .dl-amt,
+        .dl-pct {
+          flex-shrink: 0;
         }
       }
 
@@ -7530,8 +7566,10 @@
 
       .cal-scroll-area .cal-cell.expanded {
         grid-column: 1 / -1;
-        min-height: 240px;
+        grid-row: auto;
+        min-height: 0;
         aspect-ratio: auto;
+        overflow: visible;
       }
 
       @media (max-width: 900px) {
@@ -7557,6 +7595,70 @@
         .cal-scroll-area .cal-fl {
           font-size: 9px;
           padding: 2px 5px;
+        }
+      }
+
+      /* iPhone / small phones — fit 7 days in the viewport, no sideways scroll */
+      @media (max-width: 640px) {
+        .cal-scroll-area {
+          overflow-x: hidden;
+          scrollbar-gutter: auto;
+        }
+
+        .cal-scroll-area .cal-weekdays,
+        .cal-scroll-area .cal-grid {
+          --cal-col-min: 0px;
+          --cal-gap: 3px;
+          grid-template-columns: repeat(7, minmax(0, 1fr));
+          min-width: 0;
+          width: 100%;
+          max-width: 100%;
+        }
+
+        .cal-scroll-area .cal-cell:not(.expanded),
+        .cal-scroll-area .cal-cell.empty {
+          min-height: 0;
+          min-width: 0;
+          aspect-ratio: 1;
+          padding: 3px 2px;
+          gap: 2px;
+          border-radius: 7px;
+        }
+
+        .cal-scroll-area .cal-weekdays div {
+          font-size: 9px;
+          letter-spacing: 0;
+        }
+
+        .cal-scroll-area .cal-daynum {
+          font-size: 11px;
+        }
+
+        .cal-scroll-area .cal-sold,
+        .cal-scroll-area .cal-note-bar,
+        .cal-scroll-area .cal-bday,
+        .cal-scroll-area .cal-filing,
+        .cal-scroll-area .cal-note-chip,
+        .cal-scroll-area .cal-fl {
+          font-size: 8px;
+          padding: 1px 3px;
+          max-width: 100%;
+        }
+
+        .dash-cal-inner {
+          padding: 10px 8px !important;
+        }
+
+        .cal-cell.expanded {
+          min-width: 0;
+          max-width: 100%;
+        }
+
+        .cal-cell.expanded .desk-pad {
+          min-height: 148px;
+          height: 160px;
+          line-height: 28px;
+          padding: 6px 10px 10px;
         }
       }
 
@@ -8052,25 +8154,27 @@
 
       .desk-pad {
         width: 100%;
-        min-height: 340px;
+        min-height: 280px;
         border: 1px solid var(--border);
         border-radius: 10px;
         color: var(--text);
         font-size: 15px;
-        padding: 5px 16px 12px;
-        line-height: 34px;
+        padding: 8px 14px 12px;
+        line-height: 32px;
         background-color: var(--panel-2);
+        background-origin: content-box;
         background-image: repeating-linear-gradient(
-          var(--panel-2),
-          var(--panel-2) 33px,
-          rgba(124, 138, 160, 0.28) 33px,
-          rgba(124, 138, 160, 0.28) 34px
+          var(--panel-2) 0,
+          var(--panel-2) 31px,
+          rgba(124, 138, 160, 0.28) 31px,
+          rgba(124, 138, 160, 0.28) 32px
         );
         background-attachment: local;
         resize: vertical;
         outline: none;
         font-family: ui-rounded, "Segoe UI", system-ui, sans-serif;
         margin-top: 6px;
+        box-sizing: border-box;
       }
 
       .desk-pad:focus {
@@ -14144,17 +14248,33 @@
       }
 
       .cal-cell.expanded {
-        grid-column: span 3;
-        grid-row: span 3;
+        grid-column: 1 / -1;
+        grid-row: auto;
         background: var(--panel);
         border: 1.5px solid var(--blue) !important;
         z-index: 6;
         cursor: default;
-        overflow: hidden;
-        padding: 12px 14px;
+        overflow: visible;
+        padding: 14px 16px;
         box-shadow: 0 10px 34px rgba(0, 0, 0, 0.45);
         display: flex;
         flex-direction: column;
+        min-height: 0;
+        min-width: 0;
+        max-width: 100%;
+      }
+
+      .cal-cell.expanded .desk-pad {
+        min-height: 168px;
+        height: 188px;
+        flex: 1 1 auto;
+        margin-top: 0;
+        font-size: 15px;
+      }
+
+      .cal-cell.expanded .cal-desk-foot {
+        flex-shrink: 0;
+        flex-wrap: wrap;
       }
 
       .cal-exp-head {
@@ -14169,6 +14289,7 @@
         font-size: 15px;
         font-weight: 800;
         color: var(--text);
+        min-width: 0;
       }
 
       .cal-exp-close {
@@ -14227,16 +14348,16 @@
 
       .cal-exp-note {
         width: 100%;
-        flex: 1 1 0;
-        min-height: 46px;
+        flex: 1 1 auto;
+        min-height: 128px;
         overflow-y: auto;
         background: var(--panel-2);
         border: 1px solid var(--border);
         border-radius: 9px;
         padding: 9px 11px;
         color: var(--text);
-        font-size: 13px;
-        resize: none;
+        font-size: 14px;
+        resize: vertical;
         outline: none;
         font-family: inherit;
         box-sizing: border-box;
@@ -14245,6 +14366,38 @@
 
       .cal-exp-note:focus {
         border-color: var(--blue);
+      }
+
+      @media (max-width: 640px) {
+        .cal-cell.expanded {
+          padding: 12px;
+        }
+
+        .cal-exp-date {
+          font-size: 14px;
+          line-height: 1.25;
+        }
+
+        .cal-cell.expanded .desk-pad,
+        .desk-pad,
+        .cal-exp-note,
+        .ddp-note-area {
+          font-size: 16px;
+        }
+
+        .cal-side .desk-pad,
+        .desk-pad {
+          min-height: 180px;
+        }
+
+        .cal-cell.expanded .desk-pad {
+          min-height: 160px;
+          height: 170px;
+        }
+
+        .cal-desk-foot {
+          justify-content: flex-start;
+        }
       }
 
       .page-head {
@@ -14497,6 +14650,18 @@
         display: block;
       }
 
+      /* Must come AFTER base .notif-panel — earlier mobile rules were overridden */
+      @media (max-width: 900px) {
+        .notif-panel {
+          position: fixed;
+          left: 12px;
+          right: 12px;
+          width: auto;
+          max-width: none;
+          top: auto; /* set under the bell by positionNotifPanel() */
+        }
+      }
+
       .notif-head {
         padding: 13px 16px;
         border-bottom: 1px solid var(--border);
@@ -14553,6 +14718,9 @@
         text-align: center;
         color: var(--muted);
         font-size: 13px;
+        line-height: 1.45;
+        white-space: normal;
+        word-break: break-word;
       }
 
       .cal-bday {
@@ -16697,11 +16865,29 @@
         gap: 28px;
         align-items: center;
         flex-wrap: wrap;
+        min-width: 0;
       }
 
       .ebc-body .donut-legend {
         flex: 1;
-        min-width: 220px;
+        min-width: 0;
+      }
+
+      @media (max-width: 720px) {
+        .ebc-body {
+          flex-direction: column;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .ebc-body .donut-legend {
+          width: 100%;
+          min-width: 0;
+        }
+
+        .exp-breakdown-card .donut-wrap {
+          margin: 0 auto;
+        }
       }
 
       .receipt-doc {
@@ -31854,7 +32040,10 @@
       }
       function closeNotif() {
         const p = document.getElementById("notifPanel");
-        if (p) p.classList.remove("open");
+        if (p) {
+          p.classList.remove("open");
+          p.style.top = "";
+        }
       }
       function goPage(pg, fn) {
         closeNotif();
@@ -31973,11 +32162,29 @@
           b.style.display = n > 0 ? "" : "none";
         }
       }
+      function positionNotifPanel() {
+        const p = document.getElementById("notifPanel");
+        const btn = document.querySelector("#notifWrap .notif-btn");
+        if (!p || !btn || !p.classList.contains("open")) return;
+        if (!window.matchMedia("(max-width: 900px)").matches) {
+          p.style.top = "";
+          return;
+        }
+        const r = btn.getBoundingClientRect();
+        const top = Math.round(r.bottom + 8);
+        const maxTop = Math.max(8, window.innerHeight - 120);
+        p.style.top = Math.min(top, maxTop) + "px";
+      }
       function toggleNotif() {
         const p = document.getElementById("notifPanel");
         if (!p) return;
         const open = p.classList.toggle("open");
-        if (open) renderNotifList();
+        if (open) {
+          renderNotifList();
+          positionNotifPanel();
+        } else {
+          p.style.top = "";
+        }
       }
       function renderNotifList() {
         const items = getNotifications();
@@ -32005,8 +32212,27 @@
         const w = document.getElementById("notifWrap");
         const p = document.getElementById("notifPanel");
         if (p && p.classList.contains("open") && w && !w.contains(e.target))
-          p.classList.remove("open");
+          closeNotif();
       });
+      window.addEventListener(
+        "resize",
+        function () {
+          positionNotifPanel();
+        },
+        { passive: true },
+      );
+      window.addEventListener(
+        "scroll",
+        function () {
+          if (
+            document.getElementById("notifPanel") &&
+            document.getElementById("notifPanel").classList.contains("open")
+          ) {
+            closeNotif();
+          }
+        },
+        { passive: true, capture: true },
+      );
       var repUser = null;
       function openRepLogin() {
         location.href =
@@ -59355,7 +59581,7 @@
         ${rem.length ? '<div class="cal-exp-lbl">Reminders</div>' + rem.join("") : ""}
         ${soldHtml}
         <div class="cal-exp-lbl">Notes</div>
-        <textarea id="dashDayNotePad" class="desk-pad" style="min-height:180px;margin-top:0;" placeholder="Write notes for this day..." onclick="event.stopPropagation();" oninput="dashNoteDraft('${ds}', this.value)">${noteVal}</textarea>
+        <textarea id="dashDayNotePad" class="desk-pad" placeholder="Write notes for this day..." onclick="event.stopPropagation();" onkeydown="event.stopPropagation();" oninput="dashNoteDraft('${ds}', this.value)">${noteVal}</textarea>
         <div class="cal-desk-foot" style="margin-top:8px;" onclick="event.stopPropagation();">
           <span id="dashDayNoteMsg" class="cal-saved-msg"></span>
           <button type="button" class="btn-primary" style="box-shadow:none;white-space:nowrap;padding:8px 14px;font-size:12.5px;" onclick="event.stopPropagation(); dashCommitDayNote('${ds}')">
@@ -59423,6 +59649,12 @@
       function dashOpenDay(ds) {
         dashExpandedDay = dashExpandedDay === ds ? null : ds;
         if (typeof renderDashCalendar === "function") renderDashCalendar();
+        if (dashExpandedDay) {
+          requestAnimationFrame(function () {
+            var pad = document.getElementById("dashDayNotePad");
+            if (pad) pad.focus();
+          });
+        }
       }
 
       function dashNoteDraft(ds, val) {

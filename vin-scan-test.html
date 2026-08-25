@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>VIN scan test barcodes</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      padding: 32px 16px;
+      background: #111;
+      color: #eee;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+    }
+    h1 { margin: 0; font-size: 20px; }
+    p { margin: 0; color: #aaa; max-width: 420px; line-height: 1.45; }
+    .sheet {
+      background: #fff;
+      color: #111;
+      border-radius: 12px;
+      padding: 28px 24px 20px;
+      width: min(92vw, 720px);
+    }
+    .vin { font-family: ui-monospace, monospace; font-size: 18px; letter-spacing: 2px; margin: 12px 0 0; }
+    svg { width: 100%; height: auto; }
+    .label { font-size: 12px; color: #666; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Test VIN barcodes</h1>
+  <p>Open this page on your computer. On your phone, tap Scan VIN and point the camera at a barcode below.</p>
+  <div class="sheet">
+    <div class="label">Code 39 (typical door-jamb VIN sticker)</div>
+    <svg id="code39"></svg>
+    <div class="vin">1HGCM82633A004352</div>
+  </div>
+  <div class="sheet">
+    <div class="label">Code 128</div>
+    <svg id="code128"></svg>
+    <div class="vin">1HGCM82633A004352</div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+  <script>
+    var vin = "1HGCM82633A004352";
+    JsBarcode("#code39", vin, { format: "CODE39", width: 2, height: 120, displayValue: false, margin: 12 });
+    JsBarcode("#code128", vin, { format: "CODE128", width: 2, height: 120, displayValue: false, margin: 12 });
+  </script>
+</body>
+</html>
