@@ -55717,6 +55717,15 @@
       }
 
       function ensureStaffLoaded() {
+        if (
+          (window.AVPortal &&
+            typeof AVPortal.getRoutePortal === "function" &&
+            AVPortal.getRoutePortal() === "owner") ||
+          (typeof isOwnerPortalSession === "function" && isOwnerPortalSession())
+        ) {
+          staffLoaded = true;
+          return null;
+        }
         if (staffLoaded) return null;
         if (_staffLoadPromise) return _staffLoadPromise;
         if (!window.AVApi || typeof AVApi.listStaff !== "function") {
@@ -58975,6 +58984,17 @@
           .replace(/"/g, "&quot;");
       }
       async function loadDashNotes() {
+        if (
+          (window.AVPortal &&
+            typeof AVPortal.getRoutePortal === "function" &&
+            AVPortal.getRoutePortal() === "owner") ||
+          (typeof isOwnerPortalSession === "function" && isOwnerPortalSession())
+        ) {
+          dashNotesLoaded = true;
+          dashNotes = [];
+          renderDashNotes();
+          return;
+        }
         if (dashNotesLoaded) {
           renderDashNotes();
           return;
@@ -60462,8 +60482,8 @@
           _vehiclesStarted = true;
           loadVehiclesOrFallback();
         }
-        if (routePortal === "cpa") {
-          /* CPA portal uses dedicated overview/notes APIs — skip heavy CRM bootstrap. */
+        if (routePortal === "cpa" || routePortal === "owner") {
+          /* CPA/owner use dedicated APIs — skip dealership CRM bootstrap. */
           if (typeof hydrateProfileFromApi === "function") {
             hydrateProfileFromApi().finally(startVehiclesIfNeeded);
           } else {
@@ -61203,6 +61223,13 @@
       if (saved && typeof saved === 'object') Object.assign(kpiColors, saved);
     } catch (e) {}
     applyKpiCssVars();
+    if (
+      window.AVPortal &&
+      typeof AVPortal.getRoutePortal === "function" &&
+      AVPortal.getRoutePortal() === "owner"
+    ) {
+      return;
+    }
     if (!window.AVApi || typeof AVApi.getPreferences !== 'function') return;
     try {
       const res = await AVApi.getPreferences();

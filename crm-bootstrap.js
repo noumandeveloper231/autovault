@@ -19,6 +19,38 @@
     const portal = AVPortal.getRoutePortal();
 
     // Wholesale CRM uses /api/v1/wholesale/* only — skip retail modules (403 noise).
+    // Platform owner has no dealershipId — tenant CRM routes 403/500.
+    if (portal === "owner") {
+      try {
+        const meResp = await AVApi.me("owner").catch(() => null);
+        if (meResp && meResp.user) {
+          var u = meResp.user;
+          if (typeof applyMeUserToProfile === "function") {
+            applyMeUserToProfile(u);
+          } else if (typeof applyCrmOwnerData === "function") {
+            applyCrmOwnerData({
+              id: u.id,
+              name: u.fullName || u.name || u.email || "Owner",
+              fullName: u.fullName || u.name,
+              role: u.role || "platform_owner",
+              birthday: u.birthDate || "",
+              email: u.email || "",
+              imageUrl: u.imageUrl || null,
+              introCompleted: true,
+              termsAccepted: true,
+              isMainOwner: !!u.isMainOwner,
+            });
+          }
+          if (typeof updateDashWelcome === "function") updateDashWelcome();
+        }
+      } catch (e) {
+        console.warn("[crm-bootstrap] owner boot failed", e);
+      }
+      window._crmApiLoaded = true;
+      window.AV_LIVE_MODE = true;
+      return { live: true, summary: null };
+    }
+
     if (portal === "wholesale") {
       try {
         const meResp = await AVApi.me().catch(() => null);
