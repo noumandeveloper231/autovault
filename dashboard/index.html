@@ -18278,6 +18278,34 @@
         </div>
         <div
           class="nav-item"
+          data-page="owner-socials"
+          onclick="
+            showPage('owner-socials', this);
+            renderOwnerSocials();
+          "
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <!-- Share 2 / Nodes icon -->
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+          </svg>
+          Auto Socials
+        </div>
+
+        <div
+          class="nav-item"
           data-page="owner-messages"
           onclick="
             showPage('owner-messages', this);
@@ -23629,6 +23657,171 @@
             <div class="om-count" id="ownerMsgCount"></div>
           </div>
           <div id="ownerMsgList"></div>
+        </div>
+
+        <div id="page-owner-socials" class="page-section" style="display: none">
+          <div class="page-head" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <div>
+              <div class="page-title">AUTO <b>SOCIALS</b></div>
+              <div class="page-sub">
+                Automate your social media posting across FB, Instagram, LinkedIn, and X via Supabase & Make.com.
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; align-items: center;">
+              <button class="btn" onclick="connectXAccount()" style="background: #000; color: #fff; border: 1px solid var(--border); padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+                Connect X Account
+              </button>
+              <button class="btn btn-primary" onclick="openAddSocialModal()" style="background: var(--blue); color: var(--text); border: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 2px;">
+                  <line x1="12" y1="5" x2="12" y2="19"></line>
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                Add New Post
+              </button>
+            </div>
+          </div>
+
+
+          <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 15px;">
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
+                <thead>
+                  <tr style="background: var(--panel-2); border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 600;">
+                    <th style="padding: 12px 16px;">Caption</th>
+                    <th style="padding: 12px 16px;">Image</th>
+                    <th style="padding: 12px 16px;">Publish Type</th>
+                    <th style="padding: 12px 16px;">Publish Date / Time</th>
+                    <th style="padding: 12px 16px; text-align: center; width: 60px;">FB</th>
+                    <th style="padding: 12px 16px; text-align: center; width: 60px;">IG</th>
+                    <th style="padding: 12px 16px; text-align: center; width: 60px;">LK</th>
+                    <th style="padding: 12px 16px; text-align: center; width: 60px;">X</th>
+                    <th style="padding: 12px 16px; text-align: center; width: 90px;">Status</th>
+                    <th style="padding: 12px 16px; text-align: center; width: 80px;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="ownerSocialsList">
+                  <!-- Dynamic content loaded via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div
+          class="modal-overlay"
+          id="socialPostModal"
+          onclick="if(event.target===this) closeAddSocialModal()"
+          style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;"
+        >
+          <div class="modal" style="background: var(--panel); border: 1px solid var(--border); border-radius: 8px; width: 500px; max-width: 90%; overflow: hidden;">
+            <div class="modal-head" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border);">
+              <h3 style="margin: 0; color: var(--text);">Create New Social Post</h3>
+              <button class="modal-close" type="button" onclick="closeAddSocialModal()" style="background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer;">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+              <form id="socialPostForm" onsubmit="saveSocialPost(event)">
+                <div style="margin-bottom: 14px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: var(--muted);">Caption</label>
+                  <textarea id="socialCaption" required style="width: 100%; height: 100px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px; font-family: inherit; resize: vertical;" placeholder="Write your post caption..."></textarea>
+                </div>
+                <div style="margin-bottom: 14px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: var(--muted);">Media Attachment</label>
+                  
+                  <!-- File Uploader -->
+                  <div id="socialFileUploaderZone" style="border: 2px dashed var(--border); border-radius: 8px; padding: 16px; text-align: center; background: var(--bg); cursor: pointer; transition: border-color 0.2s;" onclick="document.getElementById('socialFileSelector').click()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--muted); margin-bottom: 8px;">
+                      <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                      <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <div style="font-size: 13px; color: var(--text); font-weight: 600;">Click to upload Image or Video</div>
+                    <div style="font-size: 11px; color: var(--muted); margin-top: 2px;">Supports PNG, JPG, GIF, MP4</div>
+                  </div>
+                  
+                  <input type="file" id="socialFileSelector" accept="image/*,video/*" style="display: none;" onchange="handleSocialFileSelect(event)">
+                  
+                  <!-- Selected file preview & details -->
+                  <div id="socialFilePreviewContainer" style="display: none; align-items: center; gap: 12px; margin-top: 8px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 6px; padding: 8px;">
+                    <div id="socialFileThumb" style="width: 40px; height: 40px; border-radius: 4px; background-size: cover; background-position: center; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; overflow: hidden;"></div>
+                    <div style="flex: 1; min-width: 0;">
+                      <div id="socialFileName" style="font-size: 12px; font-weight: 600; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">filename.jpg</div>
+                      <div id="socialFileSize" style="font-size: 11px; color: var(--muted);">0 KB</div>
+                    </div>
+                    <button type="button" onclick="clearSocialFile()" style="background: none; border: none; color: var(--red); font-size: 18px; cursor: pointer; padding: 0 8px;">&times;</button>
+                  </div>
+                  
+                  <!-- Fallback Image URL link button -->
+                  <div style="margin-top: 8px;">
+                    <button type="button" id="socialUrlToggleBtn" onclick="toggleSocialUrlField()" style="background: none; border: none; color: var(--blue); font-size: 12px; font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline;">
+                      Or use image/video URL instead
+                    </button>
+                  </div>
+                  
+                  <!-- Fallback Text Input -->
+                  <div id="socialImageUrlFieldContainer" style="display: none; margin-top: 8px;">
+                    <input type="text" id="socialImageUrl" style="width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px; font-size: 13px;" placeholder="Paste media public URL (e.g. R2, Google Drive, Imgur)">
+                  </div>
+                </div>
+                <div style="margin-bottom: 14px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: var(--muted);">Publish Schedule</label>
+                  <div style="display: flex; gap: 16px; margin-bottom: 8px;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="radio" name="publishType" value="publish_now" checked onchange="toggleSocialSchedule(false)">
+                      Publish Now
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="radio" name="publishType" value="scheduled" onchange="toggleSocialSchedule(true)">
+                      Schedule for Later
+                    </label>
+                  </div>
+                  <div id="socialScheduleFields" style="display: none; gap: 12px;">
+                    <div style="flex: 1;">
+                      <label style="display: block; margin-bottom: 4px; font-size: 12px; color: var(--muted);">Date</label>
+                      <input type="date" id="socialPublishDate" style="width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px;">
+                    </div>
+                    <div style="flex: 1;">
+                      <label style="display: block; margin-bottom: 4px; font-size: 12px; color: var(--muted);">Time</label>
+                      <input type="time" id="socialPublishTime" style="width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px;">
+                    </div>
+                  </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: var(--muted);">Target Platforms</label>
+                  <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="checkbox" id="socialPlatformFb">
+                      Facebook
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="checkbox" id="socialPlatformIg">
+                      Instagram
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="checkbox" id="socialPlatformLk">
+                      LinkedIn
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="checkbox" id="socialPlatformX">
+                      X (Twitter)
+                    </label>
+                  </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                  <button type="button" onclick="closeAddSocialModal()" style="background: none; border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 6px; cursor: pointer;">
+                    Cancel
+                  </button>
+                  <button type="submit" style="background: var(--blue); color: var(--text); border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer;">
+                    Create Post
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
         </div>
 
         <div id="page-vehicles" class="page-section" style="display: none">
@@ -60601,7 +60794,337 @@
   window.ownerMsgResolve = ownerMsgResolve;
   window.renderOwnerMessages = renderOwnerMessages;
   window.updateOwnerMsgBadge = updateOwnerMsgBadge;
+
+  /* —— AUTO SOCIALS —— */
+  let socialPosts = [];
+  let selectedSocialFile = null;
+
+  async function connectXAccount() {
+    try {
+      const ownerToken = window.AVPortal && AVPortal.getToken ? AVPortal.getToken("owner") : "";
+      const headers = {};
+      if (ownerToken) headers.Authorization = `Bearer ${ownerToken}`;
+
+      const res = await fetch(`${avConfig.apiUrl}/api/owner/socials/x/auth-url`, { headers });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Failed to generate X connection URL");
+      }
+      const data = await res.json();
+      if (data.url) {
+        window.open(data.url, "ConnectX", "width=600,height=700");
+      }
+    } catch (err) {
+      if (typeof AVToast !== "undefined") {
+        AVToast.error(err.message || "Could not connect to X");
+      }
+    }
+  }
+  window.connectXAccount = connectXAccount;
+
+  function openAddSocialModal() {
+
+    document.getElementById("socialPostForm").reset();
+    clearSocialFile();
+    toggleSocialSchedule(false);
+    
+    // Hide URL field by default
+    document.getElementById("socialImageUrlFieldContainer").style.display = "none";
+    document.getElementById("socialUrlToggleBtn").textContent = "Or use image/video URL instead";
+    
+    document.getElementById("socialPostModal").style.display = "flex";
+  }
+
+  function closeAddSocialModal() {
+    document.getElementById("socialPostModal").style.display = "none";
+  }
+
+  function toggleSocialSchedule(show) {
+    document.getElementById("socialScheduleFields").style.display = show ? "flex" : "none";
+    document.getElementById("socialPublishDate").required = show;
+    document.getElementById("socialPublishTime").required = show;
+  }
+
+  // Handle file selection
+  function handleSocialFileSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    selectedSocialFile = file;
+
+    // Show preview & details
+    document.getElementById("socialFileName").textContent = file.name;
+    document.getElementById("socialFileSize").textContent = (file.size / 1024).toFixed(1) + " KB";
+    
+    const previewContainer = document.getElementById("socialFilePreviewContainer");
+    const thumb = document.getElementById("socialFileThumb");
+    
+    previewContainer.style.display = "flex";
+
+    // Show Thumbnail if image
+    if (file.type.startsWith("image/")) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        thumb.style.backgroundImage = `url(${e.target.result})`;
+        thumb.style.backgroundSize = "cover";
+        thumb.style.backgroundPosition = "center";
+        thumb.innerHTML = "";
+      };
+      reader.readAsDataURL(file);
+    } else if (file.type.startsWith("video/")) {
+      thumb.style.backgroundImage = "none";
+      thumb.innerHTML = `
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--muted);">
+          <polygon points="23 7 16 12 23 17 23 7"></polygon>
+          <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+        </svg>
+      `;
+    } else {
+      thumb.style.backgroundImage = "none";
+      thumb.innerHTML = "📄";
+    }
+
+    // Hide input URL if file is selected (clean state)
+    document.getElementById("socialImageUrlFieldContainer").style.display = "none";
+    document.getElementById("socialUrlToggleBtn").textContent = "Or use image/video URL instead";
+    document.getElementById("socialImageUrl").value = "";
+  }
+
+  // Clear selected file
+  function clearSocialFile() {
+    selectedSocialFile = null;
+    document.getElementById("socialFileSelector").value = "";
+    document.getElementById("socialFilePreviewContainer").style.display = "none";
+    document.getElementById("socialFileThumb").style.backgroundImage = "none";
+    document.getElementById("socialFileThumb").innerHTML = "";
+  }
+
+  // Toggle manual URL input field
+  function toggleSocialUrlField() {
+    const container = document.getElementById("socialImageUrlFieldContainer");
+    const toggleBtn = document.getElementById("socialUrlToggleBtn");
+    
+    if (container.style.display === "none") {
+      container.style.display = "block";
+      toggleBtn.textContent = "Cancel URL attachment";
+      // Clear file upload selection to avoid confusion
+      clearSocialFile();
+    } else {
+      container.style.display = "none";
+      toggleBtn.textContent = "Or use image/video URL instead";
+      document.getElementById("socialImageUrl").value = "";
+    }
+  }
+
+  async function saveSocialPost(event) {
+    event.preventDefault();
+    
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.textContent;
+    
+    const caption = document.getElementById("socialCaption").value;
+    let imageUrl = document.getElementById("socialImageUrl").value;
+    const publishType = document.querySelector('input[name="publishType"]:checked').value;
+    const publishDate = document.getElementById("socialPublishDate").value;
+    const publishTime = document.getElementById("socialPublishTime").value;
+
+    const platformFb = document.getElementById("socialPlatformFb").checked;
+    const platformIg = document.getElementById("socialPlatformIg").checked;
+    const platformLk = document.getElementById("socialPlatformLk").checked;
+    const platformX = document.getElementById("socialPlatformX").checked;
+
+    if (!platformFb && !platformIg && !platformLk && !platformX) {
+      if (typeof AVToast !== "undefined") {
+        AVToast.warning("Please select at least one social media platform.");
+      }
+      return;
+    }
+
+    try {
+      // Disable UI to prevent double submission
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Uploading media...";
+
+      // Upload file to R2 if selected
+      if (selectedSocialFile) {
+        if (typeof AVApi === "undefined" || !AVApi.uploadFile) {
+          throw new Error("API File Upload Client is not initialized.");
+        }
+        
+        const uploadResult = await AVApi.uploadFile(selectedSocialFile, {
+          sourceEntity: "social_posts",
+          fileName: selectedSocialFile.name
+        });
+        
+        if (uploadResult && uploadResult.publicUrl) {
+          imageUrl = uploadResult.publicUrl;
+        } else {
+          throw new Error("Failed to receive public media URL from upload server.");
+        }
+      }
+
+      submitBtn.textContent = "Creating post...";
+
+      const body = {
+        caption,
+        imageUrl,
+        publishType,
+        publishDate,
+        publishTime,
+        platformFb,
+        platformIg,
+        platformLk,
+        platformX,
+      };
+
+      const routePortal = window.AVPortal && AVPortal.getRoutePortal ? AVPortal.getRoutePortal() : "owner";
+      const ownerToken = window.AVPortal && AVPortal.getToken ? AVPortal.getToken("owner") : "";
+      const headers = {
+        "Content-Type": "application/json",
+      };
+      if (ownerToken) headers.Authorization = `Bearer ${ownerToken}`;
+
+      const res = await fetch(`${avConfig.apiUrl}/api/owner/socials`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to create post");
+
+      closeAddSocialModal();
+      if (typeof AVToast !== "undefined") {
+        AVToast.success("Social post created successfully!");
+      }
+      renderOwnerSocials();
+    } catch (err) {
+      console.error("[AutoSocials] Error creating social post:", err);
+      if (typeof AVToast !== "undefined") {
+        AVToast.error(err.message || "Failed to create social post.");
+      }
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalBtnText;
+    }
+  }
+
+  async function deleteSocialPost(id) {
+    if (!confirm("Are you sure you want to delete this social post?")) return;
+
+    try {
+      const routePortal = window.AVPortal && AVPortal.getRoutePortal ? AVPortal.getRoutePortal() : "owner";
+      const ownerToken = window.AVPortal && AVPortal.getToken ? AVPortal.getToken("owner") : "";
+      const headers = {};
+      if (ownerToken) headers.Authorization = `Bearer ${ownerToken}`;
+
+      const res = await fetch(`${avConfig.apiUrl}/api/owner/socials/${id}`, {
+        method: "DELETE",
+        headers,
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Failed to delete post");
+      }
+
+      if (typeof AVToast !== "undefined") {
+        AVToast.success("Social post deleted successfully!");
+      }
+      renderOwnerSocials();
+    } catch (err) {
+      if (typeof AVToast !== "undefined") {
+        AVToast.error(err.message || "Failed to delete post.");
+      }
+    }
+  }
+
+  function renderSocialsList() {
+    const listBody = document.getElementById("ownerSocialsList");
+    if (!listBody) return;
+
+    if (socialPosts.length === 0) {
+      listBody.innerHTML = '<tr><td colspan="10" style="padding: 24px; text-align: center; color: var(--muted); background: transparent;">No social posts found. Add one above!</td></tr>';
+      return;
+    }
+
+    listBody.innerHTML = socialPosts.map(post => {
+      const scheduleDisplay = post.publishType === "publish_now" ? "Publish Now" : "Scheduled";
+      const scheduleTimeDisplay = post.publishType === "scheduled" && post.publishDate ? `${post.publishDate} ${post.publishTime || ""}` : "—";
+      
+      const checkIcon = (checked) => checked 
+        ? '<span style="color: var(--green); font-weight: bold;">YES</span>' 
+        : '<span style="color: var(--muted);">NO</span>';
+
+      const statusBadge = (status) => {
+        let color = "var(--muted)";
+        if (status === "sent") color = "var(--green)";
+        if (status === "failed") color = "var(--red)";
+        if (status === "scheduled") color = "var(--purple)";
+        return '<span style="background: var(--bg); border: 1px solid ' + color + '; color: ' + color + '; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase;">' + status + '</span>';
+      };
+
+      const imagePreview = post.imageUrl 
+        ? '<a href="' + post.imageUrl + '" target="_blank" style="color: var(--blue); text-decoration: underline;">View Image</a>' 
+        : '<span style="color: var(--muted);">None</span>';
+
+      return '<tr style="border-bottom: 1px solid var(--border); background: transparent;">' +
+        '<td style="padding: 12px 16px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + post.caption.replace(/"/g, '&quot;') + '">' + post.caption + '</td>' +
+        '<td style="padding: 12px 16px;">' + imagePreview + '</td>' +
+        '<td style="padding: 12px 16px;">' + scheduleDisplay + '</td>' +
+        '<td style="padding: 12px 16px;">' + scheduleTimeDisplay + '</td>' +
+        '<td style="padding: 12px 16px; text-align: center;">' + checkIcon(post.platformFb) + '</td>' +
+        '<td style="padding: 12px 16px; text-align: center;">' + checkIcon(post.platformIg) + '</td>' +
+        '<td style="padding: 12px 16px; text-align: center;">' + checkIcon(post.platformLk) + '</td>' +
+        '<td style="padding: 12px 16px; text-align: center;">' + checkIcon(post.platformX) + '</td>' +
+        '<td style="padding: 12px 16px; text-align: center;">' + statusBadge(post.status) + '</td>' +
+        '<td style="padding: 12px 16px; text-align: center;">' +
+          '<button onclick="deleteSocialPost(\'' + post.id + '\')" style="background: none; border: none; color: var(--red); cursor: pointer; font-size: 13px; font-weight: 600;">Delete</button>' +
+        '</td>' +
+      '</tr>';
+    }).join("");
+  }
+
+  async function renderOwnerSocials() {
+    const listBody = document.getElementById("ownerSocialsList");
+    if (listBody) {
+      listBody.innerHTML = '<tr><td colspan="10" style="padding: 24px; text-align: center; color: var(--muted); background: transparent;">Loading socials...</td></tr>';
+    }
+
+    try {
+      const routePortal = window.AVPortal && AVPortal.getRoutePortal ? AVPortal.getRoutePortal() : "owner";
+      const ownerToken = window.AVPortal && AVPortal.getToken ? AVPortal.getToken("owner") : "";
+      const headers = {};
+      if (ownerToken) headers.Authorization = `Bearer ${ownerToken}`;
+
+      const res = await fetch(`${avConfig.apiUrl}/api/owner/socials`, { headers });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Failed to load posts");
+
+      socialPosts = data.posts || [];
+    } catch (e) {
+      if (listBody) {
+        listBody.innerHTML = '<tr><td colspan="10" style="padding: 24px; text-align: center; color: var(--red); background: transparent;">Failed to load social posts.</td></tr>';
+      }
+      if (typeof AVToast !== "undefined") {
+        AVToast.error(e.message || "Failed to load social posts.");
+      }
+      return;
+    }
+    renderSocialsList();
+  }
+
+  window.openAddSocialModal = openAddSocialModal;
+  window.closeAddSocialModal = closeAddSocialModal;
+  window.toggleSocialSchedule = toggleSocialSchedule;
+  window.handleSocialFileSelect = handleSocialFileSelect;
+  window.clearSocialFile = clearSocialFile;
+  window.toggleSocialUrlField = toggleSocialUrlField;
+  window.saveSocialPost = saveSocialPost;
+  window.deleteSocialPost = deleteSocialPost;
+  window.renderOwnerSocials = renderOwnerSocials;
 })();
+
 
 </script>
 

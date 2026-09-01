@@ -420,6 +420,17 @@
   }
 
   async function guardLogin() {
+    const routePortal = getRoutePortal();
+    if (routePortal === "owner") {
+      const owner = await ensureSession("owner");
+      if (owner && owner.portal === "owner") {
+        goToSessionDashboard(owner);
+        return;
+      }
+      revealDashboard();
+      return;
+    }
+
     if (hasStoredAuth("admin") || hasStoredAuth("owner")) hideAppShell();
 
     const dealer = await ensureSession("admin");
