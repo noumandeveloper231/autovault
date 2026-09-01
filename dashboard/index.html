@@ -60977,21 +60977,44 @@
 
       // Upload file to R2 if selected
       if (selectedSocialFile) {
-        if (typeof AVApi === "undefined" || !AVApi.uploadFile) {
-          throw new Error("API File Upload Client is not initialized.");
-        }
-        
-        const uploadResult = await AVApi.uploadFile(selectedSocialFile, {
-          sourceEntity: "social_posts",
-          fileName: selectedSocialFile.name
+        const ownerToken = window.AVPortal && AVPortal.getToken ? AVPortal.getToken("owner") : "";
+        const uploadHeaders = { "Content-Type": "application/json" };
+        if (ownerToken) uploadHeaders.Authorization = `Bearer ${ownerToken}`;
+
+        // Get presigned upload URL from owner endpoint
+        const uploadReq = await fetch(`${avConfig.apiUrl}/api/owner/socials/upload-url`, {
+          method: "POST",
+          headers: uploadHeaders,
+          body: JSON.stringify({
+            originalName: selectedSocialFile.name,
+            mimeType: selectedSocialFile.type || "image/jpeg",
+            fileSize: selectedSocialFile.size
+          }),
         });
-        
-        if (uploadResult && uploadResult.publicUrl) {
-          imageUrl = uploadResult.publicUrl;
-        } else {
-          throw new Error("Failed to receive public media URL from upload server.");
+
+        if (!uploadReq.ok) {
+          const errData = await uploadReq.json().catch(() => ({}));
+          throw new Error(errData.message || "Failed to generate media upload URL.");
         }
+
+        const uploadData = await uploadReq.json();
+
+        // Upload binary file directly to R2 presigned URL
+        const putRes = await fetch(uploadData.uploadUrl, {
+          method: "PUT",
+          headers: {
+            "Content-Type": selectedSocialFile.type || "image/jpeg",
+          },
+          body: selectedSocialFile,
+        });
+
+        if (!putRes.ok) {
+          throw new Error("Failed to upload image binary to Cloudflare R2 storage.");
+        }
+
+        imageUrl = uploadData.publicUrl;
       }
+
 
       submitBtn.textContent = "Creating post...";
 
