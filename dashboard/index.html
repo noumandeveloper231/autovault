@@ -44003,7 +44003,17 @@
         }
       }
       async function refreshFlooringUndoBar() {
-        if (window.AVApi && typeof AVApi.getFlooringUndo === "function") {
+        var skipTenantUndo =
+          (typeof isOwnerPortalSession === "function" &&
+            isOwnerPortalSession()) ||
+          (window.AVPortal &&
+            typeof AVPortal.getRoutePortal === "function" &&
+            AVPortal.getRoutePortal() === "owner");
+        if (
+          !skipTenantUndo &&
+          window.AVApi &&
+          typeof AVApi.getFlooringUndo === "function"
+        ) {
           try {
             var resp = await AVApi.getFlooringUndo();
             var fromApi = undoFromApi(resp);
