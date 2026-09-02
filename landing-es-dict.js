@@ -1,4 +1,5 @@
 window.AV_LANDING_EXTRA = {
+  "Get Started — Free": "Comenzar — Gratis",
   "Skip to content": "Saltar al contenido",
   "Switch theme": "Cambiar tema",
   "Toggle theme": "Cambiar tema",
