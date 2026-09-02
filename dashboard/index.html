@@ -23668,6 +23668,12 @@
               </div>
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
+              <button class="btn" onclick="connectMetaAccount()" style="background: #1877f2; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+                Connect Meta (FB & IG)
+              </button>
               <button class="btn" onclick="connectXAccount()" style="background: #000; color: #fff; border: 1px solid var(--border); padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -23691,15 +23697,16 @@
                 <thead>
                   <tr style="background: var(--panel-2); border-bottom: 1px solid var(--border); color: var(--muted); font-weight: 600;">
                     <th style="padding: 12px 16px;">Caption</th>
-                    <th style="padding: 12px 16px;">Image</th>
+                    <th style="padding: 12px 16px;">Media</th>
                     <th style="padding: 12px 16px;">Publish Type</th>
-                    <th style="padding: 12px 16px;">Publish Date / Time</th>
+                    <th style="padding: 12px 16px;">Date / Time</th>
                     <th style="padding: 12px 16px; text-align: center; width: 60px;">FB</th>
                     <th style="padding: 12px 16px; text-align: center; width: 60px;">IG</th>
                     <th style="padding: 12px 16px; text-align: center; width: 60px;">LK</th>
                     <th style="padding: 12px 16px; text-align: center; width: 60px;">X</th>
-                    <th style="padding: 12px 16px; text-align: center; width: 90px;">Status</th>
+                    <th style="padding: 12px 16px; text-align: center; width: 110px;">Status</th>
                     <th style="padding: 12px 16px; text-align: center; width: 80px;">Action</th>
+
                   </tr>
                 </thead>
                 <tbody id="ownerSocialsList">
@@ -23730,6 +23737,23 @@
                   <textarea id="socialCaption" required style="width: 100%; height: 100px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); padding: 8px; font-family: inherit; resize: vertical;" placeholder="Write your post caption..."></textarea>
                 </div>
                 <div style="margin-bottom: 14px;">
+                  <label style="display: block; margin-bottom: 6px; font-weight: 600; color: var(--muted);">Post Format / Media Type</label>
+                  <div style="display: flex; gap: 16px;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="radio" name="postType" value="photo" checked onchange="onSocialPostTypeChange('photo')">
+                      🖼️ Photo / Image
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="radio" name="postType" value="video" onchange="onSocialPostTypeChange('video')">
+                      🎥 Video / Reel
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                      <input type="radio" name="postType" value="text" onchange="onSocialPostTypeChange('text')">
+                      📝 Text Only
+                    </label>
+                  </div>
+                </div>
+                <div id="socialMediaSection" style="margin-bottom: 14px;">
                   <label style="display: block; margin-bottom: 6px; font-weight: 600; color: var(--muted);">Media Attachment</label>
                   
                   <!-- File Uploader -->
@@ -23797,9 +23821,10 @@
                       <input type="checkbox" id="socialPlatformFb">
                       Facebook
                     </label>
-                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);" id="socialPlatformIgLabel">
                       <input type="checkbox" id="socialPlatformIg">
-                      Instagram
+                      <span>Instagram</span>
+                      <span id="socialIgHint" style="font-size: 11px; color: var(--muted); display: none;">(Requires photo/video)</span>
                     </label>
                     <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
                       <input type="checkbox" id="socialPlatformLk">
@@ -23811,6 +23836,7 @@
                     </label>
                   </div>
                 </div>
+
                 <div style="display: flex; justify-content: flex-end; gap: 10px;">
                   <button type="button" onclick="closeAddSocialModal()" style="background: none; border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 6px; cursor: pointer;">
                     Cancel
@@ -23824,7 +23850,37 @@
           </div>
         </div>
 
+        <div
+          class="modal-overlay"
+          id="socialErrorModal"
+          onclick="if(event.target===this) closeSocialErrorModal()"
+          style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 1050; align-items: center; justify-content: center;"
+        >
+          <div class="modal" style="background: var(--panel); border: 1px solid var(--red); border-radius: 8px; width: 550px; max-width: 90%; overflow: hidden;">
+            <div class="modal-head" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border); background: rgba(239,68,68,0.1);">
+              <h3 style="margin: 0; color: var(--red); display: flex; align-items: center; gap: 8px;">
+                <span>⚠️</span> Social Media API Error Log
+              </h3>
+              <button class="modal-close" type="button" onclick="closeSocialErrorModal()" style="background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer;">
+                &times;
+              </button>
+            </div>
+            <div class="modal-body" style="padding: 16px;">
+              <div style="font-size: 13px; color: var(--muted); margin-bottom: 8px;">
+                The direct API dispatch failed for one or more targeted platforms. Below are the exact diagnostic logs returned by the platform servers:
+              </div>
+              <pre id="socialErrorContent" style="background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; font-family: monospace; font-size: 12px; color: var(--red); white-space: pre-wrap; word-break: break-word; max-height: 250px; overflow-y: auto;"></pre>
+              <div style="display: flex; justify-content: flex-end; margin-top: 14px;">
+                <button type="button" onclick="closeSocialErrorModal()" style="background: var(--panel-2); border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600;">
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div id="page-vehicles" class="page-section" style="display: none">
+
           <!-- PAGE TITLE -->
           <div class="page-head">
             <div
@@ -60850,13 +60906,63 @@
       }
     }
   }
-  window.connectXAccount = connectXAccount;
+  async function connectMetaAccount() {
+    try {
+      const ownerToken = window.AVPortal && AVPortal.getToken ? AVPortal.getToken("owner") : "";
+      const headers = {};
+      if (ownerToken) headers.Authorization = `Bearer ${ownerToken}`;
+
+      const res = await fetch(`${avConfig.apiUrl}/api/owner/socials/meta/auth-url`, { headers });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.message || "Failed to generate Meta connection URL");
+      }
+      const data = await res.json();
+      if (data.url) {
+        window.open(data.url, "ConnectMeta", "width=600,height=750");
+      }
+    } catch (err) {
+      if (typeof AVToast !== "undefined") {
+        AVToast.error(err.message || "Could not connect to Meta");
+      }
+    }
+  }
+  window.connectMetaAccount = connectMetaAccount;
+
+
+  function onSocialPostTypeChange(type) {
+    const mediaSection = document.getElementById("socialMediaSection");
+    const igCheckbox = document.getElementById("socialPlatformIg");
+    const igHint = document.getElementById("socialIgHint");
+
+    if (type === "text") {
+      if (mediaSection) mediaSection.style.display = "none";
+      clearSocialFile();
+      document.getElementById("socialImageUrl").value = "";
+      if (igCheckbox) {
+        igCheckbox.checked = false;
+        igCheckbox.disabled = true;
+      }
+      if (igHint) igHint.style.display = "inline";
+    } else {
+      if (mediaSection) mediaSection.style.display = "block";
+      if (igCheckbox) igCheckbox.disabled = false;
+      if (igHint) igHint.style.display = "none";
+    }
+  }
+  window.onSocialPostTypeChange = onSocialPostTypeChange;
 
   function openAddSocialModal() {
-
     document.getElementById("socialPostForm").reset();
     clearSocialFile();
     toggleSocialSchedule(false);
+    
+    // Set default post format radio to photo
+    const defaultRadio = document.querySelector('input[name="postType"][value="photo"]');
+    if (defaultRadio) {
+      defaultRadio.checked = true;
+      onSocialPostTypeChange("photo");
+    }
     
     // Hide URL field by default
     document.getElementById("socialImageUrlFieldContainer").style.display = "none";
@@ -60868,6 +60974,25 @@
   function closeAddSocialModal() {
     document.getElementById("socialPostModal").style.display = "none";
   }
+
+  function viewSocialErrorLog(postId) {
+    const post = socialPosts.find(p => String(p.id) === String(postId));
+    const errorContent = document.getElementById("socialErrorContent");
+    if (post && errorContent) {
+      errorContent.textContent = typeof post.errorLog === "object" 
+        ? JSON.stringify(post.errorLog, null, 2) 
+        : (post.errorLog || "No detailed error log available.");
+    }
+    const modal = document.getElementById("socialErrorModal");
+    if (modal) modal.style.display = "flex";
+  }
+  window.viewSocialErrorLog = viewSocialErrorLog;
+
+  function closeSocialErrorModal() {
+    const modal = document.getElementById("socialErrorModal");
+    if (modal) modal.style.display = "none";
+  }
+  window.closeSocialErrorModal = closeSocialErrorModal;
 
   function toggleSocialSchedule(show) {
     document.getElementById("socialScheduleFields").style.display = show ? "flex" : "none";
@@ -60953,6 +61078,9 @@
     const originalBtnText = submitBtn.textContent;
     
     const caption = document.getElementById("socialCaption").value;
+    const selectedPostTypeEl = document.querySelector('input[name="postType"]:checked');
+    const postType = selectedPostTypeEl ? selectedPostTypeEl.value : "photo";
+
     let imageUrl = document.getElementById("socialImageUrl").value;
     const publishType = document.querySelector('input[name="publishType"]:checked').value;
     const publishDate = document.getElementById("socialPublishDate").value;
@@ -60973,10 +61101,10 @@
     try {
       // Disable UI to prevent double submission
       submitBtn.disabled = true;
-      submitBtn.textContent = "Uploading media...";
-
-      // Upload file to R2 if selected
-      if (selectedSocialFile) {
+      
+      // Upload file to R2 if selected and postType is not text
+      if (selectedSocialFile && postType !== "text") {
+        submitBtn.textContent = "Uploading media...";
         const ownerToken = window.AVPortal && AVPortal.getToken ? AVPortal.getToken("owner") : "";
         const uploadHeaders = { "Content-Type": "application/json" };
         if (ownerToken) uploadHeaders.Authorization = `Bearer ${ownerToken}`;
@@ -61015,12 +61143,12 @@
         imageUrl = uploadData.publicUrl;
       }
 
-
       submitBtn.textContent = "Creating post...";
 
       const body = {
         caption,
-        imageUrl,
+        imageUrl: postType === "text" ? null : imageUrl,
+        postType,
         publishType,
         publishDate,
         publishTime,
@@ -61048,7 +61176,11 @@
 
       closeAddSocialModal();
       if (typeof AVToast !== "undefined") {
-        AVToast.success("Social post created successfully!");
+        if (data.post && data.post.status === "failed") {
+          AVToast.error("Post creation completed with platform errors. Check table log.");
+        } else {
+          AVToast.success("Social post created successfully!");
+        }
       }
       renderOwnerSocials();
     } catch (err) {
@@ -61103,40 +61235,66 @@
 
     listBody.innerHTML = socialPosts.map(post => {
       const scheduleDisplay = post.publishType === "publish_now" ? "Publish Now" : "Scheduled";
-      const scheduleTimeDisplay = post.publishType === "scheduled" && post.publishDate ? `${post.publishDate} ${post.publishTime || ""}` : "—";
+      
+      let createdDisplay = "—";
+      if (post.createdAt) {
+        try {
+          const d = new Date(post.createdAt);
+          createdDisplay = d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) + " " + d.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+        } catch (e) {
+          createdDisplay = post.createdAt;
+        }
+      }
+
+      const scheduleTimeDisplay = post.publishType === "scheduled" && post.publishDate ? `${post.publishDate} ${post.publishTime || ""}` : createdDisplay;
       
       const checkIcon = (checked) => checked 
         ? '<span style="color: var(--green); font-weight: bold;">YES</span>' 
         : '<span style="color: var(--muted);">NO</span>';
 
-      const statusBadge = (status) => {
+      const statusBadge = (status, errorLog) => {
         let color = "var(--muted)";
         if (status === "sent") color = "var(--green)";
         if (status === "failed") color = "var(--red)";
         if (status === "scheduled") color = "var(--purple)";
-        return '<span style="background: var(--bg); border: 1px solid ' + color + '; color: ' + color + '; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; text-transform: uppercase;">' + status + '</span>';
+        
+        let html = '<span style="background: var(--bg); border: 1px solid ' + color + '; color: ' + color + '; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase;">' + status + '</span>';
+        if (status === "failed" && errorLog) {
+          html += '<br><button type="button" onclick="viewSocialErrorLog(\'' + post.id + '\')" style="background: none; border: none; color: var(--red); font-size: 11px; text-decoration: underline; cursor: pointer; margin-top: 4px; font-weight: 600;">⚠️ View Error Log</button>';
+        }
+        return html;
       };
 
-      const imagePreview = post.imageUrl 
-        ? '<a href="' + post.imageUrl + '" target="_blank" style="color: var(--blue); text-decoration: underline;">View Image</a>' 
-        : '<span style="color: var(--muted);">None</span>';
+      let mediaDisplay = '<span style="color: var(--muted);">📝 Text Only</span>';
+      const url = post.imageUrl || "";
+      const isVid = post.postType === "video" || url.toLowerCase().includes(".mp4") || url.toLowerCase().includes("video");
+      const isImg = post.postType === "photo" || (url && !isVid);
+
+      if (url) {
+        if (isVid) {
+          mediaDisplay = '<a href="' + url + '" target="_blank" style="color: var(--blue); text-decoration: underline; font-weight: 600;">🎥 View Video</a>';
+        } else if (isImg) {
+          mediaDisplay = '<a href="' + url + '" target="_blank" style="color: var(--blue); text-decoration: underline; font-weight: 600;">🖼️ View Photo</a>';
+        }
+      }
 
       return '<tr style="border-bottom: 1px solid var(--border); background: transparent;">' +
         '<td style="padding: 12px 16px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="' + post.caption.replace(/"/g, '&quot;') + '">' + post.caption + '</td>' +
-        '<td style="padding: 12px 16px;">' + imagePreview + '</td>' +
+        '<td style="padding: 12px 16px;">' + mediaDisplay + '</td>' +
         '<td style="padding: 12px 16px;">' + scheduleDisplay + '</td>' +
         '<td style="padding: 12px 16px;">' + scheduleTimeDisplay + '</td>' +
         '<td style="padding: 12px 16px; text-align: center;">' + checkIcon(post.platformFb) + '</td>' +
         '<td style="padding: 12px 16px; text-align: center;">' + checkIcon(post.platformIg) + '</td>' +
         '<td style="padding: 12px 16px; text-align: center;">' + checkIcon(post.platformLk) + '</td>' +
         '<td style="padding: 12px 16px; text-align: center;">' + checkIcon(post.platformX) + '</td>' +
-        '<td style="padding: 12px 16px; text-align: center;">' + statusBadge(post.status) + '</td>' +
+        '<td style="padding: 12px 16px; text-align: center;">' + statusBadge(post.status, post.errorLog) + '</td>' +
         '<td style="padding: 12px 16px; text-align: center;">' +
           '<button onclick="deleteSocialPost(\'' + post.id + '\')" style="background: none; border: none; color: var(--red); cursor: pointer; font-size: 13px; font-weight: 600;">Delete</button>' +
         '</td>' +
       '</tr>';
     }).join("");
   }
+
 
   async function renderOwnerSocials() {
     const listBody = document.getElementById("ownerSocialsList");
