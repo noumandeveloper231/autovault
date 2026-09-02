@@ -23723,14 +23723,14 @@
           onclick="if(event.target===this) closeAddSocialModal()"
           style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; align-items: center; justify-content: center;"
         >
-          <div class="modal" style="background: var(--panel); border: 1px solid var(--border); border-radius: 8px; width: 500px; max-width: 90%; overflow: hidden;">
-            <div class="modal-head" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border);">
+          <div class="modal" style="background: var(--panel); border: 1px solid var(--border); border-radius: 8px; width: 500px; max-width: 90%; max-height: 85vh; display: flex; flex-direction: column; overflow: hidden;">
+            <div class="modal-head" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border); flex-shrink: 0;">
               <h3 style="margin: 0; color: var(--text);">Create New Social Post</h3>
               <button class="modal-close" type="button" onclick="closeAddSocialModal()" style="background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer;">
                 &times;
               </button>
             </div>
-            <div class="modal-body" style="padding: 16px;">
+            <div class="modal-body" style="padding: 16px; overflow-y: auto; flex: 1;">
               <form id="socialPostForm" onsubmit="saveSocialPost(event)">
                 <div style="margin-bottom: 14px;">
                   <label style="display: block; margin-bottom: 6px; font-weight: 600; color: var(--muted);">Caption</label>
@@ -23741,15 +23741,15 @@
                   <div style="display: flex; gap: 16px;">
                     <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
                       <input type="radio" name="postType" value="photo" checked onchange="onSocialPostTypeChange('photo')">
-                      🖼️ Photo / Image
+                      Photo / Image
                     </label>
                     <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
                       <input type="radio" name="postType" value="video" onchange="onSocialPostTypeChange('video')">
-                      🎥 Video / Reel
+                      Video / Reel
                     </label>
                     <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text);">
                       <input type="radio" name="postType" value="text" onchange="onSocialPostTypeChange('text')">
-                      📝 Text Only
+                      Text Only
                     </label>
                   </div>
                 </div>
@@ -23837,7 +23837,7 @@
                   </div>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px;">
                   <button type="button" onclick="closeAddSocialModal()" style="background: none; border: 1px solid var(--border); color: var(--text); padding: 8px 16px; border-radius: 6px; cursor: pointer;">
                     Cancel
                   </button>
@@ -23858,8 +23858,8 @@
         >
           <div class="modal" style="background: var(--panel); border: 1px solid var(--red); border-radius: 8px; width: 550px; max-width: 90%; overflow: hidden;">
             <div class="modal-head" style="display: flex; justify-content: space-between; align-items: center; padding: 16px; border-bottom: 1px solid var(--border); background: rgba(239,68,68,0.1);">
-              <h3 style="margin: 0; color: var(--red); display: flex; align-items: center; gap: 8px;">
-                <span>⚠️</span> Social Media API Error Log
+              <h3 style="margin: 0; color: var(--red);">
+                Social Media API Error Log
               </h3>
               <button class="modal-close" type="button" onclick="closeSocialErrorModal()" style="background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer;">
                 &times;
@@ -23878,6 +23878,7 @@
             </div>
           </div>
         </div>
+
 
         <div id="page-vehicles" class="page-section" style="display: none">
 
@@ -61230,21 +61231,21 @@
         
         let html = '<span style="background: var(--bg); border: 1px solid ' + color + '; color: ' + color + '; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase;">' + status + '</span>';
         if (status === "failed" && errorLog) {
-          html += '<br><button type="button" onclick="viewSocialErrorLog(\'' + post.id + '\')" style="background: none; border: none; color: var(--red); font-size: 11px; text-decoration: underline; cursor: pointer; margin-top: 4px; font-weight: 600;">⚠️ View Error Log</button>';
+          html += '<br><button type="button" onclick="viewSocialErrorLog(\'' + post.id + '\')" style="background: none; border: none; color: var(--red); font-size: 11px; text-decoration: underline; cursor: pointer; margin-top: 4px; font-weight: 600;">View Error Log</button>';
         }
         return html;
       };
 
-      let mediaDisplay = '<span style="color: var(--muted);">📝 Text Only</span>';
+      let mediaDisplay = '<span style="color: var(--muted);">Text Only</span>';
       const url = post.imageUrl || "";
       const isVid = post.postType === "video" || url.toLowerCase().includes(".mp4") || url.toLowerCase().includes("video");
       const isImg = post.postType === "photo" || (url && !isVid);
 
       if (url) {
         if (isVid) {
-          mediaDisplay = '<a href="' + url + '" target="_blank" style="color: var(--blue); text-decoration: underline; font-weight: 600;">🎥 View Video</a>';
+          mediaDisplay = '<a href="' + url + '" target="_blank" style="color: var(--blue); text-decoration: underline; font-weight: 600;">View Video</a>';
         } else if (isImg) {
-          mediaDisplay = '<a href="' + url + '" target="_blank" style="color: var(--blue); text-decoration: underline; font-weight: 600;">🖼️ View Photo</a>';
+          mediaDisplay = '<a href="' + url + '" target="_blank" style="color: var(--blue); text-decoration: underline; font-weight: 600;">View Photo</a>';
         }
       }
 
