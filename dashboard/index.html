@@ -60898,6 +60898,7 @@
       }
     }
   }
+  window.connectXAccount = connectXAccount;
   window.connectMetaAccount = connectMetaAccount;
 
 
@@ -60949,10 +60950,14 @@
   function viewSocialErrorLog(postId) {
     const post = socialPosts.find(p => String(p.id) === String(postId));
     const errorContent = document.getElementById("socialErrorContent");
-    if (post && errorContent) {
-      errorContent.textContent = typeof post.errorLog === "object" 
-        ? JSON.stringify(post.errorLog, null, 2) 
-        : (post.errorLog || "No detailed error log available.");
+    if (errorContent) {
+      if (post && post.errorLog) {
+        errorContent.textContent = typeof post.errorLog === "object" 
+          ? JSON.stringify(post.errorLog, null, 2) 
+          : post.errorLog;
+      } else {
+        errorContent.textContent = "Platform dispatch failed.\n\nPossible reasons:\n1. If posting to X (Twitter), your X account is not connected yet. Click the 'Connect X Account' button at the top to authorize.\n2. If posting to Facebook/Instagram, make sure your Meta account is connected.";
+      }
     }
     const modal = document.getElementById("socialErrorModal");
     if (modal) modal.style.display = "flex";
