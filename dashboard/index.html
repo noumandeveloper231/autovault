@@ -61142,8 +61142,11 @@
         body: JSON.stringify(body),
       });
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || "Failed to create post");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        const errorMsg = data?.error?.message || data?.error?.details || data?.message || "Failed to create post";
+        throw new Error(errorMsg);
+      }
 
       closeAddSocialModal();
       if (typeof AVToast !== "undefined") {
