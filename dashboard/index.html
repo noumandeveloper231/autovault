@@ -23667,25 +23667,36 @@
                 Automate your social media posting across FB, Instagram, LinkedIn, and X via Supabase & Make.com.
               </div>
             </div>
-            <div style="display: flex; gap: 10px; align-items: center;">
-              <button class="btn" onclick="connectMetaAccount()" style="background: #1877f2; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+              <button id="btnConnectMeta" class="btn" onclick="connectMetaAccount()" style="background: #1877f2; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
-                Connect Meta (FB & IG)
+                <span id="labelConnectMeta">Connect Meta (FB & IG)</span>
+                <span id="badgeMetaConnected" style="display: none; background: rgba(34,197,94,0.2); color: #22c55e; border: 1px solid rgba(34,197,94,0.5); padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 700;">Connected</span>
               </button>
-              <button class="btn" onclick="connectXAccount()" style="background: #000; color: #fff; border: 1px solid var(--border); padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+
+              <button id="btnConnectX" class="btn" onclick="connectXAccount()" style="background: #000; color: #fff; border: 1px solid var(--border); padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
-                Connect X Account
+                <span id="labelConnectX">Connect X Account</span>
+                <span id="badgeXConnected" style="display: none; background: rgba(34,197,94,0.2); color: #22c55e; border: 1px solid rgba(34,197,94,0.5); padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 700;">Connected</span>
               </button>
-              <button class="btn" onclick="connectLinkedInAccount()" style="background: #0a66c2; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
-                </svg>
-                Connect LinkedIn
-              </button>
+
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <button id="btnConnectLinkedIn" class="btn" onclick="connectLinkedInAccount()" style="background: #0a66c2; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+                  </svg>
+                  <span id="labelConnectLinkedIn">Connect LinkedIn</span>
+                  <span id="badgeLinkedInConnected" style="display: none; background: rgba(34,197,94,0.2); color: #22c55e; border: 1px solid rgba(34,197,94,0.5); padding: 1px 7px; border-radius: 10px; font-size: 11px; font-weight: 700;">Connected</span>
+                </button>
+                <div id="linkedInDaysRemainingPill" style="display: none; background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; white-space: nowrap;">
+                  <span id="linkedInDaysCount" style="color: #38bdf8; font-weight: 700;">60d</span> remaining
+                </div>
+              </div>
+
               <button class="btn btn-primary" onclick="openAddSocialModal()" style="background: var(--blue); color: var(--text); border: none; padding: 10px 18px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right: 2px;">
                   <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -61419,6 +61430,7 @@
     renderSocialsList();
     loadXPostLogs();
     loadLinkedInPostLogs();
+    checkSocialAccountsStatus();
   }
 
   let xPostLogs = [];
@@ -61723,6 +61735,86 @@
     }
   }
 
+  async function checkSocialAccountsStatus() {
+    try {
+      const ownerToken = window.AVPortal && AVPortal.getToken ? AVPortal.getToken("owner") : "";
+      const headers = {};
+      if (ownerToken) headers.Authorization = `Bearer ${ownerToken}`;
+
+      // 1. LinkedIn Status & 60-day Expiration Counter
+      try {
+        const lkRes = await fetch(`${avConfig.apiUrl}/api/owner/socials/linkedin/status`, { headers });
+        if (lkRes.ok) {
+          const lkData = await lkRes.json();
+          const lkBadge = document.getElementById("badgeLinkedInConnected");
+          const lkLabel = document.getElementById("labelConnectLinkedIn");
+          const pill = document.getElementById("linkedInDaysRemainingPill");
+          const count = document.getElementById("linkedInDaysCount");
+
+          if (lkData.connected) {
+            if (lkBadge) lkBadge.style.display = "inline-block";
+            if (lkLabel) lkLabel.textContent = lkData.name ? `LinkedIn: ${lkData.name}` : "LinkedIn";
+            if (pill && count) {
+              const days = lkData.daysRemaining !== null && lkData.daysRemaining !== undefined ? lkData.daysRemaining : 60;
+              count.textContent = `${days}d`;
+              count.style.color = days <= 7 ? "#f59e0b" : "#38bdf8";
+              pill.style.display = "inline-flex";
+            }
+          } else {
+            if (lkBadge) lkBadge.style.display = "none";
+            if (lkLabel) lkLabel.textContent = "Connect LinkedIn";
+            if (pill) pill.style.display = "none";
+          }
+        }
+      } catch (lkErr) {
+        console.warn("[AutoSocials] Error checking LinkedIn status:", lkErr);
+      }
+
+      // 2. X (Twitter) Status
+      try {
+        const xRes = await fetch(`${avConfig.apiUrl}/api/owner/socials/x/status`, { headers });
+        if (xRes.ok) {
+          const xData = await xRes.json();
+          const xBadge = document.getElementById("badgeXConnected");
+          const xLabel = document.getElementById("labelConnectX");
+
+          if (xData.connected) {
+            if (xBadge) xBadge.style.display = "inline-block";
+            if (xLabel) xLabel.textContent = "X (Twitter)";
+          } else {
+            if (xBadge) xBadge.style.display = "none";
+            if (xLabel) xLabel.textContent = "Connect X Account";
+          }
+        }
+      } catch (xErr) {
+        console.warn("[AutoSocials] Error checking X status:", xErr);
+      }
+
+      // 3. Meta Status
+      try {
+        const metaRes = await fetch(`${avConfig.apiUrl}/api/owner/socials/meta/status`, { headers });
+        if (metaRes.ok) {
+          const metaData = await metaRes.json();
+          const metaBadge = document.getElementById("badgeMetaConnected");
+          const metaLabel = document.getElementById("labelConnectMeta");
+
+          if (metaData.connected) {
+            if (metaBadge) metaBadge.style.display = "inline-block";
+            if (metaLabel) metaLabel.textContent = metaData.pageName ? `Meta: ${metaData.pageName}` : "Meta";
+          } else {
+            if (metaBadge) metaBadge.style.display = "none";
+            if (metaLabel) metaLabel.textContent = "Connect Meta (FB & IG)";
+          }
+        }
+      } catch (metaErr) {
+        // Optional
+      }
+    } catch (err) {
+      console.warn("[AutoSocials] Error checking accounts status:", err);
+    }
+  }
+
+  window.checkSocialAccountsStatus = checkSocialAccountsStatus;
   window.openAddSocialModal = openAddSocialModal;
   window.closeAddSocialModal = closeAddSocialModal;
   window.toggleSocialSchedule = toggleSocialSchedule;
