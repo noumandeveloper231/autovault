@@ -248,16 +248,15 @@
         : (api.fees && Array.isArray(api.fees.addOnItems) ? api.fees.addOnItems : []),
       /* Actual finance-company remittance; drives profit when set (incl. $0). */
       netCheck: (function () {
-        const fromJacket =
-          jacket && jacket.fees && jacket.fees.netCheck != null
-            ? jacket.fees.netCheck
-            : null;
-        const fromVehicle =
-          api.fees && api.fees.netCheck != null ? api.fees.netCheck : null;
-        const raw = fromJacket != null ? fromJacket : fromVehicle;
-        if (raw === null || raw === undefined || raw === "") return null;
-        const n = Number(raw);
-        return Number.isFinite(n) ? n : null;
+        function readNc(fees) {
+          if (!fees || typeof fees !== "object") return null;
+          if (fees.netCheck == null || fees.netCheck === "") return null;
+          const n = Number(fees.netCheck);
+          return Number.isFinite(n) ? n : null;
+        }
+        const fromJacket = readNc(jacket && jacket.fees);
+        const fromVehicle = readNc(api.fees);
+        return fromJacket != null ? fromJacket : fromVehicle;
       })(),
       netCheckReason: (function () {
         if (jacket && jacket.fees && jacket.fees.netCheckReason != null)
@@ -631,7 +630,15 @@
     const { vehicle } = await AVApi.updateVehicle(v.id, patch);
     const expenses = vehicle.expenses || v.repairsList;
     const ui = mapApiToUi(
-      { ...vehicle, deal: vehicle.deal || (v._raw && v._raw.deal) },
+      {
+        ...vehicle,
+        deal: vehicle.deal || (v._raw && v._raw.deal),
+        dealJackets:
+          vehicle.dealJackets && vehicle.dealJackets.length
+            ? vehicle.dealJackets
+            : (v._raw && v._raw.dealJackets) || [],
+        fees: vehicle.fees || (v._raw && v._raw.fees),
+      },
       Array.isArray(expenses) && expenses[0] && expenses[0].id
         ? expenses
         : (v.repairsList || []).map((r) => ({
@@ -883,7 +890,7 @@
       netCheckReason: v.netCheckReason || null,
       netCheckNotes: v.netCheckNotes || null,
     });
-    if (!hasValue) delete fees.netCheck;
+    if (!hasValue) fees.netCheck = null;
     if (!fees.netCheckReason) delete fees.netCheckReason;
     if (!fees.netCheckNotes) delete fees.netCheckNotes;
 
