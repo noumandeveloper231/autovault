@@ -282,8 +282,7 @@
           api.fees && api.fees.statusInfo && typeof api.fees.statusInfo === "object"
             ? api.fees.statusInfo
             : null;
-        const raw = fromJacket || fromVehicle;
-        return raw ? { ...raw } : {};
+        return Object.assign({}, fromVehicle || {}, fromJacket || {});
       })(),
       commissionOverride: deal ? num(deal.commissionAmount, null) : null,
       commissionPct: deal && deal.commissionRate ? Math.round(deal.commissionRate * 1000) / 10 : null,
@@ -1024,16 +1023,31 @@
         body.netCheck = Number(sale.fees.netCheck);
       }
     }
+    const statusInfo =
+      (v.statusInfo && typeof v.statusInfo === "object" && v.statusInfo) ||
+      (v._raw && v._raw.fees && v._raw.fees.statusInfo) ||
+      null;
+    if (statusInfo && typeof statusInfo === "object") {
+      body.fees = Object.assign({}, body.fees || {}, {
+        statusInfo: Object.assign({}, statusInfo),
+      });
+    }
     if (sale.netCheck != null && sale.netCheck !== "") body.netCheck = Number(sale.netCheck);
     if (sale.titleReceived != null) body.titleReceived = !!sale.titleReceived;
     if (sale.titlePresent != null) body.titlePresent = !!sale.titlePresent;
     const resp = await AVApi.markSold(v.id, body);
-    // Clear vehicle-level fees after they've been moved to the deal jacket
+    // Clear vehicle-level add-ons after they've been moved to the deal jacket.
+    // Keep statusInfo so a reload still has deal-type details if the jacket
+    // payload omitted them.
     if (v.addOnItems && v.addOnItems.length > 0) {
       v.addOnItems = [];
       v.additionalExpenses = 0;
       v.addOns = 0;
-      try { await AVApi.updateVehicle(v.id, { fees: { addOnItems: [] }, additionalExpenses: 0 }); } catch (_) {}
+      const leftoverFees = { addOnItems: [] };
+      if (v.statusInfo && typeof v.statusInfo === "object") {
+        leftoverFees.statusInfo = Object.assign({}, v.statusInfo);
+      }
+      try { await AVApi.updateVehicle(v.id, { fees: leftoverFees, additionalExpenses: 0 }); } catch (_) {}
     }
     try {
       await refreshOneVehicle(v.id);
