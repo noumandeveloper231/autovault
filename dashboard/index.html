@@ -46384,7 +46384,12 @@
             notes,
             dealNumber,
             additionalExpenses: addOnTotal,
-            fees: { addOnItems: addOnItems },
+            fees: {
+              addOnItems: addOnItems,
+              ...(v.statusInfo && typeof v.statusInfo === "object"
+                ? { statusInfo: Object.assign({}, v.statusInfo) }
+                : {}),
+            },
             soldDate: today.toISOString(),
           });
           if (saleRep) {
@@ -54005,6 +54010,9 @@
               document.getElementById("djCustAddress").value || undefined,
             fees: {
               addOnItems: addOnItems,
+              ...(v.statusInfo && typeof v.statusInfo === "object"
+                ? { statusInfo: Object.assign({}, v.statusInfo) }
+                : {}),
               ...(v.netCheck !== null &&
               v.netCheck !== undefined &&
               v.netCheck !== ""
@@ -54206,30 +54214,36 @@
               v.commMode = "pct";
             }
           }
-          const ncRaw = (g("djNetCheck") || "").trim();
-          const ncNum = ncRaw === "" ? NaN : parseFloat(ncRaw);
-          const reason = g("djNetReason") || "";
-          const notesNc = g("djNetNotes") || "";
-          v.netCheckReason = reason;
-          v.netCheckNotes = notesNc;
-          if (!isNaN(ncNum) && ncNum >= 0) {
-            v.netCheck = ncNum;
-            const fees = {
-              addOnItems: v.addOnItems || [],
-              netCheck: ncNum,
-              netCheckReason: reason || undefined,
-              netCheckNotes: notesNc || undefined,
-            };
-            patch.fees = fees;
-          } else if (ncRaw === "") {
-            v.netCheck = null;
-            patch.fees = {
-              addOnItems: v.addOnItems || [],
-              netCheckReason: reason || undefined,
-              netCheckNotes: notesNc || undefined,
-            };
-          }
         }
+
+        const ncRaw = (g("djNetCheck") || "").trim();
+        const ncNum = ncRaw === "" ? NaN : parseFloat(ncRaw);
+        const reason = g("djNetReason") || "";
+        const notesNc = g("djNetNotes") || "";
+        v.netCheckReason = reason;
+        v.netCheckNotes = notesNc;
+        if (!isNaN(ncNum) && ncNum >= 0) {
+          const clamped =
+            typeof __clampMoneyAmount === "function"
+              ? __clampMoneyAmount(ncNum)
+              : ncNum;
+          v.netCheck = clamped;
+          patch.fees = Object.assign({}, patch.fees || {}, {
+            addOnItems: v.addOnItems || [],
+            netCheck: clamped,
+            netCheckReason: reason || undefined,
+            netCheckNotes: notesNc || undefined,
+          });
+        } else if (ncRaw === "") {
+          v.netCheck = null;
+          patch.fees = Object.assign({}, patch.fees || {}, {
+            addOnItems: v.addOnItems || [],
+            netCheck: null,
+            netCheckReason: reason || undefined,
+            netCheckNotes: notesNc || undefined,
+          });
+        }
+
         if (v.statusInfo && typeof v.statusInfo === "object") {
           const existingFees =
             (v._raw &&
