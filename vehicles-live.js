@@ -608,8 +608,15 @@
       const jacketPatch = { fees };
       if (patch.additionalExpenses != null)
         jacketPatch.additionalExpenses = patch.additionalExpenses;
-      await AVApi.updateDealJacket(jacket.id, jacketPatch);
-      jacket.fees = fees;
+      try {
+        await AVApi.updateDealJacket(jacket.id, jacketPatch);
+        jacket.fees = fees;
+      } catch (err) {
+        // Approved jackets used to reject PATCHes that weren't strictly fees.
+        // Still persist Net Check / statusInfo on the vehicle so reload keeps them.
+        await AVApi.updateVehicle(v.id, { fees });
+        if (v._raw) v._raw.fees = fees;
+      }
       if (jacketPatch.additionalExpenses != null)
         jacket.additionalExpenses = jacketPatch.additionalExpenses;
       const rest = { ...patch };
@@ -883,8 +890,13 @@
     const jacket =
       v._raw && Array.isArray(v._raw.dealJackets) && v._raw.dealJackets[0];
     if (jacket && jacket.id) {
-      await AVApi.updateDealJacket(jacket.id, { fees });
-      jacket.fees = fees;
+      try {
+        await AVApi.updateDealJacket(jacket.id, { fees });
+        jacket.fees = fees;
+      } catch (err) {
+        await AVApi.updateVehicle(v.id, { fees });
+        if (v._raw) v._raw.fees = fees;
+      }
     } else {
       await AVApi.updateVehicle(v.id, { fees });
       if (v._raw) v._raw.fees = fees;
