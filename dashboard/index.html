@@ -52401,9 +52401,16 @@
         );
         document.getElementById("djSoldPrice").value = v.soldPrice || "";
         const djNc = document.getElementById("djNetCheck");
-        if (djNc)
-          djNc.value =
-            v.netCheck != null && v.netCheck !== "" ? v.netCheck : "";
+        if (djNc) {
+          const n =
+            v.netCheck != null && v.netCheck !== "" ? Number(v.netCheck) : NaN;
+          djNc.value = Number.isFinite(n)
+            ? n.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })
+            : "";
+        }
         const djNr = document.getElementById("djNetReason");
         if (djNr) djNr.value = v.netCheckReason || "";
         const djNn = document.getElementById("djNetNotes");
@@ -53190,6 +53197,7 @@
       function djNetCheckInput() {
         dealRecalc();
         djNetDetailsSync();
+        if (typeof djAutoSave === "function") djAutoSave();
       }
       async function djSaveNetDetails() {
         const box = document.getElementById("djNetDetails");
