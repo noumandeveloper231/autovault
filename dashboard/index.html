@@ -52940,7 +52940,22 @@
         const soldPrice =
           parseFloat(document.getElementById("djSoldPrice").value) || 0;
         const netCheckEl = document.getElementById("djNetCheck");
-        const netCheckRaw = netCheckEl ? (netCheckEl.value || "").trim() : "";
+        let netCheckRaw = netCheckEl ? (netCheckEl.value || "").trim() : "";
+        if (
+          netCheckRaw === "" &&
+          v.netCheck != null &&
+          v.netCheck !== "" &&
+          netCheckEl
+        ) {
+          const loaded = Number(v.netCheck);
+          if (Number.isFinite(loaded)) {
+            netCheckEl.value = loaded.toLocaleString("en-US", {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            });
+            netCheckRaw = netCheckEl.value;
+          }
+        }
         const netCheckNum = netCheckRaw === "" ? null : parseFloat(netCheckRaw);
         const hasNetCheck =
           netCheckNum !== null && isFinite(netCheckNum);
@@ -52949,8 +52964,8 @@
             ? __clampMoneyAmount(Number(netCheckNum) || 0)
             : Number(netCheckNum) || 0
           : null;
-        if (v) {
-          v.netCheck = hasNetCheck ? netCheckAmt : null;
+        if (v && hasNetCheck) {
+          v.netCheck = netCheckAmt;
           const nr = document.getElementById("djNetReason");
           const nn = document.getElementById("djNetNotes");
           if (nr) v.netCheckReason = nr.value || "";
@@ -54243,13 +54258,10 @@
             netCheckNotes: notesNc || undefined,
           });
         } else if (ncRaw === "") {
-          v.netCheck = null;
-          patch.fees = Object.assign({}, patch.fees || {}, {
-            addOnItems: v.addOnItems || [],
-            netCheck: null,
-            netCheckReason: reason || undefined,
-            netCheckNotes: notesNc || undefined,
-          });
+          // Leave stored Net Check alone — an empty input on unrelated
+          // autosaves (status details, customer, etc.) must not send null.
+          if (reason) v.netCheckReason = reason;
+          if (notesNc) v.netCheckNotes = notesNc;
         }
 
         if (v.statusInfo && typeof v.statusInfo === "object") {
