@@ -273,6 +273,18 @@
           return String(api.fees.netCheckNotes);
         return "";
       })(),
+      statusInfo: (function () {
+        const fromJacket =
+          jacket && jacket.fees && jacket.fees.statusInfo && typeof jacket.fees.statusInfo === "object"
+            ? jacket.fees.statusInfo
+            : null;
+        const fromVehicle =
+          api.fees && api.fees.statusInfo && typeof api.fees.statusInfo === "object"
+            ? api.fees.statusInfo
+            : null;
+        const raw = fromJacket || fromVehicle;
+        return raw ? { ...raw } : {};
+      })(),
       commissionOverride: deal ? num(deal.commissionAmount, null) : null,
       commissionPct: deal && deal.commissionRate ? Math.round(deal.commissionRate * 1000) / 10 : null,
       commMode: deal && deal.commissionType
@@ -344,6 +356,9 @@
       if (prev && prev.flooringDetail) ui.flooringDetail = prev.flooringDetail;
       if (prev && prev.djDocs) ui.djDocs = prev.djDocs;
       if (prev && prev.djDocsRemoved) ui.djDocsRemoved = prev.djDocsRemoved;
+      if (prev && prev.statusInfo && typeof prev.statusInfo === "object") {
+        ui.statusInfo = Object.assign({}, ui.statusInfo || {}, prev.statusInfo);
+      }
       list[idx] = ui;
     } else list.unshift(ui);
   }
@@ -472,8 +487,21 @@
       }
 
       // Expenses + deal come from listVehicles in one round-trip (no N+1).
-      const mapped = allRows.map((row) => mapApiToUi(row, row.expenses || []));
       const list = getVehiclesList();
+      const prevById = {};
+      list.forEach((v) => {
+        if (v && v.id) prevById[v.id] = v;
+      });
+      const mapped = allRows.map((row) => mapApiToUi(row, row.expenses || []));
+      mapped.forEach((ui) => {
+        const prev = prevById[ui.id];
+        if (!prev) return;
+        if (prev.statusInfo && typeof prev.statusInfo === "object") {
+          ui.statusInfo = Object.assign({}, ui.statusInfo || {}, prev.statusInfo);
+        }
+        if (prev.djDocs) ui.djDocs = prev.djDocs;
+        if (prev.djDocsRemoved) ui.djDocsRemoved = prev.djDocsRemoved;
+      });
       list.length = 0;
       mapped.forEach((v) => list.push(v));
       global.AV_VEHICLES_LIVE = true;
@@ -638,6 +666,9 @@
     }
     if (v.netCheckReason != null) ui.netCheckReason = v.netCheckReason;
     if (v.netCheckNotes != null) ui.netCheckNotes = v.netCheckNotes;
+    if (v.statusInfo && typeof v.statusInfo === "object") {
+      ui.statusInfo = Object.assign({}, ui.statusInfo || {}, v.statusInfo);
+    }
     ui.commMode = v.commMode || ui.commMode;
     ui.documents = v.documents || ui.documents;
     ui.djDocs = v.djDocs || [];
@@ -817,6 +848,9 @@
     }
     if (v && v.netCheckReason) merged.netCheckReason = v.netCheckReason;
     if (v && v.netCheckNotes) merged.netCheckNotes = v.netCheckNotes;
+    if (v && v.statusInfo && typeof v.statusInfo === "object") {
+      merged.statusInfo = Object.assign({}, merged.statusInfo || {}, v.statusInfo);
+    }
     return merged;
   }
 
@@ -828,13 +862,18 @@
     if (hasValue && !Number.isFinite(amount)) {
       throw new Error("Invalid net check amount");
     }
-    v.netCheck = hasValue ? amount : null;
+    if (hasValue && amount < 0) {
+      throw new Error("Net check must be 0 or greater");
+    }
+    const MAX_NET = 99999999.99;
+    const stored = hasValue ? Math.min(MAX_NET, Math.round(amount * 100) / 100) : null;
+    v.netCheck = stored;
     if (meta && typeof meta === "object") {
       if (meta.reason !== undefined) v.netCheckReason = String(meta.reason || "");
       if (meta.notes !== undefined) v.netCheckNotes = String(meta.notes || "");
     }
     const fees = mergeFees(v, {
-      netCheck: hasValue ? amount : null,
+      netCheck: stored,
       netCheckReason: v.netCheckReason || null,
       netCheckNotes: v.netCheckNotes || null,
     });

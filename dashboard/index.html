@@ -3440,6 +3440,15 @@
         min-width: 150px;
         margin: 0;
       }
+      .vdp-hero-actions .vdp-delete-btn {
+        padding: 8px 14px;
+        font-size: 12px;
+        margin: 0;
+        white-space: nowrap;
+      }
+      #page-vehicle-detail > .vdp-back {
+        margin-bottom: 10px;
+      }
       .vdp-open-jacket-btn {
         display: none;
         background: var(--blue);
@@ -5990,6 +5999,9 @@
       #page-deal-jacket .form-group input,
       #page-deal-jacket .form-group select {
         width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
         background-color: var(--panel-2);
         border: 1px solid var(--border);
         color: var(--text);
@@ -5997,6 +6009,9 @@
         padding: 9px 11px;
         font-size: 13px;
         outline: none;
+      }
+      .vdp-body.dj-swap > div {
+        min-width: 0;
       }
 
       #page-deal-jacket .form-group select {
@@ -20705,22 +20720,6 @@
             </svg>
             Back to Inventory
           </div>
-          <div
-            style="
-              display: flex;
-              justify-content: flex-end;
-              margin-bottom: 12px;
-            "
-          >
-            <button
-              class="btn-danger vdp-delete-btn"
-              type="button"
-              onclick="openDeleteVehicleModal()"
-              style="padding: 8px 14px; font-size: 12px"
-            >
-              Delete Vehicle
-            </button>
-          </div>
 
           <div
             class="modal-overlay"
@@ -20870,6 +20869,13 @@
                 <option value="Wholesale">Wholesale</option>
                 <option value="Out of State Sale">Out of State Sale</option>
               </select>
+              <button
+                class="btn-danger vdp-delete-btn"
+                type="button"
+                onclick="openDeleteVehicleModal()"
+              >
+                Delete Vehicle
+              </button>
               <button
                 type="button"
                 class="vdp-open-jacket-btn"
@@ -25263,9 +25269,12 @@
                 <div class="form-group" style="margin-bottom: 0">
                   <label>Net Check ($)</label
                   ><input
-                    type="number"
+                    type="text"
+                    inputmode="decimal"
                     id="djNetCheck"
-                    placeholder="e.g. 28000"
+                    class="av-num"
+                    placeholder="e.g. 28,000"
+                    maxlength="14"
                     oninput="djNetCheckInput()"
                   />
                   <div
@@ -40474,6 +40483,7 @@
         if (v === "" || v === ".") return "";
         let [int, dec] = v.split(".");
         int = (int || "").replace(/^0+(?=\d)/, "") || "0";
+        if (int.length > 8) int = int.slice(0, 8);
         const withCommas = int.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         return dec !== undefined ? withCommas + "." + dec.slice(0, 2) : withCommas;
       }
@@ -40546,6 +40556,13 @@
           el.setSelectionRange(pos, pos);
         } catch (e) {}
       }
+      var AV_MONEY_MAX = 99999999.99;
+      function __clampMoneyAmount(n) {
+        if (!isFinite(n)) return n;
+        if (n < 0) return 0;
+        if (n > AV_MONEY_MAX) return AV_MONEY_MAX;
+        return Math.round(n * 100) / 100;
+      }
       function __moneyBlurFormat(el) {
         var raw = (el.value || "").replace(/,/g, "");
         if (raw === "" || raw === "." || raw === "-" || raw === "-.") {
@@ -40554,6 +40571,7 @@
         }
         var n = parseFloat(raw);
         if (!isFinite(n)) return;
+        n = __clampMoneyAmount(n);
         el.value = n.toLocaleString("en-US", {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
@@ -40570,6 +40588,7 @@
           if (raw === "") continue;
           var n = parseFloat(raw);
           if (!isFinite(n)) continue;
+          n = __clampMoneyAmount(n);
           el.value = n.toLocaleString("en-US", {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2,
@@ -45687,7 +45706,7 @@
           v.netCheck !== null && v.netCheck !== undefined
             ? Math.round(Number(v.netCheck) || 0)
             : "";
-        host.innerHTML = `<input class="vdp-edit-input" type="number" step="1" min="0" value="${cur}" placeholder="0"
+        host.innerHTML = `<input class="vdp-edit-input" type="number" step="0.01" min="0" max="99999999.99" value="${cur}" placeholder="0"
     onblur="vdpCommitNetCheck(this.value, this)"
     onkeydown="if(event.key==='Enter'){this.blur();}else if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}">`;
         const inp = host.querySelector("input");
@@ -45710,7 +45729,10 @@
         if (trimmed !== "") {
           let n = parseFloat(trimmed);
           if (!isFinite(n) || n < 0) n = 0;
-          next = Math.round(n * 100) / 100;
+          next =
+            typeof __clampMoneyAmount === "function"
+              ? __clampMoneyAmount(n)
+              : Math.round(n * 100) / 100;
         }
         const prev = v.netCheck;
         const same =
@@ -52463,6 +52485,12 @@
         renderDealAddOns(vin);
         renderDealBottomList();
         dealRecalc();
+        try {
+          if (typeof window.syncDjDealStatusUi === "function")
+            window.syncDjDealStatusUi();
+          else if (typeof djRenderDealTypeBox === "function")
+            djRenderDealTypeBox(v);
+        } catch (e) {}
       }
 
       function djOpenExpenses() {
@@ -52904,7 +52932,11 @@
         const netCheckNum = netCheckRaw === "" ? null : parseFloat(netCheckRaw);
         const hasNetCheck =
           netCheckNum !== null && isFinite(netCheckNum);
-        const netCheckAmt = hasNetCheck ? Number(netCheckNum) || 0 : null;
+        const netCheckAmt = hasNetCheck
+          ? typeof __clampMoneyAmount === "function"
+            ? __clampMoneyAmount(Number(netCheckNum) || 0)
+            : Number(netCheckNum) || 0
+          : null;
         if (v) {
           v.netCheck = hasNetCheck ? netCheckAmt : null;
           const nr = document.getElementById("djNetReason");
@@ -53165,9 +53197,21 @@
         const ncEl = document.getElementById("djNetCheck");
         const raw = ncEl ? (ncEl.value || "").trim() : "";
         const amount = raw === "" ? null : parseFloat(raw);
+        const clamped =
+          amount != null && isFinite(amount)
+            ? typeof __clampMoneyAmount === "function"
+              ? __clampMoneyAmount(amount)
+              : amount
+            : null;
         const reason = (document.getElementById("djNetReason") || {}).value || "";
         const notes = (document.getElementById("djNetNotes") || {}).value || "";
-        v.netCheck = amount != null && isFinite(amount) ? amount : null;
+        if (ncEl && clamped != null) {
+          ncEl.value = clamped.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        }
+        v.netCheck = clamped;
         v.netCheckReason = reason;
         v.netCheckNotes = notes;
         try {
@@ -54185,6 +54229,20 @@
               netCheckNotes: notesNc || undefined,
             };
           }
+        }
+        if (v.statusInfo && typeof v.statusInfo === "object") {
+          const existingFees =
+            (v._raw &&
+              Array.isArray(v._raw.dealJackets) &&
+              v._raw.dealJackets[0] &&
+              v._raw.dealJackets[0].fees &&
+              typeof v._raw.dealJackets[0].fees === "object" &&
+              v._raw.dealJackets[0].fees) ||
+            (v._raw && v._raw.fees && typeof v._raw.fees === "object" && v._raw.fees) ||
+            {};
+          patch.fees = Object.assign({}, existingFees, patch.fees || {}, {
+            statusInfo: Object.assign({}, v.statusInfo),
+          });
         }
         return patch;
       }
@@ -62091,7 +62149,7 @@
     },
   };
 
-  function djRenderDealTypeBox(v) {
+  function djRenderDealTypeBox(v, opts) {
     const host = document.getElementById('djDealTypeBox');
     if (!host) return;
     const type =
@@ -62100,12 +62158,22 @@
         : v && v.dealType && DEAL_TYPE_BOXES[v.dealType]
           ? v.dealType
           : null;
+    const force = !!(opts && opts.force);
+    const editing =
+      !force &&
+      document.activeElement &&
+      host.contains(document.activeElement);
     if (!type) {
+      if (editing) return;
       host.style.display = 'none';
       host.innerHTML = '';
+      delete host.dataset.dealType;
       return;
     }
+    if (!force && editing && host.dataset.dealType === type) return;
+    if (!force && host.dataset.dealType === type && host.innerHTML) return;
     host.style.display = '';
+    host.dataset.dealType = type;
     const cfg = DEAL_TYPE_BOXES[type];
     const si = (v && v.statusInfo) || {};
     const esc = (s) =>
@@ -62186,26 +62254,39 @@
       '</div></div>';
   }
 
+  function djFindDealVehicle() {
+    const vin = window.currentDealVin;
+    const list = window.vehicles || [];
+    return list.find((x) => x && (x.vin === vin || x.id === vin)) || null;
+  }
+
   function djStatusInfoSet(k, val) {
     try {
-      const vin = window.currentDealVin;
-      const list = window.vehicles || [];
-      const v = list.find((x) => x.vin === vin);
+      const v = djFindDealVehicle();
       if (!v) return;
       if (!v.statusInfo) v.statusInfo = {};
       v.statusInfo[k] = val;
+      if (v._raw) {
+        if (!v._raw.fees || typeof v._raw.fees !== 'object') v._raw.fees = {};
+        v._raw.fees.statusInfo = Object.assign({}, v.statusInfo);
+        const jacket =
+          Array.isArray(v._raw.dealJackets) && v._raw.dealJackets[0];
+        if (jacket) {
+          if (!jacket.fees || typeof jacket.fees !== 'object') jacket.fees = {};
+          jacket.fees.statusInfo = Object.assign({}, v.statusInfo);
+        }
+      }
+      if (typeof window.djAutoSave === 'function') window.djAutoSave();
     } catch (e) {}
   }
 
   async function djSetDealStatus(val) {
     try {
-      const vin = window.currentDealVin;
-      const list = window.vehicles || [];
-      const v = list.find((x) => x.vin === vin);
+      const v = djFindDealVehicle();
       if (!v) return;
       v.status = val === 'Sold' ? 'Sold' : val;
       v.dealType = val;
-      djRenderDealTypeBox(v);
+      djRenderDealTypeBox(v, { force: true });
       const sel = document.getElementById('djDealStatus');
       if (sel) sel.value = val;
       if (
@@ -62214,7 +62295,7 @@
         AVVehicles.persistStatus
       ) {
         try {
-          await AVVehicles.persistStatus(vin, val);
+          await AVVehicles.persistStatus(v.vin || window.currentDealVin, val);
         } catch (e) {}
       }
     } catch (e) {}
@@ -62225,10 +62306,9 @@
     typeof window.openDealJacket === 'function' ? window.openDealJacket : null;
   function syncDjDealStatusUi() {
     try {
-      const vin = window.currentDealVin;
-      const v = (window.vehicles || []).find(
-        (x) => x && (x.vin === vin || x.id === vin),
-      );
+      const page = document.getElementById('page-deal-jacket');
+      if (!page || page.style.display === 'none') return;
+      const v = djFindDealVehicle();
       if (!v) return;
       const sel = document.getElementById('djDealStatus');
       const label =
@@ -62237,8 +62317,10 @@
           : v.status === 'Sold' || !v.status
             ? 'Sold'
             : v.status;
-      if (sel && [...sel.options].some((o) => o.value === label)) sel.value = label;
-      else if (sel) sel.value = 'Sold';
+      if (sel && document.activeElement !== sel) {
+        if ([...sel.options].some((o) => o.value === label)) sel.value = label;
+        else sel.value = 'Sold';
+      }
       djRenderDealTypeBox(v);
       const amt = document.getElementById('djCommVal');
       const head = document.getElementById('djCommHeadVal');
@@ -62260,6 +62342,7 @@
   window.djSetDealStatus = djSetDealStatus;
   window.djStatusInfoSet = djStatusInfoSet;
   window.djRenderDealTypeBox = djRenderDealTypeBox;
+  window.syncDjDealStatusUi = syncDjDealStatusUi;
   window.loadKpiColorsFromApi = loadKpiColorsFromApi;
 
   if (document.readyState === 'loading') {
